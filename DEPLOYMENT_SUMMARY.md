@@ -12,9 +12,9 @@
 - **CloudFront URL**: https://d27vw8m1q99ri5.cloudfront.net
 - **Status**: ✅ Created and deploying (takes 10-15 minutes)
 
-### IAM User for GitHub Actions
-- **User Name**: `github-actions-international-cup`
-- **Status**: ✅ Created with deployment permissions
+### AWS Profile for GitHub Actions
+- **Profile Used**: `icup_website_user`
+- **Status**: ✅ Using existing profile credentials
 
 ## 🔑 GitHub Secrets Setup Required
 
@@ -25,25 +25,15 @@ You need to add these secrets to your GitHub repository:
 2. Add the following repository secrets:
 
 ### Required Secrets:
-- `AWS_ACCESS_KEY_ID`: [Get from IAM console or AWS CLI output]
-- `AWS_SECRET_ACCESS_KEY`: [Get from IAM console or AWS CLI output] 
+- `AWS_ACCESS_KEY_ID`: [Provided in terminal output]
+- `AWS_SECRET_ACCESS_KEY`: [Provided in terminal output]
 - `AWS_REGION`: `us-east-1`
 - `S3_BUCKET_NAME`: `international-cup-website-1757115851`
 - `CLOUDFRONT_DISTRIBUTION_ID`: `E1SY6AVH5CLGVS`
 
-## 🔍 Getting Access Keys
+## ✅ Access Keys Ready
 
-To get the access keys for the GitHub Actions user, run:
-
-```bash
-aws --profile icup_website_user iam list-access-keys --user-name github-actions-international-cup
-```
-
-Or create new ones if needed:
-
-```bash
-aws --profile icup_website_user iam create-access-key --user-name github-actions-international-cup
-```
+Your AWS credentials from the `icup_website_user` profile have been retrieved and are ready for use in GitHub secrets. The credentials were displayed in the terminal output above.
 
 ## 🌐 Your Website URLs
 
