@@ -1,0 +1,61 @@
+{
+  "name": "international-cup-website",
+  "version": "1.0.0",
+  "description": "A modern, responsive website for the International Cup sports competition",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "npx serve .",
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "echo 'CSS build completed'",
+    "build:js": "echo 'JS build completed'",
+    "validate": "npm run validate:html && npm run lint:css && npm run lint:js",
+    "validate:html": "html5validator --root . --match '*.html' --ignore-re 'Attribute.*not allowed'",
+    "lint:css": "stylelint 'css/**/*.css'",
+    "lint:js": "eslint 'js/**/*.js'",
+    "test:a11y": "pa11y http://localhost:8000",
+    "test:lighthouse": "lighthouse http://localhost:8000 --output=html --output-path=./lighthouse-report.html",
+    "deploy:manual": "aws s3 sync . s3://$S3_BUCKET_NAME --exclude 'node_modules/*' --exclude '.git/*' --exclude 'package*' --exclude '*.md'",
+    "clean": "rm -rf node_modules package-lock.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/international-cup-website.git"
+  },
+  "keywords": [
+    "website",
+    "responsive",
+    "sports",
+    "international-cup",
+    "html5",
+    "css3",
+    "javascript",
+    "aws",
+    "s3",
+    "cloudfront"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/international-cup-website/issues"
+  },
+  "homepage": "https://github.com/yourusername/international-cup-website#readme",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "html5validator": "^0.4.2",
+    "lighthouse": "^11.4.0",
+    "pa11y": "^8.0.0",
+    "pa11y-ci": "^3.1.0",
+    "serve": "^14.2.1",
+    "stylelint": "^16.0.2",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not op_mini all"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

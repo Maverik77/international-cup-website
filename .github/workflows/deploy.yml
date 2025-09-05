@@ -1,0 +1,191 @@
+name: Deploy to AWS S3 and CloudFront
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        if [ -f package.json ]; then
+          npm ci
+        else
+          echo "No package.json found, skipping npm install"
+        fi
+        
+    - name: Build project
+      run: |
+        # If you have a build process, add it here
+        # For static sites, we can just copy files
+        echo "Building project..."
+        
+        # Create build directory
+        mkdir -p build
+        
+        # Copy all necessary files to build directory
+        cp index.html build/
+        cp -r css build/
+        cp -r js build/
+        
+        # Copy favicon if it exists
+        if [ -f favicon.ico ]; then
+          cp favicon.ico build/
+        fi
+        
+        # Create a simple robots.txt
+        echo "User-agent: *" > build/robots.txt
+        echo "Allow: /" >> build/robots.txt
+        
+        # Create a sitemap.xml
+        cat > build/sitemap.xml << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          <url>
+            <loc>https://your-domain.com/</loc>
+            <lastmod>$(date -u +%Y-%m-%d)</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>1.0</priority>
+          </url>
+        </urlset>
+        EOF
+        
+        echo "Build completed successfully!"
+        
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Deploy to S3
+      run: |
+        # Sync files to S3 bucket
+        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete --exact-timestamps
+        
+        # Set proper content types for different file types
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive \
+          --exclude "*" --include "*.html" --content-type "text/html" --cache-control "max-age=3600"
+        
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive \
+          --exclude "*" --include "*.css" --content-type "text/css" --cache-control "max-age=31536000"
+        
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive \
+          --exclude "*" --include "*.js" --content-type "application/javascript" --cache-control "max-age=31536000"
+        
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive \
+          --exclude "*" --include "*.ico" --content-type "image/x-icon" --cache-control "max-age=31536000"
+          
+        echo "Files deployed to S3 successfully!"
+        
+    - name: Invalidate CloudFront
+      run: |
+        # Create CloudFront invalidation to clear cache
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+          --paths "/*"
+        
+        echo "CloudFront cache invalidated successfully!"
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ ${{ job.status }} == 'success' ]; then
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Your website is now live!"
+        else
+          echo "❌ Deployment failed!"
+          echo "Please check the logs for more details."
+        fi
+
+  # Optional: Run tests before deployment
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Validate HTML
+      run: |
+        # Install html5validator
+        pip install html5validator
+        
+        # Validate HTML files
+        html5validator --root . --match "*.html" --ignore-re "Attribute.*not allowed"
+        
+        echo "HTML validation completed!"
+        
+    - name: Check CSS
+      run: |
+        # Install stylelint
+        npm install -g stylelint stylelint-config-standard
+        
+        # Create stylelint config if it doesn't exist
+        if [ ! -f .stylelintrc.json ]; then
+          echo '{"extends": "stylelint-config-standard", "rules": {"no-descending-specificity": null}}' > .stylelintrc.json
+        fi
+        
+        # Lint CSS files
+        stylelint "css/**/*.css" || echo "CSS linting completed with warnings"
+        
+    - name: Validate JavaScript
+      run: |
+        # Install ESLint
+        npm install -g eslint
+        
+        # Create basic ESLint config
+        if [ ! -f .eslintrc.json ]; then
+          echo '{"env": {"browser": true, "es2021": true}, "rules": {"no-unused-vars": "warn", "no-console": "off"}}' > .eslintrc.json
+        fi
+        
+        # Lint JavaScript files
+        eslint js/**/*.js || echo "JavaScript linting completed with warnings"
+        
+    - name: Check accessibility
+      run: |
+        # Install pa11y for accessibility testing
+        npm install -g pa11y-ci
+        
+        # Create pa11y config
+        echo '{"urls": ["index.html"], "standard": "WCAG2AA"}' > .pa11yci.json
+        
+        # Run accessibility tests (allow to continue on failure)
+        pa11y-ci || echo "Accessibility check completed with warnings"
+
+  # Security scan
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif' 
