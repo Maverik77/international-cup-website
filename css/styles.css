@@ -309,6 +309,33 @@ section {
 }
 
 /* Format Section */
+.format-overview {
+    max-width: 600px;
+    margin: 2rem auto 3rem;
+    text-align: center;
+}
+
+.points-summary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.points-summary h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.points-summary p {
+    color: white;
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
 .format-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
