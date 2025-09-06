@@ -398,33 +398,93 @@ section {
 
 .teams-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
     margin-top: 3rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .team-card {
     background: white;
-    padding: 2rem;
-    border-radius: 12px;
+    padding: 2.5rem;
+    border-radius: 16px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.team-usa::before {
+    background: linear-gradient(90deg, #B22234 0%, #FFFFFF 50%, #3C3B6E 100%);
+}
+
+.team-international::before {
+    background: linear-gradient(90deg, #1e3a8a 0%, #10b981 50%, #f59e0b 100%);
 }
 
 .team-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.team-logo {
+    margin-bottom: 1.5rem;
 }
 
 .team-flag {
-    font-size: 4rem;
-    margin-bottom: 1rem;
+    font-size: 5rem;
+    margin-bottom: 0;
+}
+
+.team-logo-img {
+    max-width: 120px;
+    max-height: 120px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .team-card h3 {
     color: #333;
     margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.team-card p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.team-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    background: #f0f8ff;
+    color: #667eea;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 /* Schedule Section */
@@ -704,6 +764,13 @@ section {
     .format-grid,
     .teams-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .teams-grid {
+        max-width: none;
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 
     /* Contact */
@@ -754,6 +821,16 @@ section {
     .format-card,
     .team-card {
         margin: 0 0.5rem;
+        padding: 1.5rem;
+    }
+    
+    .team-flag {
+        font-size: 3.5rem;
+    }
+    
+    .team-logo-img {
+        max-width: 80px;
+        max-height: 80px;
     }
 
     .contact-form {
