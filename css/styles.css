@@ -221,6 +221,17 @@ p {
     animation: bounce 2s infinite;
 }
 
+.hero-trophy {
+    max-width: 300px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: float 3s ease-in-out infinite;
+}
+
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
     40% { transform: translateY(-30px); }
@@ -650,6 +661,11 @@ section {
 
     .hero-placeholder {
         font-size: 4rem;
+    }
+
+    .hero-trophy {
+        max-width: 200px;
+        max-height: 250px;
     }
 
     .hero-buttons {
