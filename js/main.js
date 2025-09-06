@@ -278,7 +278,7 @@ function initAnimations() {
     // Elements to animate
     const animateElements = document.querySelectorAll(`
         .about-card,
-        .event-card,
+        .format-card,
         .team-card,
         .schedule-item,
         .section-header

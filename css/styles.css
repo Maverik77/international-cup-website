@@ -308,15 +308,15 @@ section {
     margin-bottom: 1rem;
 }
 
-/* Events Section */
-.events-grid {
+/* Format Section */
+.format-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 3rem;
 }
 
-.event-card {
+.format-card {
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -324,12 +324,12 @@ section {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.event-card:hover {
+.format-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-.event-image {
+.format-image {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     height: 120px;
     display: flex;
@@ -338,16 +338,16 @@ section {
     font-size: 3rem;
 }
 
-.event-card h3, .event-card p {
+.format-card h3, .format-card p {
     padding: 0 1.5rem;
 }
 
-.event-card h3 {
+.format-card h3 {
     padding-top: 1.5rem;
     color: #333;
 }
 
-.event-details {
+.format-details {
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
@@ -356,11 +356,11 @@ section {
     font-weight: 500;
 }
 
-.event-date {
+.format-type {
     color: #667eea;
 }
 
-.event-teams {
+.format-count {
     color: #666;
 }
 
@@ -674,7 +674,7 @@ section {
 
     /* Grids */
     .about-grid,
-    .events-grid,
+    .format-grid,
     .teams-grid {
         grid-template-columns: 1fr;
     }
@@ -724,7 +724,7 @@ section {
     }
 
     .about-card,
-    .event-card,
+    .format-card,
     .team-card {
         margin: 0 0.5rem;
     }
