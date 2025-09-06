@@ -450,8 +450,8 @@ section {
 }
 
 .team-logo-img {
-    max-width: 60px;
-    max-height: 60px;
+    max-width: 60px !important;
+    max-height: 60px !important;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -845,8 +845,8 @@ section {
     }
     
     .team-logo-img {
-        max-width: 45px;
-        max-height: 45px;
+        max-width: 45px !important;
+        max-height: 45px !important;
     }
 
     .contact-form {
