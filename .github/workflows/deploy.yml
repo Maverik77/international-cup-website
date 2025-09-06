@@ -61,6 +61,11 @@ jobs:
         cp -r css build/
         cp -r js build/
         
+        # Copy pics folder if it exists
+        if [ -d pics ]; then
+          cp -r pics build/
+        fi
+        
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
