@@ -135,6 +135,26 @@ p {
     width: 100%;
 }
 
+/* Special styling for Members link */
+.nav-link[href="/members/"] {
+    background: linear-gradient(135deg, #4caf50, #81c784);
+    color: white !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+}
+
+.nav-link[href="/members/"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    color: white !important;
+}
+
+.nav-link[href="/members/"]::after {
+    display: none; /* Remove the underline effect for the Members button */
+}
+
 .nav-hamburger {
     display: none;
     flex-direction: column;
@@ -733,6 +753,14 @@ section {
 
     .nav-menu.active {
         left: 0;
+    }
+    
+    /* Mobile Members button styling */
+    .nav-link[href="/members/"] {
+        margin-left: 0;
+        margin-top: 1rem;
+        display: inline-block;
+        width: auto;
     }
 
     .nav-hamburger {

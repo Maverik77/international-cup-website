@@ -15,7 +15,7 @@
 }
 
 .modal-content {
-    background-color: var(--white);
+    background-color: #ffffff;
     margin: 5% auto;
     padding: 0;
     border: none;
@@ -24,6 +24,8 @@
     max-width: 440px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     animation: modalSlideIn 0.3s ease-out;
+    position: relative;
+    z-index: 1001;
 }
 
 @keyframes modalSlideIn {
@@ -87,10 +89,10 @@
     gap: 12px;
     width: 100%;
     padding: 14px 16px;
-    border: 2px solid var(--light-gray);
+    border: 2px solid #e0e0e0;
     border-radius: 8px;
-    background: var(--white);
-    color: var(--text-dark);
+    background: #ffffff;
+    color: #333333;
     font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
@@ -157,11 +159,11 @@
 
 .form-group input {
     padding: 14px 16px;
-    border: 2px solid var(--light-gray);
+    border: 2px solid #e0e0e0;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s ease;
-    background: var(--white);
+    background: #ffffff;
 }
 
 .form-group input:focus {
