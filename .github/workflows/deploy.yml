@@ -66,6 +66,16 @@ jobs:
           cp -r pics build/
         fi
         
+        # Copy members area if it exists
+        if [ -d members ]; then
+          cp -r members build/
+        fi
+        
+        # Copy auth folder if it exists
+        if [ -d auth ]; then
+          cp -r auth build/
+        fi
+        
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/

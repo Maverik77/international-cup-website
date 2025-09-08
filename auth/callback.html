@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - International Cup</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1563.0.min.js"></script>
+    <script src="https://unpkg.com/amazon-cognito-identity-js@6.3.12/dist/amazon-cognito-identity.min.js"></script>
+</head>
+<body>
+    <div class="auth-callback-container">
+        <div class="auth-callback-content">
+            <div class="spinner"></div>
+            <h2>Signing you in...</h2>
+            <p>Please wait while we complete your authentication.</p>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        // This page handles OAuth callbacks from social providers
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+            
+            if (error) {
+                document.querySelector('h2').textContent = 'Authentication Failed';
+                document.querySelector('p').textContent = 'There was an error signing you in. Please try again.';
+                document.querySelector('.spinner').style.display = 'none';
+                
+                setTimeout(() => {
+                    window.location.href = '/members/';
+                }, 3000);
+            } else if (code) {
+                // The auth.js script will handle the OAuth callback
+                // After successful authentication, redirect to members area
+                setTimeout(() => {
+                    const accessToken = localStorage.getItem('access_token');
+                    if (accessToken) {
+                        window.location.href = '/members/';
+                    } else {
+                        // If no token after 10 seconds, something went wrong
+                        document.querySelector('h2').textContent = 'Authentication Failed';
+                        document.querySelector('p').textContent = 'There was an error completing your sign in. Please try again.';
+                        document.querySelector('.spinner').style.display = 'none';
+                        
+                        setTimeout(() => {
+                            window.location.href = '/members/';
+                        }, 3000);
+                    }
+                }, 10000);
+            } else {
+                // No code parameter, redirect to members area
+                window.location.href = '/members/';
+            }
+        });
+    </script>
+
+    <style>
+        .auth-callback-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .auth-callback-content {
+            text-align: center;
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        
+        .auth-callback-content h2 {
+            margin: 24px 0 16px 0;
+            font-size: 1.5rem;
+        }
+        
+        .auth-callback-content p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+    </style>
+</body>
+</html>
