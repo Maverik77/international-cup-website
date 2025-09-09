@@ -283,6 +283,8 @@ function checkAuthState() {
     if (accessToken && idToken) {
         // User is authenticated via OAuth (Google, Facebook, Apple)
         console.log('Found OAuth tokens, user is authenticated');
+        console.log('Access token:', accessToken.substring(0, 20) + '...');
+        console.log('ID token:', idToken.substring(0, 20) + '...');
         updateAuthState(true);
         loadOAuthUserProfile(idToken);
         return;
@@ -413,16 +415,31 @@ function loadOAuthUserProfile(idToken) {
 }
 
 function updateAuthState(isAuthenticated) {
+    console.log('updateAuthState called with:', isAuthenticated);
     showLoading(false);
     
     if (isAuthenticated) {
+        console.log('Setting authenticated state - hiding logged out, showing logged in');
         if (authButton) authButton.textContent = 'Profile';
-        if (loggedOutState) loggedOutState.style.display = 'none';
-        if (loggedInState) loggedInState.style.display = 'block';
+        if (loggedOutState) {
+            loggedOutState.style.display = 'none';
+            console.log('Hidden logged-out state');
+        }
+        if (loggedInState) {
+            loggedInState.style.display = 'block';
+            console.log('Shown logged-in state');
+        }
     } else {
+        console.log('Setting unauthenticated state - showing logged out, hiding logged in');
         if (authButton) authButton.textContent = 'Sign In';
-        if (loggedOutState) loggedOutState.style.display = 'block';
-        if (loggedInState) loggedInState.style.display = 'none';
+        if (loggedOutState) {
+            loggedOutState.style.display = 'block';
+            console.log('Shown logged-out state');
+        }
+        if (loggedInState) {
+            loggedInState.style.display = 'none';
+            console.log('Hidden logged-in state');
+        }
     }
 }
 
