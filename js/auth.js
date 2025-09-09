@@ -276,6 +276,19 @@ function handleSocialLogin(provider) {
 function checkAuthState() {
     showLoading(true);
     
+    // First check for OAuth tokens in localStorage (from social login)
+    const accessToken = localStorage.getItem('access_token');
+    const idToken = localStorage.getItem('id_token');
+    
+    if (accessToken && idToken) {
+        // User is authenticated via OAuth (Google, Facebook, Apple)
+        console.log('Found OAuth tokens, user is authenticated');
+        updateAuthState(true);
+        loadOAuthUserProfile(idToken);
+        return;
+    }
+    
+    // Then check for Cognito User Pool session (email/password)
     currentUser = userPool.getCurrentUser();
     
     if (currentUser) {
@@ -366,6 +379,37 @@ function loadUserProfile() {
             authButton.textContent = userInfo.given_name || 'Profile';
         }
     });
+}
+
+function loadOAuthUserProfile(idToken) {
+    try {
+        // Decode JWT token to get user info
+        const base64Url = idToken.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        const userInfo = JSON.parse(jsonPayload);
+        console.log('OAuth user info:', userInfo);
+        
+        // Update UI with user info from OAuth token
+        if (memberName) {
+            const name = userInfo.given_name || userInfo.name || userInfo.email?.split('@')[0] || 'Member';
+            memberName.textContent = name;
+        }
+        
+        // Update auth button
+        if (authButton) {
+            const name = userInfo.given_name || userInfo.name || 'Profile';
+            authButton.textContent = name;
+        }
+    } catch (error) {
+        console.error('Error parsing OAuth token:', error);
+        // Fallback to generic display
+        if (memberName) memberName.textContent = 'Member';
+        if (authButton) authButton.textContent = 'Profile';
+    }
 }
 
 function updateAuthState(isAuthenticated) {
