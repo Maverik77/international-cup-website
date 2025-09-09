@@ -36,28 +36,60 @@
                     window.location.href = '/members/';
                 }, 3000);
             } else if (code) {
-                // The auth.js script will handle the OAuth callback
-                // After successful authentication, redirect to members area
-                setTimeout(() => {
-                    const accessToken = localStorage.getItem('access_token');
-                    if (accessToken) {
-                        window.location.href = '/members/';
-                    } else {
-                        // If no token after 10 seconds, something went wrong
-                        document.querySelector('h2').textContent = 'Authentication Failed';
-                        document.querySelector('p').textContent = 'There was an error completing your sign in. Please try again.';
-                        document.querySelector('.spinner').style.display = 'none';
-                        
-                        setTimeout(() => {
-                            window.location.href = '/members/';
-                        }, 3000);
-                    }
-                }, 10000);
+                // Exchange the authorization code for tokens
+                exchangeCodeForTokens(code);
             } else {
                 // No code parameter, redirect to members area
                 window.location.href = '/members/';
             }
         });
+        
+        function exchangeCodeForTokens(code) {
+            // Exchange code for tokens using Cognito token endpoint
+            fetch(`https://international-cup-auth.auth.us-east-1.amazoncognito.com/oauth2/token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    grant_type: 'authorization_code',
+                    client_id: 'q27ncptlccjrjkjrap017scp0',
+                    client_secret: '1cg3kjftid2ccr89asfjvrf2ojjljfiq1nojmbanu4utvr654hcg',
+                    code: code,
+                    redirect_uri: window.location.origin + '/auth/callback.html'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    // Store tokens and redirect to members area
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('id_token', data.id_token);
+                    if (data.refresh_token) {
+                        localStorage.setItem('refresh_token', data.refresh_token);
+                    }
+                    
+                    document.querySelector('h2').textContent = 'Success!';
+                    document.querySelector('p').textContent = 'Redirecting to your member dashboard...';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/members/';
+                    }, 1000);
+                } else {
+                    throw new Error('No access token received');
+                }
+            })
+            .catch(error => {
+                console.error('OAuth token exchange error:', error);
+                document.querySelector('h2').textContent = 'Authentication Failed';
+                document.querySelector('p').textContent = 'There was an error completing your sign in. Please try again.';
+                document.querySelector('.spinner').style.display = 'none';
+                
+                setTimeout(() => {
+                    window.location.href = '/members/';
+                }, 3000);
+            });
+        }
     </script>
 
     <style>

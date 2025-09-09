@@ -316,7 +316,7 @@ function handleOAuthCallback(code) {
             client_id: COGNITO_CONFIG.ClientId,
             client_secret: COGNITO_CONFIG.ClientSecret,
             code: code,
-            redirect_uri: window.location.origin + '/auth/callback'
+            redirect_uri: window.location.origin + '/auth/callback.html'
         })
     })
     .then(response => response.json())
