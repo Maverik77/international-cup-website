@@ -53,29 +53,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupEventListeners() {
-    // Modal controls
-    authButton.addEventListener('click', showAuthModal);
-    closeModal.addEventListener('click', hideAuthModal);
-    switchMode.addEventListener('click', toggleAuthMode);
+    // Modal controls (only if elements exist)
+    if (authButton) authButton.addEventListener('click', showAuthModal);
+    if (closeModal) closeModal.addEventListener('click', hideAuthModal);
+    if (switchMode) switchMode.addEventListener('click', toggleAuthMode);
     
-    // Form submission
-    authForm.addEventListener('submit', handleAuthSubmit);
+    // Form submission (only if form exists)
+    if (authForm) authForm.addEventListener('submit', handleAuthSubmit);
     
-    // Social login buttons
-    googleLogin.addEventListener('click', () => handleSocialLogin('Google'));
-    facebookLogin.addEventListener('click', () => handleSocialLogin('Facebook'));
-    appleLogin.addEventListener('click', () => handleSocialLogin('SignInWithApple'));
+    // Social login buttons (only if they exist)
+    if (googleLogin) googleLogin.addEventListener('click', () => handleSocialLogin('Google'));
+    if (facebookLogin) facebookLogin.addEventListener('click', () => handleSocialLogin('Facebook'));
+    if (appleLogin) appleLogin.addEventListener('click', () => handleSocialLogin('SignInWithApple'));
     
     // Member actions
     if (profileBtn) profileBtn.addEventListener('click', showProfile);
     if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
     
-    // Close modal on outside click
-    window.addEventListener('click', function(event) {
-        if (event.target === authModal) {
-            hideAuthModal();
-        }
-    });
+    // Close modal on outside click (only if modal exists)
+    if (authModal) {
+        window.addEventListener('click', function(event) {
+            if (event.target === authModal) {
+                hideAuthModal();
+            }
+        });
+    }
     
     // Forgot password
     const forgotPassword = document.getElementById('forgot-password');
