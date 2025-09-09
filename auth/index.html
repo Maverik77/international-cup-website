@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <script>
+        // Redirect to callback.html with all query parameters
+        const currentUrl = new URL(window.location.href);
+        const callbackUrl = new URL('./callback.html', currentUrl);
+        callbackUrl.search = currentUrl.search;
+        window.location.replace(callbackUrl.href);
+    </script>
+</body>
+</html>

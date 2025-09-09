@@ -265,7 +265,7 @@ function handleSocialLogin(provider) {
         `client_id=${COGNITO_CONFIG.ClientId}&` +
         `response_type=code&` +
         `scope=email+openid+profile&` +
-        `redirect_uri=${encodeURIComponent(window.location.origin + '/auth/callback')}&` +
+        `redirect_uri=${encodeURIComponent(window.location.origin + '/auth/callback.html')}&` +
         `identity_provider=${provider}`;
     
     window.location.href = loginUrl;
