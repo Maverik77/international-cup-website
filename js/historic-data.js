@@ -177,7 +177,14 @@ function setupHistoricDataHandlers() {
 async function loadHistoricData() {
     if (historicData) return historicData;
     
-    // Try multiple URLs to handle different deployment scenarios
+    // Use embedded data if available (for GitHub Pages compatibility)
+    if (typeof HISTORIC_DATA !== 'undefined') {
+        console.log('Using embedded historic data');
+        historicData = HISTORIC_DATA;
+        return historicData;
+    }
+    
+    // Fallback to fetch if embedded data is not available
     const possibleUrls = [
         './single_matches_perhole.json',
         '/international-cup-website/single_matches_perhole.json',
@@ -198,8 +205,8 @@ async function loadHistoricData() {
         }
     }
     
-    // If all URLs fail, show error
-    console.error('Failed to load historic data from all URLs');
+    // If all methods fail, show error
+    console.error('Failed to load historic data from all sources');
     showNotification('Failed to load historic tournament data. Please try refreshing the page.', 'error');
     return null;
 }
