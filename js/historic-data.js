@@ -178,7 +178,7 @@ async function loadHistoricData() {
     if (historicData) return historicData;
     
     try {
-        const response = await fetch('../single_matches_perhole.json');
+        const response = await fetch('./single_matches_perhole.json');
         if (!response.ok) {
             throw new Error('Failed to load historic data');
         }
