@@ -1,23 +1,11 @@
-// AWS Cognito Configuration
-const COGNITO_CONFIG = {
-    UserPoolId: 'us-east-1_T5zttESw4',
-    ClientId: 'q27ncptlccjrjkjrap017scp0',
-    ClientSecret: '1cg3kjftid2ccr89asfjvrf2ojjljfiq1nojmbanu4utvr654hcg',
-    Domain: 'international-cup-auth.auth.us-east-1.amazoncognito.com',
-    Region: 'us-east-1'
+// Simple Authentication Configuration
+const SIMPLE_AUTH_CONFIG = {
+    password: 'cup',
+    sessionKey: 'intcup_authenticated'
 };
-
-// Initialize Cognito
-const poolData = {
-    UserPoolId: COGNITO_CONFIG.UserPoolId,
-    ClientId: COGNITO_CONFIG.ClientId
-};
-
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
 // Authentication State
-let currentUser = null;
-let isSignUpMode = false;
+let isAuthenticated = false;
 
 // DOM Elements
 const authModal = document.getElementById('auth-modal');
@@ -26,15 +14,6 @@ const closeModal = document.getElementById('close-modal');
 const authForm = document.getElementById('auth-form');
 const modalTitle = document.getElementById('modal-title');
 const authSubmit = document.getElementById('auth-submit');
-const switchMode = document.getElementById('switch-mode');
-const authSwitchText = document.getElementById('auth-switch-text');
-const nameFields = document.getElementById('name-fields');
-const passwordRequirements = document.getElementById('password-requirements');
-
-// Social login buttons
-const googleLogin = document.getElementById('google-login');
-const facebookLogin = document.getElementById('facebook-login');
-const appleLogin = document.getElementById('apple-login');
 
 // Page states
 const loadingState = document.getElementById('loading-state');
@@ -56,15 +35,9 @@ function setupEventListeners() {
     // Modal controls (only if elements exist)
     if (authButton) authButton.addEventListener('click', showAuthModal);
     if (closeModal) closeModal.addEventListener('click', hideAuthModal);
-    if (switchMode) switchMode.addEventListener('click', toggleAuthMode);
     
     // Form submission (only if form exists)
-    if (authForm) authForm.addEventListener('submit', handleAuthSubmit);
-    
-    // Social login buttons (only if they exist)
-    if (googleLogin) googleLogin.addEventListener('click', () => handleSocialLogin('Google'));
-    if (facebookLogin) facebookLogin.addEventListener('click', () => handleSocialLogin('Facebook'));
-    if (appleLogin) appleLogin.addEventListener('click', () => handleSocialLogin('SignInWithApple'));
+    if (authForm) authForm.addEventListener('submit', handlePasswordSubmit);
     
     // Member actions
     if (profileBtn) profileBtn.addEventListener('click', showProfile);
@@ -77,12 +50,6 @@ function setupEventListeners() {
                 hideAuthModal();
             }
         });
-    }
-    
-    // Forgot password
-    const forgotPassword = document.getElementById('forgot-password');
-    if (forgotPassword) {
-        forgotPassword.addEventListener('click', handleForgotPassword);
     }
 }
 
@@ -97,316 +64,83 @@ function hideAuthModal() {
     resetForm();
 }
 
-function toggleAuthMode(e) {
-    e.preventDefault();
-    isSignUpMode = !isSignUpMode;
-    
-    if (isSignUpMode) {
-        modalTitle.textContent = 'Create Account';
-        authSubmit.textContent = 'Sign Up';
-        authSwitchText.innerHTML = 'Already have an account? <a href="#" id="switch-mode">Sign In</a>';
-        nameFields.style.display = 'block';
-        passwordRequirements.style.display = 'block';
-        document.getElementById('firstName').required = true;
-        document.getElementById('lastName').required = true;
-    } else {
-        modalTitle.textContent = 'Welcome Back!';
-        authSubmit.textContent = 'Sign In';
-        authSwitchText.innerHTML = 'Don\'t have an account? <a href="#" id="switch-mode">Sign Up</a>';
-        nameFields.style.display = 'none';
-        passwordRequirements.style.display = 'none';
-        document.getElementById('firstName').required = false;
-        document.getElementById('lastName').required = false;
-    }
-    
-    // Re-attach event listener to new switch mode button
-    document.getElementById('switch-mode').addEventListener('click', toggleAuthMode);
-}
-
 function resetForm() {
-    authForm.reset();
-    isSignUpMode = false;
-    modalTitle.textContent = 'Welcome Back!';
-    authSubmit.textContent = 'Sign In';
-    authSwitchText.innerHTML = 'Don\'t have an account? <a href="#" id="switch-mode">Sign Up</a>';
-    nameFields.style.display = 'none';
-    passwordRequirements.style.display = 'none';
-    document.getElementById('firstName').required = false;
-    document.getElementById('lastName').required = false;
-    
-    // Re-attach event listener
-    document.getElementById('switch-mode').addEventListener('click', toggleAuthMode);
+    if (authForm) authForm.reset();
 }
 
-async function handleAuthSubmit(e) {
+function handlePasswordSubmit(e) {
     e.preventDefault();
     
-    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
     
     authSubmit.disabled = true;
-    authSubmit.textContent = isSignUpMode ? 'Creating Account...' : 'Signing In...';
+    authSubmit.textContent = 'Checking...';
     
-    try {
-        if (isSignUpMode) {
-            await signUp(email, password, firstName, lastName);
-        } else {
-            await signIn(email, password);
-        }
-    } catch (error) {
-        console.error('Authentication error:', error);
-        showNotification(error.message || 'Authentication failed', 'error');
-    } finally {
-        authSubmit.disabled = false;
-        authSubmit.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
+    // Simple password check
+    if (password === SIMPLE_AUTH_CONFIG.password) {
+        // Store authentication in sessionStorage
+        sessionStorage.setItem(SIMPLE_AUTH_CONFIG.sessionKey, 'true');
+        isAuthenticated = true;
+        
+        showNotification('Welcome to the International Cup Members Area!', 'success');
+        hideAuthModal();
+        updateAuthState(true);
+    } else {
+        showNotification('Incorrect password. Please try again.', 'error');
     }
-}
-
-function signUp(email, password, firstName, lastName) {
-    return new Promise((resolve, reject) => {
-        const attributeList = [];
-        
-        attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({
-            Name: 'email',
-            Value: email
-        }));
-        
-        attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({
-            Name: 'given_name',
-            Value: firstName
-        }));
-        
-        attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({
-            Name: 'family_name',
-            Value: lastName
-        }));
-        
-        userPool.signUp(email, password, attributeList, null, function(err, result) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            
-            showNotification('Account created! Please check your email for verification code.', 'success');
-            
-            // Show verification prompt
-            const verificationCode = prompt('Please enter the verification code sent to your email:');
-            if (verificationCode) {
-                confirmSignUp(email, verificationCode).then(resolve).catch(reject);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-}
-
-function confirmSignUp(email, verificationCode) {
-    return new Promise((resolve, reject) => {
-        const userData = {
-            Username: email,
-            Pool: userPool
-        };
-        
-        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-        
-        cognitoUser.confirmRegistration(verificationCode, true, function(err, result) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            
-            showNotification('Email verified successfully! You can now sign in.', 'success');
-            hideAuthModal();
-            resolve(result);
-        });
-    });
-}
-
-function signIn(email, password) {
-    return new Promise((resolve, reject) => {
-        const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-            Username: email,
-            Password: password
-        });
-        
-        const userData = {
-            Username: email,
-            Pool: userPool
-        };
-        
-        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-        
-        cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess: function(result) {
-                currentUser = cognitoUser;
-                showNotification('Welcome back!', 'success');
-                hideAuthModal();
-                updateAuthState(true);
-                resolve(result);
-            },
-            onFailure: function(err) {
-                reject(err);
-            },
-            newPasswordRequired: function(userAttributes, requiredAttributes) {
-                // Handle new password requirement
-                const newPassword = prompt('Please set a new password:');
-                if (newPassword) {
-                    cognitoUser.completeNewPasswordChallenge(newPassword, {}, this);
-                } else {
-                    reject(new Error('New password required'));
-                }
-            }
-        });
-    });
-}
-
-function handleSocialLogin(provider) {
-    const loginUrl = `https://${COGNITO_CONFIG.Domain}/oauth2/authorize?` +
-        `client_id=${COGNITO_CONFIG.ClientId}&` +
-        `response_type=code&` +
-        `scope=email+openid+profile&` +
-        `redirect_uri=${encodeURIComponent(window.location.origin + '/auth/callback.html')}&` +
-        `identity_provider=${provider}`;
     
-    window.location.href = loginUrl;
+    authSubmit.disabled = false;
+    authSubmit.textContent = 'Sign In';
 }
 
 function checkAuthState() {
     showLoading(true);
     
-    // First check for OAuth tokens in localStorage (from social login)
-    const accessToken = localStorage.getItem('access_token');
-    const idToken = localStorage.getItem('id_token');
-    
-    if (accessToken && idToken) {
-        // User is authenticated via OAuth (Google, Facebook, Apple)
+    // Auto-signin for localhost development
+    if (isLocalhost()) {
+        console.log('🔧 Development mode: Auto-signing in for localhost');
+        sessionStorage.setItem(SIMPLE_AUTH_CONFIG.sessionKey, 'true');
+        isAuthenticated = true;
         updateAuthState(true);
-        loadOAuthUserProfile(idToken);
+        loadMockUserProfile();
+        showNotification('🔧 Auto-signed in for localhost development', 'info');
         return;
     }
     
-    // Then check for Cognito User Pool session (email/password)
-    currentUser = userPool.getCurrentUser();
-    
-    if (currentUser) {
-        currentUser.getSession(function(err, session) {
-            if (err) {
-                console.error('Session error:', err);
-                updateAuthState(false);
-                return;
-            }
-            
-            if (session.isValid()) {
-                updateAuthState(true);
-                loadUserProfile();
-            } else {
-                updateAuthState(false);
-            }
-        });
+    // Check if user is authenticated
+    const authStatus = sessionStorage.getItem(SIMPLE_AUTH_CONFIG.sessionKey);
+    if (authStatus === 'true') {
+        isAuthenticated = true;
+        updateAuthState(true);
+        loadUserProfile();
     } else {
-        // Check for OAuth callback
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        
-        if (code && window.location.pathname.includes('/auth/callback')) {
-            handleOAuthCallback(code);
-        } else {
-            updateAuthState(false);
-        }
+        isAuthenticated = false;
+        updateAuthState(false);
     }
 }
 
-function handleOAuthCallback(code) {
-    // Exchange code for tokens
-    fetch(`https://${COGNITO_CONFIG.Domain}/oauth2/token`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            grant_type: 'authorization_code',
-            client_id: COGNITO_CONFIG.ClientId,
-            client_secret: COGNITO_CONFIG.ClientSecret,
-            code: code,
-            redirect_uri: window.location.origin + '/auth/callback.html'
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.access_token) {
-            // Store tokens and redirect to members area
-            localStorage.setItem('access_token', data.access_token);
-            localStorage.setItem('id_token', data.id_token);
-            localStorage.setItem('refresh_token', data.refresh_token);
-            
-            showNotification('Successfully signed in!', 'success');
-            window.location.href = '/members/';
-        } else {
-            throw new Error('Failed to get access token');
-        }
-    })
-    .catch(error => {
-        console.error('OAuth callback error:', error);
-        showNotification('Sign in failed. Please try again.', 'error');
-        updateAuthState(false);
-    });
-}
 
 function loadUserProfile() {
-    if (!currentUser) return;
+    // Update UI with simple user info
+    if (memberName) {
+        memberName.textContent = 'Member';
+    }
     
-    currentUser.getUserAttributes(function(err, attributes) {
-        if (err) {
-            console.error('Error getting user attributes:', err);
-            return;
-        }
-        
-        const userInfo = {};
-        attributes.forEach(attribute => {
-            userInfo[attribute.getName()] = attribute.getValue();
-        });
-        
-        // Update UI with user info
-        if (memberName && (userInfo.given_name || userInfo.name)) {
-            memberName.textContent = userInfo.given_name || userInfo.name || 'Member';
-        }
-        
-        // Update auth button
-        if (authButton) {
-            authButton.textContent = userInfo.given_name || 'Profile';
-        }
-    });
+    // Update auth button
+    if (authButton) {
+        authButton.textContent = 'Profile';
+    }
 }
 
-function loadOAuthUserProfile(idToken) {
-    try {
-        // Decode JWT token to get user info
-        const base64Url = idToken.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        
-        const userInfo = JSON.parse(jsonPayload);
-        
-        // Update UI with user info from OAuth token
-        if (memberName) {
-            const name = userInfo.given_name || userInfo.name || userInfo.email?.split('@')[0] || 'Member';
-            memberName.textContent = name;
-        }
-        
-        // Update auth button
-        if (authButton) {
-            const name = userInfo.given_name || userInfo.name || 'Profile';
-            authButton.textContent = name;
-        }
-    } catch (error) {
-        console.error('Error parsing OAuth token:', error);
-        // Fallback to generic display
-        if (memberName) memberName.textContent = 'Member';
-        if (authButton) authButton.textContent = 'Profile';
+function loadMockUserProfile() {
+    // Update UI with mock user info for localhost
+    if (memberName) {
+        memberName.textContent = 'Dev User';
+    }
+    
+    // Update auth button
+    if (authButton) {
+        authButton.textContent = 'Dev User';
     }
 }
 
@@ -431,54 +165,25 @@ function showLoading(show) {
 }
 
 function handleLogout() {
-    if (currentUser) {
-        currentUser.signOut();
-        currentUser = null;
-    }
-    
-    // Clear stored tokens
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('refresh_token');
+    // Clear authentication
+    sessionStorage.removeItem(SIMPLE_AUTH_CONFIG.sessionKey);
+    isAuthenticated = false;
     
     showNotification('You have been signed out.', 'info');
     updateAuthState(false);
+    
+    // Auto-signin again if on localhost
+    if (isLocalhost()) {
+        setTimeout(() => {
+            sessionStorage.setItem(SIMPLE_AUTH_CONFIG.sessionKey, 'true');
+            isAuthenticated = true;
+            updateAuthState(true);
+            loadMockUserProfile();
+            showNotification('🔧 Auto-signed in for localhost development', 'info');
+        }, 1000);
+    }
 }
 
-function handleForgotPassword(e) {
-    e.preventDefault();
-    
-    const email = prompt('Please enter your email address:');
-    if (!email) return;
-    
-    const userData = {
-        Username: email,
-        Pool: userPool
-    };
-    
-    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-    
-    cognitoUser.forgotPassword({
-        onSuccess: function() {
-            const verificationCode = prompt('Please enter the verification code sent to your email:');
-            const newPassword = prompt('Please enter your new password:');
-            
-            if (verificationCode && newPassword) {
-                cognitoUser.confirmPassword(verificationCode, newPassword, {
-                    onSuccess: function() {
-                        showNotification('Password reset successfully!', 'success');
-                    },
-                    onFailure: function(err) {
-                        showNotification(err.message || 'Password reset failed', 'error');
-                    }
-                });
-            }
-        },
-        onFailure: function(err) {
-            showNotification(err.message || 'Password reset failed', 'error');
-        }
-    });
-}
 
 function showProfile() {
     // TODO: Implement profile editing
@@ -538,6 +243,13 @@ function showNotification(message, type = 'info') {
             }
         }, 300);
     }, 5000);
+}
+
+// Utility function to check if running on localhost
+function isLocalhost() {
+    return window.location.hostname === 'localhost' || 
+           window.location.hostname === '127.0.0.1' || 
+           window.location.hostname === '0.0.0.0';
 }
 
 // Global function for showing auth modal (called from HTML)

@@ -1,0 +1,6988 @@
+{
+  "matches": [
+    {
+      "match_no": 1,
+      "usa_player": {
+        "name": "Crouse, Christopher",
+        "handicap": 0,
+        "gross_out": 41,
+        "gross_in": 38,
+        "gross_total": 79,
+        "net_total": 79
+      },
+      "international_player": {
+        "name": "Davuluri, Vijay",
+        "handicap": 11,
+        "gross_out": 49,
+        "gross_in": 41,
+        "gross_total": 90,
+        "net_total": 79
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 38,
+            "stroke_received": false,
+            "net": 38,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 2,
+      "usa_player": {
+        "name": "Walsh, Thomas",
+        "handicap": 0,
+        "gross_out": 30,
+        "gross_in": 39,
+        "gross_total": 69,
+        "net_total": 69
+      },
+      "international_player": {
+        "name": "Pearce, Tim",
+        "handicap": 1,
+        "gross_out": 33,
+        "gross_in": 43,
+        "gross_total": 76,
+        "net_total": 75
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 39,
+            "stroke_received": false,
+            "net": 39,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 43,
+            "stroke_received": false,
+            "net": 43,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": null,
+            "stroke_received": false,
+            "net": null,
+            "result": "unknown"
+          },
+          "international": {
+            "strokes": null,
+            "stroke_received": false,
+            "net": null,
+            "result": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 3,
+      "usa_player": {
+        "name": "Taliaferro, Will",
+        "handicap": 12,
+        "gross_out": 46,
+        "gross_in": 46,
+        "gross_total": 92,
+        "net_total": 80
+      },
+      "international_player": {
+        "name": "Jewell, Phillip",
+        "handicap": 0,
+        "gross_out": 35,
+        "gross_in": 38,
+        "gross_total": 73,
+        "net_total": 73
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 46,
+            "stroke_received": false,
+            "net": 46,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 38,
+            "stroke_received": false,
+            "net": 38,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 4,
+      "usa_player": {
+        "name": "Rizzo, Anthony",
+        "handicap": 1,
+        "gross_out": 42,
+        "gross_in": 44,
+        "gross_total": 86,
+        "net_total": 85
+      },
+      "international_player": {
+        "name": "Kumar, Anuj",
+        "handicap": 0,
+        "gross_out": 39,
+        "gross_in": 42,
+        "gross_total": 81,
+        "net_total": 81
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 44,
+            "stroke_received": false,
+            "net": 44,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 42,
+            "stroke_received": false,
+            "net": 42,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 5,
+      "usa_player": {
+        "name": "Galkin, Jeff",
+        "handicap": 0,
+        "gross_out": 44,
+        "gross_in": 40,
+        "gross_total": 84,
+        "net_total": 84
+      },
+      "international_player": {
+        "name": "Perumbala, Bala",
+        "handicap": 1,
+        "gross_out": 45,
+        "gross_in": 39,
+        "gross_total": 84,
+        "net_total": 83
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 40,
+            "stroke_received": false,
+            "net": 40,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 39,
+            "stroke_received": false,
+            "net": 39,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 6,
+      "usa_player": {
+        "name": "Altman, John",
+        "handicap": 0,
+        "gross_out": 44,
+        "gross_in": 40,
+        "gross_total": 84,
+        "net_total": 84
+      },
+      "international_player": {
+        "name": "Woodisse, Philip",
+        "handicap": 2,
+        "gross_out": 38,
+        "gross_in": 40,
+        "gross_total": 78,
+        "net_total": 76
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 40,
+            "stroke_received": false,
+            "net": 40,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 40,
+            "stroke_received": false,
+            "net": 40,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 7,
+      "usa_player": {
+        "name": "Covino, Scott",
+        "handicap": 0,
+        "gross_out": 40,
+        "gross_in": 41,
+        "gross_total": 81,
+        "net_total": 81
+      },
+      "international_player": {
+        "name": "Wagner, Erik",
+        "handicap": 6,
+        "gross_out": 44,
+        "gross_in": 43,
+        "gross_total": 87,
+        "net_total": 81
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 43,
+            "stroke_received": false,
+            "net": 43,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 8,
+      "usa_player": {
+        "name": "O'Braitis, Robert",
+        "handicap": 0,
+        "gross_out": 43,
+        "gross_in": 45,
+        "gross_total": 88,
+        "net_total": 88
+      },
+      "international_player": {
+        "name": "Lambert, Stefan",
+        "handicap": 2,
+        "gross_out": 41,
+        "gross_in": 41,
+        "gross_total": 82,
+        "net_total": 80
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 45,
+            "stroke_received": false,
+            "net": 45,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 9,
+      "usa_player": {
+        "name": "Murphy, Thomas",
+        "handicap": 3,
+        "gross_out": 44,
+        "gross_in": 48,
+        "gross_total": 92,
+        "net_total": 89
+      },
+      "international_player": {
+        "name": "Bae, Jun",
+        "handicap": 0,
+        "gross_out": 37,
+        "gross_in": 43,
+        "gross_total": 80,
+        "net_total": 80
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 48,
+            "stroke_received": false,
+            "net": 48,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 43,
+            "stroke_received": false,
+            "net": 43,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 10,
+      "usa_player": {
+        "name": "Chiari, Derek",
+        "handicap": 5,
+        "gross_out": 38,
+        "gross_in": 43,
+        "gross_total": 81,
+        "net_total": 77
+      },
+      "international_player": {
+        "name": "Venkataramani, Sundu",
+        "handicap": 0,
+        "gross_out": 30,
+        "gross_in": 38,
+        "gross_total": 68,
+        "net_total": 68
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 43,
+            "stroke_received": false,
+            "net": 43,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 38,
+            "stroke_received": false,
+            "net": 38,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": null,
+            "stroke_received": false,
+            "net": null,
+            "result": "unknown"
+          },
+          "international": {
+            "strokes": null,
+            "stroke_received": false,
+            "net": null,
+            "result": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 11,
+      "usa_player": {
+        "name": "McNamee, Michael",
+        "handicap": 0,
+        "gross_out": 40,
+        "gross_in": 36,
+        "gross_total": 76,
+        "net_total": 76
+      },
+      "international_player": {
+        "name": "Yedulla, Surender",
+        "handicap": 12,
+        "gross_out": 44,
+        "gross_in": 42,
+        "gross_total": 86,
+        "net_total": 74
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 36,
+            "stroke_received": false,
+            "net": 36,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 42,
+            "stroke_received": false,
+            "net": 42,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 12,
+      "usa_player": {
+        "name": "Hoff, Philip",
+        "handicap": 0,
+        "gross_out": 44,
+        "gross_in": 47,
+        "gross_total": 91,
+        "net_total": 91
+      },
+      "international_player": {
+        "name": "Muthusamy, Sridhar",
+        "handicap": 7,
+        "gross_out": 40,
+        "gross_in": 45,
+        "gross_total": 85,
+        "net_total": 78
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 47,
+            "stroke_received": false,
+            "net": 47,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 45,
+            "stroke_received": false,
+            "net": 45,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 13,
+      "usa_player": {
+        "name": "Dunn, Tom",
+        "handicap": 2,
+        "gross_out": 52,
+        "gross_in": 46,
+        "gross_total": 98,
+        "net_total": 96
+      },
+      "international_player": {
+        "name": "Kim, Michael",
+        "handicap": 0,
+        "gross_out": 44,
+        "gross_in": 44,
+        "gross_total": 88,
+        "net_total": 88
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 46,
+            "stroke_received": false,
+            "net": 46,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 44,
+            "stroke_received": false,
+            "net": 44,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 14,
+      "usa_player": {
+        "name": "Sutch, Brett",
+        "handicap": 11,
+        "gross_out": 45,
+        "gross_in": 43,
+        "gross_total": 88,
+        "net_total": 77
+      },
+      "international_player": {
+        "name": "Neilson, Robert",
+        "handicap": 0,
+        "gross_out": 44,
+        "gross_in": 41,
+        "gross_total": 85,
+        "net_total": 85
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 43,
+            "stroke_received": false,
+            "net": 43,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": false,
+            "net": 8,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 15,
+      "usa_player": {
+        "name": "Kozlowski, Kevin",
+        "handicap": 3,
+        "gross_out": 52,
+        "gross_in": 46,
+        "gross_total": 98,
+        "net_total": 95
+      },
+      "international_player": {
+        "name": "Lin, Terry",
+        "handicap": 0,
+        "gross_out": 48,
+        "gross_in": 46,
+        "gross_total": 94,
+        "net_total": 94
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": false,
+            "net": 8,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 46,
+            "stroke_received": false,
+            "net": 46,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 46,
+            "stroke_received": false,
+            "net": 46,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": false,
+            "net": 8,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 16,
+      "usa_player": {
+        "name": "Gillie, Jim",
+        "handicap": 0,
+        "gross_out": 39,
+        "gross_in": 40,
+        "gross_total": 79,
+        "net_total": 79
+      },
+      "international_player": {
+        "name": "Wickham, Daren",
+        "handicap": 13,
+        "gross_out": 48,
+        "gross_in": 47,
+        "gross_total": 95,
+        "net_total": 82
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": true,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 40,
+            "stroke_received": false,
+            "net": 40,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 47,
+            "stroke_received": false,
+            "net": 47,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 2,
+            "stroke_received": false,
+            "net": 2,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "loss"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 17,
+      "usa_player": {
+        "name": "Haufler, Kurt",
+        "handicap": 0,
+        "gross_out": 46,
+        "gross_in": 45,
+        "gross_total": 91,
+        "net_total": 91
+      },
+      "international_player": {
+        "name": "Hedges, Ben",
+        "handicap": 9,
+        "gross_out": 51,
+        "gross_in": 49,
+        "gross_total": 100,
+        "net_total": 91
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 45,
+            "stroke_received": false,
+            "net": 45,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 49,
+            "stroke_received": false,
+            "net": 49,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "tie"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 18,
+      "usa_player": {
+        "name": "Gallo, Bob",
+        "handicap": 0,
+        "gross_out": 43,
+        "gross_in": 41,
+        "gross_total": 84,
+        "net_total": 84
+      },
+      "international_player": {
+        "name": "Silpacharn, Jack",
+        "handicap": 2,
+        "gross_out": 42,
+        "gross_in": 39,
+        "gross_total": 81,
+        "net_total": 79
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 39,
+            "stroke_received": false,
+            "net": 39,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 19,
+      "usa_player": {
+        "name": "Purpura, Scott",
+        "handicap": 0,
+        "gross_out": 39,
+        "gross_in": 38,
+        "gross_total": 77,
+        "net_total": 77
+      },
+      "international_player": {
+        "name": "Ansari, Soban",
+        "handicap": 9,
+        "gross_out": 43,
+        "gross_in": 45,
+        "gross_total": 88,
+        "net_total": 79
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": true,
+            "net": 2,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 38,
+            "stroke_received": false,
+            "net": 38,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 45,
+            "stroke_received": false,
+            "net": 45,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": true,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 2,
+            "stroke_received": true,
+            "net": 1,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 20,
+      "usa_player": {
+        "name": "Kritsberg, Jeff",
+        "handicap": 1,
+        "gross_out": 36,
+        "gross_in": 41,
+        "gross_total": 77,
+        "net_total": 76
+      },
+      "international_player": {
+        "name": "Hazzard, Troy",
+        "handicap": 0,
+        "gross_out": 38,
+        "gross_in": 41,
+        "gross_total": 79,
+        "net_total": 79
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 41,
+            "stroke_received": false,
+            "net": 41,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 21,
+      "usa_player": {
+        "name": "Freedman, Mitch",
+        "handicap": 0,
+        "gross_out": 38,
+        "gross_in": 39,
+        "gross_total": 77,
+        "net_total": 77
+      },
+      "international_player": {
+        "name": "Siu, James",
+        "handicap": 4,
+        "gross_out": 45,
+        "gross_in": 44,
+        "gross_total": 89,
+        "net_total": 85
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": false,
+            "net": 8,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 39,
+            "stroke_received": false,
+            "net": 39,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 44,
+            "stroke_received": false,
+            "net": 44,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": false,
+            "net": 8,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": true,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "tie"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 22,
+      "usa_player": {
+        "name": "Barnes, Keith",
+        "handicap": 0,
+        "gross_out": 44,
+        "gross_in": 38,
+        "gross_total": 82,
+        "net_total": 82
+      },
+      "international_player": {
+        "name": "Bae, Jaejin",
+        "handicap": 1,
+        "gross_out": 44,
+        "gross_in": 45,
+        "gross_total": 89,
+        "net_total": 88
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 38,
+            "stroke_received": false,
+            "net": 38,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 45,
+            "stroke_received": false,
+            "net": 45,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": true,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 23,
+      "usa_player": {
+        "name": "Esposito, Victor",
+        "handicap": 0,
+        "gross_out": 41,
+        "gross_in": 44,
+        "gross_total": 85,
+        "net_total": 85
+      },
+      "international_player": {
+        "name": "Olivero, Philip",
+        "handicap": 3,
+        "gross_out": 45,
+        "gross_in": 44,
+        "gross_total": 89,
+        "net_total": 86
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 44,
+            "stroke_received": false,
+            "net": 44,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 44,
+            "stroke_received": false,
+            "net": 44,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        }
+      ]
+    },
+    {
+      "match_no": 24,
+      "usa_player": {
+        "name": "Herman, Victor",
+        "handicap": 1,
+        "gross_out": 41,
+        "gross_in": 43,
+        "gross_total": 84,
+        "net_total": 83
+      },
+      "international_player": {
+        "name": "Bharwani, Uttam",
+        "handicap": 0,
+        "gross_out": 42,
+        "gross_in": 47,
+        "gross_total": 89,
+        "net_total": 89
+      },
+      "holes": [
+        {
+          "hole": 1,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 2,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 3,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 4,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 5,
+          "usa": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 8,
+            "stroke_received": false,
+            "net": 8,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 6,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 7,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 8,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 9,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 10,
+          "usa": {
+            "strokes": 43,
+            "stroke_received": false,
+            "net": 43,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 47,
+            "stroke_received": false,
+            "net": 47,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 11,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 12,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 13,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 14,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "loss"
+          },
+          "international": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          }
+        },
+        {
+          "hole": 15,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": true,
+            "net": 4,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 7,
+            "stroke_received": false,
+            "net": 7,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 16,
+          "usa": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "tie"
+          }
+        },
+        {
+          "hole": 17,
+          "usa": {
+            "strokes": 5,
+            "stroke_received": false,
+            "net": 5,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 6,
+            "stroke_received": false,
+            "net": 6,
+            "result": "loss"
+          }
+        },
+        {
+          "hole": 18,
+          "usa": {
+            "strokes": 3,
+            "stroke_received": false,
+            "net": 3,
+            "result": "win"
+          },
+          "international": {
+            "strokes": 4,
+            "stroke_received": false,
+            "net": 4,
+            "result": "loss"
+          }
+        }
+      ]
+    }
+  ]
+}

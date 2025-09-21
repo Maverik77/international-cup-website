@@ -251,6 +251,9 @@ function handleMemberAction(action) {
         case 'View Registration':
             showRegistrationDetails();
             break;
+        case 'View 2024 Results':
+            // Handled by historic-data.js
+            break;
         default:
             showNotification('This feature is coming soon!', 'info');
     }

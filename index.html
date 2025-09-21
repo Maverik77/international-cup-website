@@ -16,6 +16,7 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/auth.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -33,7 +34,7 @@
                 <a href="#format" class="nav-link">Format</a>
                 <a href="#teams" class="nav-link">Teams</a>
                 <a href="#schedule" class="nav-link">Schedule</a>
-                <a href="/members/" class="nav-link">Members</a>
+                <a href="#history" class="nav-link">History</a>
             </div>
             <div class="nav-hamburger" id="nav-hamburger">
                 <span class="bar"></span>
@@ -237,7 +238,120 @@
         </div>
     </section>
 
+    <!-- Latest News Section -->
+    <section id="news" class="news">
+        <div class="container">
+            <div class="section-header">
+                <h2>Latest News</h2>
+                <p>Stay updated with the latest International Cup announcements and updates</p>
+            </div>
+            <div class="news-grid">
+                <article class="news-card">
+                    <div class="news-date">December 15, 2024</div>
+                    <h3>Registration Now Open for International Cup 2025</h3>
+                    <p>We're excited to announce that registration is officially open for the 2025 International Cup! This year promises to be our biggest and best tournament yet, with golfers from around the world ready to compete at Lansdowne Resort.</p>
+                    <a href="#" class="news-link">Read More →</a>
+                </article>
+                
+                <article class="news-card">
+                    <div class="news-date">December 10, 2024</div>
+                    <h3>Tournament Format Finalized</h3>
+                    <p>The tournament committee has finalized the format for the 2025 International Cup. Day 1 will feature team matches in Best Ball, Alternate Shot, and Shamble formats, while Day 2 will showcase individual matchplay battles.</p>
+                    <a href="#" class="news-link">Read More →</a>
+                </article>
+                
+                <article class="news-card">
+                    <div class="news-date">December 5, 2024</div>
+                    <h3>Save the Dates: October 16-18, 2025</h3>
+                    <p>Mark your calendars! The 2025 International Cup will take place October 16-18 at Lansdowne Resort. Three days of world-class golf, competition, and celebration await.</p>
+                    <a href="#" class="news-link">Read More →</a>
+                </article>
+                
+                <article class="news-card">
+                    <div class="news-date">November 28, 2024</div>
+                    <h3>Team International Wins 2024 Championship</h3>
+                    <p>In a thrilling finish at Lansdowne Resort, Team International captured the 2024 International Cup with a decisive 72-24 victory over Team USA. The tournament featured incredible golf and unforgettable moments.</p>
+                    <a href="#" class="news-link">Read More →</a>
+                </article>
+            </div>
+        </div>
+    </section>
 
+    <!-- History Section -->
+    <section id="history" class="history">
+        <div class="container">
+            <div class="section-header">
+                <h2>Tournament History</h2>
+                <p>Relive the memorable moments from past International Cup tournaments</p>
+            </div>
+            <div class="history-content">
+                <div class="history-intro">
+                    <p>Since its inception in 2021, the International Cup has delivered thrilling competition and unforgettable memories. Explore the complete results and highlights from each year of this prestigious tournament.</p>
+                </div>
+                
+                <div class="history-tournaments">
+                    <div class="tournament-card" onclick="show2024Results()">
+                        <div class="tournament-year">2024</div>
+                        <div class="tournament-info">
+                            <h3>International Cup 2024</h3>
+                            <div class="tournament-result">
+                                <span class="winner">Team International Wins</span>
+                                <span class="score">72-24</span>
+                            </div>
+                            <div class="tournament-details">
+                                <span class="venue">Lansdowne Resort</span>
+                                <span class="date">October 17-19, 2024</span>
+                            </div>
+                        </div>
+                        <div class="view-results-btn">View Results →</div>
+                    </div>
+                    
+                    <div class="tournament-card completed">
+                        <div class="tournament-year">2023</div>
+                        <div class="tournament-info">
+                            <h3>International Cup 2023</h3>
+                            <div class="tournament-result">
+                                <span class="winner usa-winner">Team USA Wins</span>
+                            </div>
+                            <div class="tournament-details">
+                                <span class="venue">Lansdowne Resort</span>
+                                <span class="date">October 2023</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tournament-card completed">
+                        <div class="tournament-year">2022</div>
+                        <div class="tournament-info">
+                            <h3>International Cup 2022</h3>
+                            <div class="tournament-result">
+                                <span class="winner">Team International Wins</span>
+                            </div>
+                            <div class="tournament-details">
+                                <span class="venue">Lansdowne Resort</span>
+                                <span class="date">October 2022</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tournament-card completed">
+                        <div class="tournament-year">2021</div>
+                        <div class="tournament-info">
+                            <h3>International Cup 2021</h3>
+                            <div class="tournament-result">
+                                <span class="winner">Team International Wins</span>
+                                <span class="inaugural-note">Inaugural Tournament</span>
+                            </div>
+                            <div class="tournament-details">
+                                <span class="venue">Lansdowne Resort</span>
+                                <span class="date">October 2021</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -271,5 +385,6 @@
 
     <!-- JavaScript -->
     <script src="js/main.js"></script>
+    <script src="js/historic-data.js"></script>
 </body>
 </html> 
