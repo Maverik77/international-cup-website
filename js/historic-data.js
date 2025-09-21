@@ -177,18 +177,31 @@ function setupHistoricDataHandlers() {
 async function loadHistoricData() {
     if (historicData) return historicData;
     
-    try {
-        const response = await fetch('./single_matches_perhole.json');
-        if (!response.ok) {
-            throw new Error('Failed to load historic data');
+    // Try multiple URLs to handle different deployment scenarios
+    const possibleUrls = [
+        './single_matches_perhole.json',
+        '/international-cup-website/single_matches_perhole.json',
+        'single_matches_perhole.json'
+    ];
+    
+    for (const url of possibleUrls) {
+        try {
+            console.log(`Attempting to load data from: ${url}`);
+            const response = await fetch(url);
+            if (response.ok) {
+                historicData = await response.json();
+                console.log('Successfully loaded historic data from:', url);
+                return historicData;
+            }
+        } catch (error) {
+            console.warn(`Failed to load from ${url}:`, error);
         }
-        historicData = await response.json();
-        return historicData;
-    } catch (error) {
-        console.error('Error loading historic data:', error);
-        showNotification('Failed to load historic tournament data', 'error');
-        return null;
     }
+    
+    // If all URLs fail, show error
+    console.error('Failed to load historic data from all URLs');
+    showNotification('Failed to load historic tournament data. Please try refreshing the page.', 'error');
+    return null;
 }
 
 function show2024ResultsModal() {
@@ -378,7 +391,8 @@ async function showDay2Results() {
 async function showHistoricDataModal() {
     const data = await loadHistoricData();
     if (!data || !data.matches) {
-        showNotification('No historic data available', 'error');
+        console.error('Historic data loading failed:', data);
+        showNotification('No historic data available. Please check the browser console for details.', 'error');
         return;
     }
 

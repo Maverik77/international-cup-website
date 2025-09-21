@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Loading Test</title>
+</head>
+<body>
+    <h1>Historic Data Loading Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testDataLoading() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing data loading...</p>';
+            
+            const urls = [
+                './single_matches_perhole.json',
+                '/international-cup-website/single_matches_perhole.json',
+                'single_matches_perhole.json'
+            ];
+            
+            for (const url of urls) {
+                try {
+                    console.log(`Testing: ${url}`);
+                    const response = await fetch(url);
+                    results.innerHTML += `<p><strong>${url}</strong>: Status ${response.status} (${response.ok ? 'OK' : 'FAILED'})</p>`;
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        results.innerHTML += `<p>✅ Successfully loaded ${data.matches?.length || 0} matches</p>`;
+                        break;
+                    }
+                } catch (error) {
+                    results.innerHTML += `<p><strong>${url}</strong>: ERROR - ${error.message}</p>`;
+                }
+            }
+        }
+        
+        testDataLoading();
+    </script>
+</body>
+</html>
