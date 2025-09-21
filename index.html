@@ -367,5 +367,22 @@
     <script src="js/main.js"></script>
     <script src="js/historic-data.js"></script>
     <script src="js/news.js"></script>
+    <script>
+        // Simple client-side routing for GitHub Pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const path = window.location.pathname;
+            const hash = window.location.hash;
+            
+            // Handle /admin route
+            if (path.endsWith('/admin') || hash === '#admin') {
+                window.location.href = 'admin.html';
+            }
+            
+            // Handle /news route  
+            if (path.endsWith('/news') || hash === '#news') {
+                window.location.href = 'news.html';
+            }
+        });
+    </script>
 </body>
 </html> 

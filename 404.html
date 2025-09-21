@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Cup - Page Not Found</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <script>
+        // Handle client-side routing for GitHub Pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const path = window.location.pathname;
+            const segments = path.split('/').filter(s => s);
+            const lastSegment = segments[segments.length - 1];
+            
+            // Handle common routes
+            if (lastSegment === 'admin') {
+                window.location.replace('/international-cup-website/admin.html');
+                return;
+            }
+            
+            if (lastSegment === 'news') {
+                window.location.replace('/international-cup-website/news.html');
+                return;
+            }
+            
+            // If it's a known HTML file, try to redirect
+            if (lastSegment === 'news.html' || lastSegment === 'admin.html') {
+                window.location.replace('/international-cup-website/' + lastSegment);
+                return;
+            }
+        });
+    </script>
+</head>
+<body>
+    <div style="text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #667eea; margin-bottom: 1rem;">Page Not Found</h1>
+        <p style="margin-bottom: 2rem; color: #666;">The page you're looking for doesn't exist or may have been moved.</p>
+        <div style="margin-bottom: 2rem;">
+            <a href="/international-cup-website/" style="background: #667eea; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">Go Home</a>
+            <a href="/international-cup-website/news.html" style="background: #f8fafc; color: #667eea; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; border: 2px solid #667eea;">View News</a>
+        </div>
+        <p id="redirect-message" style="color: #999; font-size: 0.9rem;"></p>
+    </div>
+</body>
+</html>
