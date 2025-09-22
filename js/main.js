@@ -413,18 +413,18 @@ function preloadResources() {
 // Initialize preloading
 document.addEventListener('DOMContentLoaded', preloadResources);
 
-// Service Worker registration (for PWA capabilities)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                console.log('ServiceWorker registration successful');
-            })
-            .catch(function(error) {
-                console.log('ServiceWorker registration failed');
-            });
-    });
-}
+// Service Worker registration (temporarily disabled to fix console errors)
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', function() {
+//         navigator.serviceWorker.register('./sw.js')
+//             .then(function(registration) {
+//                 console.log('ServiceWorker registration successful');
+//             })
+//             .catch(function(error) {
+//                 console.error('ServiceWorker registration failed:', error);
+//             });
+//     });
+// }
 
 // Export functions for testing (if in Node.js environment)
 if (typeof module !== 'undefined' && module.exports) {
