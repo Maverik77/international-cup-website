@@ -700,14 +700,13 @@
             const path = window.location.pathname;
             const hash = window.location.hash;
             
-            // Handle /admin route - open admin panel instead of redirecting
-            if (path.endsWith('/admin') || hash === '#admin') {
+            // Handle /admin route - open admin panel and fix URL
+            if (path.endsWith('/admin')) {
+                // Replace the URL to remove /admin and add #admin hash
+                window.history.replaceState(null, null, '/#admin');
                 openAdminPanel();
-            }
-            
-            // Handle /news route  
-            if (path.endsWith('/news') || hash === '#news') {
-                window.location.href = 'news.html';
+            } else if (hash === '#admin') {
+                openAdminPanel();
             }
         });
     </script>
