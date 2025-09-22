@@ -131,19 +131,21 @@ function updateHomepageNews() {
     const articles = newsManager.getNews();
     
     // Update the news section on index.html if it exists
-    const homeNewsGrid = document.querySelector('.news-grid');
+    const homeNewsGrid = document.querySelector('#homepage-news-grid');
     if (homeNewsGrid && articles.length > 0) {
-        // Show only the latest article on homepage
-        const latestArticle = articles.sort((a, b) => b.timestamp - a.timestamp)[0];
+        // Show the last 3 articles on homepage
+        const sortedArticles = articles.sort((a, b) => b.timestamp - a.timestamp);
+        const recentArticles = sortedArticles.slice(0, 3);
         
-        homeNewsGrid.innerHTML = `
+        const articlesHTML = recentArticles.map(article => `
             <article class="news-card">
-                <div class="news-date">${newsManager.formatDate(latestArticle.date)}</div>
-                <h3>${newsManager.escapeHtml(latestArticle.title)}</h3>
-                <p>${newsManager.escapeHtml(latestArticle.content)}</p>
-                <a href="news.html" class="news-link">Read More →</a>
+                <div class="news-date">${newsManager.formatDate(article.date)}</div>
+                <h3>${newsManager.escapeHtml(article.title)}</h3>
+                <p>${newsManager.escapeHtml(article.content)}</p>
             </article>
-        `;
+        `).join('');
+        
+        homeNewsGrid.innerHTML = articlesHTML;
     }
 }
 

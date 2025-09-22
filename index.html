@@ -70,13 +70,16 @@
                 <h2>Latest News</h2>
                 <p>Stay updated with the latest International Cup announcements and updates</p>
             </div>
-            <div class="news-grid">
+            <div class="news-grid" id="homepage-news-grid">
                 <article class="news-card">
                     <div class="news-date">December 15, 2024</div>
                     <h3>International Cup 2025 dates set</h3>
                     <p>The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th.</p>
                     <a href="#" class="news-link">Read More →</a>
                 </article>
+            </div>
+            <div class="news-actions">
+                <button id="view-all-news-btn" class="btn btn-secondary">View All News</button>
             </div>
         </div>
     </section>
@@ -416,12 +419,80 @@
         </div>
     </div>
 
+    <!-- News Modal -->
+    <div id="news-modal" class="modal" style="display: none;">
+        <div class="modal-content news-modal-content">
+            <div class="modal-header">
+                <h2>All News</h2>
+                <span class="modal-close" id="news-modal-close">&times;</span>
+            </div>
+            <div class="modal-body news-modal-body">
+                <div id="all-news-container" class="all-news-container">
+                    <!-- All news articles will be loaded here -->
+                    <div class="loading-news">
+                        <p>Loading news articles...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="js/main.js"></script>
     <script src="js/historic-data-embedded.js"></script>
     <script src="js/historic-data.js"></script>
     <script src="js/news.js"></script>
     <style>
+        /* News Actions Styles */
+        .news-actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        /* News Modal Styles */
+        .news-modal-content {
+            max-width: 800px;
+            max-height: 80vh;
+            width: 90%;
+        }
+        
+        .news-modal-body {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+        
+        .all-news-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .modal-news-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #fff;
+        }
+        
+        .modal-news-card .news-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-news-card h3 {
+            margin: 0 0 1rem 0;
+            color: #333;
+            font-size: 1.25rem;
+        }
+        
+        .modal-news-card p {
+            margin: 0;
+            color: #555;
+            line-height: 1.6;
+        }
+        
         /* Admin Panel Modal Styles */
         #admin-panel-modal .modal-content {
             max-width: 600px;
@@ -474,6 +545,61 @@
         }
     </style>
     <script>
+        // News Modal Functions
+        function openNewsModal() {
+            document.getElementById('news-modal').style.display = 'block';
+            loadAllNewsInModal();
+        }
+        
+        function closeNewsModal() {
+            document.getElementById('news-modal').style.display = 'none';
+        }
+        
+        function loadAllNewsInModal() {
+            const container = document.getElementById('all-news-container');
+            if (!container) return;
+            
+            // Get news from localStorage or use default
+            const newsStorageKey = 'internationalCupNews';
+            let articles = JSON.parse(localStorage.getItem(newsStorageKey) || '[]');
+            
+            // If no articles in storage, use default
+            if (articles.length === 0) {
+                articles = [{
+                    id: 1,
+                    title: "International Cup 2025 dates set",
+                    content: "The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th.",
+                    date: "2024-12-15",
+                    timestamp: new Date("2024-12-15").getTime()
+                }];
+            }
+            
+            // Sort articles by date (newest first)
+            articles.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Generate HTML for all articles
+            const articlesHTML = articles.map(article => `
+                <article class="modal-news-card">
+                    <div class="news-date">${formatNewsDate(article.date)}</div>
+                    <h3>${escapeHtml(article.title)}</h3>
+                    <p>${escapeHtml(article.content)}</p>
+                </article>
+            `).join('');
+            
+            container.innerHTML = articlesHTML;
+        }
+        
+        function formatNewsDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         // Admin Panel Functions (embedded to bypass CSP issues)
         const ADMIN_PASSWORD = 'cup2025';
         const NEWS_STORAGE_KEY = 'internationalCupNews';
@@ -714,6 +840,27 @@
                     openAdminPanel();
                 });
             });
+            
+            // News modal event listeners
+            const viewAllNewsBtn = document.getElementById('view-all-news-btn');
+            if (viewAllNewsBtn) {
+                viewAllNewsBtn.addEventListener('click', openNewsModal);
+            }
+            
+            const newsModalClose = document.getElementById('news-modal-close');
+            if (newsModalClose) {
+                newsModalClose.addEventListener('click', closeNewsModal);
+            }
+            
+            // Close news modal when clicking outside
+            const newsModal = document.getElementById('news-modal');
+            if (newsModal) {
+                newsModal.addEventListener('click', function(e) {
+                    if (e.target === newsModal) {
+                        closeNewsModal();
+                    }
+                });
+            }
         }
         
         // Simple client-side routing for GitHub Pages
