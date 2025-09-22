@@ -18,20 +18,28 @@
             const segments = path.split('/').filter(s => s);
             const lastSegment = segments[segments.length - 1];
             
-            // Handle common routes
+            console.log('404 page loaded. Path:', path, 'Last segment:', lastSegment);
+            
+            // Handle common routes for custom domain
             if (lastSegment === 'admin') {
-                window.location.replace('/international-cup-website/admin.html');
+                console.log('Redirecting /admin to /#admin');
+                window.location.replace('/#admin');
                 return;
             }
             
             if (lastSegment === 'news') {
-                window.location.replace('/international-cup-website/news.html');
+                window.location.replace('/news.html');
                 return;
             }
             
             // If it's a known HTML file, try to redirect
-            if (lastSegment === 'news.html' || lastSegment === 'admin.html') {
-                window.location.replace('/international-cup-website/' + lastSegment);
+            if (lastSegment === 'news.html') {
+                window.location.replace('/news.html');
+                return;
+            }
+            
+            if (lastSegment === 'admin.html') {
+                window.location.replace('/#admin');
                 return;
             }
         });
@@ -42,8 +50,8 @@
         <h1 style="color: #667eea; margin-bottom: 1rem;">Page Not Found</h1>
         <p style="margin-bottom: 2rem; color: #666;">The page you're looking for doesn't exist or may have been moved.</p>
         <div style="margin-bottom: 2rem;">
-            <a href="/international-cup-website/" style="background: #667eea; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">Go Home</a>
-            <a href="/international-cup-website/news.html" style="background: #f8fafc; color: #667eea; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; border: 2px solid #667eea;">View News</a>
+            <a href="/" style="background: #667eea; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">Go Home</a>
+            <a href="/news.html" style="background: #f8fafc; color: #667eea; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; border: 2px solid #667eea;">View News</a>
         </div>
         <p id="redirect-message" style="color: #999; font-size: 0.9rem;"></p>
     </div>
