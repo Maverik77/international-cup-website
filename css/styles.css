@@ -19,7 +19,7 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; /* Temporarily disabled to fix jumping */
 }
 
 body {

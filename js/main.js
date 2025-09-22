@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initFormHandling();
     initScrollEffects();
     initAnimations();
+    initActiveNavigation();
 });
 
 // Mobile Navigation Functionality
@@ -71,24 +72,19 @@ function initSmoothScrolling() {
                 const targetElement = document.getElementById(targetId);
                 
                 if (targetElement) {
-                    // Temporarily disable CSS smooth scrolling to prevent conflicts
-                    document.documentElement.style.scrollBehavior = 'auto';
+                    // Get navbar height for offset calculation
+                    const navbar = document.querySelector('.navbar');
+                    const navbarHeight = navbar ? navbar.offsetHeight : 80;
                     
-                    // Use a small delay to prevent jumping
-                    setTimeout(() => {
-                        const navbarHeight = document.querySelector('.navbar').offsetHeight;
-                        const targetPosition = targetElement.offsetTop - navbarHeight - 10;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        // Re-enable CSS smooth scrolling after navigation
-                        setTimeout(() => {
-                            document.documentElement.style.scrollBehavior = 'smooth';
-                        }, 1000);
-                    }, 100);
+                    // Calculate target position with offset
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - 20;
+                    
+                    // Simple scroll to position
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
                 }
             }
         });
@@ -242,14 +238,14 @@ function initScrollEffects() {
             navbar.classList.remove('scrolled');
         }
         
-        // Hide/show navbar on scroll (optional enhancement)
-        if (window.innerWidth > 768) {
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                navbar.style.transform = 'translateY(-100%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-        }
+        // Hide/show navbar on scroll (temporarily disabled to fix jumping)
+        // if (window.innerWidth > 768) {
+        //     if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        //         navbar.style.transform = 'translateY(-100%)';
+        //     } else {
+        //         navbar.style.transform = 'translateY(0)';
+        //     }
+        // }
         
         lastScrollY = currentScrollY;
     }, 16); // ~60fps
@@ -356,58 +352,52 @@ function throttle(func, limit) {
 
 // Add active navigation highlighting
 function initActiveNavigation() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
+    // Temporarily disabled to debug scroll jumping
+    // const sections = document.querySelectorAll('section[id]');
+    // const navLinks = document.querySelectorAll('.nav-link');
     
-    const highlightNavigation = throttle(function() {
-        // Skip highlighting during smooth scroll navigation to prevent conflicts
-        if (document.documentElement.style.scrollBehavior === 'auto') {
-            return;
-        }
+    // const highlightNavigation = throttle(function() {
+    //     const scrollPosition = window.scrollY + 100;
+    //     let activeSection = null;
         
-        const scrollPosition = window.scrollY + 100;
-        let activeSection = null;
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
+    //     sections.forEach(section => {
+    //         const sectionTop = section.offsetTop;
+    //         const sectionHeight = section.offsetHeight;
+    //         const sectionId = section.getAttribute('id');
             
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                activeSection = sectionId;
-            }
-        });
+    //         if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+    //             activeSection = sectionId;
+    //         }
+    //     });
         
-        if (activeSection) {
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${activeSection}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-    }, 150);
+    //     if (activeSection) {
+    //         navLinks.forEach(link => {
+    //             link.classList.remove('active');
+    //             if (link.getAttribute('href') === `#${activeSection}`) {
+    //                 link.classList.add('active');
+    //             }
+    //         });
+    //     }
+    // }, 150);
     
-    window.addEventListener('scroll', highlightNavigation);
+    // window.addEventListener('scroll', highlightNavigation);
 }
 
 // Initialize active navigation on load
-document.addEventListener('DOMContentLoaded', function() {
-    initActiveNavigation();
-    
-    // Add CSS for active navigation
-    const activeNavStyle = document.createElement('style');
-    activeNavStyle.textContent = `
-        .nav-link.active {
-            color: #667eea !important;
-        }
-        
-        .nav-link.active::after {
-            width: 100% !important;
-        }
-    `;
-    document.head.appendChild(activeNavStyle);
-});
+// (moved to main DOMContentLoaded listener above)
+
+// Add CSS for active navigation (when re-enabled)
+// const activeNavStyle = document.createElement('style');
+// activeNavStyle.textContent = `
+//     .nav-link.active {
+//         color: #667eea !important;
+//     }
+//     
+//     .nav-link.active::after {
+//         width: 100% !important;
+//     }
+// `;
+// document.head.appendChild(activeNavStyle);
 
 // Performance optimization: Preload critical resources
 function preloadResources() {
