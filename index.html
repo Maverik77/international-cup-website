@@ -384,8 +384,11 @@
                     </form>
                     <div id="admin-error" style="color: red; display: none;">Incorrect password</div>
                     <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
-                        <p>GitHub token is optional but required for news updates.</p>
-                        <a href="https://github.com/settings/tokens" target="_blank" style="color: #007cba;">Create GitHub Token</a>
+                        <p>GitHub token is saved and only required for news updates.</p>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <a href="https://github.com/settings/tokens" target="_blank" style="color: #007cba;">Create Token</a>
+                            <button type="button" id="clear-token-btn" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.9em;">Clear Saved Token</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -611,6 +614,12 @@
             // Restore scroll position to prevent page jumping
             window.scrollTo(0, currentScrollY);
             
+            // Pre-populate GitHub token if it exists
+            const savedToken = localStorage.getItem('githubToken');
+            if (savedToken) {
+                document.getElementById('github-token-input').value = savedToken;
+            }
+            
             // Check if already authenticated
             if (isAdminAuthenticated()) {
                 document.getElementById('admin-login').style.display = 'none';
@@ -631,7 +640,7 @@
         }
         
         function adminLogout() {
-            // Clear authentication
+            // Clear authentication but keep GitHub token
             localStorage.removeItem('adminAuthenticated');
             localStorage.removeItem('adminAuthExpiration');
             
@@ -639,6 +648,7 @@
             document.getElementById('admin-login').style.display = 'block';
             document.getElementById('admin-dashboard').style.display = 'none';
             document.getElementById('admin-password-input').value = '';
+            document.getElementById('github-token-input').value = '';
             document.getElementById('admin-error').style.display = 'none';
         }
         
@@ -655,14 +665,17 @@
                 localStorage.setItem('adminAuthenticated', 'true');
                 localStorage.setItem('adminAuthExpiration', expirationDate.getTime());
                 
-                // Store GitHub token (encrypted in real implementation)
-                if (githubToken) {
-                    localStorage.setItem('githubToken', githubToken);
+                // Store GitHub token persistently (only if provided or updated)
+                if (githubToken && githubToken.trim()) {
+                    localStorage.setItem('githubToken', githubToken.trim());
                 }
                 
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').style.display = 'block';
                 loadAdminNewsList();
+                
+                // Clear password field for security
+                document.getElementById('admin-password-input').value = '';
             } else {
                 document.getElementById('admin-error').style.display = 'block';
             }
@@ -873,6 +886,18 @@
                 newsModal.addEventListener('click', function(e) {
                     if (e.target === newsModal) {
                         closeNewsModal();
+                    }
+                });
+            }
+            
+            // Clear token button
+            const clearTokenBtn = document.getElementById('clear-token-btn');
+            if (clearTokenBtn) {
+                clearTokenBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to clear the saved GitHub token?')) {
+                        localStorage.removeItem('githubToken');
+                        document.getElementById('github-token-input').value = '';
+                        alert('GitHub token cleared. You will need to enter it again for news updates.');
                     }
                 });
             }
