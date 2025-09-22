@@ -1,4 +1,6 @@
 // Admin Panel for News Management
+console.log('admin.js loaded successfully');
+
 class AdminPanel {
     constructor() {
         this.adminPassword = 'cup2025';
@@ -285,7 +287,9 @@ class AdminPanel {
 
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, creating AdminPanel...');
     window.adminPanel = new AdminPanel();
+    console.log('AdminPanel created:', window.adminPanel);
 });
 
 // Check if we're accessing the admin route
