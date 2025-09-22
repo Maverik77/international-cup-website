@@ -1,109 +1,49 @@
-// News Management System
+// Simple News Management System - Read from static JSON file
 class NewsManager {
     constructor() {
-        this.storageKey = 'internationalCupNews';
-        this.init();
+        this.newsUrl = './data/news.json';
+        this.cache = null;
+        this.cacheExpiry = null;
+        this.cacheTimeout = 5 * 60 * 1000; // 5 minutes
     }
 
-    init() {
-        this.loadNews();
-    }
+    // Get all news articles from static JSON file
+    async getNews() {
+        try {
+            // Check cache first
+            if (this.cache && this.cacheExpiry && Date.now() < this.cacheExpiry) {
+                return this.cache;
+            }
 
-    // Get all news articles from localStorage
-    getNews() {
-        const news = localStorage.getItem(this.storageKey);
-        return news ? JSON.parse(news) : this.getDefaultNews();
+            const response = await fetch(this.newsUrl + '?t=' + Date.now());
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const articles = await response.json();
+            
+            // Cache the result
+            this.cache = articles;
+            this.cacheExpiry = Date.now() + this.cacheTimeout;
+            
+            return articles;
+        } catch (error) {
+            console.error('Error reading news:', error);
+            return this.getDefaultNews();
+        }
     }
 
     // Get default news (fallback)
     getDefaultNews() {
         return [
             {
-                id: 1,
+                id: Date.now(),
                 title: "International Cup 2025 dates set",
                 content: "The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th.",
                 date: "2024-12-15",
                 timestamp: new Date("2024-12-15").getTime()
             }
         ];
-    }
-
-    // Save news articles to localStorage
-    saveNews(articles) {
-        localStorage.setItem(this.storageKey, JSON.stringify(articles));
-    }
-
-    // Add new article
-    addArticle(title, content, date) {
-        const articles = this.getNews();
-        const newArticle = {
-            id: Date.now(),
-            title: title,
-            content: content,
-            date: date,
-            timestamp: new Date(date).getTime()
-        };
-        
-        articles.unshift(newArticle); // Add to beginning
-        this.saveNews(articles);
-        return newArticle;
-    }
-
-    // Update existing article
-    updateArticle(id, title, content, date) {
-        const articles = this.getNews();
-        const index = articles.findIndex(article => article.id == id);
-        
-        if (index !== -1) {
-            articles[index] = {
-                ...articles[index],
-                title: title,
-                content: content,
-                date: date,
-                timestamp: new Date(date).getTime()
-            };
-            this.saveNews(articles);
-            return articles[index];
-        }
-        return null;
-    }
-
-    // Delete article
-    deleteArticle(id) {
-        const articles = this.getNews();
-        const filteredArticles = articles.filter(article => article.id != id);
-        this.saveNews(filteredArticles);
-        return true;
-    }
-
-    // Load and display news on the news page
-    loadNews() {
-        const container = document.getElementById('news-articles-container');
-        if (!container) return;
-
-        const articles = this.getNews();
-        
-        if (articles.length === 0) {
-            container.innerHTML = `
-                <div class="no-news">
-                    <p>No news articles available at this time.</p>
-                </div>
-            `;
-            return;
-        }
-
-        // Sort articles by date (newest first)
-        articles.sort((a, b) => b.timestamp - a.timestamp);
-
-        const articlesHTML = articles.map(article => `
-            <article class="news-article">
-                <div class="news-article-date">${this.formatDate(article.date)}</div>
-                <h2>${this.escapeHtml(article.title)}</h2>
-                <div class="news-article-content">${this.escapeHtml(article.content)}</div>
-            </article>
-        `).join('');
-
-        container.innerHTML = articlesHTML;
     }
 
     // Format date for display
@@ -126,26 +66,57 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Update homepage news section
-function updateHomepageNews() {
-    const newsManager = new NewsManager();
-    const articles = newsManager.getNews();
-    
-    // Update the news section on index.html if it exists
-    const homeNewsGrid = document.querySelector('#homepage-news-grid');
-    if (homeNewsGrid && articles.length > 0) {
-        // Show the last 3 articles on homepage
-        const sortedArticles = articles.sort((a, b) => b.timestamp - a.timestamp);
-        const recentArticles = sortedArticles.slice(0, 3);
+async function updateHomepageNews() {
+    try {
+        const articles = await window.newsManager.getNews();
         
-        const articlesHTML = recentArticles.map(article => `
-            <article class="news-card">
-                <div class="news-date">${newsManager.formatDate(article.date)}</div>
-                <h3>${newsManager.escapeHtml(article.title)}</h3>
-                <p>${newsManager.escapeHtml(article.content)}</p>
+        // Update the news section on index.html if it exists
+        const homeNewsGrid = document.querySelector('#homepage-news-grid');
+        if (homeNewsGrid && articles.length > 0) {
+            // Show the last 3 articles on homepage
+            const sortedArticles = articles.sort((a, b) => b.timestamp - a.timestamp);
+            const recentArticles = sortedArticles.slice(0, 3);
+            
+            const articlesHTML = recentArticles.map(article => `
+                <article class="news-card">
+                    <div class="news-date">${window.newsManager.formatDate(article.date)}</div>
+                    <h3>${window.newsManager.escapeHtml(article.title)}</h3>
+                    <p>${window.newsManager.escapeHtml(article.content)}</p>
+                </article>
+            `).join('');
+            
+            homeNewsGrid.innerHTML = articlesHTML;
+        }
+    } catch (error) {
+        console.error('Error updating homepage news:', error);
+    }
+}
+
+// Load all news in modal
+async function loadAllNewsInModal() {
+    try {
+        const container = document.getElementById('all-news-container');
+        if (!container) return;
+        
+        const articles = await window.newsManager.getNews();
+        
+        // Sort articles by date (newest first)
+        const sortedArticles = articles.sort((a, b) => b.timestamp - a.timestamp);
+        
+        // Generate HTML for all articles
+        const articlesHTML = sortedArticles.map(article => `
+            <article class="modal-news-card">
+                <div class="news-date">${window.newsManager.formatDate(article.date)}</div>
+                <h3>${window.newsManager.escapeHtml(article.title)}</h3>
+                <p>${window.newsManager.escapeHtml(article.content)}</p>
             </article>
         `).join('');
         
-        homeNewsGrid.innerHTML = articlesHTML;
+        container.innerHTML = articlesHTML;
+    } catch (error) {
+        console.error('Error loading news in modal:', error);
+        document.getElementById('all-news-container').innerHTML = 
+            '<p>Error loading news articles. Please try again later.</p>';
     }
 }
 

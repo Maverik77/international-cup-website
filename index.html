@@ -36,7 +36,6 @@
                 <a href="#teams" class="nav-link">Teams</a>
                 <a href="#schedule" class="nav-link">Schedule</a>
                 <a href="#history" class="nav-link">History</a>
-                <a href="#admin" class="nav-link admin-link" title="Admin Panel">⚙️</a>
             </div>
             <div class="nav-hamburger" id="nav-hamburger">
                 <span class="bar"></span>
@@ -345,7 +344,7 @@
                     <h3>International Cup</h3>
                     <p>Team USA vs Team International • Two days of championship golf at Lansdowne</p>
                     <div class="social-links">
-                        <a href="/admin" class="social-link admin-link" title="Admin Panel">⚙️</a>
+                        <!-- Social links can be added here in the future -->
                     </div>
                 </div>
                 <div class="footer-section">
@@ -366,66 +365,6 @@
         </div>
     </footer>
 
-    <!-- Admin Panel Modal (hidden) -->
-    <div id="admin-panel-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Admin Panel</h2>
-                <span class="modal-close" id="admin-modal-close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <!-- Login Form -->
-                <div id="admin-login" style="display: block;">
-                    <p>Enter admin credentials:</p>
-                    <form id="admin-login-form">
-                        <input type="password" id="admin-password-input" placeholder="Admin Password" required>
-                        <input type="password" id="github-token-input" placeholder="GitHub Token (for news updates)" style="margin-top: 10px;">
-                        <button type="submit">Login</button>
-                    </form>
-                    <div id="admin-error" style="color: red; display: none;">Incorrect password</div>
-                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
-                        <p>GitHub token is saved and only required for news updates.</p>
-                        <div style="display: flex; gap: 10px; margin-top: 5px;">
-                            <a href="https://github.com/settings/tokens" target="_blank" style="color: #007cba;">Create Token</a>
-                            <button type="button" id="clear-token-btn" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.9em;">Clear Saved Token</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Admin Dashboard -->
-                <div id="admin-dashboard" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3>News Management</h3>
-                        <button id="admin-logout-btn" style="background: #dc3545; color: white;">Logout</button>
-                    </div>
-                    <div id="admin-news-list"></div>
-                    <button id="add-news-btn">Add News Article</button>
-                    
-                    <!-- Add/Edit News Form -->
-                    <div id="admin-news-form" style="display: none; margin-top: 20px;">
-                        <h4 id="admin-form-title">Add News Article</h4>
-                        <form id="admin-news-form-element">
-                            <input type="hidden" id="edit-article-id">
-                            <div>
-                                <label>Title:</label>
-                                <input type="text" id="admin-news-title" required>
-                            </div>
-                            <div>
-                                <label>Date:</label>
-                                <input type="date" id="admin-news-date" required>
-                            </div>
-                            <div>
-                                <label>Content:</label>
-                                <textarea id="admin-news-content" rows="4" required></textarea>
-                            </div>
-                            <button type="submit">Save</button>
-                            <button type="button" id="cancel-news-btn">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- News Modal -->
     <div id="news-modal" class="modal" style="display: none;">
@@ -449,7 +388,7 @@
     <script src="js/main.js"></script>
     <script src="js/historic-data-embedded.js"></script>
     <script src="js/historic-data.js"></script>
-    <script src="js/news-s3.js"></script>
+    <script src="js/news.js"></script>
     <style>
         /* News Actions Styles */
         .news-actions {
@@ -501,56 +440,6 @@
             line-height: 1.6;
         }
         
-        /* Admin Panel Modal Styles */
-        #admin-panel-modal .modal-content {
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        #admin-panel-modal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        #admin-panel-modal .modal-close {
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-        }
-        #admin-panel-modal .modal-close:hover {
-            color: #333;
-        }
-        #admin-panel-modal form {
-            margin-bottom: 20px;
-        }
-        #admin-panel-modal input, #admin-panel-modal textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        #admin-panel-modal button {
-            padding: 10px 15px;
-            margin: 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background: #007cba;
-            color: white;
-        }
-        #admin-panel-modal button:hover {
-            background: #005a8b;
-        }
-        #admin-panel-modal label {
-            display: block;
-            font-weight: bold;
-            margin-top: 10px;
-        }
     </style>
     <script>
         // News Modal Functions
@@ -566,309 +455,8 @@
             document.getElementById('news-modal').style.display = 'none';
         }
         
-        // This function is now handled by news-s3.js
-        // Keep this comment for reference
-        
-        function formatNewsDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // Admin Panel Functions (embedded to bypass CSP issues)
-        const ADMIN_PASSWORD = 'cup2025';
-        const NEWS_STORAGE_KEY = 'internationalCupNews';
-        
-        function isAdminAuthenticated() {
-            const isAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
-            const expirationTime = localStorage.getItem('adminAuthExpiration');
-            
-            if (!isAuthenticated || !expirationTime) {
-                return false;
-            }
-            
-            const currentTime = new Date().getTime();
-            const expiration = parseInt(expirationTime);
-            
-            if (currentTime > expiration) {
-                // Authentication expired, clear it
-                localStorage.removeItem('adminAuthenticated');
-                localStorage.removeItem('adminAuthExpiration');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        function openAdminPanel() {
-            // Store current scroll position to prevent jumping
-            const currentScrollY = window.scrollY;
-            
-            document.getElementById('admin-panel-modal').style.display = 'block';
-            
-            // Restore scroll position to prevent page jumping
-            window.scrollTo(0, currentScrollY);
-            
-            // Pre-populate GitHub token if it exists
-            const savedToken = localStorage.getItem('githubToken');
-            if (savedToken) {
-                document.getElementById('github-token-input').value = savedToken;
-            }
-            
-            // Check if already authenticated
-            if (isAdminAuthenticated()) {
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-dashboard').style.display = 'block';
-                loadAdminNewsList();
-            } else {
-                document.getElementById('admin-login').style.display = 'block';
-                document.getElementById('admin-dashboard').style.display = 'none';
-            }
-        }
-        
-        function closeAdminPanel() {
-            document.getElementById('admin-panel-modal').style.display = 'none';
-            document.getElementById('admin-login').style.display = 'block';
-            document.getElementById('admin-dashboard').style.display = 'none';
-            document.getElementById('admin-password-input').value = '';
-            document.getElementById('admin-error').style.display = 'none';
-        }
-        
-        function adminLogout() {
-            // Clear authentication but keep GitHub token
-            localStorage.removeItem('adminAuthenticated');
-            localStorage.removeItem('adminAuthExpiration');
-            
-            // Show login form
-            document.getElementById('admin-login').style.display = 'block';
-            document.getElementById('admin-dashboard').style.display = 'none';
-            document.getElementById('admin-password-input').value = '';
-            document.getElementById('github-token-input').value = '';
-            document.getElementById('admin-error').style.display = 'none';
-        }
-        
-        function adminLogin(event) {
-            event.preventDefault();
-            const password = document.getElementById('admin-password-input').value;
-            const githubToken = document.getElementById('github-token-input').value;
-            
-            if (password === ADMIN_PASSWORD) {
-                // Set login expiration to 3 weeks from now
-                const expirationDate = new Date();
-                expirationDate.setDate(expirationDate.getDate() + 21); // 3 weeks
-                
-                localStorage.setItem('adminAuthenticated', 'true');
-                localStorage.setItem('adminAuthExpiration', expirationDate.getTime());
-                
-                // Store GitHub token persistently (only if provided or updated)
-                if (githubToken && githubToken.trim()) {
-                    localStorage.setItem('githubToken', githubToken.trim());
-                }
-                
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-dashboard').style.display = 'block';
-                loadAdminNewsList();
-                
-                // Clear password field for security
-                document.getElementById('admin-password-input').value = '';
-            } else {
-                document.getElementById('admin-error').style.display = 'block';
-            }
-        }
-        
-        async function loadAdminNewsList() {
-            try {
-                const listContainer = document.getElementById('admin-news-list');
-                listContainer.innerHTML = '<p>Loading articles...</p>';
-                
-                const newsList = await window.s3NewsManager.getNews();
-                
-                if (newsList.length === 0) {
-                    listContainer.innerHTML = '<p>No news articles found.</p>';
-                    return;
-                }
-                
-                // Clear container
-                listContainer.innerHTML = '';
-                
-                const wrapper = document.createElement('div');
-                wrapper.style.marginBottom = '20px';
-                
-                // Sort by date (newest first)
-                const sortedArticles = newsList.sort((a, b) => b.timestamp - a.timestamp);
-                
-                sortedArticles.forEach(article => {
-                    const articleDiv = document.createElement('div');
-                    articleDiv.style.border = '1px solid #ddd';
-                    articleDiv.style.padding = '10px';
-                    articleDiv.style.margin = '10px 0';
-                    
-                    const titleElement = document.createElement('strong');
-                    titleElement.textContent = article.title;
-                    
-                    const dateElement = document.createElement('span');
-                    dateElement.textContent = ' (' + article.date + ')';
-                    
-                    const contentElement = document.createElement('p');
-                    contentElement.textContent = article.content;
-                    
-                    const editButton = document.createElement('button');
-                    editButton.textContent = 'Edit';
-                    editButton.addEventListener('click', () => editNewsArticle(article.id));
-                    
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.style.color = 'red';
-                    deleteButton.style.marginLeft = '10px';
-                    deleteButton.addEventListener('click', () => deleteNewsArticle(article.id));
-                    
-                    articleDiv.appendChild(titleElement);
-                    articleDiv.appendChild(dateElement);
-                    articleDiv.appendChild(document.createElement('br'));
-                    articleDiv.appendChild(contentElement);
-                    articleDiv.appendChild(editButton);
-                    articleDiv.appendChild(deleteButton);
-                    
-                    wrapper.appendChild(articleDiv);
-                });
-                
-                listContainer.appendChild(wrapper);
-            } catch (error) {
-                console.error('Error loading admin news list:', error);
-                document.getElementById('admin-news-list').innerHTML = '<p>Error loading articles. Please try again.</p>';
-            }
-        }
-        
-        function showAddNewsForm() {
-            document.getElementById('admin-form-title').textContent = 'Add News Article';
-            document.getElementById('edit-article-id').value = '';
-            document.getElementById('admin-news-title').value = '';
-            document.getElementById('admin-news-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('admin-news-content').value = '';
-            document.getElementById('admin-news-form').style.display = 'block';
-        }
-        
-        function hideNewsForm() {
-            document.getElementById('admin-news-form').style.display = 'none';
-        }
-        
-        async function editNewsArticle(id) {
-            try {
-                const newsList = await window.s3NewsManager.getNews();
-                const article = newsList.find(a => a.id == id);
-                if (article) {
-                    document.getElementById('admin-form-title').textContent = 'Edit News Article';
-                    document.getElementById('edit-article-id').value = article.id;
-                    document.getElementById('admin-news-title').value = article.title;
-                    document.getElementById('admin-news-date').value = article.date;
-                    document.getElementById('admin-news-content').value = article.content;
-                    document.getElementById('admin-news-form').style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Error loading article for edit:', error);
-                alert('Error loading article. Please try again.');
-            }
-        }
-        
-        async function deleteNewsArticle(id) {
-            if (confirm('Are you sure you want to delete this article?')) {
-                try {
-                    const githubToken = localStorage.getItem('githubToken');
-                    if (!githubToken) {
-                        alert('GitHub token required for deleting articles. Please login again with your GitHub token.');
-                        return;
-                    }
-                    
-                    await window.s3NewsManager.deleteArticle(id, ADMIN_PASSWORD, githubToken);
-                    await loadAdminNewsList();
-                    await updateHomepageNews();
-                    alert('Article deleted successfully!');
-                } catch (error) {
-                    console.error('Error deleting article:', error);
-                    alert('Error deleting article: ' + error.message);
-                }
-            }
-        }
-        
-        async function saveNewsArticle(event) {
-            event.preventDefault();
-            
-            try {
-                const id = document.getElementById('edit-article-id').value;
-                const title = document.getElementById('admin-news-title').value;
-                const date = document.getElementById('admin-news-date').value;
-                const content = document.getElementById('admin-news-content').value;
-                
-                if (!title || !date || !content) {
-                    alert('Please fill in all fields.');
-                    return;
-                }
-                
-                const githubToken = localStorage.getItem('githubToken');
-                if (!githubToken) {
-                    alert('GitHub token required for saving articles. Please login again with your GitHub token.');
-                    return;
-                }
-                
-                if (id) {
-                    // Update existing article
-                    await window.s3NewsManager.updateArticle(id, title, content, date, ADMIN_PASSWORD, githubToken);
-                } else {
-                    // Add new article
-                    await window.s3NewsManager.addArticle(title, content, date, ADMIN_PASSWORD, githubToken);
-                }
-                
-                await loadAdminNewsList();
-                await updateHomepageNews();
-                hideNewsForm();
-                
-                alert('Article saved successfully! Changes will be live after GitHub Actions deployment.');
-            } catch (error) {
-                console.error('Error saving article:', error);
-                alert('Error saving article: ' + error.message);
-            }
-        }
-        
-        // Setup event listeners to avoid inline onclick (CSP compliance)
-        function setupAdminEventListeners() {
-            // Close modal
-            document.getElementById('admin-modal-close').addEventListener('click', closeAdminPanel);
-            
-            // Login form
-            document.getElementById('admin-login-form').addEventListener('submit', adminLogin);
-            
-            // Logout button
-            document.getElementById('admin-logout-btn').addEventListener('click', adminLogout);
-            
-            // Add news button
-            document.getElementById('add-news-btn').addEventListener('click', showAddNewsForm);
-            
-            // News form
-            document.getElementById('admin-news-form-element').addEventListener('submit', saveNewsArticle);
-            
-            // Cancel button
-            document.getElementById('cancel-news-btn').addEventListener('click', hideNewsForm);
-            
-            // Handle admin link clicks to prevent page jumping
-            document.querySelectorAll('.admin-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Update URL without scrolling
-                    const currentScrollY = window.scrollY;
-                    window.history.pushState(null, null, '#admin');
-                    window.scrollTo(0, currentScrollY);
-                    
-                    // Open admin panel
-                    openAdminPanel();
-                });
-            });
-            
+        // Setup news modal event listeners
+        document.addEventListener('DOMContentLoaded', function() {
             // News modal event listeners
             const viewAllNewsBtn = document.getElementById('view-all-news-btn');
             if (viewAllNewsBtn) {
@@ -888,34 +476,6 @@
                         closeNewsModal();
                     }
                 });
-            }
-            
-            // Clear token button
-            const clearTokenBtn = document.getElementById('clear-token-btn');
-            if (clearTokenBtn) {
-                clearTokenBtn.addEventListener('click', function() {
-                    if (confirm('Are you sure you want to clear the saved GitHub token?')) {
-                        localStorage.removeItem('githubToken');
-                        document.getElementById('github-token-input').value = '';
-                        alert('GitHub token cleared. You will need to enter it again for news updates.');
-                    }
-                });
-            }
-        }
-        
-        // Simple client-side routing for GitHub Pages
-        document.addEventListener('DOMContentLoaded', function() {
-            setupAdminEventListeners();
-            const path = window.location.pathname;
-            const hash = window.location.hash;
-            
-            // Handle /admin route - open admin panel and fix URL
-            if (path.endsWith('/admin')) {
-                // Replace the URL to remove /admin and add #admin hash
-                window.history.replaceState(null, null, '/#admin');
-                openAdminPanel();
-            } else if (hash === '#admin') {
-                openAdminPanel();
             }
         });
     </script>
