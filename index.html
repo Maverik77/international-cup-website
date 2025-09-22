@@ -36,6 +36,7 @@
                 <a href="#teams" class="nav-link">Teams</a>
                 <a href="#schedule" class="nav-link">Schedule</a>
                 <a href="#history" class="nav-link">History</a>
+                <a href="#admin" class="nav-link admin-link" title="Admin Panel">⚙️</a>
             </div>
             <div class="nav-hamburger" id="nav-hamburger">
                 <span class="bar"></span>
@@ -499,7 +500,13 @@
         }
         
         function openAdminPanel() {
+            // Store current scroll position to prevent jumping
+            const currentScrollY = window.scrollY;
+            
             document.getElementById('admin-panel-modal').style.display = 'block';
+            
+            // Restore scroll position to prevent page jumping
+            window.scrollTo(0, currentScrollY);
             
             // Check if already authenticated
             if (isAdminAuthenticated()) {
@@ -692,6 +699,21 @@
             
             // Cancel button
             document.getElementById('cancel-news-btn').addEventListener('click', hideNewsForm);
+            
+            // Handle admin link clicks to prevent page jumping
+            document.querySelectorAll('.admin-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update URL without scrolling
+                    const currentScrollY = window.scrollY;
+                    window.history.pushState(null, null, '#admin');
+                    window.scrollTo(0, currentScrollY);
+                    
+                    // Open admin panel
+                    openAdminPanel();
+                });
+            });
         }
         
         // Simple client-side routing for GitHub Pages
