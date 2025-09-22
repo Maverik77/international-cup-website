@@ -1,23 +1,16 @@
 [
-    {
-        "id": 1735689123456,
-        "title": "International Cup 2025 dates set",
-        "content": "The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th.",
-        "date": "2024-12-15",
-        "timestamp": 1702598400000
-    },
-    {
-        "id": 1735689123400,
-        "title": "Registration Now Open",
-        "content": "Registration for the International Cup 2025 is now open. Don't miss your chance to be part of this exciting tournament!",
-        "date": "2024-12-10",
-        "timestamp": 1702166400000
-    },
-    {
-        "id": 1735689123300,
-        "title": "Team Captains Announced",
-        "content": "We're excited to announce the team captains for the 2025 International Cup. Both Team USA and Team International have selected experienced leaders.",
-        "date": "2024-12-05",
-        "timestamp": 1701734400000
-    }
+  {
+    "id": 1758565536447,
+    "title": "Test",
+    "content": "test",
+    "date": "2025-09-22",
+    "timestamp": 1758499200000
+  },
+  {
+    "id": 1758565536447,
+    "title": "International Cup 2025 dates set",
+    "content": "The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th.",
+    "date": "2024-12-15",
+    "timestamp": 1734220800000
+  }
 ]
