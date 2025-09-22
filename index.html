@@ -363,20 +363,243 @@
         </div>
     </footer>
 
+    <!-- Admin Panel Modal (hidden) -->
+    <div id="admin-panel-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Admin Panel</h2>
+                <span class="modal-close" onclick="closeAdminPanel()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- Login Form -->
+                <div id="admin-login" style="display: block;">
+                    <p>Enter admin password:</p>
+                    <form onsubmit="adminLogin(event)">
+                        <input type="password" id="admin-password-input" placeholder="Password" required>
+                        <button type="submit">Login</button>
+                    </form>
+                    <div id="admin-error" style="color: red; display: none;">Incorrect password</div>
+                </div>
+                
+                <!-- Admin Dashboard -->
+                <div id="admin-dashboard" style="display: none;">
+                    <h3>News Management</h3>
+                    <div id="admin-news-list"></div>
+                    <button onclick="showAddNewsForm()">Add News Article</button>
+                    
+                    <!-- Add/Edit News Form -->
+                    <div id="admin-news-form" style="display: none; margin-top: 20px;">
+                        <h4 id="admin-form-title">Add News Article</h4>
+                        <form onsubmit="saveNewsArticle(event)">
+                            <input type="hidden" id="edit-article-id">
+                            <div>
+                                <label>Title:</label>
+                                <input type="text" id="admin-news-title" required>
+                            </div>
+                            <div>
+                                <label>Date:</label>
+                                <input type="date" id="admin-news-date" required>
+                            </div>
+                            <div>
+                                <label>Content:</label>
+                                <textarea id="admin-news-content" rows="4" required></textarea>
+                            </div>
+                            <button type="submit">Save</button>
+                            <button type="button" onclick="hideNewsForm()">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="js/main.js"></script>
     <script src="js/historic-data-embedded.js"></script>
     <script src="js/historic-data.js"></script>
     <script src="js/news.js"></script>
+    <style>
+        /* Admin Panel Modal Styles */
+        #admin-panel-modal .modal-content {
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #admin-panel-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        #admin-panel-modal .modal-close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        #admin-panel-modal .modal-close:hover {
+            color: #333;
+        }
+        #admin-panel-modal form {
+            margin-bottom: 20px;
+        }
+        #admin-panel-modal input, #admin-panel-modal textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #admin-panel-modal button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007cba;
+            color: white;
+        }
+        #admin-panel-modal button:hover {
+            background: #005a8b;
+        }
+        #admin-panel-modal label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
     <script>
+        // Admin Panel Functions (embedded to bypass CSP issues)
+        const ADMIN_PASSWORD = 'cup2025';
+        const NEWS_STORAGE_KEY = 'internationalCupNews';
+        
+        function openAdminPanel() {
+            document.getElementById('admin-panel-modal').style.display = 'block';
+        }
+        
+        function closeAdminPanel() {
+            document.getElementById('admin-panel-modal').style.display = 'none';
+            document.getElementById('admin-login').style.display = 'block';
+            document.getElementById('admin-dashboard').style.display = 'none';
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('admin-error').style.display = 'none';
+        }
+        
+        function adminLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('admin-password-input').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                loadAdminNewsList();
+            } else {
+                document.getElementById('admin-error').style.display = 'block';
+            }
+        }
+        
+        function loadAdminNewsList() {
+            const newsList = JSON.parse(localStorage.getItem(NEWS_STORAGE_KEY) || '[]');
+            const listContainer = document.getElementById('admin-news-list');
+            
+            if (newsList.length === 0) {
+                listContainer.innerHTML = '<p>No news articles found.</p>';
+                return;
+            }
+            
+            let html = '<div style="margin-bottom: 20px;">';
+            newsList.forEach(article => {
+                html += `
+                    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+                        <strong>${article.title}</strong> (${article.date})<br>
+                        <p>${article.content}</p>
+                        <button onclick="editNewsArticle('${article.id}')">Edit</button>
+                        <button onclick="deleteNewsArticle('${article.id}')" style="color: red;">Delete</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            listContainer.innerHTML = html;
+        }
+        
+        function showAddNewsForm() {
+            document.getElementById('admin-form-title').textContent = 'Add News Article';
+            document.getElementById('edit-article-id').value = '';
+            document.getElementById('admin-news-title').value = '';
+            document.getElementById('admin-news-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('admin-news-content').value = '';
+            document.getElementById('admin-news-form').style.display = 'block';
+        }
+        
+        function hideNewsForm() {
+            document.getElementById('admin-news-form').style.display = 'none';
+        }
+        
+        function editNewsArticle(id) {
+            const newsList = JSON.parse(localStorage.getItem(NEWS_STORAGE_KEY) || '[]');
+            const article = newsList.find(a => a.id === id);
+            if (article) {
+                document.getElementById('admin-form-title').textContent = 'Edit News Article';
+                document.getElementById('edit-article-id').value = article.id;
+                document.getElementById('admin-news-title').value = article.title;
+                document.getElementById('admin-news-date').value = article.date;
+                document.getElementById('admin-news-content').value = article.content;
+                document.getElementById('admin-news-form').style.display = 'block';
+            }
+        }
+        
+        function deleteNewsArticle(id) {
+            if (confirm('Are you sure you want to delete this article?')) {
+                let newsList = JSON.parse(localStorage.getItem(NEWS_STORAGE_KEY) || '[]');
+                newsList = newsList.filter(a => a.id !== id);
+                localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(newsList));
+                loadAdminNewsList();
+                // Update homepage news
+                if (typeof updateHomepageNews === 'function') {
+                    updateHomepageNews();
+                }
+            }
+        }
+        
+        function saveNewsArticle(event) {
+            event.preventDefault();
+            const id = document.getElementById('edit-article-id').value || Date.now().toString();
+            const title = document.getElementById('admin-news-title').value;
+            const date = document.getElementById('admin-news-date').value;
+            const content = document.getElementById('admin-news-content').value;
+            
+            let newsList = JSON.parse(localStorage.getItem(NEWS_STORAGE_KEY) || '[]');
+            
+            const articleIndex = newsList.findIndex(a => a.id === id);
+            const article = { id, title, date, content };
+            
+            if (articleIndex >= 0) {
+                newsList[articleIndex] = article;
+            } else {
+                newsList.unshift(article);
+            }
+            
+            localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(newsList));
+            loadAdminNewsList();
+            hideNewsForm();
+            
+            // Update homepage news
+            if (typeof updateHomepageNews === 'function') {
+                updateHomepageNews();
+            }
+            
+            alert('Article saved successfully!');
+        }
+        
         // Simple client-side routing for GitHub Pages
         document.addEventListener('DOMContentLoaded', function() {
             const path = window.location.pathname;
             const hash = window.location.hash;
             
-            // Handle /admin route
+            // Handle /admin route - open admin panel instead of redirecting
             if (path.endsWith('/admin') || hash === '#admin') {
-                window.location.href = 'admin.html';
+                openAdminPanel();
             }
             
             // Handle /news route  
