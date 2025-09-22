@@ -5,8 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting to Admin Panel...</title>
     <script>
-        // Immediate redirect to admin.html
-        window.location.replace('../admin.html');
+        console.log('admin/index.html loaded - redirecting to admin.html');
+        console.log('Current URL:', window.location.href);
+        
+        // Try multiple redirect approaches
+        setTimeout(() => {
+            console.log('Attempting redirect...');
+            try {
+                window.location.replace('../admin.html');
+            } catch (e) {
+                console.error('Redirect failed:', e);
+                window.location.href = '../admin.html';
+            }
+        }, 100);
     </script>
     <noscript>
         <meta http-equiv="refresh" content="0; url=../admin.html">
