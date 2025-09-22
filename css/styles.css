@@ -2314,8 +2314,8 @@ textarea:focus {
 }
 
 .golf-scorecard-table th {
-    background: var(--text-dark) !important;
-    color: black !important;
+    background: #f1f5f9 !important;
+    color: var(--text-dark) !important;
     font-weight: 700;
 }
 
@@ -2340,15 +2340,15 @@ textarea:focus {
 }
 
 .hole-label {
-    background: var(--text-dark);
-    color: white !important;
+    background: #e2e8f0;
+    color: var(--text-dark) !important;
     font-weight: 700;
     font-size: 1rem;
 }
 
 .hole-number {
-    background: var(--text-dark);
-    color: white !important;
+    background: #e2e8f0;
+    color: var(--text-dark) !important;
     font-weight: 700;
     text-align: center;
     font-size: 1rem;

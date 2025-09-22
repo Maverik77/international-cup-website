@@ -10,8 +10,10 @@ class AdminPanel {
     }
 
     init() {
+        console.log('AdminPanel initializing...');
         this.setupEventListeners();
         this.checkAuthStatus();
+        console.log('AdminPanel initialized');
     }
 
     setupEventListeners() {
@@ -49,8 +51,13 @@ class AdminPanel {
     checkAuthStatus() {
         // For demo purposes, we'll use sessionStorage to maintain login state
         const isAuthenticated = sessionStorage.getItem('adminAuthenticated') === 'true';
+        console.log('Auth status check:', isAuthenticated);
         if (isAuthenticated) {
+            console.log('User authenticated, showing dashboard');
             this.showDashboard();
+        } else {
+            console.log('User not authenticated, showing login');
+            this.showLogin();
         }
     }
 
