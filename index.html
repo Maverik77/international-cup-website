@@ -368,13 +368,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Admin Panel</h2>
-                <span class="modal-close" onclick="closeAdminPanel()">&times;</span>
+                <span class="modal-close" id="admin-modal-close">&times;</span>
             </div>
             <div class="modal-body">
                 <!-- Login Form -->
                 <div id="admin-login" style="display: block;">
                     <p>Enter admin password:</p>
-                    <form onsubmit="adminLogin(event)">
+                    <form id="admin-login-form">
                         <input type="password" id="admin-password-input" placeholder="Password" required>
                         <button type="submit">Login</button>
                     </form>
@@ -385,12 +385,12 @@
                 <div id="admin-dashboard" style="display: none;">
                     <h3>News Management</h3>
                     <div id="admin-news-list"></div>
-                    <button onclick="showAddNewsForm()">Add News Article</button>
+                    <button id="add-news-btn">Add News Article</button>
                     
                     <!-- Add/Edit News Form -->
                     <div id="admin-news-form" style="display: none; margin-top: 20px;">
                         <h4 id="admin-form-title">Add News Article</h4>
-                        <form onsubmit="saveNewsArticle(event)">
+                        <form id="admin-news-form-element">
                             <input type="hidden" id="edit-article-id">
                             <div>
                                 <label>Title:</label>
@@ -405,7 +405,7 @@
                                 <textarea id="admin-news-content" rows="4" required></textarea>
                             </div>
                             <button type="submit">Save</button>
-                            <button type="button" onclick="hideNewsForm()">Cancel</button>
+                            <button type="button" id="cancel-news-btn">Cancel</button>
                         </form>
                     </div>
                 </div>
@@ -508,19 +508,48 @@
                 return;
             }
             
-            let html = '<div style="margin-bottom: 20px;">';
+            // Clear container
+            listContainer.innerHTML = '';
+            
+            const wrapper = document.createElement('div');
+            wrapper.style.marginBottom = '20px';
+            
             newsList.forEach(article => {
-                html += `
-                    <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
-                        <strong>${article.title}</strong> (${article.date})<br>
-                        <p>${article.content}</p>
-                        <button onclick="editNewsArticle('${article.id}')">Edit</button>
-                        <button onclick="deleteNewsArticle('${article.id}')" style="color: red;">Delete</button>
-                    </div>
-                `;
+                const articleDiv = document.createElement('div');
+                articleDiv.style.border = '1px solid #ddd';
+                articleDiv.style.padding = '10px';
+                articleDiv.style.margin = '10px 0';
+                
+                const titleElement = document.createElement('strong');
+                titleElement.textContent = article.title;
+                
+                const dateElement = document.createElement('span');
+                dateElement.textContent = ' (' + article.date + ')';
+                
+                const contentElement = document.createElement('p');
+                contentElement.textContent = article.content;
+                
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', () => editNewsArticle(article.id));
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.style.color = 'red';
+                deleteButton.style.marginLeft = '10px';
+                deleteButton.addEventListener('click', () => deleteNewsArticle(article.id));
+                
+                articleDiv.appendChild(titleElement);
+                articleDiv.appendChild(dateElement);
+                articleDiv.appendChild(document.createElement('br'));
+                articleDiv.appendChild(contentElement);
+                articleDiv.appendChild(editButton);
+                articleDiv.appendChild(deleteButton);
+                
+                wrapper.appendChild(articleDiv);
             });
-            html += '</div>';
-            listContainer.innerHTML = html;
+            
+            listContainer.appendChild(wrapper);
         }
         
         function showAddNewsForm() {
@@ -592,8 +621,27 @@
             alert('Article saved successfully!');
         }
         
+        // Setup event listeners to avoid inline onclick (CSP compliance)
+        function setupAdminEventListeners() {
+            // Close modal
+            document.getElementById('admin-modal-close').addEventListener('click', closeAdminPanel);
+            
+            // Login form
+            document.getElementById('admin-login-form').addEventListener('submit', adminLogin);
+            
+            // Add news button
+            document.getElementById('add-news-btn').addEventListener('click', showAddNewsForm);
+            
+            // News form
+            document.getElementById('admin-news-form-element').addEventListener('submit', saveNewsArticle);
+            
+            // Cancel button
+            document.getElementById('cancel-news-btn').addEventListener('click', hideNewsForm);
+        }
+        
         // Simple client-side routing for GitHub Pages
         document.addEventListener('DOMContentLoaded', function() {
+            setupAdminEventListeners();
             const path = window.location.pathname;
             const hash = window.location.hash;
             
