@@ -341,10 +341,7 @@
                     <h3>International Cup</h3>
                     <p>Team USA vs Team International • Two days of championship golf at Lansdowne</p>
                     <div class="social-links">
-                        <a href="#" class="social-link">📘</a>
-                        <a href="#" class="social-link">🐦</a>
-                        <a href="#" class="social-link">📷</a>
-                        <a href="#" class="social-link">📺</a>
+                        <a href="#admin" class="social-link admin-link" title="Admin Panel">⚙️</a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -383,7 +380,10 @@
                 
                 <!-- Admin Dashboard -->
                 <div id="admin-dashboard" style="display: none;">
-                    <h3>News Management</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>News Management</h3>
+                        <button id="admin-logout-btn" style="background: #dc3545; color: white;">Logout</button>
+                    </div>
                     <div id="admin-news-list"></div>
                     <button id="add-news-btn">Add News Article</button>
                     
@@ -475,8 +475,39 @@
         const ADMIN_PASSWORD = 'cup2025';
         const NEWS_STORAGE_KEY = 'internationalCupNews';
         
+        function isAdminAuthenticated() {
+            const isAuthenticated = localStorage.getItem('adminAuthenticated') === 'true';
+            const expirationTime = localStorage.getItem('adminAuthExpiration');
+            
+            if (!isAuthenticated || !expirationTime) {
+                return false;
+            }
+            
+            const currentTime = new Date().getTime();
+            const expiration = parseInt(expirationTime);
+            
+            if (currentTime > expiration) {
+                // Authentication expired, clear it
+                localStorage.removeItem('adminAuthenticated');
+                localStorage.removeItem('adminAuthExpiration');
+                return false;
+            }
+            
+            return true;
+        }
+        
         function openAdminPanel() {
             document.getElementById('admin-panel-modal').style.display = 'block';
+            
+            // Check if already authenticated
+            if (isAdminAuthenticated()) {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                loadAdminNewsList();
+            } else {
+                document.getElementById('admin-login').style.display = 'block';
+                document.getElementById('admin-dashboard').style.display = 'none';
+            }
         }
         
         function closeAdminPanel() {
@@ -487,10 +518,29 @@
             document.getElementById('admin-error').style.display = 'none';
         }
         
+        function adminLogout() {
+            // Clear authentication
+            localStorage.removeItem('adminAuthenticated');
+            localStorage.removeItem('adminAuthExpiration');
+            
+            // Show login form
+            document.getElementById('admin-login').style.display = 'block';
+            document.getElementById('admin-dashboard').style.display = 'none';
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('admin-error').style.display = 'none';
+        }
+        
         function adminLogin(event) {
             event.preventDefault();
             const password = document.getElementById('admin-password-input').value;
             if (password === ADMIN_PASSWORD) {
+                // Set login expiration to 3 weeks from now
+                const expirationDate = new Date();
+                expirationDate.setDate(expirationDate.getDate() + 21); // 3 weeks
+                
+                localStorage.setItem('adminAuthenticated', 'true');
+                localStorage.setItem('adminAuthExpiration', expirationDate.getTime());
+                
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').style.display = 'block';
                 loadAdminNewsList();
@@ -628,6 +678,9 @@
             
             // Login form
             document.getElementById('admin-login-form').addEventListener('submit', adminLogin);
+            
+            // Logout button
+            document.getElementById('admin-logout-btn').addEventListener('click', adminLogout);
             
             // Add news button
             document.getElementById('add-news-btn').addEventListener('click', showAddNewsForm);
