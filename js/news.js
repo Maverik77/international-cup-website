@@ -52,11 +52,26 @@ class NewsManager {
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
-    // Escape HTML to prevent XSS
+    // Escape HTML to prevent XSS, but allow safe internal links
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // Process content to allow safe internal links
+    processContent(content) {
+        // First escape all HTML
+        let processed = this.escapeHtml(content);
+        
+        // Then allow specific safe internal links
+        // Pattern: [Link Text](#section) or [Link Text](/page)
+        processed = processed.replace(
+            /\[([^\]]+)\]\((#[a-zA-Z0-9-]+|\/[a-zA-Z0-9-\/]*)\)/g,
+            '<a href="$2" class="news-link">$1</a>'
+        );
+        
+        return processed;
     }
 }
 
@@ -81,7 +96,7 @@ async function updateHomepageNews() {
                 <article class="news-card">
                     <div class="news-date">${window.newsManager.formatDate(article.date)}</div>
                     <h3>${window.newsManager.escapeHtml(article.title)}</h3>
-                    <p>${window.newsManager.escapeHtml(article.content)}</p>
+                    <p>${window.newsManager.processContent(article.content)}</p>
                 </article>
             `).join('');
             
@@ -108,7 +123,7 @@ async function loadAllNewsInModal() {
             <article class="modal-news-card">
                 <div class="news-date">${window.newsManager.formatDate(article.date)}</div>
                 <h3>${window.newsManager.escapeHtml(article.title)}</h3>
-                <p>${window.newsManager.escapeHtml(article.content)}</p>
+                <p>${window.newsManager.processContent(article.content)}</p>
             </article>
         `).join('');
         
