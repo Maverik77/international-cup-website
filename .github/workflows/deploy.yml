@@ -61,6 +61,11 @@ jobs:
         cp -r css build/
         cp -r js build/
         
+        # Copy data folder if it exists (for news.json and similar assets)
+        if [ -d data ]; then
+          cp -r data build/
+        fi
+        
         # Copy pics folder if it exists
         if [ -d pics ]; then
           cp -r pics build/
@@ -124,15 +129,21 @@ jobs:
         
         aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive \
           --exclude "*" --include "*.ico" --content-type "image/x-icon" --cache-control "max-age=31536000"
+
+        # Ensure JSON files (e.g., data/news.json) have correct headers and are refreshed quickly
+        if [ -d build/data ]; then
+          aws s3 cp build/data/ s3://${{ secrets.S3_BUCKET_NAME }}/data/ --recursive \
+            --exclude "*" --include "*.json" --content-type "application/json" --cache-control "max-age=60"
+        fi
           
         echo "Files deployed to S3 successfully!"
         
-    - name: Invalidate CloudFront
+    - name: Invalidate CloudFront (news.json)
       run: |
         # Create CloudFront invalidation to clear cache
         aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-          --paths "/*"
+          --paths "/data/news.json"
         
         echo "CloudFront cache invalidated successfully!"
         
