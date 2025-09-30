@@ -1,12 +1,14 @@
 // Service Worker for International Cup Website
 // Provides offline functionality and caching
 
-const CACHE_NAME = 'international-cup-v1.0.0';
+const CACHE_NAME = 'international-cup-v1.0.1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/css/styles.css',
   '/js/main.js',
+  '/js/news.js',
+  '/data/news.json',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
 ];
 
@@ -67,4 +69,4 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
-}); 
+});

@@ -75,15 +75,28 @@ class NewsManager {
     }
 }
 
-// Initialize news manager
+// Initialize news manager and update homepage immediately
 document.addEventListener('DOMContentLoaded', function() {
     window.newsManager = new NewsManager();
+    
+    // Update homepage news immediately after initialization
+    if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) {
+        updateHomepageNews();
+    }
 });
 
 // Update homepage news section
 async function updateHomepageNews() {
     try {
         console.log('updateHomepageNews: Starting...');
+        
+        // Ensure newsManager is available
+        if (!window.newsManager) {
+            console.log('updateHomepageNews: NewsManager not ready, retrying...');
+            setTimeout(updateHomepageNews, 100);
+            return;
+        }
+        
         const articles = await window.newsManager.getNews();
         console.log('updateHomepageNews: Got articles:', articles);
         
@@ -141,25 +154,29 @@ async function loadAllNewsInModal() {
     }
 }
 
-// Call this function when the page loads if we're on the homepage
-if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) {
-    document.addEventListener('DOMContentLoaded', updateHomepageNews);
-}
-
-// Debug function to test news processing
-function testNewsProcessing() {
-    console.log('Testing news processing...');
+// Debug function to show status on page
+function showDebugInfo() {
+    const debugDiv = document.createElement('div');
+    debugDiv.id = 'debug-info';
+    debugDiv.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #000; color: #fff; padding: 10px; font-size: 12px; z-index: 9999; max-width: 300px;';
+    
+    let info = 'Debug Info:\\n';
+    info += `NewsManager exists: ${!!window.newsManager}\\n`;
+    info += `Grid element exists: ${!!document.querySelector('#homepage-news-grid')}\\n`;
+    info += `Current path: ${window.location.pathname}\\n`;
+    
     if (window.newsManager) {
         const testContent = "Check out the [schedule](#schedule) for more details.";
         const processed = window.newsManager.processContent(testContent);
-        console.log('Original:', testContent);
-        console.log('Processed:', processed);
-        return processed;
-    } else {
-        console.error('NewsManager not initialized');
-        return null;
+        info += `Test processing works: ${processed.includes('<a href')}\\n`;
     }
+    
+    debugDiv.innerHTML = info.replace(/\\n/g, '<br>');
+    document.body.appendChild(debugDiv);
+    
+    // Remove after 10 seconds
+    setTimeout(() => debugDiv.remove(), 10000);
 }
 
-// Make test function available globally for debugging
-window.testNewsProcessing = testNewsProcessing;
+// Show debug info after page loads
+setTimeout(showDebugInfo, 2000);
