@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Data Form - International Cup</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        .wizard { max-width: 760px; margin: 0 auto; }
+        .step { display: none; padding: 16px 0; }
+        .step.active { display: block; }
+        .controls { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; }
+        .controls .spacer { flex: 1; }
+        .btn { padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn-primary { background: #007bff; color: #fff; }
+        .btn-secondary { background: #6c757d; color: #fff; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="number"],
+        .form-group input[type="tel"],
+        .form-group input[type="url"],
+        .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+        .card { border: 1px solid #ddd; border-radius: 6px; padding: 10px; cursor: pointer; }
+        .card.selected { border-color: #007bff; background: #f0f7ff; }
+        .progress { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; margin: 12px 0 20px; }
+        .progress-bar { height: 100%; background: #007bff; width: 0%; transition: width 0.3s ease; }
+        .review dl { display: grid; grid-template-columns: 1fr 2fr; gap: 8px 16px; }
+        .review dt { font-weight: 700; }
+        .notice { font-size: 14px; color: #555; }
+    </style>
+    <script>
+        const STORAGE_KEY = 'club_data_form_v1';
+        const state = {
+            name_or_email: '',
+            avg_drive_distance: '',
+            fairways_hit: '',
+            avg_7i_distance: '',
+            long_approach_rating: '',
+            mid_short_approach_rating: '',
+            scrambling_rating: '',
+            putting_rating: '',
+            three_putts_per_round: '',
+            shot_shape: '',
+            biggest_miss: '',
+            penalties_per_round: '',
+            consistency_rating: ''
+        };
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(state, parsed);
+                }
+            } catch (e) {}
+        }
+        function saveState() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        }
+        function setSelected(container, value) {
+            const cards = container.querySelectorAll('.card');
+            cards.forEach(c => c.classList.toggle('selected', c.dataset.value === value));
+        }
+        function updateProgress(stepIndex, totalSteps) {
+            const pct = Math.round(((stepIndex + 1) / totalSteps) * 100);
+            const bar = document.querySelector('.progress-bar');
+            if (bar) bar.style.width = pct + '%';
+        }
+        function showStep(index) {
+            const steps = Array.from(document.querySelectorAll('.step'));
+            steps.forEach((s, i) => s.classList.toggle('active', i === index));
+            updateProgress(index, steps.length);
+            document.getElementById('backBtn').disabled = index === 0;
+            const isLast = index === steps.length - 1;
+            document.getElementById('nextBtn').style.display = isLast ? 'none' : 'inline-block';
+            document.getElementById('submitBtn').style.display = isLast ? 'inline-block' : 'none';
+            // Scroll into view for SPA-like navigation
+            steps[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function applyStateToUI() {
+            // text/number inputs
+            const map = {
+                name_or_email: 'nameOrEmail',
+                avg_drive_distance: 'avgDrive',
+                avg_7i_distance: 'avg7i'
+            };
+            Object.keys(map).forEach(k => {
+                const el = document.getElementById(map[k]);
+                if (el) el.value = state[k] || '';
+            });
+
+            // selection groups
+            const groups = [
+                ['fairways_hit', 'fairwaysOptions'],
+                ['long_approach_rating', 'longApproachOptions'],
+                ['mid_short_approach_rating', 'midShortApproachOptions'],
+                ['scrambling_rating', 'scramblingOptions'],
+                ['putting_rating', 'puttingOptions'],
+                ['three_putts_per_round', 'threePuttsOptions'],
+                ['shot_shape', 'shotShapeOptions'],
+                ['biggest_miss', 'biggestMissOptions'],
+                ['penalties_per_round', 'penaltiesOptions'],
+                ['consistency_rating', 'consistencyOptions']
+            ];
+            groups.forEach(([key, containerId]) => {
+                const container = document.getElementById(containerId);
+                if (container) setSelected(container, state[key] || '');
+            });
+        }
+        function onOptionClick(e) {
+            const card = e.target.closest('.card');
+            if (!card) return;
+            const container = card.parentElement;
+            const key = container.dataset.key;
+            const value = card.dataset.value;
+            state[key] = value;
+            setSelected(container, value);
+            saveState();
+        }
+        function collectAndValidate(stepIndex) {
+            // Persist current visible inputs
+            // Map simple inputs
+            const nameEl = document.getElementById('nameOrEmail');
+            if (nameEl) state.name_or_email = nameEl.value.trim();
+            const avgDriveEl = document.getElementById('avgDrive');
+            if (avgDriveEl) state.avg_drive_distance = avgDriveEl.value.trim();
+            const avg7iEl = document.getElementById('avg7i');
+            if (avg7iEl) state.avg_7i_distance = avg7iEl.value.trim();
+            saveState();
+
+            // Basic required validation on certain steps
+            const requiredByStep = {
+                0: ['name_or_email'],
+                1: ['avg_drive_distance'],
+                2: ['fairways_hit'],
+                3: ['avg_7i_distance'],
+                4: ['long_approach_rating'],
+                5: ['mid_short_approach_rating'],
+                6: ['scrambling_rating'],
+                7: ['putting_rating', 'three_putts_per_round'],
+                8: ['shot_shape'],
+                9: ['biggest_miss'],
+                10: ['penalties_per_round'],
+                11: ['consistency_rating']
+            };
+            const required = requiredByStep[stepIndex] || [];
+            const missing = required.filter(k => !state[k]);
+            if (missing.length > 0) {
+                alert('Please complete the required field(s) before continuing.');
+                return false;
+            }
+            return true;
+        }
+        function populateReview() {
+            const out = document.getElementById('reviewList');
+            out.innerHTML = '';
+            const entries = [
+                ['Name or Email', state.name_or_email],
+                ['Average Driving Distance', state.avg_drive_distance],
+                ['Fairways Hit', state.fairways_hit],
+                ['Average 7-iron Distance', state.avg_7i_distance],
+                ['Long Approaches (1–5)', state.long_approach_rating],
+                ['Mid/Short Approaches (1–5)', state.mid_short_approach_rating],
+                ['Scrambling (1–5)', state.scrambling_rating],
+                ['Putting (1–5)', state.putting_rating],
+                ['3-putts/round', state.three_putts_per_round],
+                ['Typical Shot Shape', state.shot_shape],
+                ['Biggest Miss', state.biggest_miss],
+                ['Penalties per round', state.penalties_per_round],
+                ['Consistency (1–5)', state.consistency_rating]
+            ];
+            entries.forEach(([k, v]) => {
+                const dt = document.createElement('dt');
+                dt.textContent = k;
+                const dd = document.createElement('dd');
+                dd.textContent = v || '-';
+                out.appendChild(dt);
+                out.appendChild(dd);
+            });
+        }
+        function handleSubmit(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            // Initialize EmailJS (replace with your public key)
+            try { emailjs.init('vvPZA9beU9jEMGaRP'); } catch (e) {}
+            const params = Object.assign({}, state, { submission_date: new Date().toISOString() });
+            // Replace with your service and template IDs
+            emailjs.send('service_eg9k0co', 'template_rwrgs07', params)
+                .then(() => {
+                    alert('Thanks! Your responses were submitted.');
+                    // keep data in localStorage for now, or clear: localStorage.removeItem(STORAGE_KEY);
+                })
+                .catch(() => {
+                    alert('There was an error submitting. Please try again later.');
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit';
+                });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            loadState();
+            // Wire option groups
+            document.querySelectorAll('.options').forEach(c => c.addEventListener('click', onOptionClick));
+            applyStateToUI();
+
+            let current = 0;
+            const steps = Array.from(document.querySelectorAll('.step'));
+            showStep(current);
+
+            document.getElementById('backBtn').addEventListener('click', function() {
+                if (current > 0) { current -= 1; showStep(current); }
+            });
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                if (!collectAndValidate(current)) return;
+                if (current < steps.length - 1) {
+                    current += 1;
+                    if (current === steps.length - 1) populateReview();
+                    showStep(current);
+                }
+            });
+            document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>International Cup</h1>
+
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="wizard">
+            <h2>Club Data Form</h2>
+            <p class="notice">Use Continue and Back to navigate. Your answers are saved as you go.</p>
+            <p class="notice">For any question with rating 1-5: 1 is weakness and 5 is strength.</p>
+            <div class="progress"><div class="progress-bar"></div></div>
+
+            <section class="step active">
+                <div class="form-group">
+                    <label for="nameOrEmail">Name or Email</label>
+                    <input type="text" id="nameOrEmail" placeholder="Your name or email">
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label for="avgDrive">Average Driving Distance (yards)</label>
+                    <input type="number" id="avgDrive" min="0" step="1" placeholder="e.g., 250">
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Fairways Hit</label>
+                    <div id="fairwaysOptions" class="options" data-key="fairways_hit">
+                        <div class="card" data-value="<30%"><span><30%</span></div>
+                        <div class="card" data-value="30–50%"><span>30–50%</span></div>
+                        <div class="card" data-value="50–70%"><span>50–70%</span></div>
+                        <div class="card" data-value=">70%"><span>>70%</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label for="avg7i">Average 7-iron Distance (yards)</label>
+                    <input type="number" id="avg7i" min="0" step="1" placeholder="e.g., 150">
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Long Approaches (hybrids/woods) 1–5</label>
+                    <div id="longApproachOptions" class="options" data-key="long_approach_rating">
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2">2</div>
+                        <div class="card" data-value="3">3</div>
+                        <div class="card" data-value="4">4</div>
+                        <div class="card" data-value="5">5</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Mid/Short Approaches (8i–LW) 1–5</label>
+                    <div id="midShortApproachOptions" class="options" data-key="mid_short_approach_rating">
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2">2</div>
+                        <div class="card" data-value="3">3</div>
+                        <div class="card" data-value="4">4</div>
+                        <div class="card" data-value="5">5</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Scrambling (non-sand) 1–5</label>
+                    <div id="scramblingOptions" class="options" data-key="scrambling_rating">
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2">2</div>
+                        <div class="card" data-value="3">3</div>
+                        <div class="card" data-value="4">4</div>
+                        <div class="card" data-value="5">5</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Putting 1–5</label>
+                    <div id="puttingOptions" class="options" data-key="putting_rating">
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2">2</div>
+                        <div class="card" data-value="3">3</div>
+                        <div class="card" data-value="4">4</div>
+                        <div class="card" data-value="5">5</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>3-putts/round</label>
+                    <div id="threePuttsOptions" class="options" data-key="three_putts_per_round">
+                        <div class="card" data-value="0">0</div>
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2">2</div>
+                        <div class="card" data-value="3+">3+</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Typical Shot Shape</label>
+                    <div id="shotShapeOptions" class="options" data-key="shot_shape">
+                        <div class="card" data-value="Fade">Fade</div>
+                        <div class="card" data-value="Draw">Draw</div>
+                        <div class="card" data-value="Straight">Straight</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Biggest Miss</label>
+                    <div id="biggestMissOptions" class="options" data-key="biggest_miss">
+                        <div class="card" data-value="Left">Left</div>
+                        <div class="card" data-value="Right">Right</div>
+                        <div class="card" data-value="Short">Short</div>
+                        <div class="card" data-value="Big chunk/thin">Big chunk/thin</div>
+                        <div class="card" data-value="Penalty">Penalty</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Penalties per round</label>
+                    <div id="penaltiesOptions" class="options" data-key="penalties_per_round">
+                        <div class="card" data-value="0">0</div>
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2+">2+</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <div class="form-group">
+                    <label>Consistency (blow-up avoidance) 1–5</label>
+                    <div id="consistencyOptions" class="options" data-key="consistency_rating">
+                        <div class="card" data-value="1">1</div>
+                        <div class="card" data-value="2">2</div>
+                        <div class="card" data-value="3">3</div>
+                        <div class="card" data-value="4">4</div>
+                        <div class="card" data-value="5">5</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="step">
+                <h3>Review Your Answers</h3>
+                <div class="review">
+                    <dl id="reviewList"></dl>
+                </div>
+                <p class="notice">On submit, your responses will be emailed via EmailJS to the configured address.</p>
+            </section>
+
+            <div class="controls">
+                <button id="backBtn" class="btn btn-secondary" type="button">Back</button>
+                <div class="spacer"></div>
+                <button id="nextBtn" class="btn btn-primary" type="button">Continue</button>
+                <button id="submitBtn" class="btn btn-primary" type="button" style="display:none">Submit</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 International Cup. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

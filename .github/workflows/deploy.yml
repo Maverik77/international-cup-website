@@ -81,6 +81,11 @@ jobs:
           cp -r auth build/
         fi
         
+        # Copy forms folder if it exists
+        if [ -d forms ]; then
+          cp -r forms build/
+        fi
+        
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
