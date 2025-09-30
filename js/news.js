@@ -15,7 +15,7 @@ class NewsManager {
                 return this.cache;
             }
 
-            const response = await fetch(this.newsUrl + '?t=' + Date.now());
+            const response = await fetch(this.newsUrl + '?t=' + Date.now(), { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -80,9 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.newsManager = new NewsManager();
     
     // Update homepage news immediately after initialization
-    if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) {
-        updateHomepageNews();
-    }
+    // Always attempt to update if the container exists (works for any path)
+    updateHomepageNews();
 });
 
 // Update homepage news section
