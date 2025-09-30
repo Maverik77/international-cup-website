@@ -595,6 +595,61 @@ section {
     font-size: 1rem;
 }
 
+/* Pairings Party Details Styles */
+.pairings-party-details {
+    margin-top: 1rem;
+}
+
+.pairings-party-details .venue-info,
+.pairings-party-details .event-details,
+.pairings-party-details .menu-info {
+    margin-bottom: 1.5rem;
+}
+
+.pairings-party-details h4 {
+    color: #667eea;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.pairings-party-details .address {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.pairings-party-details .event-details p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.pairings-party-details .menu-section {
+    margin-bottom: 1rem;
+}
+
+.pairings-party-details .menu-section strong {
+    color: #333;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.pairings-party-details ul {
+    margin: 0 0 0 1rem;
+    padding: 0;
+    list-style-type: disc;
+}
+
+.pairings-party-details li {
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+}
+
 /* Contact Section */
 .contact {
     background: #f8fafc;
@@ -2050,6 +2105,21 @@ textarea:focus {
     color: var(--text-light);
     line-height: 1.6;
     margin-bottom: 1.5rem;
+}
+
+.news-card .news-link,
+.modal-news-card .news-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.news-card .news-link:hover,
+.modal-news-card .news-link:hover {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary-color);
 }
 
 .news-link {
