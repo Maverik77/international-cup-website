@@ -58,7 +58,7 @@ function initMobileNavigation() {
 
 // Smooth Scrolling for Navigation Links
 function initSmoothScrolling() {
-    const navLinks = document.querySelectorAll('.nav-link, .btn[href^="#"]');
+    const navLinks = document.querySelectorAll('.nav-link, .btn[href^="#"], .news-link[href^="#"]');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
