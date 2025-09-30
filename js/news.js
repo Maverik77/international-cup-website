@@ -88,21 +88,16 @@ document.addEventListener('DOMContentLoaded', function() {
 // Update homepage news section
 async function updateHomepageNews() {
     try {
-        console.log('updateHomepageNews: Starting...');
-        
         // Ensure newsManager is available
         if (!window.newsManager) {
-            console.log('updateHomepageNews: NewsManager not ready, retrying...');
             setTimeout(updateHomepageNews, 100);
             return;
         }
         
         const articles = await window.newsManager.getNews();
-        console.log('updateHomepageNews: Got articles:', articles);
         
         // Update the news section on index.html if it exists
         const homeNewsGrid = document.querySelector('#homepage-news-grid');
-        console.log('updateHomepageNews: Found grid element:', !!homeNewsGrid);
         if (homeNewsGrid && articles.length > 0) {
             // Show the last 3 articles on homepage
             const sortedArticles = articles.sort((a, b) => b.timestamp - a.timestamp);
@@ -117,9 +112,6 @@ async function updateHomepageNews() {
             `).join('');
             
             homeNewsGrid.innerHTML = articlesHTML;
-            console.log('updateHomepageNews: Updated homepage news successfully');
-        } else {
-            console.log('updateHomepageNews: No grid element or no articles');
         }
     } catch (error) {
         console.error('Error updating homepage news:', error);
@@ -153,30 +145,3 @@ async function loadAllNewsInModal() {
             '<p>Error loading news articles. Please try again later.</p>';
     }
 }
-
-// Debug function to show status on page
-function showDebugInfo() {
-    const debugDiv = document.createElement('div');
-    debugDiv.id = 'debug-info';
-    debugDiv.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #000; color: #fff; padding: 10px; font-size: 12px; z-index: 9999; max-width: 300px;';
-    
-    let info = 'Debug Info:\\n';
-    info += `NewsManager exists: ${!!window.newsManager}\\n`;
-    info += `Grid element exists: ${!!document.querySelector('#homepage-news-grid')}\\n`;
-    info += `Current path: ${window.location.pathname}\\n`;
-    
-    if (window.newsManager) {
-        const testContent = "Check out the [schedule](#schedule) for more details.";
-        const processed = window.newsManager.processContent(testContent);
-        info += `Test processing works: ${processed.includes('<a href')}\\n`;
-    }
-    
-    debugDiv.innerHTML = info.replace(/\\n/g, '<br>');
-    document.body.appendChild(debugDiv);
-    
-    // Remove after 10 seconds
-    setTimeout(() => debugDiv.remove(), 10000);
-}
-
-// Show debug info after page loads
-setTimeout(showDebugInfo, 2000);
