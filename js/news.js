@@ -83,10 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
 // Update homepage news section
 async function updateHomepageNews() {
     try {
+        console.log('updateHomepageNews: Starting...');
         const articles = await window.newsManager.getNews();
+        console.log('updateHomepageNews: Got articles:', articles);
         
         // Update the news section on index.html if it exists
         const homeNewsGrid = document.querySelector('#homepage-news-grid');
+        console.log('updateHomepageNews: Found grid element:', !!homeNewsGrid);
         if (homeNewsGrid && articles.length > 0) {
             // Show the last 3 articles on homepage
             const sortedArticles = articles.sort((a, b) => b.timestamp - a.timestamp);
@@ -101,6 +104,9 @@ async function updateHomepageNews() {
             `).join('');
             
             homeNewsGrid.innerHTML = articlesHTML;
+            console.log('updateHomepageNews: Updated homepage news successfully');
+        } else {
+            console.log('updateHomepageNews: No grid element or no articles');
         }
     } catch (error) {
         console.error('Error updating homepage news:', error);
@@ -139,3 +145,21 @@ async function loadAllNewsInModal() {
 if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) {
     document.addEventListener('DOMContentLoaded', updateHomepageNews);
 }
+
+// Debug function to test news processing
+function testNewsProcessing() {
+    console.log('Testing news processing...');
+    if (window.newsManager) {
+        const testContent = "Check out the [schedule](#schedule) for more details.";
+        const processed = window.newsManager.processContent(testContent);
+        console.log('Original:', testContent);
+        console.log('Processed:', processed);
+        return processed;
+    } else {
+        console.error('NewsManager not initialized');
+        return null;
+    }
+}
+
+// Make test function available globally for debugging
+window.testNewsProcessing = testNewsProcessing;
