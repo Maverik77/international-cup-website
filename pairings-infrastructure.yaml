@@ -41,6 +41,7 @@ Resources:
                   - arn:aws:dynamodb:us-east-1:*:table/icup-pairings
                   - arn:aws:dynamodb:us-east-1:*:table/icup-reveal-state
                   - arn:aws:dynamodb:us-east-1:*:table/icup-websocket-connections
+                  - arn:aws:dynamodb:us-east-1:*:table/icup-players
         - PolicyName: APIGatewayManageConnections
           PolicyDocument:
             Version: '2012-10-17'
@@ -51,7 +52,20 @@ Resources:
                 Resource: '*'
 
   # DynamoDB Tables (using existing tables)
-  # Note: Tables already exist and are referenced by name
+  # Note: Pairings, reveal-state, and websocket-connections tables already exist
+  
+  # Players Table (new)
+  PlayersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: icup-players
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
 
   # Lambda Functions
   GetPairingsFunction:
@@ -89,10 +103,45 @@ Resources:
             Path: /pairings
             Method: POST
 
-  RevealNextFunction:
+  GetPlayersFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: lambda/revealNext/
+      CodeUri: lambda/getPlayers/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Events:
+        GetPlayers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /players
+            Method: GET
+
+  UpdatePlayersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/updatePlayers/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UpdatePlayers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /players
+            Method: POST
+
+  RevealPairingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/revealPairing/
       Handler: index.handler
       Runtime: nodejs18.x
       Role: !GetAtt PairingsLambdaRole.Arn
@@ -102,11 +151,11 @@ Resources:
           ADMIN_PASSWORD: !Ref AdminPassword
           WEBSOCKET_ENDPOINT: !Sub 'https://${PairingsWebSocket}.execute-api.${AWS::Region}.amazonaws.com/prod'
       Events:
-        RevealNext:
+        RevealPairing:
           Type: Api
           Properties:
             RestApiId: !Ref PairingsApi
-            Path: /reveal/next
+            Path: /reveal
             Method: POST
 
   WebSocketConnectFunction:

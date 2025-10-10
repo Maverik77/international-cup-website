@@ -9,7 +9,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
 const WEBSOCKET_ENDPOINT = process.env.WEBSOCKET_ENDPOINT;
 
 exports.handler = async (event) => {
-    console.log('Reveal Next request:', JSON.stringify(event));
+    console.log('Reveal Pairing request:', JSON.stringify(event));
     
     try {
         // Check password
@@ -28,19 +28,27 @@ exports.handler = async (event) => {
         }
         
         const body = JSON.parse(event.body || '{}');
-        const action = body.action || 'next'; // 'next' or 'reset'
+        const action = body.action; // 'reveal' or 'reset'
+        const pairingId = body.pairingId;
+        const step = body.step; // 1 or 2
         
+        // Reset action
         if (action === 'reset') {
-            // Reset reveal state
-            await docClient.send(new PutCommand({
-                TableName: 'icup-reveal-state',
-                Item: {
-                    id: 'current',
-                    currentRevealIndex: -1,
-                    revealedIds: [],
-                    lastUpdated: new Date().toISOString()
-                }
+            // Get all pairings and reset their reveal steps
+            const pairingsResult = await docClient.send(new ScanCommand({
+                TableName: 'icup-pairings'
             }));
+            
+            const pairings = pairingsResult.Items || [];
+            
+            // Reset reveal step for all pairings
+            for (const pairing of pairings) {
+                pairing.revealStep = 0;
+                await docClient.send(new PutCommand({
+                    TableName: 'icup-pairings',
+                    Item: pairing
+                }));
+            }
             
             // Broadcast reset to all connected clients
             await broadcastToClients({ type: 'reset' });
@@ -57,88 +65,89 @@ exports.handler = async (event) => {
             };
         }
         
-        // Get all pairings
-        const pairingsResult = await docClient.send(new ScanCommand({
-            TableName: 'icup-pairings'
-        }));
-        
-        const pairings = (pairingsResult.Items || []).sort((a, b) => {
-            if (a.day !== b.day) return a.day - b.day;
-            if (a.type !== b.type) return a.type === 'team' ? -1 : 1;
-            return a.match_number - b.match_number;
-        });
-        
-        // Get current reveal state
-        const revealStateResult = await docClient.send(new GetCommand({
-            TableName: 'icup-reveal-state',
-            Key: { id: 'current' }
-        }));
-        
-        const revealState = revealStateResult.Item || {
-            id: 'current',
-            currentRevealIndex: -1,
-            revealedIds: []
-        };
-        
-        const nextIndex = revealState.currentRevealIndex + 1;
-        
-        if (nextIndex >= pairings.length) {
+        // Reveal action
+        if (action === 'reveal' && pairingId && step) {
+            // Get the specific pairing
+            const pairingResult = await docClient.send(new GetCommand({
+                TableName: 'icup-pairings',
+                Key: { id: pairingId }
+            }));
+            
+            const pairing = pairingResult.Item;
+            
+            if (!pairing) {
+                return {
+                    statusCode: 404,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({ error: 'Pairing not found' })
+                };
+            }
+            
+            // Update reveal step
+            pairing.revealStep = step;
+            
+            await docClient.send(new PutCommand({
+                TableName: 'icup-pairings',
+                Item: pairing
+            }));
+            
+            // Determine which side to show based on step and reveal order
+            let side;
+            if (step === 1) {
+                // First reveal - show the side specified by revealOrder
+                side = pairing.revealOrder === 'usa-first' ? 'usa' : 'intl';
+            } else if (step === 2) {
+                // Second reveal - show the opposite side
+                side = pairing.revealOrder === 'usa-first' ? 'intl' : 'usa';
+            }
+            
+            // Broadcast to all connected clients
+            await broadcastToClients({
+                type: 'reveal',
+                pairingId: pairing.id,
+                step: step,
+                side: side,
+                pairing: pairing
+            });
+            
             return {
                 statusCode: 200,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type,X-Admin-Password',
+                    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
                 },
-                body: JSON.stringify({ 
-                    success: true, 
-                    complete: true,
-                    message: 'All pairings revealed' 
+                body: JSON.stringify({
+                    success: true,
+                    pairing: pairing,
+                    step: step,
+                    side: side
                 })
             };
         }
         
-        const nextPairing = pairings[nextIndex];
-        revealState.currentRevealIndex = nextIndex;
-        revealState.revealedIds.push(nextPairing.id);
-        revealState.lastUpdated = new Date().toISOString();
-        
-        // Update reveal state
-        await docClient.send(new PutCommand({
-            TableName: 'icup-reveal-state',
-            Item: revealState
-        }));
-        
-        // Broadcast to all connected clients
-        await broadcastToClients({
-            type: 'reveal',
-            pairing: nextPairing,
-            revealIndex: nextIndex
-        });
-        
         return {
-            statusCode: 200,
+            statusCode: 400,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type,X-Admin-Password',
-                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
+                'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify({
-                success: true,
-                pairing: nextPairing,
-                revealIndex: nextIndex,
-                totalPairings: pairings.length
-            })
+            body: JSON.stringify({ error: 'Invalid request - missing action, pairingId, or step' })
         };
+        
     } catch (error) {
-        console.error('Error revealing next pairing:', error);
+        console.error('Error revealing pairing:', error);
         return {
             statusCode: 500,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify({ error: 'Failed to reveal next pairing' })
+            body: JSON.stringify({ error: 'Failed to reveal pairing' })
         };
     }
 };
@@ -180,4 +189,3 @@ async function broadcastToClients(message) {
         console.error('Error broadcasting to clients:', error);
     }
 }
-
