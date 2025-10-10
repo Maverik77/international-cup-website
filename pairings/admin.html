@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Cup - Pairings Admin</title>
+    <link rel="stylesheet" href="../css/pairings.css">
+</head>
+<body class="pairings-admin">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>⛳ International Cup - Pairings Admin</h1>
+            <p>Manage pairings and control reveal sequence for the pairings party</p>
+        </div>
+        
+        <!-- Password Section -->
+        <div id="password-section" class="password-section">
+            <h2>Admin Access</h2>
+            <p>Enter admin password to manage pairings</p>
+            <input type="password" id="admin-password" placeholder="Enter password">
+            <button class="btn btn-primary" onclick="login()">Login</button>
+            <p id="password-error" style="color: red; margin-top: 10px;"></p>
+        </div>
+        
+        <!-- Main Admin Interface (hidden until authenticated) -->
+        <div id="admin-interface" style="display: none;">
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <h2>Reveal Controls</h2>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" onclick="revealNext()">
+                        Reveal Next Pairing
+                    </button>
+                    <button class="btn btn-warning" onclick="resetReveals()">
+                        Reset All Reveals
+                    </button>
+                    <button class="btn btn-success" onclick="saveAllPairings()">
+                        Save All Changes
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadInitialData()">
+                        Load Sample Data
+                    </button>
+                </div>
+                
+                <div class="status-display">
+                    <p><strong>Status:</strong> <span id="reveal-status">Ready</span></p>
+                    <p><strong>Revealed:</strong> <span id="revealed-count">0</span> / <span id="total-count">0</span></p>
+                    <p><strong>Next to reveal:</strong> <span id="next-reveal">None</span></p>
+                </div>
+            </div>
+            
+            <!-- Day 1 Team Matches Editor -->
+            <div class="pairings-editor">
+                <h2>Day 1 - Team Matches (12 Matches)</h2>
+                <div id="day1-editor"></div>
+            </div>
+            
+            <!-- Day 2 Singles Matches Editor -->
+            <div class="pairings-editor">
+                <h2>Day 2 - Singles Matches (24 Matches)</h2>
+                <div id="day2-editor"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration - UPDATE THESE AFTER BACKEND DEPLOYMENT
+        const CONFIG = {
+            REST_API_URL: 'https://YOUR_API_GATEWAY_URL/prod',
+            WEBSOCKET_URL: 'wss://YOUR_WEBSOCKET_URL/prod'
+        };
+        
+        let adminPassword = '';
+        let pairings = [];
+        let revealState = {};
+        
+        // Check for saved password
+        function checkSavedPassword() {
+            const saved = localStorage.getItem('icup_admin_password');
+            if (saved) {
+                adminPassword = saved;
+                document.getElementById('admin-password').value = saved;
+                login();
+            }
+        }
+        
+        // Login function
+        async function login() {
+            const password = document.getElementById('admin-password').value;
+            const errorEl = document.getElementById('password-error');
+            
+            if (!password) {
+                errorEl.textContent = 'Please enter a password';
+                return;
+            }
+            
+            // Test password by making a request
+            try {
+                const response = await fetch(`${CONFIG.REST_API_URL}/pairings`, {
+                    headers: {
+                        'X-Admin-Password': password
+                    }
+                });
+                
+                if (response.ok) {
+                    adminPassword = password;
+                    localStorage.setItem('icup_admin_password', password);
+                    document.getElementById('password-section').style.display = 'none';
+                    document.getElementById('admin-interface').style.display = 'block';
+                    await loadPairings();
+                } else {
+                    errorEl.textContent = 'Invalid password';
+                }
+            } catch (error) {
+                errorEl.textContent = 'Connection error - check API configuration';
+                console.error('Login error:', error);
+            }
+        }
+        
+        // Load pairings from API
+        async function loadPairings() {
+            try {
+                const response = await fetch(`${CONFIG.REST_API_URL}/pairings`);
+                const data = await response.json();
+                
+                pairings = data.pairings || [];
+                revealState = data.revealState || { currentRevealIndex: -1, revealedIds: [] };
+                
+                if (pairings.length === 0) {
+                    // No pairings yet, initialize empty structure
+                    initializeEmptyPairings();
+                }
+                
+                renderEditors();
+                updateStatus();
+            } catch (error) {
+                console.error('Failed to load pairings:', error);
+                alert('Failed to load pairings. Check console for details.');
+            }
+        }
+        
+        // Initialize empty pairings structure
+        function initializeEmptyPairings() {
+            pairings = [];
+            
+            // Day 1: 12 team matches
+            for (let i = 1; i <= 12; i++) {
+                pairings.push({
+                    id: `day1-team-${i}`,
+                    type: 'team',
+                    day: 1,
+                    match_number: i,
+                    usa_team: { player1: '', player2: '' },
+                    intl_team: { player1: '', player2: '' },
+                    revealed: false,
+                    reveal_stage: 0
+                });
+            }
+            
+            // Day 2: 24 singles matches
+            for (let i = 1; i <= 24; i++) {
+                pairings.push({
+                    id: `day2-singles-${i}`,
+                    type: 'singles',
+                    day: 2,
+                    match_number: i,
+                    usa_player: '',
+                    intl_player: '',
+                    revealed: false,
+                    reveal_stage: 0
+                });
+            }
+        }
+        
+        // Render editors
+        function renderEditors() {
+            const day1Editor = document.getElementById('day1-editor');
+            const day2Editor = document.getElementById('day2-editor');
+            
+            day1Editor.innerHTML = '';
+            day2Editor.innerHTML = '';
+            
+            pairings.forEach(pairing => {
+                const card = createEditorCard(pairing);
+                
+                if (pairing.day === 1) {
+                    day1Editor.appendChild(card);
+                } else {
+                    day2Editor.appendChild(card);
+                }
+            });
+        }
+        
+        // Create editor card
+        function createEditorCard(pairing) {
+            const card = document.createElement('div');
+            card.className = 'pairing-edit-card';
+            card.dataset.pairingId = pairing.id;
+            
+            if (pairing.type === 'team') {
+                card.innerHTML = `
+                    <h3>Match ${pairing.match_number} ${isRevealed(pairing.id) ? '✅ Revealed' : ''}</h3>
+                    <div class="team-inputs">
+                        <div class="input-group usa">
+                            <label>USA Player 1</label>
+                            <input type="text" data-field="usa_team.player1" 
+                                   value="${pairing.usa_team.player1}" 
+                                   onchange="updatePairing('${pairing.id}', this)">
+                        </div>
+                        <div class="input-group intl">
+                            <label>International Player 1</label>
+                            <input type="text" data-field="intl_team.player1" 
+                                   value="${pairing.intl_team.player1}" 
+                                   onchange="updatePairing('${pairing.id}', this)">
+                        </div>
+                        <div class="input-group usa">
+                            <label>USA Player 2</label>
+                            <input type="text" data-field="usa_team.player2" 
+                                   value="${pairing.usa_team.player2}" 
+                                   onchange="updatePairing('${pairing.id}', this)">
+                        </div>
+                        <div class="input-group intl">
+                            <label>International Player 2</label>
+                            <input type="text" data-field="intl_team.player2" 
+                                   value="${pairing.intl_team.player2}" 
+                                   onchange="updatePairing('${pairing.id}', this)">
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <h3>Match ${pairing.match_number} ${isRevealed(pairing.id) ? '✅ Revealed' : ''}</h3>
+                    <div class="singles-inputs">
+                        <div class="input-group usa">
+                            <label>USA Player</label>
+                            <input type="text" data-field="usa_player" 
+                                   value="${pairing.usa_player}" 
+                                   onchange="updatePairing('${pairing.id}', this)">
+                        </div>
+                        <div class="input-group intl">
+                            <label>International Player</label>
+                            <input type="text" data-field="intl_player" 
+                                   value="${pairing.intl_player}" 
+                                   onchange="updatePairing('${pairing.id}', this)">
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return card;
+        }
+        
+        // Check if pairing is revealed
+        function isRevealed(pairingId) {
+            return revealState.revealedIds && revealState.revealedIds.includes(pairingId);
+        }
+        
+        // Update pairing in memory
+        function updatePairing(pairingId, inputElement) {
+            const pairing = pairings.find(p => p.id === pairingId);
+            if (!pairing) return;
+            
+            const field = inputElement.dataset.field;
+            const value = inputElement.value;
+            
+            if (field.includes('.')) {
+                const [obj, prop] = field.split('.');
+                pairing[obj][prop] = value;
+            } else {
+                pairing[field] = value;
+            }
+            
+            console.log('Updated:', pairingId, field, value);
+        }
+        
+        // Save all pairings to API
+        async function saveAllPairings() {
+            try {
+                document.getElementById('reveal-status').textContent = 'Saving...';
+                
+                const response = await fetch(`${CONFIG.REST_API_URL}/pairings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ pairings })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('reveal-status').textContent = `Saved ${data.count} pairings`;
+                    setTimeout(() => updateStatus(), 2000);
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Failed to save pairings');
+                document.getElementById('reveal-status').textContent = 'Save failed';
+            }
+        }
+        
+        // Reveal next pairing
+        async function revealNext() {
+            try {
+                document.getElementById('reveal-status').textContent = 'Revealing...';
+                
+                const response = await fetch(`${CONFIG.REST_API_URL}/reveal/next`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ action: 'next' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.complete) {
+                    document.getElementById('reveal-status').textContent = 'All pairings revealed!';
+                    alert('All pairings have been revealed!');
+                } else {
+                    revealState.currentRevealIndex = data.revealIndex;
+                    if (!revealState.revealedIds) revealState.revealedIds = [];
+                    revealState.revealedIds.push(data.pairing.id);
+                    
+                    renderEditors();
+                    updateStatus();
+                }
+            } catch (error) {
+                console.error('Reveal error:', error);
+                alert('Failed to reveal next pairing');
+            }
+        }
+        
+        // Reset all reveals
+        async function resetReveals() {
+            if (!confirm('Reset all reveals? This will hide all pairings on the display screen.')) {
+                return;
+            }
+            
+            try {
+                document.getElementById('reveal-status').textContent = 'Resetting...';
+                
+                const response = await fetch(`${CONFIG.REST_API_URL}/reveal/next`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ action: 'reset' })
+                });
+                
+                if (response.ok) {
+                    revealState = { currentRevealIndex: -1, revealedIds: [] };
+                    renderEditors();
+                    updateStatus();
+                }
+            } catch (error) {
+                console.error('Reset error:', error);
+                alert('Failed to reset reveals');
+            }
+        }
+        
+        // Update status display
+        function updateStatus() {
+            const revealedCount = revealState.revealedIds ? revealState.revealedIds.length : 0;
+            const totalCount = pairings.length;
+            
+            document.getElementById('revealed-count').textContent = revealedCount;
+            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('reveal-status').textContent = 'Ready';
+            
+            const nextIndex = (revealState.currentRevealIndex || -1) + 1;
+            if (nextIndex < pairings.length) {
+                const nextPairing = pairings[nextIndex];
+                const desc = nextPairing.type === 'team' 
+                    ? `Day ${nextPairing.day} Team Match ${nextPairing.match_number}`
+                    : `Day ${nextPairing.day} Singles Match ${nextPairing.match_number}`;
+                document.getElementById('next-reveal').textContent = desc;
+            } else {
+                document.getElementById('next-reveal').textContent = 'All revealed!';
+            }
+        }
+        
+        // Load sample data
+        function loadInitialData() {
+            if (!confirm('Load sample data? This will overwrite current pairings.')) {
+                return;
+            }
+            
+            initializeEmptyPairings();
+            
+            // Add some sample names
+            const usaPlayers = ['John Smith', 'Mike Johnson', 'David Williams', 'Chris Brown', 'Matt Davis'];
+            const intlPlayers = ['Pierre Dubois', 'Hans Schmidt', 'Luca Rossi', 'Carlos Garcia', 'Yuki Tanaka'];
+            
+            pairings.forEach((pairing, idx) => {
+                if (pairing.type === 'team') {
+                    pairing.usa_team.player1 = usaPlayers[idx % usaPlayers.length];
+                    pairing.usa_team.player2 = usaPlayers[(idx + 1) % usaPlayers.length];
+                    pairing.intl_team.player1 = intlPlayers[idx % intlPlayers.length];
+                    pairing.intl_team.player2 = intlPlayers[(idx + 1) % intlPlayers.length];
+                } else {
+                    pairing.usa_player = usaPlayers[idx % usaPlayers.length];
+                    pairing.intl_player = intlPlayers[idx % intlPlayers.length];
+                }
+            });
+            
+            renderEditors();
+            updateStatus();
+            alert('Sample data loaded. Click "Save All Changes" to persist.');
+        }
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            checkSavedPassword();
+        });
+    </script>
+</body>
+</html>
+

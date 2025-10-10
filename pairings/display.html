@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Cup - Pairings Display</title>
+    <link rel="stylesheet" href="../css/pairings.css">
+    <style>
+        /* Additional display-specific styles */
+        body {
+            cursor: none; /* Hide cursor for clean display */
+        }
+    </style>
+</head>
+<body class="pairings-display">
+    <div class="display-container">
+        <div class="display-header">
+            <h1>⛳ International Cup Pairings ⛳</h1>
+        </div>
+        
+        <div class="display-content">
+            <div class="day-section">
+                <h2>Day 1 - Team Matches</h2>
+                <div id="day1-pairings" class="pairings-grid"></div>
+            </div>
+            
+            <div class="day-section">
+                <h2>Day 2 - Singles Matches</h2>
+                <div id="day2-pairings" class="pairings-grid"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reveal Animation Overlay -->
+    <div id="reveal-overlay" class="reveal-overlay">
+        <div class="reveal-content">
+            <div id="reveal-usa" class="reveal-team usa">
+                <div class="reveal-players"></div>
+            </div>
+            <div id="reveal-intl" class="reveal-team intl">
+                <div class="reveal-players"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Connection Status -->
+    <div id="connection-status" class="connection-status connecting">
+        Connecting...
+    </div>
+    
+    <script>
+        // Configuration - UPDATE THESE AFTER BACKEND DEPLOYMENT
+        const CONFIG = {
+            REST_API_URL: 'https://YOUR_API_GATEWAY_URL/prod',
+            WEBSOCKET_URL: 'wss://YOUR_WEBSOCKET_URL/prod'
+        };
+        
+        let ws = null;
+        let pairings = [];
+        let revealState = {};
+        let isRevealing = false;
+        
+        // Initialize display
+        async function init() {
+            await loadPairings();
+            connectWebSocket();
+        }
+        
+        // Load pairings from API
+        async function loadPairings() {
+            try {
+                const response = await fetch(`${CONFIG.REST_API_URL}/pairings`);
+                const data = await response.json();
+                
+                pairings = data.pairings || [];
+                revealState = data.revealState || { revealedIds: [] };
+                
+                renderPairings();
+            } catch (error) {
+                console.error('Failed to load pairings:', error);
+            }
+        }
+        
+        // Render pairings on screen
+        function renderPairings() {
+            const day1Container = document.getElementById('day1-pairings');
+            const day2Container = document.getElementById('day2-pairings');
+            
+            day1Container.innerHTML = '';
+            day2Container.innerHTML = '';
+            
+            pairings.forEach(pairing => {
+                const card = createPairingCard(pairing);
+                
+                if (pairing.day === 1) {
+                    day1Container.appendChild(card);
+                } else {
+                    day2Container.appendChild(card);
+                }
+                
+                // Show revealed pairings
+                if (revealState.revealedIds && revealState.revealedIds.includes(pairing.id)) {
+                    setTimeout(() => card.classList.add('revealed'), 100);
+                }
+            });
+        }
+        
+        // Create pairing card element
+        function createPairingCard(pairing) {
+            const card = document.createElement('div');
+            card.className = 'pairing-card';
+            card.dataset.pairingId = pairing.id;
+            
+            if (pairing.type === 'team') {
+                card.innerHTML = `
+                    <div class="match-number">Match ${pairing.match_number}</div>
+                    <div class="pairing-matchup">
+                        <div class="team-side usa">
+                            <div class="player-name">${pairing.usa_team.player1 || 'TBD'}</div>
+                            <div class="player-name">${pairing.usa_team.player2 || 'TBD'}</div>
+                        </div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team-side intl">
+                            <div class="player-name">${pairing.intl_team.player1 || 'TBD'}</div>
+                            <div class="player-name">${pairing.intl_team.player2 || 'TBD'}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="match-number">Match ${pairing.match_number}</div>
+                    <div class="pairing-matchup">
+                        <div class="team-side usa">
+                            <div class="player-name">${pairing.usa_player || 'TBD'}</div>
+                        </div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team-side intl">
+                            <div class="player-name">${pairing.intl_player || 'TBD'}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return card;
+        }
+        
+        // Connect to WebSocket
+        function connectWebSocket() {
+            updateConnectionStatus('connecting');
+            
+            ws = new WebSocket(CONFIG.WEBSOCKET_URL);
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                updateConnectionStatus('connected');
+                setTimeout(() => {
+                    document.getElementById('connection-status').style.display = 'none';
+                }, 2000);
+            };
+            
+            ws.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                handleWebSocketMessage(message);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateConnectionStatus('disconnected');
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                updateConnectionStatus('disconnected');
+                // Reconnect after 5 seconds
+                setTimeout(connectWebSocket, 5000);
+            };
+        }
+        
+        // Handle WebSocket messages
+        function handleWebSocketMessage(message) {
+            console.log('WebSocket message:', message);
+            
+            if (message.type === 'reveal') {
+                revealPairing(message.pairing);
+            } else if (message.type === 'reset') {
+                resetDisplay();
+            }
+        }
+        
+        // Animate pairing reveal
+        async function revealPairing(pairing) {
+            if (isRevealing) return;
+            isRevealing = true;
+            
+            const overlay = document.getElementById('reveal-overlay');
+            const usaTeam = document.getElementById('reveal-usa');
+            const intlTeam = document.getElementById('reveal-intl');
+            
+            // Show overlay
+            overlay.classList.add('active');
+            
+            // Prepare content
+            if (pairing.type === 'team') {
+                usaTeam.querySelector('.reveal-players').innerHTML = `
+                    <div>${pairing.usa_team.player1}</div>
+                    <div>${pairing.usa_team.player2}</div>
+                `;
+                intlTeam.querySelector('.reveal-players').innerHTML = `
+                    <div>${pairing.intl_team.player1}</div>
+                    <div>${pairing.intl_team.player2}</div>
+                `;
+            } else {
+                usaTeam.querySelector('.reveal-players').innerHTML = `
+                    <div>${pairing.usa_player}</div>
+                `;
+                intlTeam.querySelector('.reveal-players').innerHTML = `
+                    <div>${pairing.intl_player}</div>
+                `;
+            }
+            
+            // Animate USA team
+            await new Promise(resolve => {
+                usaTeam.classList.add('show');
+                setTimeout(resolve, 1500);
+            });
+            
+            // Animate International team
+            await new Promise(resolve => {
+                intlTeam.classList.add('show');
+                setTimeout(resolve, 1500);
+            });
+            
+            // Hide overlay and show in grid
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    usaTeam.classList.remove('show');
+                    intlTeam.classList.remove('show');
+                    resolve();
+                }, 1000);
+            });
+            
+            // Add to grid
+            const card = document.querySelector(`[data-pairing-id="${pairing.id}"]`);
+            if (card) {
+                card.classList.add('revealed');
+            }
+            
+            // Update reveal state
+            if (!revealState.revealedIds) revealState.revealedIds = [];
+            if (!revealState.revealedIds.includes(pairing.id)) {
+                revealState.revealedIds.push(pairing.id);
+            }
+            
+            isRevealing = false;
+        }
+        
+        // Reset display
+        function resetDisplay() {
+            const cards = document.querySelectorAll('.pairing-card');
+            cards.forEach(card => card.classList.remove('revealed'));
+            revealState = { revealedIds: [] };
+        }
+        
+        // Update connection status
+        function updateConnectionStatus(status) {
+            const statusEl = document.getElementById('connection-status');
+            statusEl.className = `connection-status ${status}`;
+            
+            const statusText = {
+                connecting: 'Connecting...',
+                connected: 'Connected ✓',
+                disconnected: 'Disconnected - Reconnecting...'
+            };
+            
+            statusEl.textContent = statusText[status] || status;
+            
+            if (status === 'connected') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 2000);
+            } else {
+                statusEl.style.display = 'block';
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+        
+        // Reload pairings every 30 seconds as fallback
+        setInterval(loadPairings, 30000);
+    </script>
+</body>
+</html>
+

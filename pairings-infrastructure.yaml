@@ -1,0 +1,263 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: International Cup Pairings Reveal System
+
+Parameters:
+  AdminPassword:
+    Type: String
+    Default: icup2024
+    NoEcho: true
+    Description: Password for admin access to pairing management
+
+Resources:
+  # Lambda Execution Role
+  PairingsLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:BatchWriteItem
+                Resource:
+                  - !GetAtt PairingsTable.Arn
+                  - !GetAtt RevealStateTable.Arn
+                  - !GetAtt WebSocketConnectionsTable.Arn
+        - PolicyName: APIGatewayManageConnections
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - execute-api:ManageConnections
+                Resource: '*'
+
+  # DynamoDB Tables
+  PairingsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: icup-pairings
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  RevealStateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: icup-reveal-state
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  WebSocketConnectionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: icup-websocket-connections
+      AttributeDefinitions:
+        - AttributeName: connectionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: connectionId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Lambda Functions
+  GetPairingsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getPairings/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Events:
+        GetPairings:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /pairings
+            Method: GET
+
+  UpdatePairingsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/updatePairings/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UpdatePairings:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /pairings
+            Method: POST
+
+  RevealNextFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/revealNext/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          ADMIN_PASSWORD: !Ref AdminPassword
+          WEBSOCKET_ENDPOINT: !Sub 'https://${PairingsWebSocket}.execute-api.${AWS::Region}.amazonaws.com/prod'
+      Events:
+        RevealNext:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /reveal/next
+            Method: POST
+
+  WebSocketConnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/websocketConnect/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+
+  WebSocketDisconnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/websocketDisconnect/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+
+  # REST API
+  PairingsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Admin-Password'"
+        AllowOrigin: "'*'"
+
+  # WebSocket API
+  PairingsWebSocket:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: icup-pairings-websocket
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: $request.body.action
+
+  WebSocketConnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref PairingsWebSocket
+      RouteKey: $connect
+      AuthorizationType: NONE
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref WebSocketConnectIntegration
+
+  WebSocketDisconnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref PairingsWebSocket
+      RouteKey: $disconnect
+      AuthorizationType: NONE
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref WebSocketDisconnectIntegration
+
+  WebSocketConnectIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref PairingsWebSocket
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebSocketConnectFunction.Arn}/invocations'
+
+  WebSocketDisconnectIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref PairingsWebSocket
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebSocketDisconnectFunction.Arn}/invocations'
+
+  WebSocketDeployment:
+    Type: AWS::ApiGatewayV2::Deployment
+    DependsOn:
+      - WebSocketConnectRoute
+      - WebSocketDisconnectRoute
+    Properties:
+      ApiId: !Ref PairingsWebSocket
+
+  WebSocketStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      StageName: prod
+      DeploymentId: !Ref WebSocketDeployment
+      ApiId: !Ref PairingsWebSocket
+
+  # Lambda Permissions for WebSocket
+  WebSocketConnectPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WebSocketConnectFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${PairingsWebSocket}/*'
+
+  WebSocketDisconnectPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WebSocketDisconnectFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${PairingsWebSocket}/*'
+
+Outputs:
+  RestApiUrl:
+    Description: REST API endpoint URL
+    Value: !Sub 'https://${PairingsApi}.execute-api.${AWS::Region}.amazonaws.com/prod'
+  WebSocketUrl:
+    Description: WebSocket API endpoint URL
+    Value: !Sub 'wss://${PairingsWebSocket}.execute-api.${AWS::Region}.amazonaws.com/prod'
+  PairingsTableName:
+    Description: DynamoDB Pairings Table Name
+    Value: !Ref PairingsTable
+  RevealStateTableName:
+    Description: DynamoDB Reveal State Table Name
+    Value: !Ref RevealStateTable
+

@@ -1,0 +1,453 @@
+/* International Cup Pairings Reveal System Styles */
+
+:root {
+    --usa-red: #DC143C;
+    --intl-navy: #000080;
+    --bg-dark: #1a1a1a;
+    --bg-light: #f5f5f5;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+    --accent-gold: #FFD700;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.pairings-display {
+    font-family: 'Arial', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Display Screen Layout */
+.display-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+}
+
+.display-header {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 3px solid var(--accent-gold);
+    margin-bottom: 20px;
+}
+
+.display-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-gold);
+}
+
+.display-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.day-section {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.day-section h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+}
+
+.pairings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pairing-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    border-left: 5px solid var(--accent-gold);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+}
+
+.pairing-card.revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.match-number {
+    font-size: 0.9rem;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.pairing-matchup {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 15px;
+    align-items: center;
+    font-size: 1.3rem;
+}
+
+.team-side {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.team-side.usa {
+    background: var(--usa-red);
+    text-align: right;
+}
+
+.team-side.intl {
+    background: var(--intl-navy);
+    text-align: left;
+}
+
+.vs-divider {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+}
+
+.player-name {
+    font-weight: bold;
+    margin: 3px 0;
+}
+
+/* Reveal Animation Overlay */
+.reveal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.reveal-overlay.active {
+    display: flex;
+}
+
+.reveal-content {
+    text-align: center;
+    max-width: 80%;
+}
+
+.reveal-team {
+    padding: 40px 60px;
+    border-radius: 15px;
+    margin: 20px 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.reveal-team.usa {
+    background: var(--usa-red);
+}
+
+.reveal-team.intl {
+    background: var(--intl-navy);
+}
+
+.reveal-team.show {
+    animation: revealTeam 0.8s ease forwards;
+}
+
+.reveal-players {
+    font-size: 2rem;
+    line-height: 1.8;
+}
+
+@keyframes revealTeam {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-5deg);
+    }
+    60% {
+        transform: scale(1.1) rotate(2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes slideToGrid {
+    from {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translate(var(--grid-x, 0), var(--grid-y, 0)) scale(0.3);
+        opacity: 0;
+    }
+}
+
+/* Admin Panel Styles */
+body.pairings-admin {
+    font-family: 'Arial', sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+    padding: 20px;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, var(--usa-red) 0%, var(--intl-navy) 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.admin-header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.password-section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    margin: 50px auto;
+}
+
+.password-section input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.controls-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.controls-section h2 {
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.control-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: var(--usa-red);
+    color: white;
+}
+
+.btn-secondary {
+    background: var(--intl-navy);
+    color: white;
+}
+
+.btn-warning {
+    background: #ff9800;
+    color: white;
+}
+
+.btn-success {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status-display {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.status-display p {
+    margin: 5px 0;
+}
+
+.pairings-editor {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.pairings-editor h2 {
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.pairing-edit-card {
+    background: #f9f9f9;
+    border-left: 4px solid var(--accent-gold);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.pairing-edit-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.team-inputs, .singles-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.input-group.usa label {
+    color: var(--usa-red);
+}
+
+.input-group.intl label {
+    color: var(--intl-navy);
+}
+
+.input-group input {
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.input-group.usa input {
+    border-color: var(--usa-red);
+}
+
+.input-group.intl input {
+    border-color: var(--intl-navy);
+}
+
+.connection-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+.connection-status.connected {
+    background: #4CAF50;
+    color: white;
+}
+
+.connection-status.disconnected {
+    background: #f44336;
+    color: white;
+}
+
+.connection-status.connecting {
+    background: #ff9800;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .display-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .display-header h1 {
+        font-size: 2rem;
+    }
+    
+    .pairing-matchup {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .team-inputs, .singles-inputs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
