@@ -622,3 +622,72 @@ body.pairings-admin {
     cursor: not-allowed;
 }
 
+/* Roster Management - Tabbed & Collapsible */
+.roster-management {
+    border: 1px solid #ddd;
+}
+
+.roster-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.roster-header h2 {
+    margin: 0;
+}
+
+.roster-collapse-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+}
+
+.roster-management.collapsed .roster-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.roster-management.collapsed .roster-content {
+    display: none;
+}
+
+.roster-tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.roster-tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    border: none;
+    background: #f0f0f0;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.roster-tab.active {
+    background: white;
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+.roster-tab.usa:hover {
+    background: rgba(220, 20, 60, 0.1);
+}
+
+.roster-tab.intl:hover {
+    background: rgba(0, 0, 128, 0.1);
+}
+
+.roster-tab-content {
+    display: none;
+}
+
+.roster-tab-content.active {
+    display: block;
+}
+

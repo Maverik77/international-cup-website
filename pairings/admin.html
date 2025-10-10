@@ -26,29 +26,41 @@
         <div id="admin-interface" style="display: none;">
             
             <!-- Player Roster Management -->
-            <div class="roster-management">
-                <h2>Player Roster Management</h2>
-                <p style="margin-bottom: 15px;">Manage all players for Team USA and International team</p>
+            <div class="roster-management collapsed">
+                <div class="roster-header" onclick="toggleRoster()">
+                    <h2>Player Roster Management</h2>
+                    <span class="roster-collapse-icon">▼</span>
+                </div>
                 
-                <div class="roster-grid">
-                    <!-- USA Players -->
-                    <div class="roster-column usa">
-                        <h3>🇺🇸 Team USA</h3>
+                <div class="roster-content">
+                    <p style="margin-bottom: 15px; padding: 0 20px;">Manage all players for Team USA and International team</p>
+                    
+                    <!-- Tabs -->
+                    <div class="roster-tabs">
+                        <button class="roster-tab usa active" onclick="switchRosterTab('usa')">
+                            🇺🇸 Team USA (<span id="usa-count">0</span>)
+                        </button>
+                        <button class="roster-tab intl" onclick="switchRosterTab('intl')">
+                            🌍 Team International (<span id="intl-count">0</span>)
+                        </button>
+                    </div>
+                    
+                    <!-- USA Tab Content -->
+                    <div id="roster-tab-usa" class="roster-tab-content active" style="padding: 0 20px 20px;">
                         <div id="usa-players" class="player-list"></div>
                         <button class="btn-add-player" onclick="addPlayer('USA')">+ Add USA Player</button>
                     </div>
                     
-                    <!-- International Players -->
-                    <div class="roster-column intl">
-                        <h3>🌍 Team International</h3>
+                    <!-- International Tab Content -->
+                    <div id="roster-tab-intl" class="roster-tab-content" style="padding: 0 20px 20px;">
                         <div id="intl-players" class="player-list"></div>
                         <button class="btn-add-player" onclick="addPlayer('International')">+ Add International Player</button>
                     </div>
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <button class="btn btn-success" onclick="saveRoster()">Save Roster</button>
-                    <button class="btn btn-secondary" onclick="loadSampleRoster()">Load Sample Data</button>
+                    
+                    <div style="padding: 0 20px 20px;">
+                        <button class="btn btn-success" onclick="saveRoster()">Save Roster</button>
+                        <button class="btn btn-secondary" onclick="loadSampleRoster()">Load Sample Data</button>
+                    </div>
                 </div>
             </div>
             
@@ -57,6 +69,7 @@
                 <h2>Global Controls</h2>
                 <div class="control-buttons">
                     <button class="btn btn-warning" onclick="resetAllReveals()">Reset All Reveals</button>
+                    <button class="btn btn-danger" onclick="resetAllPairings()">Reset All Pairings</button>
                     <button class="btn btn-success" onclick="saveAllPairings()">Save All Pairings</button>
                     <button class="btn btn-secondary" onclick="initializeEmptyPairings()">Initialize Empty Pairings</button>
                 </div>
@@ -183,6 +196,10 @@
             intlPlayers.forEach(player => {
                 intlContainer.appendChild(createPlayerItem(player));
             });
+            
+            // Update counts
+            document.getElementById('usa-count').textContent = usaPlayers.length;
+            document.getElementById('intl-count').textContent = intlPlayers.length;
         }
         
         // Create player item element
@@ -247,6 +264,23 @@
             players = players.filter(p => p.id !== playerId);
             renderRoster();
             updatePlayerCount();
+            
+            // Check if this player is used in any pairings and warn
+            const isUsed = pairings.some(pairing => {
+                if (pairing.type === 'team') {
+                    return pairing.usa_team.player1_id === playerId ||
+                           pairing.usa_team.player2_id === playerId ||
+                           pairing.intl_team.player1_id === playerId ||
+                           pairing.intl_team.player2_id === playerId;
+                } else {
+                    return pairing.usa_player_id === playerId ||
+                           pairing.intl_player_id === playerId;
+                }
+            });
+            
+            if (isUsed) {
+                alert('Warning: This player is assigned to matches. Save roster to clear those assignments.');
+            }
         }
         
         // Save roster to API
@@ -267,6 +301,10 @@
                     const data = await response.json();
                     document.getElementById('global-status').textContent = `Saved ${data.count} players`;
                     await loadPlayers();
+                    
+                    // Re-render editors to update dropdowns with new player names
+                    renderEditors();
+                    
                     setTimeout(() => {
                         document.getElementById('global-status').textContent = 'Ready';
                     }, 2000);
@@ -408,19 +446,19 @@
                     <div class="team-inputs">
                         <div class="input-group usa">
                             <label>USA Player 1</label>
-                            ${createPlayerDropdown(pairing.usa_team.player1_id, 'USA', (val) => updatePairingPlayer(pairing.id, 'usa_team.player1_id', val))}
+                            ${createPlayerDropdown(pairing.usa_team.player1_id, 'USA', pairing.id, 'usa_team.player1_id')}
                         </div>
                         <div class="input-group intl">
                             <label>International Player 1</label>
-                            ${createPlayerDropdown(pairing.intl_team.player1_id, 'International', (val) => updatePairingPlayer(pairing.id, 'intl_team.player1_id', val))}
+                            ${createPlayerDropdown(pairing.intl_team.player1_id, 'International', pairing.id, 'intl_team.player1_id')}
                         </div>
                         <div class="input-group usa">
                             <label>USA Player 2</label>
-                            ${createPlayerDropdown(pairing.usa_team.player2_id, 'USA', (val) => updatePairingPlayer(pairing.id, 'usa_team.player2_id', val))}
+                            ${createPlayerDropdown(pairing.usa_team.player2_id, 'USA', pairing.id, 'usa_team.player2_id')}
                         </div>
                         <div class="input-group intl">
                             <label>International Player 2</label>
-                            ${createPlayerDropdown(pairing.intl_team.player2_id, 'International', (val) => updatePairingPlayer(pairing.id, 'intl_team.player2_id', val))}
+                            ${createPlayerDropdown(pairing.intl_team.player2_id, 'International', pairing.id, 'intl_team.player2_id')}
                         </div>
                     </div>
                     
@@ -447,11 +485,11 @@
                     <div class="singles-inputs">
                         <div class="input-group usa">
                             <label>USA Player</label>
-                            ${createPlayerDropdown(pairing.usa_player_id, 'USA', (val) => updatePairingPlayer(pairing.id, 'usa_player_id', val))}
+                            ${createPlayerDropdown(pairing.usa_player_id, 'USA', pairing.id, 'usa_player_id')}
                         </div>
                         <div class="input-group intl">
                             <label>International Player</label>
-                            ${createPlayerDropdown(pairing.intl_player_id, 'International', (val) => updatePairingPlayer(pairing.id, 'intl_player_id', val))}
+                            ${createPlayerDropdown(pairing.intl_player_id, 'International', pairing.id, 'intl_player_id')}
                         </div>
                     </div>
                     
@@ -475,12 +513,17 @@
             return card;
         }
         
-        // Create player dropdown HTML
-        function createPlayerDropdown(selectedId, team, onchange) {
+        // Create player dropdown HTML with smart filtering
+        function createPlayerDropdown(selectedId, team, pairingId, field) {
+            const pairing = pairings.find(p => p.id === pairingId);
             const teamPlayers = players.filter(p => p.team === team);
+            
+            // Get all player IDs used on this day (excluding current pairing and current field)
+            const usedPlayerIds = getUsedPlayerIdsForDay(pairing.day, pairingId, field);
+            
             const selectId = 'select-' + Math.random().toString(36).substr(2, 9);
             
-            let html = `<select id="${selectId}" data-onchange="true">`;
+            let html = `<select id="${selectId}" data-pairing-id="${pairingId}" data-field="${field}">`;
             html += '<option value="">-- Select Player --</option>';
             
             teamPlayers.forEach(player => {
@@ -488,11 +531,58 @@
                     `${player.firstName} ${player.lastName} (${player.nickname})` :
                     `${player.firstName} ${player.lastName}`;
                 const selected = player.id === selectedId ? 'selected' : '';
-                html += `<option value="${player.id}" ${selected}>${displayName}</option>`;
+                const disabled = usedPlayerIds.includes(player.id) ? 'disabled' : '';
+                const style = disabled ? 'color: #999; font-style: italic;' : '';
+                
+                html += `<option value="${player.id}" ${selected} ${disabled} style="${style}">${displayName}${disabled ? ' (assigned)' : ''}</option>`;
             });
             
             html += '</select>';
             return html;
+        }
+        
+        // Get player IDs already used on a specific day
+        function getUsedPlayerIdsForDay(day, excludePairingId, excludeField) {
+            const usedIds = new Set();
+            
+            pairings.forEach(pairing => {
+                if (pairing.day !== day || pairing.id === excludePairingId) {
+                    return;
+                }
+                
+                if (pairing.type === 'team') {
+                    if (pairing.usa_team.player1_id) usedIds.add(pairing.usa_team.player1_id);
+                    if (pairing.usa_team.player2_id) usedIds.add(pairing.usa_team.player2_id);
+                    if (pairing.intl_team.player1_id) usedIds.add(pairing.intl_team.player1_id);
+                    if (pairing.intl_team.player2_id) usedIds.add(pairing.intl_team.player2_id);
+                } else {
+                    if (pairing.usa_player_id) usedIds.add(pairing.usa_player_id);
+                    if (pairing.intl_player_id) usedIds.add(pairing.intl_player_id);
+                }
+            });
+            
+            // Also exclude players used in the same match (current pairing)
+            const currentPairing = pairings.find(p => p.id === excludePairingId);
+            if (currentPairing) {
+                if (currentPairing.type === 'team') {
+                    ['usa_team.player1_id', 'usa_team.player2_id', 'intl_team.player1_id', 'intl_team.player2_id'].forEach(f => {
+                        if (f !== excludeField) {
+                            const [obj, prop] = f.split('.');
+                            const id = currentPairing[obj][prop];
+                            if (id) usedIds.add(id);
+                        }
+                    });
+                } else {
+                    ['usa_player_id', 'intl_player_id'].forEach(f => {
+                        if (f !== excludeField) {
+                            const id = currentPairing[f];
+                            if (id) usedIds.add(id);
+                        }
+                    });
+                }
+            }
+            
+            return Array.from(usedIds);
         }
         
         // Update pairing player
@@ -506,6 +596,9 @@
             } else {
                 pairing[field] = value;
             }
+            
+            // Re-render all editors to update dropdown availability
+            renderEditors();
         }
         
         // Update reveal order
@@ -577,6 +670,70 @@
                 console.error('Save error:', error);
                 alert('Failed to save pairings');
                 document.getElementById('global-status').textContent = 'Save failed';
+            }
+        }
+        
+        // Toggle roster collapse
+        function toggleRoster() {
+            const roster = document.querySelector('.roster-management');
+            roster.classList.toggle('collapsed');
+        }
+        
+        // Switch roster tabs
+        function switchRosterTab(team) {
+            // Update tab buttons
+            document.querySelectorAll('.roster-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.roster-tab.${team}`).classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.roster-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`roster-tab-${team}`).classList.add('active');
+        }
+        
+        // Reset all pairings
+        async function resetAllPairings() {
+            if (!confirm('Reset all pairings? This will clear all player selections and reveal states.')) {
+                return;
+            }
+            
+            try {
+                document.getElementById('global-status').textContent = 'Resetting pairings...';
+                
+                // Clear all player selections and reset reveal steps
+                pairings.forEach(pairing => {
+                    pairing.revealStep = 0;
+                    if (pairing.type === 'team') {
+                        pairing.usa_team.player1_id = '';
+                        pairing.usa_team.player2_id = '';
+                        pairing.intl_team.player1_id = '';
+                        pairing.intl_team.player2_id = '';
+                    } else {
+                        pairing.usa_player_id = '';
+                        pairing.intl_player_id = '';
+                    }
+                });
+                
+                // Save to backend
+                await saveAllPairings();
+                
+                // Reset reveals on display
+                await resetAllReveals();
+                
+                // Re-render editors
+                renderEditors();
+                
+                document.getElementById('global-status').textContent = 'Pairings reset complete';
+                setTimeout(() => {
+                    document.getElementById('global-status').textContent = 'Ready';
+                }, 2000);
+            } catch (error) {
+                console.error('Reset pairings error:', error);
+                alert('Failed to reset pairings');
+                document.getElementById('global-status').textContent = 'Reset failed';
             }
         }
         
