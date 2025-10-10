@@ -50,16 +50,18 @@ echo -e "${GREEN}✅ Dependencies installed${NC}"
 echo ""
 
 echo -e "${BLUE}🏗️  Building SAM application...${NC}"
-sam build --profile "$AWS_PROFILE"
+sam build --template pairings-infrastructure.yaml --profile "$AWS_PROFILE"
 echo -e "${GREEN}✅ Build complete${NC}"
 echo ""
 
 echo -e "${BLUE}📤 Deploying to AWS...${NC}"
 sam deploy \
+    --template-file .aws-sam/build/template.yaml \
     --profile "$AWS_PROFILE" \
     --stack-name "$STACK_NAME" \
     --parameter-overrides AdminPassword="$ADMIN_PASSWORD" \
     --capabilities CAPABILITY_IAM \
+    --resolve-s3 \
     --no-confirm-changeset \
     --no-fail-on-empty-changeset
 

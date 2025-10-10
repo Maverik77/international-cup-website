@@ -38,9 +38,9 @@ Resources:
                   - dynamodb:Scan
                   - dynamodb:BatchWriteItem
                 Resource:
-                  - !GetAtt PairingsTable.Arn
-                  - !GetAtt RevealStateTable.Arn
-                  - !GetAtt WebSocketConnectionsTable.Arn
+                  - arn:aws:dynamodb:us-east-1:*:table/icup-pairings
+                  - arn:aws:dynamodb:us-east-1:*:table/icup-reveal-state
+                  - arn:aws:dynamodb:us-east-1:*:table/icup-websocket-connections
         - PolicyName: APIGatewayManageConnections
           PolicyDocument:
             Version: '2012-10-17'
@@ -50,42 +50,8 @@ Resources:
                   - execute-api:ManageConnections
                 Resource: '*'
 
-  # DynamoDB Tables
-  PairingsTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: icup-pairings
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
-
-  RevealStateTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: icup-reveal-state
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
-
-  WebSocketConnectionsTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: icup-websocket-connections
-      AttributeDefinitions:
-        - AttributeName: connectionId
-          AttributeType: S
-      KeySchema:
-        - AttributeName: connectionId
-          KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
+  # DynamoDB Tables (using existing tables)
+  # Note: Tables already exist and are referenced by name
 
   # Lambda Functions
   GetPairingsFunction:
@@ -256,8 +222,8 @@ Outputs:
     Value: !Sub 'wss://${PairingsWebSocket}.execute-api.${AWS::Region}.amazonaws.com/prod'
   PairingsTableName:
     Description: DynamoDB Pairings Table Name
-    Value: !Ref PairingsTable
+    Value: icup-pairings
   RevealStateTableName:
     Description: DynamoDB Reveal State Table Name
-    Value: !Ref RevealStateTable
+    Value: icup-reveal-state
 
