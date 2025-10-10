@@ -2,9 +2,9 @@ name: Deploy to AWS S3 and CloudFront
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, staging ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, staging ]
 
 jobs:
   test:
@@ -30,7 +30,8 @@ jobs:
         [ -f "js/main.js" ] && echo "✅ JavaScript found" || echo "❌ JavaScript missing"
         echo "File structure check completed!"
 
-  deploy:
+  deploy-production:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: test
     
@@ -143,12 +144,12 @@ jobs:
           
         echo "Files deployed to S3 successfully!"
         
-    - name: Invalidate CloudFront (news.json)
+    - name: Invalidate CloudFront
       run: |
         # Create CloudFront invalidation to clear cache
         aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-          --paths "/data/news.json"
+          --paths "/*"
         
         echo "CloudFront cache invalidated successfully!"
         
@@ -156,14 +157,146 @@ jobs:
       if: always()
       run: |
         if [ ${{ job.status }} == 'success' ]; then
-          echo "✅ Deployment completed successfully!"
-          echo "🌐 Your website is now live!"
+          echo "✅ Production deployment completed successfully!"
+          echo "🌐 Live at: https://www.lansdowne-international-cup.com"
         else
-          echo "❌ Deployment failed!"
+          echo "❌ Production deployment failed!"
           echo "Please check the logs for more details."
         fi
 
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: |
+        echo "Static website - no npm dependencies needed"
+        
+    - name: Build project
+      run: |
+        # If you have a build process, add it here
+        # For static sites, we can just copy files
+        echo "Building project for STAGING..."
+        
+        # Create build directory
+        mkdir -p build
+        
+        # Copy all necessary files to build directory
+        cp index.html build/
+        cp -r css build/
+        cp -r js build/
+        
+        # Copy data folder if it exists (for news.json and similar assets)
+        if [ -d data ]; then
+          cp -r data build/
+        fi
+        
+        # Copy pics folder if it exists
+        if [ -d pics ]; then
+          cp -r pics build/
+        fi
+        
+        # Copy members area if it exists
+        if [ -d members ]; then
+          cp -r members build/
+        fi
+        
+        # Copy auth folder if it exists
+        if [ -d auth ]; then
+          cp -r auth build/
+        fi
+        
+        # Copy forms folder if it exists
+        if [ -d forms ]; then
+          cp -r forms build/
+        fi
+        
+        # Copy favicon if it exists
+        if [ -f favicon.ico ]; then
+          cp favicon.ico build/
+        fi
+        
+        # Create a simple robots.txt (disallow indexing on staging)
+        echo "User-agent: *" > build/robots.txt
+        echo "Disallow: /" >> build/robots.txt
+        
+        # Create a sitemap.xml
+        cat > build/sitemap.xml << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          <url>
+            <loc>https://staging.lansdowne-international-cup.com/</loc>
+            <lastmod>$(date -u +%Y-%m-%d)</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>0.5</priority>
+          </url>
+        </urlset>
+        EOF
+        
+        echo "Build completed successfully for STAGING!"
+        
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Deploy to S3 (Staging)
+      run: |
+        # Sync files to S3 bucket
+        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }} --delete --exact-timestamps
+        
+        # Set proper content types for different file types
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/ --recursive \
+          --exclude "*" --include "*.html" --content-type "text/html" --cache-control "max-age=3600"
+        
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/ --recursive \
+          --exclude "*" --include "*.css" --content-type "text/css" --cache-control "max-age=31536000"
+        
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/ --recursive \
+          --exclude "*" --include "*.js" --content-type "application/javascript" --cache-control "max-age=31536000"
+        
+        aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/ --recursive \
+          --exclude "*" --include "*.ico" --content-type "image/x-icon" --cache-control "max-age=31536000"
 
+        # Ensure JSON files (e.g., data/news.json) have correct headers and are refreshed quickly
+        if [ -d build/data ]; then
+          aws s3 cp build/data/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/data/ --recursive \
+            --exclude "*" --include "*.json" --content-type "application/json" --cache-control "max-age=60"
+        fi
+          
+        echo "Files deployed to S3 STAGING successfully!"
+        
+    - name: Invalidate CloudFront (Staging)
+      run: |
+        # Create CloudFront invalidation to clear cache
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_STAGING }} \
+          --paths "/*"
+        
+        echo "CloudFront STAGING cache invalidated successfully!"
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ ${{ job.status }} == 'success' ]; then
+          echo "✅ Staging deployment completed successfully!"
+          echo "🌐 Live at: https://staging.lansdowne-international-cup.com"
+        else
+          echo "❌ Staging deployment failed!"
+          echo "Please check the logs for more details."
+        fi
 
   # Security scan
   security:
