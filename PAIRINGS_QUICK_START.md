@@ -5,106 +5,113 @@
 Your complete pairing reveal system is ready! Here's what was created:
 
 ### 🎯 Features
+- **Player Roster Management**: Add/edit players with names, nicknames, and tee colors
 - **Admin Panel**: Password-protected pairing management at `/pairings/admin.html`
 - **Display Screen**: Full-screen animated display at `/pairings/display.html`
+- **Two-Step Reveals**: Stage first side, then reveal opponent
+- **Flexible Reveal Order**: Choose USA-first or International-first per match
 - **Real-time Updates**: WebSocket synchronization between admin and display
 - **Team Colors**: USA Red (#DC143C), International Navy (#000080)
-- **Animated Reveals**: Dramatic reveal sequences for the pairings party
+- **Responsive Display**: Fits all matches without scrolling
 - **12 Team Matches** (Day 1) + **24 Singles Matches** (Day 2)
 
 ### 🏗️ Infrastructure
-- **3 DynamoDB Tables**: Created and ready
+- **4 DynamoDB Tables**: Deployed and ready
   - `icup-pairings` ✅
   - `icup-reveal-state` ✅
   - `icup-websocket-connections` ✅
-- **6 Lambda Functions**: Written and ready to deploy
+  - `icup-players` ✅ (NEW)
+- **7 Lambda Functions**: Deployed ✅
+  - `GetPairingsFunction`
+  - `UpdatePairingsFunction`
+  - `GetPlayersFunction` (NEW)
+  - `UpdatePlayersFunction` (NEW)
+  - `RevealPairingFunction` (NEW - replaces RevealNext)
+  - `WebSocketConnectFunction`
+  - `WebSocketDisconnectFunction`
 - **CloudFormation Template**: Infrastructure as code
 - **Deployment Script**: Automated deployment
 
-## 🚀 Next Steps to Go Live
+## 🚀 Current Status
 
-### Step 1: Deploy Backend (5 minutes)
+### ✅ Backend Deployed
 
-The backend needs to be deployed to AWS using SAM. Here's how:
+The backend has been successfully deployed to AWS:
 
-1. **Install AWS SAM CLI** (one-time setup):
-   ```bash
-   brew install aws-sam-cli
-   ```
+- **REST API URL**: `https://35taqw9rrk.execute-api.us-east-1.amazonaws.com/prod`
+- **WebSocket URL**: `wss://5xshmnvtv2.execute-api.us-east-1.amazonaws.com/prod`
+- **Admin Password**: `icup2024`
 
-2. **Deploy the backend**:
-   ```bash
-   cd /Users/erikwagner/coding/international_cup_website
-   ./deploy-pairings-backend.sh icup2024
-   ```
-   *(Replace `icup2024` with your desired admin password)*
+Frontend files (`admin.html` and `display.html`) are already configured with these URLs!
 
-3. **Note the outputs**:
-   After deployment, you'll see:
-   ```
-   RestApiUrl: https://abc123.execute-api.us-east-1.amazonaws.com/prod
-   WebSocketUrl: wss://xyz789.execute-api.us-east-1.amazonaws.com/prod
-   ```
-   **SAVE THESE URLS!** You'll need them for the next step.
+### 📍 What's Left
 
-### Step 2: Configure Frontend (2 minutes)
+1. **Test in staging** (merge feature branch to staging)
+2. **Test player roster management**
+3. **Test two-step reveals**
+4. **Go live** (merge to main when ready)
 
-Update both HTML files with your API URLs:
+## 🧪 Testing Steps
 
-**File 1:** `pairings/admin.html` (line 15-18)
-```javascript
-const CONFIG = {
-    REST_API_URL: 'https://YOUR_ACTUAL_API_URL/prod',  // ← Replace with RestApiUrl
-    WEBSOCKET_URL: 'wss://YOUR_ACTUAL_WS_URL/prod'      // ← Replace with WebSocketUrl
-};
+### Step 1: Merge to Staging Branch
+
+```bash
+git checkout staging
+git merge feature/pairing-reveal
+git push origin staging
 ```
 
-**File 2:** `pairings/display.html` (line 54-57)
-```javascript
-const CONFIG = {
-    REST_API_URL: 'https://YOUR_ACTUAL_API_URL/prod',  // ← Replace with RestApiUrl
-    WEBSOCKET_URL: 'wss://YOUR_ACTUAL_WS_URL/prod'      // ← Replace with WebSocketUrl
-};
-```
+Wait ~2 minutes for GitHub Actions deployment.
 
-### Step 3: Test in Staging (5 minutes)
+### Step 2: Test Player Roster
 
-1. **Commit and push changes**:
-   ```bash
-   git add pairings/admin.html pairings/display.html
-   git commit -m "config: update pairing system API URLs"
-   git push origin feature/pairing-reveal
-   ```
+1. **Open admin panel**: https://staging.lansdowne-international-cup.com/pairings/admin.html
+2. **Login** (password: `icup2024`)
+3. **Click "Load Sample Data"** to populate test players
+4. **Click "Save Roster"** to persist
+5. **Verify** players appear in dropdowns below
 
-2. **Merge to staging**:
-   ```bash
-   git checkout staging
-   git merge feature/pairing-reveal
-   git push origin staging
-   ```
+### Step 3: Set Up Test Pairings
 
-3. **Wait for deployment** (~2 minutes)
-   Watch GitHub Actions: https://github.com/Maverik77/international-cup-website/actions
+1. **For Match 1 (Day 1)**:
+   - Set reveal order: **USA First**
+   - Select USA Player 1: John Smith
+   - Select USA Player 2: Mike Johnson
+   - Select International Player 1: Pierre Dubois
+   - Select International Player 2: Hans Schmidt
 
-4. **Test the system**:
-   - **Admin**: https://staging.lansdowne-international-cup.com/pairings/admin.html
-   - **Display**: https://staging.lansdowne-international-cup.com/pairings/display.html
+2. **For Match 2 (Day 1)**:
+   - Set reveal order: **International First**
+   - Select players from dropdowns
 
-### Step 4: Enter Pairings
+3. **Click "Save All Pairings"**
 
-1. **Open admin panel** and login (password: `icup2024` or your custom password)
-2. **Click "Load Sample Data"** to test, or enter real player names
-3. **Click "Save All Changes"** to persist to database
+### Step 4: Test Two-Step Reveals
 
-### Step 5: Test Reveals
+1. **Open display screen** in new window: https://staging.lansdowne-international-cup.com/pairings/display.html
+2. **Verify** "Connected ✓" appears
+3. **On admin panel**, find Match 1:
+   - Click **"Reveal First Side"**
+   - **Watch display**: USA team appears (red box)
+   - **Status changes** to "Side 1 Revealed"
+4. **Click "Reveal Second Side"**:
+   - **Watch display**: International team appears (navy box)
+   - **Both teams hold** for 3 seconds
+   - **Match appears** in grid
+   - **Status changes** to "Both Revealed"
 
-1. **Open display screen** in a separate window/tab
-2. **On admin panel**, click "Reveal Next Pairing"
-3. **Watch the animation**: USA team appears, then International team
-4. **Verify** it shows in the display grid
-5. **Continue** revealing more pairings to test
+5. **Test Match 2** with International-first order:
+   - Click **"Reveal First Side"**
+   - **Watch display**: International team appears first
+   - Click **"Reveal Second Side"**
+   - **Watch display**: USA team appears second
 
-### Step 6: Go Live (when ready)
+6. **Click "Reset All Reveals"**:
+   - Confirm reset
+   - **Verify** display clears
+   - **All matches** return to "Not Started"
+
+### Step 5: Go Live (when ready)
 
 Once tested in staging, promote to production:
 
@@ -122,35 +129,55 @@ Access at:
 
 ### Setup (30 minutes before)
 
-1. **Connect Display**:
+1. **Enter All Players**:
+   - Open admin panel
+   - Add all USA players (names, nicknames, tee colors)
+   - Add all International players
+   - **Save Roster**
+
+2. **Configure All Pairings**:
+   - Set up all 12 Day 1 team matches
+   - Set up all 24 Day 2 singles matches
+   - Choose reveal order for each match
+   - **Save All Pairings**
+
+3. **Connect Display**:
    - Connect laptop to projector/TV
-   - Open display screen in browser
+   - Open display screen in browser: `/pairings/display.html`
    - Press F11 for fullscreen
    - Verify "Connected ✓" appears
 
-2. **Admin Setup**:
+4. **Admin Setup**:
    - Open admin panel on your laptop/tablet
    - Login with password
-   - Verify all pairings are entered correctly
    - Keep admin panel visible
 
 ### During Party
 
-1. **Start Reveals**:
-   - Click "Reveal Next Pairing" when ready
-   - USA team/player appears first (RED)
-   - International team/player appears second (NAVY)
-   - Both slide into the grid
+1. **Two-Step Reveal Process**:
+   - **Step 1**: Click **"Reveal First Side"** on any match
+     - First team/player appears on display (based on reveal order)
+     - Large animated box with team color
+     - Stays visible until you proceed
+   - **Step 2**: Click **"Reveal Second Side"**
+     - Second team/player appears next to first
+     - Both visible for 3 seconds
+     - Automatically added to match grid
 
-2. **Pace Yourself**:
-   - Allow time for audience reaction
+2. **Flexible Order**:
+   - Reveal any match in any order
+   - USA-first or International-first per match
+   - Each match is independent
+
+3. **Pace Yourself**:
+   - Allow time for audience reaction between steps
+   - Build anticipation before revealing opponent
    - Space out reveals for dramatic effect
-   - Monitor display screen
 
-3. **Status Tracking**:
-   - Watch "Revealed: X / 36" counter
-   - See next pairing to be revealed
-   - ✅ indicates already revealed
+4. **Status Tracking**:
+   - **Not Started** (gray) - Not revealed yet
+   - **Side 1 Revealed** (orange) - Waiting for second side
+   - **Both Revealed** (green) - Complete, visible in grid
 
 ### If Something Goes Wrong
 
