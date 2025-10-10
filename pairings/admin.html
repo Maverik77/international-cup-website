@@ -10,7 +10,7 @@
     <div class="admin-container">
         <div class="admin-header">
             <h1>⛳ International Cup - Pairings Admin</h1>
-            <p>Manage pairings and control reveal sequence for the pairings party</p>
+            <p>Manage player roster, pairings, and control reveal sequence</p>
         </div>
         
         <!-- Password Section -->
@@ -24,28 +24,46 @@
         
         <!-- Main Admin Interface (hidden until authenticated) -->
         <div id="admin-interface" style="display: none;">
-            <!-- Controls Section -->
+            
+            <!-- Player Roster Management -->
+            <div class="roster-management">
+                <h2>Player Roster Management</h2>
+                <p style="margin-bottom: 15px;">Manage all players for Team USA and International team</p>
+                
+                <div class="roster-grid">
+                    <!-- USA Players -->
+                    <div class="roster-column usa">
+                        <h3>🇺🇸 Team USA</h3>
+                        <div id="usa-players" class="player-list"></div>
+                        <button class="btn-add-player" onclick="addPlayer('USA')">+ Add USA Player</button>
+                    </div>
+                    
+                    <!-- International Players -->
+                    <div class="roster-column intl">
+                        <h3>🌍 Team International</h3>
+                        <div id="intl-players" class="player-list"></div>
+                        <button class="btn-add-player" onclick="addPlayer('International')">+ Add International Player</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-success" onclick="saveRoster()">Save Roster</button>
+                    <button class="btn btn-secondary" onclick="loadSampleRoster()">Load Sample Data</button>
+                </div>
+            </div>
+            
+            <!-- Global Controls Section -->
             <div class="controls-section">
-                <h2>Reveal Controls</h2>
+                <h2>Global Controls</h2>
                 <div class="control-buttons">
-                    <button class="btn btn-primary" onclick="revealNext()">
-                        Reveal Next Pairing
-                    </button>
-                    <button class="btn btn-warning" onclick="resetReveals()">
-                        Reset All Reveals
-                    </button>
-                    <button class="btn btn-success" onclick="saveAllPairings()">
-                        Save All Changes
-                    </button>
-                    <button class="btn btn-secondary" onclick="loadInitialData()">
-                        Load Sample Data
-                    </button>
+                    <button class="btn btn-warning" onclick="resetAllReveals()">Reset All Reveals</button>
+                    <button class="btn btn-success" onclick="saveAllPairings()">Save All Pairings</button>
+                    <button class="btn btn-secondary" onclick="initializeEmptyPairings()">Initialize Empty Pairings</button>
                 </div>
                 
                 <div class="status-display">
-                    <p><strong>Status:</strong> <span id="reveal-status">Ready</span></p>
-                    <p><strong>Revealed:</strong> <span id="revealed-count">0</span> / <span id="total-count">0</span></p>
-                    <p><strong>Next to reveal:</strong> <span id="next-reveal">None</span></p>
+                    <p><strong>Status:</strong> <span id="global-status">Ready</span></p>
+                    <p><strong>Players Loaded:</strong> <span id="player-count">0</span></p>
                 </div>
             </div>
             
@@ -71,8 +89,9 @@
         };
         
         let adminPassword = '';
+        let players = [];
         let pairings = [];
-        let revealState = {};
+        let playerIdCounter = { USA: 1, International: 1 };
         
         // Check for saved password
         function checkSavedPassword() {
@@ -94,9 +113,8 @@
                 return;
             }
             
-            // Test password by making a request
             try {
-                const response = await fetch(`${CONFIG.REST_API_URL}/pairings`, {
+                const response = await fetch(`${CONFIG.REST_API_URL}/players`, {
                     headers: {
                         'X-Admin-Password': password
                     }
@@ -107,6 +125,7 @@
                     localStorage.setItem('icup_admin_password', password);
                     document.getElementById('password-section').style.display = 'none';
                     document.getElementById('admin-interface').style.display = 'block';
+                    await loadPlayers();
                     await loadPairings();
                 } else {
                     errorEl.textContent = 'Invalid password';
@@ -117,6 +136,177 @@
             }
         }
         
+        // Load players from API
+        async function loadPlayers() {
+            try {
+                const response = await fetch(`${CONFIG.REST_API_URL}/players`);
+                const data = await response.json();
+                
+                players = data.players || [];
+                
+                // Update counter for next player ID
+                const usaPlayers = players.filter(p => p.team === 'USA');
+                const intlPlayers = players.filter(p => p.team === 'International');
+                
+                if (usaPlayers.length > 0) {
+                    const maxId = Math.max(...usaPlayers.map(p => parseInt(p.id.split('-')[2])));
+                    playerIdCounter.USA = maxId + 1;
+                }
+                
+                if (intlPlayers.length > 0) {
+                    const maxId = Math.max(...intlPlayers.map(p => parseInt(p.id.split('-')[2])));
+                    playerIdCounter.International = maxId + 1;
+                }
+                
+                renderRoster();
+                updatePlayerCount();
+            } catch (error) {
+                console.error('Failed to load players:', error);
+            }
+        }
+        
+        // Render roster UI
+        function renderRoster() {
+            const usaContainer = document.getElementById('usa-players');
+            const intlContainer = document.getElementById('intl-players');
+            
+            usaContainer.innerHTML = '';
+            intlContainer.innerHTML = '';
+            
+            const usaPlayers = players.filter(p => p.team === 'USA');
+            const intlPlayers = players.filter(p => p.team === 'International');
+            
+            usaPlayers.forEach(player => {
+                usaContainer.appendChild(createPlayerItem(player));
+            });
+            
+            intlPlayers.forEach(player => {
+                intlContainer.appendChild(createPlayerItem(player));
+            });
+        }
+        
+        // Create player item element
+        function createPlayerItem(player) {
+            const div = document.createElement('div');
+            div.className = `player-item ${player.team.toLowerCase()}`;
+            div.dataset.playerId = player.id;
+            
+            div.innerHTML = `
+                <div class="player-inputs">
+                    <input type="text" placeholder="First Name" 
+                           value="${player.firstName || ''}" 
+                           onchange="updatePlayerField('${player.id}', 'firstName', this.value)">
+                    <input type="text" placeholder="Last Name" 
+                           value="${player.lastName || ''}" 
+                           onchange="updatePlayerField('${player.id}', 'lastName', this.value)">
+                    <input type="text" placeholder="Nickname (optional)" 
+                           value="${player.nickname || ''}" 
+                           onchange="updatePlayerField('${player.id}', 'nickname', this.value)">
+                    <select onchange="updatePlayerField('${player.id}', 'teeColor', this.value)">
+                        <option value="Blue" ${player.teeColor === 'Blue' ? 'selected' : ''}>Blue Tees</option>
+                        <option value="White" ${player.teeColor === 'White' ? 'selected' : ''}>White Tees</option>
+                    </select>
+                    <button class="btn-delete" onclick="deletePlayer('${player.id}')">Delete</button>
+                </div>
+            `;
+            
+            return div;
+        }
+        
+        // Add new player
+        function addPlayer(team) {
+            const id = `player-${team.toLowerCase().substring(0, 4)}-${playerIdCounter[team]}`;
+            playerIdCounter[team]++;
+            
+            const player = {
+                id: id,
+                firstName: '',
+                lastName: '',
+                nickname: '',
+                team: team,
+                teeColor: 'Blue'
+            };
+            
+            players.push(player);
+            renderRoster();
+            updatePlayerCount();
+        }
+        
+        // Update player field
+        function updatePlayerField(playerId, field, value) {
+            const player = players.find(p => p.id === playerId);
+            if (player) {
+                player[field] = value;
+            }
+        }
+        
+        // Delete player
+        function deletePlayer(playerId) {
+            if (!confirm('Delete this player?')) return;
+            
+            players = players.filter(p => p.id !== playerId);
+            renderRoster();
+            updatePlayerCount();
+        }
+        
+        // Save roster to API
+        async function saveRoster() {
+            try {
+                document.getElementById('global-status').textContent = 'Saving roster...';
+                
+                const response = await fetch(`${CONFIG.REST_API_URL}/players`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ players })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('global-status').textContent = `Saved ${data.count} players`;
+                    await loadPlayers();
+                    setTimeout(() => {
+                        document.getElementById('global-status').textContent = 'Ready';
+                    }, 2000);
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                console.error('Save roster error:', error);
+                alert('Failed to save roster');
+                document.getElementById('global-status').textContent = 'Save failed';
+            }
+        }
+        
+        // Load sample roster
+        function loadSampleRoster() {
+            if (!confirm('Load sample roster? This will overwrite current players.')) return;
+            
+            players = [
+                { id: 'player-usa-1', firstName: 'John', lastName: 'Smith', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-2', firstName: 'Mike', lastName: 'Johnson', nickname: 'MJ', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-3', firstName: 'David', lastName: 'Williams', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-4', firstName: 'Chris', lastName: 'Brown', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-intl-1', firstName: 'Pierre', lastName: 'Dubois', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-2', firstName: 'Hans', lastName: 'Schmidt', nickname: 'The Hammer', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-3', firstName: 'Luca', lastName: 'Rossi', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-4', firstName: 'Carlos', lastName: 'Garcia', nickname: '', team: 'International', teeColor: 'White' }
+            ];
+            
+            playerIdCounter = { USA: 5, International: 5 };
+            renderRoster();
+            updatePlayerCount();
+            alert('Sample roster loaded. Click "Save Roster" to persist.');
+        }
+        
+        // Update player count display
+        function updatePlayerCount() {
+            const count = players.length;
+            document.getElementById('player-count').textContent = count;
+        }
+        
         // Load pairings from API
         async function loadPairings() {
             try {
@@ -124,18 +314,15 @@
                 const data = await response.json();
                 
                 pairings = data.pairings || [];
-                revealState = data.revealState || { currentRevealIndex: -1, revealedIds: [] };
                 
                 if (pairings.length === 0) {
-                    // No pairings yet, initialize empty structure
                     initializeEmptyPairings();
+                } else {
+                    renderEditors();
                 }
-                
-                renderEditors();
-                updateStatus();
             } catch (error) {
                 console.error('Failed to load pairings:', error);
-                alert('Failed to load pairings. Check console for details.');
+                initializeEmptyPairings();
             }
         }
         
@@ -150,10 +337,10 @@
                     type: 'team',
                     day: 1,
                     match_number: i,
-                    usa_team: { player1: '', player2: '' },
-                    intl_team: { player1: '', player2: '' },
-                    revealed: false,
-                    reveal_stage: 0
+                    usa_team: { player1_id: '', player2_id: '' },
+                    intl_team: { player1_id: '', player2_id: '' },
+                    revealOrder: 'usa-first',
+                    revealStep: 0
                 });
             }
             
@@ -164,15 +351,17 @@
                     type: 'singles',
                     day: 2,
                     match_number: i,
-                    usa_player: '',
-                    intl_player: '',
-                    revealed: false,
-                    reveal_stage: 0
+                    usa_player_id: '',
+                    intl_player_id: '',
+                    revealOrder: 'usa-first',
+                    revealStep: 0
                 });
             }
+            
+            renderEditors();
         }
         
-        // Render editors
+        // Render pairing editors
         function renderEditors() {
             const day1Editor = document.getElementById('day1-editor');
             const day2Editor = document.getElementById('day2-editor');
@@ -197,71 +386,119 @@
             card.className = 'pairing-edit-card';
             card.dataset.pairingId = pairing.id;
             
+            const statusClass = pairing.revealStep === 0 ? 'not-started' : 
+                                pairing.revealStep === 1 ? 'step-1' : 'step-2';
+            const statusText = pairing.revealStep === 0 ? 'Not Started' :
+                              pairing.revealStep === 1 ? 'Side 1 Revealed' : 'Both Revealed';
+            
             if (pairing.type === 'team') {
                 card.innerHTML = `
-                    <h3>Match ${pairing.match_number} ${isRevealed(pairing.id) ? '✅ Revealed' : ''}</h3>
+                    <h3>Match ${pairing.match_number}</h3>
+                    <div class="reveal-status ${statusClass}">${statusText}</div>
+                    
+                    <div class="reveal-order-controls">
+                        <label><input type="radio" name="order-${pairing.id}" value="usa-first" 
+                               ${pairing.revealOrder === 'usa-first' ? 'checked' : ''}
+                               onchange="updateRevealOrder('${pairing.id}', 'usa-first')"> USA First</label>
+                        <label><input type="radio" name="order-${pairing.id}" value="intl-first"
+                               ${pairing.revealOrder === 'intl-first' ? 'checked' : ''}
+                               onchange="updateRevealOrder('${pairing.id}', 'intl-first')"> International First</label>
+                    </div>
+                    
                     <div class="team-inputs">
                         <div class="input-group usa">
                             <label>USA Player 1</label>
-                            <input type="text" data-field="usa_team.player1" 
-                                   value="${pairing.usa_team.player1}" 
-                                   onchange="updatePairing('${pairing.id}', this)">
+                            ${createPlayerDropdown(pairing.usa_team.player1_id, 'USA', (val) => updatePairingPlayer(pairing.id, 'usa_team.player1_id', val))}
                         </div>
                         <div class="input-group intl">
                             <label>International Player 1</label>
-                            <input type="text" data-field="intl_team.player1" 
-                                   value="${pairing.intl_team.player1}" 
-                                   onchange="updatePairing('${pairing.id}', this)">
+                            ${createPlayerDropdown(pairing.intl_team.player1_id, 'International', (val) => updatePairingPlayer(pairing.id, 'intl_team.player1_id', val))}
                         </div>
                         <div class="input-group usa">
                             <label>USA Player 2</label>
-                            <input type="text" data-field="usa_team.player2" 
-                                   value="${pairing.usa_team.player2}" 
-                                   onchange="updatePairing('${pairing.id}', this)">
+                            ${createPlayerDropdown(pairing.usa_team.player2_id, 'USA', (val) => updatePairingPlayer(pairing.id, 'usa_team.player2_id', val))}
                         </div>
                         <div class="input-group intl">
                             <label>International Player 2</label>
-                            <input type="text" data-field="intl_team.player2" 
-                                   value="${pairing.intl_team.player2}" 
-                                   onchange="updatePairing('${pairing.id}', this)">
+                            ${createPlayerDropdown(pairing.intl_team.player2_id, 'International', (val) => updatePairingPlayer(pairing.id, 'intl_team.player2_id', val))}
                         </div>
                     </div>
+                    
+                    <button class="btn-reveal-step" onclick="revealStep('${pairing.id}')" 
+                            ${pairing.revealStep >= 2 ? 'disabled' : ''}>
+                        ${pairing.revealStep === 0 ? 'Reveal First Side' : 
+                          pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
+                    </button>
                 `;
             } else {
                 card.innerHTML = `
-                    <h3>Match ${pairing.match_number} ${isRevealed(pairing.id) ? '✅ Revealed' : ''}</h3>
+                    <h3>Match ${pairing.match_number}</h3>
+                    <div class="reveal-status ${statusClass}">${statusText}</div>
+                    
+                    <div class="reveal-order-controls">
+                        <label><input type="radio" name="order-${pairing.id}" value="usa-first"
+                               ${pairing.revealOrder === 'usa-first' ? 'checked' : ''}
+                               onchange="updateRevealOrder('${pairing.id}', 'usa-first')"> USA First</label>
+                        <label><input type="radio" name="order-${pairing.id}" value="intl-first"
+                               ${pairing.revealOrder === 'intl-first' ? 'checked' : ''}
+                               onchange="updateRevealOrder('${pairing.id}', 'intl-first')"> International First</label>
+                    </div>
+                    
                     <div class="singles-inputs">
                         <div class="input-group usa">
                             <label>USA Player</label>
-                            <input type="text" data-field="usa_player" 
-                                   value="${pairing.usa_player}" 
-                                   onchange="updatePairing('${pairing.id}', this)">
+                            ${createPlayerDropdown(pairing.usa_player_id, 'USA', (val) => updatePairingPlayer(pairing.id, 'usa_player_id', val))}
                         </div>
                         <div class="input-group intl">
                             <label>International Player</label>
-                            <input type="text" data-field="intl_player" 
-                                   value="${pairing.intl_player}" 
-                                   onchange="updatePairing('${pairing.id}', this)">
+                            ${createPlayerDropdown(pairing.intl_player_id, 'International', (val) => updatePairingPlayer(pairing.id, 'intl_player_id', val))}
                         </div>
                     </div>
+                    
+                    <button class="btn-reveal-step" onclick="revealStep('${pairing.id}')"
+                            ${pairing.revealStep >= 2 ? 'disabled' : ''}>
+                        ${pairing.revealStep === 0 ? 'Reveal First Side' :
+                          pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
+                    </button>
                 `;
             }
+            
+            // Add event listeners for dropdowns
+            card.querySelectorAll('select').forEach(select => {
+                const pairingId = select.dataset.pairingId;
+                const field = select.dataset.field;
+                select.addEventListener('change', (e) => {
+                    updatePairingPlayer(pairingId, field, e.target.value);
+                });
+            });
             
             return card;
         }
         
-        // Check if pairing is revealed
-        function isRevealed(pairingId) {
-            return revealState.revealedIds && revealState.revealedIds.includes(pairingId);
+        // Create player dropdown HTML
+        function createPlayerDropdown(selectedId, team, onchange) {
+            const teamPlayers = players.filter(p => p.team === team);
+            const selectId = 'select-' + Math.random().toString(36).substr(2, 9);
+            
+            let html = `<select id="${selectId}" data-onchange="true">`;
+            html += '<option value="">-- Select Player --</option>';
+            
+            teamPlayers.forEach(player => {
+                const displayName = player.nickname ? 
+                    `${player.firstName} ${player.lastName} (${player.nickname})` :
+                    `${player.firstName} ${player.lastName}`;
+                const selected = player.id === selectedId ? 'selected' : '';
+                html += `<option value="${player.id}" ${selected}>${displayName}</option>`;
+            });
+            
+            html += '</select>';
+            return html;
         }
         
-        // Update pairing in memory
-        function updatePairing(pairingId, inputElement) {
+        // Update pairing player
+        function updatePairingPlayer(pairingId, field, value) {
             const pairing = pairings.find(p => p.id === pairingId);
             if (!pairing) return;
-            
-            const field = inputElement.dataset.field;
-            const value = inputElement.value;
             
             if (field.includes('.')) {
                 const [obj, prop] = field.split('.');
@@ -269,14 +506,54 @@
             } else {
                 pairing[field] = value;
             }
-            
-            console.log('Updated:', pairingId, field, value);
         }
         
-        // Save all pairings to API
+        // Update reveal order
+        function updateRevealOrder(pairingId, order) {
+            const pairing = pairings.find(p => p.id === pairingId);
+            if (pairing) {
+                pairing.revealOrder = order;
+            }
+        }
+        
+        // Reveal step
+        async function revealStep(pairingId) {
+            const pairing = pairings.find(p => p.id === pairingId);
+            if (!pairing) return;
+            
+            const nextStep = pairing.revealStep + 1;
+            if (nextStep > 2) return;
+            
+            try {
+                const response = await fetch(`${CONFIG.REST_API_URL}/reveal`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({
+                        action: 'reveal',
+                        pairingId: pairingId,
+                        step: nextStep
+                    })
+                });
+                
+                if (response.ok) {
+                    pairing.revealStep = nextStep;
+                    renderEditors();
+                } else {
+                    throw new Error('Reveal failed');
+                }
+            } catch (error) {
+                console.error('Reveal error:', error);
+                alert('Failed to reveal pairing');
+            }
+        }
+        
+        // Save all pairings
         async function saveAllPairings() {
             try {
-                document.getElementById('reveal-status').textContent = 'Saving...';
+                document.getElementById('global-status').textContent = 'Saving pairings...';
                 
                 const response = await fetch(`${CONFIG.REST_API_URL}/pairings`, {
                     method: 'POST',
@@ -289,61 +566,30 @@
                 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('reveal-status').textContent = `Saved ${data.count} pairings`;
-                    setTimeout(() => updateStatus(), 2000);
+                    document.getElementById('global-status').textContent = `Saved ${data.count} pairings`;
+                    setTimeout(() => {
+                        document.getElementById('global-status').textContent = 'Ready';
+                    }, 2000);
                 } else {
                     throw new Error('Save failed');
                 }
             } catch (error) {
                 console.error('Save error:', error);
                 alert('Failed to save pairings');
-                document.getElementById('reveal-status').textContent = 'Save failed';
-            }
-        }
-        
-        // Reveal next pairing
-        async function revealNext() {
-            try {
-                document.getElementById('reveal-status').textContent = 'Revealing...';
-                
-                const response = await fetch(`${CONFIG.REST_API_URL}/reveal/next`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Admin-Password': adminPassword
-                    },
-                    body: JSON.stringify({ action: 'next' })
-                });
-                
-                const data = await response.json();
-                
-                if (data.complete) {
-                    document.getElementById('reveal-status').textContent = 'All pairings revealed!';
-                    alert('All pairings have been revealed!');
-                } else {
-                    revealState.currentRevealIndex = data.revealIndex;
-                    if (!revealState.revealedIds) revealState.revealedIds = [];
-                    revealState.revealedIds.push(data.pairing.id);
-                    
-                    renderEditors();
-                    updateStatus();
-                }
-            } catch (error) {
-                console.error('Reveal error:', error);
-                alert('Failed to reveal next pairing');
+                document.getElementById('global-status').textContent = 'Save failed';
             }
         }
         
         // Reset all reveals
-        async function resetReveals() {
+        async function resetAllReveals() {
             if (!confirm('Reset all reveals? This will hide all pairings on the display screen.')) {
                 return;
             }
             
             try {
-                document.getElementById('reveal-status').textContent = 'Resetting...';
+                document.getElementById('global-status').textContent = 'Resetting...';
                 
-                const response = await fetch(`${CONFIG.REST_API_URL}/reveal/next`, {
+                const response = await fetch(`${CONFIG.REST_API_URL}/reveal`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -353,9 +599,14 @@
                 });
                 
                 if (response.ok) {
-                    revealState = { currentRevealIndex: -1, revealedIds: [] };
+                    pairings.forEach(p => p.revealStep = 0);
                     renderEditors();
-                    updateStatus();
+                    document.getElementById('global-status').textContent = 'Reset complete';
+                    setTimeout(() => {
+                        document.getElementById('global-status').textContent = 'Ready';
+                    }, 2000);
+                } else {
+                    throw new Error('Reset failed');
                 }
             } catch (error) {
                 console.error('Reset error:', error);
@@ -363,61 +614,10 @@
             }
         }
         
-        // Update status display
-        function updateStatus() {
-            const revealedCount = revealState.revealedIds ? revealState.revealedIds.length : 0;
-            const totalCount = pairings.length;
-            
-            document.getElementById('revealed-count').textContent = revealedCount;
-            document.getElementById('total-count').textContent = totalCount;
-            document.getElementById('reveal-status').textContent = 'Ready';
-            
-            const nextIndex = (revealState.currentRevealIndex || -1) + 1;
-            if (nextIndex < pairings.length) {
-                const nextPairing = pairings[nextIndex];
-                const desc = nextPairing.type === 'team' 
-                    ? `Day ${nextPairing.day} Team Match ${nextPairing.match_number}`
-                    : `Day ${nextPairing.day} Singles Match ${nextPairing.match_number}`;
-                document.getElementById('next-reveal').textContent = desc;
-            } else {
-                document.getElementById('next-reveal').textContent = 'All revealed!';
-            }
-        }
-        
-        // Load sample data
-        function loadInitialData() {
-            if (!confirm('Load sample data? This will overwrite current pairings.')) {
-                return;
-            }
-            
-            initializeEmptyPairings();
-            
-            // Add some sample names
-            const usaPlayers = ['John Smith', 'Mike Johnson', 'David Williams', 'Chris Brown', 'Matt Davis'];
-            const intlPlayers = ['Pierre Dubois', 'Hans Schmidt', 'Luca Rossi', 'Carlos Garcia', 'Yuki Tanaka'];
-            
-            pairings.forEach((pairing, idx) => {
-                if (pairing.type === 'team') {
-                    pairing.usa_team.player1 = usaPlayers[idx % usaPlayers.length];
-                    pairing.usa_team.player2 = usaPlayers[(idx + 1) % usaPlayers.length];
-                    pairing.intl_team.player1 = intlPlayers[idx % intlPlayers.length];
-                    pairing.intl_team.player2 = intlPlayers[(idx + 1) % intlPlayers.length];
-                } else {
-                    pairing.usa_player = usaPlayers[idx % usaPlayers.length];
-                    pairing.intl_player = intlPlayers[idx % intlPlayers.length];
-                }
-            });
-            
-            renderEditors();
-            updateStatus();
-            alert('Sample data loaded. Click "Save All Changes" to persist.');
-        }
-        
-        // Initialize
+        // Initialize on load
         window.addEventListener('DOMContentLoaded', () => {
             checkSavedPassword();
         });
     </script>
 </body>
 </html>
-

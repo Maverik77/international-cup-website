@@ -56,14 +56,39 @@
         };
         
         let ws = null;
+        let players = [];
         let pairings = [];
-        let revealState = {};
         let isRevealing = false;
+        let currentRevealData = null;
         
         // Initialize display
         async function init() {
+            await loadPlayers();
             await loadPairings();
             connectWebSocket();
+        }
+        
+        // Load players from API
+        async function loadPlayers() {
+            try {
+                const response = await fetch(`${CONFIG.REST_API_URL}/players`);
+                const data = await response.json();
+                players = data.players || [];
+                console.log(`Loaded ${players.length} players`);
+            } catch (error) {
+                console.error('Failed to load players:', error);
+            }
+        }
+        
+        // Get player display name
+        function getPlayerName(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return 'TBD';
+            
+            if (player.nickname) {
+                return `${player.firstName} ${player.lastName} (${player.nickname})`;
+            }
+            return `${player.firstName} ${player.lastName}`;
         }
         
         // Load pairings from API
@@ -73,7 +98,6 @@
                 const data = await response.json();
                 
                 pairings = data.pairings || [];
-                revealState = data.revealState || { revealedIds: [] };
                 
                 renderPairings();
             } catch (error) {
@@ -98,8 +122,8 @@
                     day2Container.appendChild(card);
                 }
                 
-                // Show revealed pairings
-                if (revealState.revealedIds && revealState.revealedIds.includes(pairing.id)) {
+                // Show fully revealed pairings (step 2)
+                if (pairing.revealStep === 2) {
                     setTimeout(() => card.classList.add('revealed'), 100);
                 }
             });
@@ -112,30 +136,38 @@
             card.dataset.pairingId = pairing.id;
             
             if (pairing.type === 'team') {
+                const usaPlayer1 = getPlayerName(pairing.usa_team.player1_id);
+                const usaPlayer2 = getPlayerName(pairing.usa_team.player2_id);
+                const intlPlayer1 = getPlayerName(pairing.intl_team.player1_id);
+                const intlPlayer2 = getPlayerName(pairing.intl_team.player2_id);
+                
                 card.innerHTML = `
                     <div class="match-number">Match ${pairing.match_number}</div>
                     <div class="pairing-matchup">
                         <div class="team-side usa">
-                            <div class="player-name">${pairing.usa_team.player1 || 'TBD'}</div>
-                            <div class="player-name">${pairing.usa_team.player2 || 'TBD'}</div>
+                            <div class="player-name">${usaPlayer1}</div>
+                            <div class="player-name">${usaPlayer2}</div>
                         </div>
                         <div class="vs-divider">VS</div>
                         <div class="team-side intl">
-                            <div class="player-name">${pairing.intl_team.player1 || 'TBD'}</div>
-                            <div class="player-name">${pairing.intl_team.player2 || 'TBD'}</div>
+                            <div class="player-name">${intlPlayer1}</div>
+                            <div class="player-name">${intlPlayer2}</div>
                         </div>
                     </div>
                 `;
             } else {
+                const usaPlayer = getPlayerName(pairing.usa_player_id);
+                const intlPlayer = getPlayerName(pairing.intl_player_id);
+                
                 card.innerHTML = `
                     <div class="match-number">Match ${pairing.match_number}</div>
                     <div class="pairing-matchup">
                         <div class="team-side usa">
-                            <div class="player-name">${pairing.usa_player || 'TBD'}</div>
+                            <div class="player-name">${usaPlayer}</div>
                         </div>
                         <div class="vs-divider">VS</div>
                         <div class="team-side intl">
-                            <div class="player-name">${pairing.intl_player || 'TBD'}</div>
+                            <div class="player-name">${intlPlayer}</div>
                         </div>
                     </div>
                 `;
@@ -181,14 +213,33 @@
             console.log('WebSocket message:', message);
             
             if (message.type === 'reveal') {
-                revealPairing(message.pairing);
+                handleRevealMessage(message);
             } else if (message.type === 'reset') {
                 resetDisplay();
             }
         }
         
-        // Animate pairing reveal
-        async function revealPairing(pairing) {
+        // Handle reveal message with step
+        async function handleRevealMessage(message) {
+            const { pairing, step, side } = message;
+            
+            // Update local pairing data
+            const localPairing = pairings.find(p => p.id === pairing.id);
+            if (localPairing) {
+                localPairing.revealStep = step;
+            }
+            
+            if (step === 1) {
+                // Show first side only
+                await revealFirstSide(pairing, side);
+            } else if (step === 2) {
+                // Show second side and complete reveal
+                await revealSecondSide(pairing, side);
+            }
+        }
+        
+        // Reveal first side only
+        async function revealFirstSide(pairing, side) {
             if (isRevealing) return;
             isRevealing = true;
             
@@ -196,48 +247,123 @@
             const usaTeam = document.getElementById('reveal-usa');
             const intlTeam = document.getElementById('reveal-intl');
             
+            // Clear previous content
+            usaTeam.classList.remove('show');
+            intlTeam.classList.remove('show');
+            
             // Show overlay
             overlay.classList.add('active');
             
-            // Prepare content
-            if (pairing.type === 'team') {
-                usaTeam.querySelector('.reveal-players').innerHTML = `
-                    <div>${pairing.usa_team.player1}</div>
-                    <div>${pairing.usa_team.player2}</div>
-                `;
-                intlTeam.querySelector('.reveal-players').innerHTML = `
-                    <div>${pairing.intl_team.player1}</div>
-                    <div>${pairing.intl_team.player2}</div>
-                `;
+            // Prepare content for the side to reveal
+            if (side === 'usa') {
+                if (pairing.type === 'team') {
+                    const player1 = getPlayerName(pairing.usa_team.player1_id);
+                    const player2 = getPlayerName(pairing.usa_team.player2_id);
+                    usaTeam.querySelector('.reveal-players').innerHTML = `
+                        <div>${player1}</div>
+                        <div>${player2}</div>
+                    `;
+                } else {
+                    const player = getPlayerName(pairing.usa_player_id);
+                    usaTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
+                }
+                
+                // Animate USA team
+                await new Promise(resolve => {
+                    setTimeout(() => {
+                        usaTeam.classList.add('show');
+                        resolve();
+                    }, 300);
+                });
             } else {
-                usaTeam.querySelector('.reveal-players').innerHTML = `
-                    <div>${pairing.usa_player}</div>
-                `;
-                intlTeam.querySelector('.reveal-players').innerHTML = `
-                    <div>${pairing.intl_player}</div>
-                `;
+                if (pairing.type === 'team') {
+                    const player1 = getPlayerName(pairing.intl_team.player1_id);
+                    const player2 = getPlayerName(pairing.intl_team.player2_id);
+                    intlTeam.querySelector('.reveal-players').innerHTML = `
+                        <div>${player1}</div>
+                        <div>${player2}</div>
+                    `;
+                } else {
+                    const player = getPlayerName(pairing.intl_player_id);
+                    intlTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
+                }
+                
+                // Animate International team
+                await new Promise(resolve => {
+                    setTimeout(() => {
+                        intlTeam.classList.add('show');
+                        resolve();
+                    }, 300);
+                });
             }
             
-            // Animate USA team
-            await new Promise(resolve => {
-                usaTeam.classList.add('show');
-                setTimeout(resolve, 1500);
-            });
+            // Store current reveal data
+            currentRevealData = { pairing, firstSide: side };
             
-            // Animate International team
-            await new Promise(resolve => {
-                intlTeam.classList.add('show');
-                setTimeout(resolve, 1500);
-            });
+            isRevealing = false;
+        }
+        
+        // Reveal second side and complete
+        async function revealSecondSide(pairing, side) {
+            if (isRevealing) return;
+            isRevealing = true;
             
-            // Hide overlay and show in grid
+            const overlay = document.getElementById('reveal-overlay');
+            const usaTeam = document.getElementById('reveal-usa');
+            const intlTeam = document.getElementById('reveal-intl');
+            
+            // The opposite side from step 1
+            if (side === 'usa') {
+                if (pairing.type === 'team') {
+                    const player1 = getPlayerName(pairing.usa_team.player1_id);
+                    const player2 = getPlayerName(pairing.usa_team.player2_id);
+                    usaTeam.querySelector('.reveal-players').innerHTML = `
+                        <div>${player1}</div>
+                        <div>${player2}</div>
+                    `;
+                } else {
+                    const player = getPlayerName(pairing.usa_player_id);
+                    usaTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
+                }
+                
+                // Animate USA team
+                await new Promise(resolve => {
+                    setTimeout(() => {
+                        usaTeam.classList.add('show');
+                        resolve();
+                    }, 300);
+                });
+            } else {
+                if (pairing.type === 'team') {
+                    const player1 = getPlayerName(pairing.intl_team.player1_id);
+                    const player2 = getPlayerName(pairing.intl_team.player2_id);
+                    intlTeam.querySelector('.reveal-players').innerHTML = `
+                        <div>${player1}</div>
+                        <div>${player2}</div>
+                    `;
+                } else {
+                    const player = getPlayerName(pairing.intl_player_id);
+                    intlTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
+                }
+                
+                // Animate International team
+                await new Promise(resolve => {
+                    setTimeout(() => {
+                        intlTeam.classList.add('show');
+                        resolve();
+                    }, 300);
+                });
+            }
+            
+            // Hold both sides on screen for 3 seconds
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            // Hide overlay
             await new Promise(resolve => {
-                setTimeout(() => {
-                    overlay.classList.remove('active');
-                    usaTeam.classList.remove('show');
-                    intlTeam.classList.remove('show');
-                    resolve();
-                }, 1000);
+                overlay.classList.remove('active');
+                usaTeam.classList.remove('show');
+                intlTeam.classList.remove('show');
+                setTimeout(resolve, 500);
             });
             
             // Add to grid
@@ -246,12 +372,7 @@
                 card.classList.add('revealed');
             }
             
-            // Update reveal state
-            if (!revealState.revealedIds) revealState.revealedIds = [];
-            if (!revealState.revealedIds.includes(pairing.id)) {
-                revealState.revealedIds.push(pairing.id);
-            }
-            
+            currentRevealData = null;
             isRevealing = false;
         }
         
@@ -259,7 +380,21 @@
         function resetDisplay() {
             const cards = document.querySelectorAll('.pairing-card');
             cards.forEach(card => card.classList.remove('revealed'));
-            revealState = { revealedIds: [] };
+            
+            // Hide overlay
+            const overlay = document.getElementById('reveal-overlay');
+            const usaTeam = document.getElementById('reveal-usa');
+            const intlTeam = document.getElementById('reveal-intl');
+            
+            overlay.classList.remove('active');
+            usaTeam.classList.remove('show');
+            intlTeam.classList.remove('show');
+            
+            currentRevealData = null;
+            isRevealing = false;
+            
+            // Reload pairings to get reset state
+            loadPairings();
         }
         
         // Update connection status
@@ -289,7 +424,9 @@
         
         // Reload pairings every 30 seconds as fallback
         setInterval(loadPairings, 30000);
+        
+        // Reload players every 5 minutes
+        setInterval(loadPlayers, 300000);
     </script>
 </body>
 </html>
-
