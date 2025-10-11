@@ -342,12 +342,41 @@ body.pairings-admin {
     color: var(--text-dark);
 }
 
+#day1-editor {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+#day2-editor {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
 .pairing-edit-card {
     background: #f9f9f9;
     border-left: 4px solid var(--accent-gold);
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.pairing-edit-card.collapsed .pairing-card-content {
+    display: none;
+}
+
+.pairing-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.pairing-card-header h3 {
+    margin: 0;
 }
 
 .pairing-edit-card h3 {
@@ -620,6 +649,28 @@ body.pairings-admin {
 .btn-reveal-step:disabled {
     background: #6c757d;
     cursor: not-allowed;
+}
+
+.btn-save-pairing {
+    background: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.btn-save-pairing:hover {
+    background: #45a049;
+}
+
+.pairing-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 /* Roster Management - Tabbed & Collapsible */

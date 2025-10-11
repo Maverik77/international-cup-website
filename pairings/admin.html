@@ -464,6 +464,9 @@
         function createEditorCard(pairing) {
             const card = document.createElement('div');
             card.className = 'pairing-edit-card';
+            if (pairing.revealStep === 2) {
+                card.classList.add('collapsed');
+            }
             card.dataset.pairingId = pairing.id;
             
             const statusClass = pairing.revealStep === 0 ? 'not-started' : 
@@ -473,73 +476,87 @@
             
             if (pairing.type === 'team') {
                 card.innerHTML = `
-                    <h3>Match ${pairing.match_number}</h3>
-                    <div class="reveal-status ${statusClass}">${statusText}</div>
-                    
-                    <div class="reveal-order-controls">
-                        <label><input type="radio" name="order-${pairing.id}" value="usa-first" 
-                               ${pairing.revealOrder === 'usa-first' ? 'checked' : ''}
-                               onchange="updateRevealOrder('${pairing.id}', 'usa-first')"> USA First</label>
-                        <label><input type="radio" name="order-${pairing.id}" value="intl-first"
-                               ${pairing.revealOrder === 'intl-first' ? 'checked' : ''}
-                               onchange="updateRevealOrder('${pairing.id}', 'intl-first')"> International First</label>
+                    <div class="pairing-card-header" onclick="togglePairingCard('${pairing.id}')">
+                        <h3>Match ${pairing.match_number}</h3>
+                        <div class="reveal-status ${statusClass}">${statusText}</div>
                     </div>
                     
-                    <div class="team-inputs">
-                        <div class="input-group usa">
-                            <label>USA Player 1</label>
-                            ${createPlayerDropdown(pairing.usa_team.player1_id, 'USA', pairing.id, 'usa_team.player1_id')}
+                    <div class="pairing-card-content">
+                        <div class="reveal-order-controls">
+                            <label><input type="radio" name="order-${pairing.id}" value="usa-first" 
+                                   ${pairing.revealOrder === 'usa-first' ? 'checked' : ''}
+                                   onchange="updateRevealOrder('${pairing.id}', 'usa-first')"> USA First</label>
+                            <label><input type="radio" name="order-${pairing.id}" value="intl-first"
+                                   ${pairing.revealOrder === 'intl-first' ? 'checked' : ''}
+                                   onchange="updateRevealOrder('${pairing.id}', 'intl-first')"> International First</label>
                         </div>
-                        <div class="input-group intl">
-                            <label>International Player 1</label>
-                            ${createPlayerDropdown(pairing.intl_team.player1_id, 'International', pairing.id, 'intl_team.player1_id')}
+                        
+                        <div class="team-inputs">
+                            <div class="input-group usa">
+                                <label>USA Player 1</label>
+                                ${createPlayerDropdown(pairing.usa_team.player1_id, 'USA', pairing.id, 'usa_team.player1_id')}
+                            </div>
+                            <div class="input-group intl">
+                                <label>International Player 1</label>
+                                ${createPlayerDropdown(pairing.intl_team.player1_id, 'International', pairing.id, 'intl_team.player1_id')}
+                            </div>
+                            <div class="input-group usa">
+                                <label>USA Player 2</label>
+                                ${createPlayerDropdown(pairing.usa_team.player2_id, 'USA', pairing.id, 'usa_team.player2_id')}
+                            </div>
+                            <div class="input-group intl">
+                                <label>International Player 2</label>
+                                ${createPlayerDropdown(pairing.intl_team.player2_id, 'International', pairing.id, 'intl_team.player2_id')}
+                            </div>
                         </div>
-                        <div class="input-group usa">
-                            <label>USA Player 2</label>
-                            ${createPlayerDropdown(pairing.usa_team.player2_id, 'USA', pairing.id, 'usa_team.player2_id')}
-                        </div>
-                        <div class="input-group intl">
-                            <label>International Player 2</label>
-                            ${createPlayerDropdown(pairing.intl_team.player2_id, 'International', pairing.id, 'intl_team.player2_id')}
+                        
+                        <div class="pairing-actions">
+                            <button class="btn-reveal-step" onclick="revealStep('${pairing.id}')" 
+                                    ${pairing.revealStep >= 2 ? 'disabled' : ''}>
+                                ${pairing.revealStep === 0 ? 'Reveal First Side' : 
+                                  pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
+                            </button>
+                            <button class="btn-save-pairing" onclick="saveSinglePairing('${pairing.id}')">Save This Match</button>
                         </div>
                     </div>
-                    
-                    <button class="btn-reveal-step" onclick="revealStep('${pairing.id}')" 
-                            ${pairing.revealStep >= 2 ? 'disabled' : ''}>
-                        ${pairing.revealStep === 0 ? 'Reveal First Side' : 
-                          pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
-                    </button>
                 `;
             } else {
                 card.innerHTML = `
-                    <h3>Match ${pairing.match_number}</h3>
-                    <div class="reveal-status ${statusClass}">${statusText}</div>
-                    
-                    <div class="reveal-order-controls">
-                        <label><input type="radio" name="order-${pairing.id}" value="usa-first"
-                               ${pairing.revealOrder === 'usa-first' ? 'checked' : ''}
-                               onchange="updateRevealOrder('${pairing.id}', 'usa-first')"> USA First</label>
-                        <label><input type="radio" name="order-${pairing.id}" value="intl-first"
-                               ${pairing.revealOrder === 'intl-first' ? 'checked' : ''}
-                               onchange="updateRevealOrder('${pairing.id}', 'intl-first')"> International First</label>
+                    <div class="pairing-card-header" onclick="togglePairingCard('${pairing.id}')">
+                        <h3>Match ${pairing.match_number}</h3>
+                        <div class="reveal-status ${statusClass}">${statusText}</div>
                     </div>
                     
-                    <div class="singles-inputs">
-                        <div class="input-group usa">
-                            <label>USA Player</label>
-                            ${createPlayerDropdown(pairing.usa_player_id, 'USA', pairing.id, 'usa_player_id')}
+                    <div class="pairing-card-content">
+                        <div class="reveal-order-controls">
+                            <label><input type="radio" name="order-${pairing.id}" value="usa-first"
+                                   ${pairing.revealOrder === 'usa-first' ? 'checked' : ''}
+                                   onchange="updateRevealOrder('${pairing.id}', 'usa-first')"> USA First</label>
+                            <label><input type="radio" name="order-${pairing.id}" value="intl-first"
+                                   ${pairing.revealOrder === 'intl-first' ? 'checked' : ''}
+                                   onchange="updateRevealOrder('${pairing.id}', 'intl-first')"> International First</label>
                         </div>
-                        <div class="input-group intl">
-                            <label>International Player</label>
-                            ${createPlayerDropdown(pairing.intl_player_id, 'International', pairing.id, 'intl_player_id')}
+                        
+                        <div class="singles-inputs">
+                            <div class="input-group usa">
+                                <label>USA Player</label>
+                                ${createPlayerDropdown(pairing.usa_player_id, 'USA', pairing.id, 'usa_player_id')}
+                            </div>
+                            <div class="input-group intl">
+                                <label>International Player</label>
+                                ${createPlayerDropdown(pairing.intl_player_id, 'International', pairing.id, 'intl_player_id')}
+                            </div>
+                        </div>
+                        
+                        <div class="pairing-actions">
+                            <button class="btn-reveal-step" onclick="revealStep('${pairing.id}')"
+                                    ${pairing.revealStep >= 2 ? 'disabled' : ''}>
+                                ${pairing.revealStep === 0 ? 'Reveal First Side' :
+                                  pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
+                            </button>
+                            <button class="btn-save-pairing" onclick="saveSinglePairing('${pairing.id}')">Save This Match</button>
                         </div>
                     </div>
-                    
-                    <button class="btn-reveal-step" onclick="revealStep('${pairing.id}')"
-                            ${pairing.revealStep >= 2 ? 'disabled' : ''}>
-                        ${pairing.revealStep === 0 ? 'Reveal First Side' :
-                          pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
-                    </button>
                 `;
             }
             
@@ -553,6 +570,54 @@
             });
             
             return card;
+        }
+        
+        // Toggle pairing card collapse
+        function togglePairingCard(pairingId) {
+            const card = document.querySelector(`[data-pairing-id="${pairingId}"]`);
+            if (card) {
+                card.classList.toggle('collapsed');
+            }
+        }
+        
+        // Save single pairing
+        async function saveSinglePairing(pairingId) {
+            const pairing = pairings.find(p => p.id === pairingId);
+            if (!pairing) return;
+            
+            try {
+                const card = document.querySelector(`[data-pairing-id="${pairingId}"]`);
+                const saveBtn = card.querySelector('.btn-save-pairing');
+                const originalText = saveBtn.textContent;
+                saveBtn.textContent = 'Saving...';
+                saveBtn.disabled = true;
+                
+                const response = await fetch(`${CONFIG.REST_API_URL}/pairings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ pairings })
+                });
+                
+                if (response.ok) {
+                    saveBtn.textContent = '✓ Saved!';
+                    setTimeout(() => {
+                        saveBtn.textContent = originalText;
+                        saveBtn.disabled = false;
+                    }, 1500);
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                console.error('Save pairing error:', error);
+                alert('Failed to save pairing');
+                const card = document.querySelector(`[data-pairing-id="${pairingId}"]`);
+                const saveBtn = card.querySelector('.btn-save-pairing');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save This Match';
+            }
         }
         
         // Create player dropdown HTML with smart filtering
@@ -676,6 +741,16 @@
                 if (response.ok) {
                     pairing.revealStep = nextStep;
                     renderEditors();
+                    
+                    // Auto-collapse when fully revealed (step 2)
+                    if (nextStep === 2) {
+                        setTimeout(() => {
+                            const card = document.querySelector(`[data-pairing-id="${pairingId}"]`);
+                            if (card && !card.classList.contains('collapsed')) {
+                                card.classList.add('collapsed');
+                            }
+                        }, 500);
+                    }
                 } else {
                     throw new Error('Reveal failed');
                 }
