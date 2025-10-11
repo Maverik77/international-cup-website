@@ -80,15 +80,19 @@
             }
         }
         
-        // Get player display name
+        // Get player display name (abbreviated for display)
         function getPlayerName(playerId) {
             const player = players.find(p => p.id === playerId);
             if (!player) return 'TBD';
             
+            // Use first initial + last name (e.g., "J. Smith")
+            const firstInitial = player.firstName ? player.firstName.charAt(0).toUpperCase() : '';
+            const displayName = `${firstInitial}. ${player.lastName}`;
+            
             if (player.nickname) {
-                return `${player.firstName} ${player.lastName} (${player.nickname})`;
+                return `${displayName} (${player.nickname})`;
             }
-            return `${player.firstName} ${player.lastName}`;
+            return displayName;
         }
         
         // Load pairings from API
