@@ -323,17 +323,59 @@
             if (!confirm('Load sample roster? This will overwrite current players.')) return;
             
             players = [
-                { id: 'player-usa-1', firstName: 'John', lastName: 'Smith', nickname: '', team: 'USA', teeColor: 'Blue' },
-                { id: 'player-usa-2', firstName: 'Mike', lastName: 'Johnson', nickname: 'MJ', team: 'USA', teeColor: 'Blue' },
-                { id: 'player-usa-3', firstName: 'David', lastName: 'Williams', nickname: '', team: 'USA', teeColor: 'Blue' },
-                { id: 'player-usa-4', firstName: 'Chris', lastName: 'Brown', nickname: '', team: 'USA', teeColor: 'White' },
-                { id: 'player-intl-1', firstName: 'Pierre', lastName: 'Dubois', nickname: '', team: 'International', teeColor: 'Blue' },
-                { id: 'player-intl-2', firstName: 'Hans', lastName: 'Schmidt', nickname: 'The Hammer', team: 'International', teeColor: 'Blue' },
-                { id: 'player-intl-3', firstName: 'Luca', lastName: 'Rossi', nickname: '', team: 'International', teeColor: 'Blue' },
-                { id: 'player-intl-4', firstName: 'Carlos', lastName: 'Garcia', nickname: '', team: 'International', teeColor: 'White' }
+                // USA Team - 24 players
+                { id: 'player-usa-1', firstName: 'John', lastName: 'Altman', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-2', firstName: 'Keith', lastName: 'Barnes', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-3', firstName: 'Jay', lastName: 'Collins', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-4', firstName: 'Norm', lastName: 'Corkhill', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-5', firstName: 'Scott', lastName: 'Covino', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-6', firstName: 'Chris', lastName: 'Crouse', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-7', firstName: 'John', lastName: 'Daley', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-8', firstName: 'Mike', lastName: 'Edelheit', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-9', firstName: 'Victor', lastName: 'Esposito', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-10', firstName: 'Mitch', lastName: 'Freedman', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-11', firstName: 'Jeff', lastName: 'Galkin', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-12', firstName: 'Jamie', lastName: 'Kerrigan', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-13', firstName: 'Dave', lastName: 'Kohlasch', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-14', firstName: 'Kevin', lastName: 'Kozlowski', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-15', firstName: 'Jeff', lastName: 'Kritsberg', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-16', firstName: 'Kyle', lastName: 'Lenihan', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-17', firstName: 'Mike', lastName: 'McNamee', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-18', firstName: 'Jeff', lastName: 'Miller', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-19', firstName: 'Pete', lastName: 'Mitesser', nickname: '', team: 'USA', teeColor: 'White' },
+                { id: 'player-usa-20', firstName: 'Tom', lastName: 'Murphy', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-21', firstName: 'Anthony', lastName: 'Rizzo', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-22', firstName: 'Brett', lastName: 'Sutch', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-23', firstName: 'Jay', lastName: 'Vosburgh', nickname: '', team: 'USA', teeColor: 'Blue' },
+                { id: 'player-usa-24', firstName: 'Mike', lastName: 'Ziegler', nickname: '', team: 'USA', teeColor: 'Blue' },
+                // International Team - 24 players
+                { id: 'player-intl-1', firstName: 'Tim', lastName: 'Pearce', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-2', firstName: 'Phil', lastName: 'Woodisse', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-3', firstName: 'Erik', lastName: 'Wagner', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-4', firstName: 'Daren', lastName: 'Wickham', nickname: '', team: 'International', teeColor: 'White' },
+                { id: 'player-intl-5', firstName: 'Rhys', lastName: 'Gully', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-6', firstName: 'Troy', lastName: 'Hazzard', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-7', firstName: 'Uttam', lastName: 'Bharwani', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-8', firstName: 'Philip', lastName: 'Olivero', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-9', firstName: 'Robbie', lastName: 'Neilson', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-10', firstName: 'Phillip', lastName: 'Jewell', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-11', firstName: 'Ben', lastName: 'Hedges', nickname: '', team: 'International', teeColor: 'White' },
+                { id: 'player-intl-12', firstName: 'Stefan', lastName: 'Lambert', nickname: '', team: 'International', teeColor: 'White' },
+                { id: 'player-intl-13', firstName: 'Jun', lastName: 'Bae', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-14', firstName: 'Joung Kook', lastName: 'Park', nickname: 'JK', team: 'International', teeColor: 'White' },
+                { id: 'player-intl-15', firstName: 'Yunsang', lastName: 'Bae', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-16', firstName: 'Jack', lastName: 'Silpacharn', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-17', firstName: 'James', lastName: 'Siu', nickname: '', team: 'International', teeColor: 'White' },
+                { id: 'player-intl-18', firstName: 'Jong', lastName: 'Kim', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-19', firstName: 'Vijay', lastName: 'Davuluri', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-20', firstName: 'Suresh', lastName: 'Saribala', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-21', firstName: 'Muralidhar', lastName: 'Malyala', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-22', firstName: 'Anil B', lastName: 'Katarki', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-23', firstName: 'Dinakar', lastName: 'Kudum', nickname: '', team: 'International', teeColor: 'Blue' },
+                { id: 'player-intl-24', firstName: 'Soban', lastName: 'Ansari', nickname: '', team: 'International', teeColor: 'Blue' }
             ];
             
-            playerIdCounter = { USA: 5, International: 5 };
+            playerIdCounter = { USA: 25, International: 25 };
             renderRoster();
             updatePlayerCount();
             alert('Sample roster loaded. Click "Save Roster" to persist.');
