@@ -260,6 +260,9 @@
                 intl_player_id: pairing.intl_player_id
             });
             
+            // Reload players to ensure we have the latest roster before revealing
+            await loadPlayers();
+            
             // Update local pairing data
             const localPairing = pairings.find(p => p.id === pairing.id);
             if (localPairing) {
