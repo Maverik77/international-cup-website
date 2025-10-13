@@ -189,6 +189,7 @@
                         <span class="stat-item">🏌️‍♂️ 24 Players</span>
                         <span class="stat-item">🏠 1 Country One dream</span>
                     </div>
+                    <button class="btn btn-secondary roster-toggle" onclick="toggleRoster('usa')">View Roster</button>
                 </div>
                 <div class="team-card team-international">
                     <div class="team-logo">
@@ -199,6 +200,84 @@
                     <div class="team-stats">
                         <span class="stat-item">🌍 12+ Countries</span>
                         <span class="stat-item">🏌️‍♂️ 24 Players</span>
+                    </div>
+                    <button class="btn btn-secondary roster-toggle" onclick="toggleRoster('intl')">View Roster</button>
+                </div>
+            </div>
+            
+            <!-- Team Rosters -->
+            <div class="rosters-container">
+                <!-- USA Roster -->
+                <div id="usa-roster" class="team-roster" style="display: none;">
+                    <div class="roster-header">
+                        <h3>🇺🇸 Team USA Roster</h3>
+                        <span class="close-roster" onclick="toggleRoster('usa')">&times;</span>
+                    </div>
+                    <div class="roster-grid">
+                        <div class="roster-player">John Altman</div>
+                        <div class="roster-player white-tees">Keith Barnes <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Jay Collins</div>
+                        <div class="roster-player white-tees">Norm Corkhill <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Scott Covino</div>
+                        <div class="roster-player">Chris Crouse</div>
+                        <div class="roster-player">John Daley</div>
+                        <div class="roster-player white-tees">Mike Edelheit <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Victor Esposito</div>
+                        <div class="roster-player">Mitch Freedman</div>
+                        <div class="roster-player">Jeff Galkin</div>
+                        <div class="roster-player">Jamie Kerrigan</div>
+                        <div class="roster-player white-tees">Dave Kohlasch <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player white-tees">Kevin Kozlowski <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Jeff Kritsberg</div>
+                        <div class="roster-player">Kyle Lenihan</div>
+                        <div class="roster-player">Mike McNamee</div>
+                        <div class="roster-player white-tees">Jeff Miller <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player white-tees">Pete Mitesser <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Tom Murphy</div>
+                        <div class="roster-player">Anthony Rizzo</div>
+                        <div class="roster-player">Brett Sutch</div>
+                        <div class="roster-player">Jay Vosburgh</div>
+                        <div class="roster-player">Mike Ziegler</div>
+                    </div>
+                    <div class="roster-legend">
+                        <span class="tee-badge">⚪</span> White Tees (Rule of 70)
+                    </div>
+                </div>
+                
+                <!-- International Roster -->
+                <div id="intl-roster" class="team-roster" style="display: none;">
+                    <div class="roster-header">
+                        <h3>🌍 Team International Roster</h3>
+                        <span class="close-roster" onclick="toggleRoster('intl')">&times;</span>
+                    </div>
+                    <div class="roster-grid">
+                        <div class="roster-player">Tim Pearce</div>
+                        <div class="roster-player">Phil Woodisse</div>
+                        <div class="roster-player">Erik Wagner</div>
+                        <div class="roster-player white-tees">Daren Wickham <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Rhys Gully</div>
+                        <div class="roster-player">Troy Hazzard</div>
+                        <div class="roster-player">Uttam Bharwani</div>
+                        <div class="roster-player">Philip Olivero</div>
+                        <div class="roster-player">Robbie Neilson</div>
+                        <div class="roster-player">Phillip Jewell</div>
+                        <div class="roster-player white-tees">Ben Hedges <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player white-tees">Stefan Lambert <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Jun Bae</div>
+                        <div class="roster-player white-tees">Joung Kook Park (JK) <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Yunsang Bae</div>
+                        <div class="roster-player">Jack Silpacharn</div>
+                        <div class="roster-player white-tees">James Siu <span class="tee-badge">⚪</span></div>
+                        <div class="roster-player">Jong Kim</div>
+                        <div class="roster-player">Vijay Davuluri</div>
+                        <div class="roster-player">Suresh Saribala</div>
+                        <div class="roster-player">Muralidhar Malyala</div>
+                        <div class="roster-player">Anil B Katarki</div>
+                        <div class="roster-player">Dinakar Kudum</div>
+                        <div class="roster-player">Soban Ansari</div>
+                    </div>
+                    <div class="roster-legend">
+                        <span class="tee-badge">⚪</span> White Tees (Rule of 70)
                     </div>
                 </div>
             </div>
@@ -470,8 +549,141 @@
             line-height: 1.6;
         }
         
+        /* Team Roster Styles */
+        .roster-toggle {
+            margin-top: 1rem;
+        }
+        
+        .rosters-container {
+            margin-top: 3rem;
+        }
+        
+        .team-roster {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .roster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #e5e5e5;
+        }
+        
+        .roster-header h3 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #333;
+        }
+        
+        .close-roster {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        
+        .close-roster:hover {
+            color: #333;
+        }
+        
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .roster-player {
+            padding: 0.75rem 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.2s;
+            border-left: 3px solid #007bff;
+        }
+        
+        .roster-player:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .roster-player.white-tees {
+            border-left-color: #6c757d;
+            background: #fff3cd;
+        }
+        
+        .roster-player.white-tees:hover {
+            background: #ffe69c;
+        }
+        
+        .tee-badge {
+            font-size: 0.9rem;
+            margin-left: 0.25rem;
+        }
+        
+        .roster-legend {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .roster-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .roster-header h3 {
+                font-size: 1.4rem;
+            }
+        }
     </style>
     <script>
+        // Roster Toggle Function
+        function toggleRoster(team) {
+            const rosterId = team + '-roster';
+            const rosterEl = document.getElementById(rosterId);
+            
+            if (rosterEl.style.display === 'none' || rosterEl.style.display === '') {
+                // Close other roster if open
+                const otherTeam = team === 'usa' ? 'intl' : 'usa';
+                document.getElementById(otherTeam + '-roster').style.display = 'none';
+                
+                // Show this roster
+                rosterEl.style.display = 'block';
+                
+                // Smooth scroll to roster
+                setTimeout(() => {
+                    rosterEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                // Hide this roster
+                rosterEl.style.display = 'none';
+            }
+        }
+        
         // News Modal Functions
         function openNewsModal() {
             document.getElementById('news-modal').style.display = 'block';

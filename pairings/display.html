@@ -81,14 +81,23 @@
         }
         
         // Get player display name (abbreviated for display)
-        function getPlayerName(playerId) {
+        function getPlayerName(playerId, fullName = false) {
             const player = players.find(p => p.id === playerId);
             if (!player) {
                 console.log(`Player not found for ID: ${playerId}`);
                 return 'TBD';
             }
             
-            // Use first initial + last name (e.g., "J. Smith")
+            // Full name for reveal modal
+            if (fullName) {
+                const displayName = `${player.firstName} ${player.lastName}`;
+                if (player.nickname) {
+                    return `${displayName} (${player.nickname})`;
+                }
+                return displayName;
+            }
+            
+            // Abbreviated for grid display - first initial + last name (e.g., "J. Smith")
             const firstInitial = player.firstName ? player.firstName.charAt(0).toUpperCase() : '';
             const displayName = `${firstInitial}. ${player.lastName}`;
             
@@ -285,14 +294,14 @@
             // Prepare content for the side to reveal
             if (side === 'usa') {
                 if (pairing.type === 'team') {
-                    const player1 = getPlayerName(pairing.usa_team.player1_id);
-                    const player2 = getPlayerName(pairing.usa_team.player2_id);
+                    const player1 = getPlayerName(pairing.usa_team.player1_id, true);
+                    const player2 = getPlayerName(pairing.usa_team.player2_id, true);
                     usaTeam.querySelector('.reveal-players').innerHTML = `
                         <div>${player1}</div>
                         <div>${player2}</div>
                     `;
                 } else {
-                    const player = getPlayerName(pairing.usa_player_id);
+                    const player = getPlayerName(pairing.usa_player_id, true);
                     usaTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
                 }
                 
@@ -305,14 +314,14 @@
                 });
             } else {
                 if (pairing.type === 'team') {
-                    const player1 = getPlayerName(pairing.intl_team.player1_id);
-                    const player2 = getPlayerName(pairing.intl_team.player2_id);
+                    const player1 = getPlayerName(pairing.intl_team.player1_id, true);
+                    const player2 = getPlayerName(pairing.intl_team.player2_id, true);
                     intlTeam.querySelector('.reveal-players').innerHTML = `
                         <div>${player1}</div>
                         <div>${player2}</div>
                     `;
                 } else {
-                    const player = getPlayerName(pairing.intl_player_id);
+                    const player = getPlayerName(pairing.intl_player_id, true);
                     intlTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
                 }
                 
@@ -343,14 +352,14 @@
             // The opposite side from step 1
             if (side === 'usa') {
                 if (pairing.type === 'team') {
-                    const player1 = getPlayerName(pairing.usa_team.player1_id);
-                    const player2 = getPlayerName(pairing.usa_team.player2_id);
+                    const player1 = getPlayerName(pairing.usa_team.player1_id, true);
+                    const player2 = getPlayerName(pairing.usa_team.player2_id, true);
                     usaTeam.querySelector('.reveal-players').innerHTML = `
                         <div>${player1}</div>
                         <div>${player2}</div>
                     `;
                 } else {
-                    const player = getPlayerName(pairing.usa_player_id);
+                    const player = getPlayerName(pairing.usa_player_id, true);
                     usaTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
                 }
                 
@@ -363,14 +372,14 @@
                 });
             } else {
                 if (pairing.type === 'team') {
-                    const player1 = getPlayerName(pairing.intl_team.player1_id);
-                    const player2 = getPlayerName(pairing.intl_team.player2_id);
+                    const player1 = getPlayerName(pairing.intl_team.player1_id, true);
+                    const player2 = getPlayerName(pairing.intl_team.player2_id, true);
                     intlTeam.querySelector('.reveal-players').innerHTML = `
                         <div>${player1}</div>
                         <div>${player2}</div>
                     `;
                 } else {
-                    const player = getPlayerName(pairing.intl_player_id);
+                    const player = getPlayerName(pairing.intl_player_id, true);
                     intlTeam.querySelector('.reveal-players').innerHTML = `<div>${player}</div>`;
                 }
                 
