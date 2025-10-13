@@ -8,6 +8,13 @@ Parameters:
     Default: icup2024
     NoEcho: true
     Description: Password for admin access to pairing management
+  Environment:
+    Type: String
+    Default: prod
+    AllowedValues:
+      - prod
+      - staging
+    Description: Environment name for resource naming (prod or staging)
 
 Resources:
   # Lambda Execution Role
@@ -38,10 +45,10 @@ Resources:
                   - dynamodb:Scan
                   - dynamodb:BatchWriteItem
                 Resource:
-                  - arn:aws:dynamodb:us-east-1:*:table/icup-pairings
-                  - arn:aws:dynamodb:us-east-1:*:table/icup-reveal-state
-                  - arn:aws:dynamodb:us-east-1:*:table/icup-websocket-connections
-                  - arn:aws:dynamodb:us-east-1:*:table/icup-players
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-pairings-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-reveal-state-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-websocket-connections-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-players-${Environment}'
         - PolicyName: APIGatewayManageConnections
           PolicyDocument:
             Version: '2012-10-17'
@@ -51,19 +58,57 @@ Resources:
                   - execute-api:ManageConnections
                 Resource: '*'
 
-  # DynamoDB Tables (using existing tables)
-  # Note: Pairings, reveal-state, and websocket-connections tables already exist
+  # DynamoDB Tables
   
-  # Players Table (new)
+  # Players Table
   PlayersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: icup-players
+      TableName: !Sub 'icup-players-${Environment}'
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
       KeySchema:
         - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  
+  # Pairings Table
+  PairingsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-pairings-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  
+  # Reveal State Table
+  RevealStateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-reveal-state-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  
+  # WebSocket Connections Table
+  WebSocketConnectionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-websocket-connections-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: connectionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: connectionId
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
@@ -76,6 +121,12 @@ Resources:
       Runtime: nodejs18.x
       Role: !GetAtt PairingsLambdaRole.Arn
       Timeout: 10
+      Environment:
+        Variables:
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
       Events:
         GetPairings:
           Type: Api
@@ -95,6 +146,10 @@ Resources:
       Environment:
         Variables:
           ADMIN_PASSWORD: !Ref AdminPassword
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
       Events:
         UpdatePairings:
           Type: Api
@@ -111,6 +166,12 @@ Resources:
       Runtime: nodejs18.x
       Role: !GetAtt PairingsLambdaRole.Arn
       Timeout: 10
+      Environment:
+        Variables:
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
       Events:
         GetPlayers:
           Type: Api
@@ -130,6 +191,10 @@ Resources:
       Environment:
         Variables:
           ADMIN_PASSWORD: !Ref AdminPassword
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
       Events:
         UpdatePlayers:
           Type: Api
@@ -150,6 +215,10 @@ Resources:
         Variables:
           ADMIN_PASSWORD: !Ref AdminPassword
           WEBSOCKET_ENDPOINT: !Sub 'https://${PairingsWebSocket}.execute-api.${AWS::Region}.amazonaws.com/prod'
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
       Events:
         RevealPairing:
           Type: Api
@@ -166,6 +235,12 @@ Resources:
       Runtime: nodejs18.x
       Role: !GetAtt PairingsLambdaRole.Arn
       Timeout: 10
+      Environment:
+        Variables:
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
 
   WebSocketDisconnectFunction:
     Type: AWS::Serverless::Function
@@ -175,6 +250,12 @@ Resources:
       Runtime: nodejs18.x
       Role: !GetAtt PairingsLambdaRole.Arn
       Timeout: 10
+      Environment:
+        Variables:
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          REVEAL_STATE_TABLE: !Sub 'icup-reveal-state-${Environment}'
+          PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
+          WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
 
   # REST API
   PairingsApi:

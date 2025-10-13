@@ -5,6 +5,7 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const PLAYERS_TABLE = process.env.PLAYERS_TABLE || 'icup-players';
 
 exports.handler = async (event) => {
     console.log('Update Players request:', JSON.stringify(event));
@@ -41,7 +42,7 @@ exports.handler = async (event) => {
         
         // Get existing players to determine what to delete
         const existingResult = await docClient.send(new ScanCommand({
-            TableName: 'icup-players'
+            TableName: PLAYERS_TABLE
         }));
         
         const existingIds = new Set((existingResult.Items || []).map(p => p.id));
@@ -51,7 +52,7 @@ exports.handler = async (event) => {
         const toDelete = [...existingIds].filter(id => !newIds.has(id));
         for (const id of toDelete) {
             await docClient.send(new DeleteCommand({
-                TableName: 'icup-players',
+                TableName: PLAYERS_TABLE,
                 Key: { id }
             }));
         }
@@ -68,7 +69,7 @@ exports.handler = async (event) => {
             const batch = putRequests.slice(i, i + 25);
             await docClient.send(new BatchWriteCommand({
                 RequestItems: {
-                    'icup-players': batch
+                    [PLAYERS_TABLE]: batch
                 }
             }));
         }

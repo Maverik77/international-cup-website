@@ -5,6 +5,7 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const PAIRINGS_TABLE = process.env.PAIRINGS_TABLE || 'icup-pairings';
 
 exports.handler = async (event) => {
     console.log('Update Pairings request:', JSON.stringify(event));
@@ -51,7 +52,7 @@ exports.handler = async (event) => {
             const batch = putRequests.slice(i, i + 25);
             await docClient.send(new BatchWriteCommand({
                 RequestItems: {
-                    'icup-pairings': batch
+                    [PAIRINGS_TABLE]: batch
                 }
             }));
         }

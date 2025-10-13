@@ -7,6 +7,8 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
 const WEBSOCKET_ENDPOINT = process.env.WEBSOCKET_ENDPOINT;
+const PAIRINGS_TABLE = process.env.PAIRINGS_TABLE || 'icup-pairings';
+const WEBSOCKET_TABLE = process.env.WEBSOCKET_TABLE || 'icup-websocket-connections';
 
 exports.handler = async (event) => {
     console.log('Reveal Pairing request:', JSON.stringify(event));
@@ -36,7 +38,7 @@ exports.handler = async (event) => {
         if (action === 'reset') {
             // Get all pairings and reset their reveal steps
             const pairingsResult = await docClient.send(new ScanCommand({
-                TableName: 'icup-pairings'
+                TableName: PAIRINGS_TABLE
             }));
             
             const pairings = pairingsResult.Items || [];
@@ -45,7 +47,7 @@ exports.handler = async (event) => {
             for (const pairing of pairings) {
                 pairing.revealStep = 0;
                 await docClient.send(new PutCommand({
-                    TableName: 'icup-pairings',
+                    TableName: PAIRINGS_TABLE,
                     Item: pairing
                 }));
             }
@@ -69,7 +71,7 @@ exports.handler = async (event) => {
         if (action === 'reveal' && pairingId && step) {
             // Get the specific pairing
             const pairingResult = await docClient.send(new GetCommand({
-                TableName: 'icup-pairings',
+                TableName: PAIRINGS_TABLE,
                 Key: { id: pairingId }
             }));
             
@@ -90,7 +92,7 @@ exports.handler = async (event) => {
             pairing.revealStep = step;
             
             await docClient.send(new PutCommand({
-                TableName: 'icup-pairings',
+                TableName: PAIRINGS_TABLE,
                 Item: pairing
             }));
             
@@ -161,7 +163,7 @@ async function broadcastToClients(message) {
     try {
         // Get all connections
         const connectionsResult = await docClient.send(new ScanCommand({
-            TableName: 'icup-websocket-connections'
+            TableName: WEBSOCKET_TABLE
         }));
         
         const connections = connectionsResult.Items || [];

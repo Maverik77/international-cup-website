@@ -4,6 +4,8 @@ const { DynamoDBDocumentClient, DeleteCommand } = require('@aws-sdk/lib-dynamodb
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
+const WEBSOCKET_TABLE = process.env.WEBSOCKET_TABLE || 'icup-websocket-connections';
+
 exports.handler = async (event) => {
     console.log('WebSocket disconnect:', JSON.stringify(event));
     
@@ -11,7 +13,7 @@ exports.handler = async (event) => {
     
     try {
         await docClient.send(new DeleteCommand({
-            TableName: 'icup-websocket-connections',
+            TableName: WEBSOCKET_TABLE,
             Key: {
                 connectionId: connectionId
             }

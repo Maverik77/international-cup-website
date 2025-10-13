@@ -4,18 +4,21 @@ const { DynamoDBDocumentClient, ScanCommand, GetCommand } = require('@aws-sdk/li
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
+const PAIRINGS_TABLE = process.env.PAIRINGS_TABLE || 'icup-pairings';
+const REVEAL_STATE_TABLE = process.env.REVEAL_STATE_TABLE || 'icup-reveal-state';
+
 exports.handler = async (event) => {
     console.log('GET Pairings request:', JSON.stringify(event));
     
     try {
         // Fetch all pairings
         const pairingsResult = await docClient.send(new ScanCommand({
-            TableName: 'icup-pairings'
+            TableName: PAIRINGS_TABLE
         }));
         
         // Fetch reveal state
         const revealStateResult = await docClient.send(new GetCommand({
-            TableName: 'icup-reveal-state',
+            TableName: REVEAL_STATE_TABLE,
             Key: { id: 'current' }
         }));
         

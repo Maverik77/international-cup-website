@@ -4,13 +4,15 @@ const { DynamoDBDocumentClient, ScanCommand } = require('@aws-sdk/lib-dynamodb')
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
+const PLAYERS_TABLE = process.env.PLAYERS_TABLE || 'icup-players';
+
 exports.handler = async (event) => {
     console.log('GET Players request:', JSON.stringify(event));
     
     try {
         // Fetch all players
         const result = await docClient.send(new ScanCommand({
-            TableName: 'icup-players'
+            TableName: PLAYERS_TABLE
         }));
         
         const players = result.Items || [];
