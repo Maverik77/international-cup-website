@@ -74,7 +74,6 @@
                 const response = await fetch(`${CONFIG.REST_API_URL}/players`);
                 const data = await response.json();
                 players = data.players || [];
-                console.log(`Loaded ${players.length} players`);
             } catch (error) {
                 console.error('Failed to load players:', error);
             }
@@ -84,7 +83,6 @@
         function getPlayerName(playerId, fullName = false) {
             const player = players.find(p => p.id === playerId);
             if (!player) {
-                console.log(`Player not found for ID: ${playerId}`);
                 return 'TBD';
             }
             
@@ -117,16 +115,6 @@
                 const data = await response.json();
                 
                 pairings = data.pairings || [];
-                console.log('Loaded pairings:', pairings.length);
-                
-                // Log singles matches for debugging
-                const singlesMatches = pairings.filter(p => p.type === 'singles');
-                console.log('Singles matches:', singlesMatches.map(p => ({
-                    id: p.id,
-                    usa: p.usa_player_id,
-                    intl: p.intl_player_id
-                })));
-                
                 renderPairings();
             } catch (error) {
                 console.error('Failed to load pairings:', error);
@@ -211,7 +199,6 @@
             ws = new WebSocket(CONFIG.WEBSOCKET_URL);
             
             ws.onopen = () => {
-                console.log('WebSocket connected');
                 updateConnectionStatus('connected');
                 setTimeout(() => {
                     document.getElementById('connection-status').style.display = 'none';
@@ -229,7 +216,6 @@
             };
             
             ws.onclose = () => {
-                console.log('WebSocket disconnected');
                 updateConnectionStatus('disconnected');
                 // Reconnect after 5 seconds
                 setTimeout(connectWebSocket, 5000);
@@ -238,8 +224,6 @@
         
         // Handle WebSocket messages
         function handleWebSocketMessage(message) {
-            console.log('WebSocket message:', message);
-            
             if (message.type === 'reveal') {
                 handleRevealMessage(message);
             } else if (message.type === 'reset') {
@@ -250,15 +234,6 @@
         // Handle reveal message with step
         async function handleRevealMessage(message) {
             const { pairing, step, side } = message;
-            
-            console.log('Reveal message received:', {
-                pairingId: pairing.id,
-                type: pairing.type,
-                step: step,
-                side: side,
-                usa_player_id: pairing.usa_player_id,
-                intl_player_id: pairing.intl_player_id
-            });
             
             // Reload players to ensure we have the latest roster before revealing
             await loadPlayers();
