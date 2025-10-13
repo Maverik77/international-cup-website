@@ -179,7 +179,6 @@ async function loadHistoricData() {
     
     // Use embedded data if available (for GitHub Pages compatibility)
     if (typeof HISTORIC_DATA !== 'undefined') {
-        console.log('Using embedded historic data');
         historicData = HISTORIC_DATA;
         return historicData;
     }
@@ -193,15 +192,13 @@ async function loadHistoricData() {
     
     for (const url of possibleUrls) {
         try {
-            console.log(`Attempting to load data from: ${url}`);
             const response = await fetch(url);
             if (response.ok) {
                 historicData = await response.json();
-                console.log('Successfully loaded historic data from:', url);
                 return historicData;
             }
         } catch (error) {
-            console.warn(`Failed to load from ${url}:`, error);
+            // Silently try next URL
         }
     }
     
@@ -398,8 +395,7 @@ async function showDay2Results() {
 async function showHistoricDataModal() {
     const data = await loadHistoricData();
     if (!data || !data.matches) {
-        console.error('Historic data loading failed:', data);
-        showNotification('No historic data available. Please check the browser console for details.', 'error');
+        showNotification('No historic data available.', 'error');
         return;
     }
 
