@@ -410,7 +410,7 @@
         function initializeEmptyPairings() {
             pairings = [];
             
-            // Day 1: 12 team matches
+            // Day 1: 12 team matches - alternating reveal order
             for (let i = 1; i <= 12; i++) {
                 pairings.push({
                     id: `day1-team-${i}`,
@@ -419,12 +419,12 @@
                     match_number: i,
                     usa_team: { player1_id: '', player2_id: '' },
                     intl_team: { player1_id: '', player2_id: '' },
-                    revealOrder: 'usa-first',
+                    revealOrder: i % 2 === 1 ? 'usa-first' : 'intl-first',
                     revealStep: 0
                 });
             }
             
-            // Day 2: 24 singles matches
+            // Day 2: 24 singles matches - alternating reveal order
             for (let i = 1; i <= 24; i++) {
                 pairings.push({
                     id: `day2-singles-${i}`,
@@ -433,7 +433,7 @@
                     match_number: i,
                     usa_player_id: '',
                     intl_player_id: '',
-                    revealOrder: 'usa-first',
+                    revealOrder: i % 2 === 1 ? 'usa-first' : 'intl-first',
                     revealStep: 0
                 });
             }
