@@ -406,10 +406,24 @@
                 setTimeout(resolve, 500);
             });
             
-            // Add to grid
+            // Update the pairing in our local array with the revealed data
+            const localPairing = pairings.find(p => p.id === pairing.id);
+            if (localPairing) {
+                if (pairing.type === 'team') {
+                    localPairing.usa_team = pairing.usa_team;
+                    localPairing.intl_team = pairing.intl_team;
+                } else {
+                    localPairing.usa_player_id = pairing.usa_player_id;
+                    localPairing.intl_player_id = pairing.intl_player_id;
+                }
+            }
+            
+            // Re-render the card with updated player data
             const card = document.querySelector(`[data-pairing-id="${pairing.id}"]`);
             if (card) {
-                card.classList.add('revealed');
+                const newCard = createPairingCard(pairing);
+                newCard.classList.add('revealed');
+                card.replaceWith(newCard);
             }
             
             currentRevealData = null;

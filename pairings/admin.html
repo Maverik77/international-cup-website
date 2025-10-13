@@ -68,6 +68,7 @@
             <div class="controls-section">
                 <h2>Global Controls</h2>
                 <div class="control-buttons">
+                    <button class="btn btn-primary" onclick="revealAll()">Reveal All Pairings</button>
                     <button class="btn btn-warning" onclick="resetAllReveals()">Reset All Reveals</button>
                     <button class="btn btn-danger" onclick="resetAllPairings()">Reset All Pairings</button>
                     <button class="btn btn-success" onclick="saveAllPairings()">Save All Pairings</button>
@@ -704,8 +705,14 @@
                 pairing[field] = value;
             }
             
+            // Save scroll position before re-rendering
+            const scrollY = window.scrollY;
+            
             // Re-render all editors to update dropdown availability
             renderEditors();
+            
+            // Restore scroll position after re-rendering
+            window.scrollTo(0, scrollY);
         }
         
         // Update reveal order
@@ -758,6 +765,96 @@
                 console.error('Reveal error:', error);
                 alert('Failed to reveal pairing');
             }
+        }
+        
+        // Reveal all pairings sequentially
+        async function revealAll() {
+            const statusEl = document.getElementById('global-status');
+            
+            // Get all pairings that are not fully revealed, sorted by day and match number
+            const pairingsToReveal = pairings
+                .filter(p => p.revealStep < 2)
+                .sort((a, b) => {
+                    if (a.day !== b.day) return a.day - b.day;
+                    return a.match_number - b.match_number;
+                });
+            
+            if (pairingsToReveal.length === 0) {
+                alert('All pairings are already revealed!');
+                return;
+            }
+            
+            if (!confirm(`This will reveal ${pairingsToReveal.length} pairings. Continue?`)) {
+                return;
+            }
+            
+            statusEl.textContent = `Revealing pairings...`;
+            
+            for (let i = 0; i < pairingsToReveal.length; i++) {
+                const pairing = pairingsToReveal[i];
+                statusEl.textContent = `Revealing Match ${pairing.match_number} (${i + 1}/${pairingsToReveal.length})...`;
+                
+                try {
+                    // Reveal step 1 (first side)
+                    if (pairing.revealStep === 0) {
+                        await fetch(`${CONFIG.REST_API_URL}/reveal`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Admin-Password': adminPassword
+                            },
+                            body: JSON.stringify({
+                                action: 'reveal',
+                                pairingId: pairing.id,
+                                step: 1
+                            })
+                        });
+                        pairing.revealStep = 1;
+                        renderEditors();
+                        
+                        // Wait 2 seconds before revealing second side
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                    
+                    // Reveal step 2 (second side)
+                    if (pairing.revealStep === 1) {
+                        await fetch(`${CONFIG.REST_API_URL}/reveal`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Admin-Password': adminPassword
+                            },
+                            body: JSON.stringify({
+                                action: 'reveal',
+                                pairingId: pairing.id,
+                                step: 2
+                            })
+                        });
+                        pairing.revealStep = 2;
+                        renderEditors();
+                        
+                        // Auto-collapse after reveal
+                        setTimeout(() => {
+                            const card = document.querySelector(`[data-pairing-id="${pairing.id}"]`);
+                            if (card && !card.classList.contains('collapsed')) {
+                                card.classList.add('collapsed');
+                            }
+                        }, 500);
+                        
+                        // Wait 1 second before next pairing
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                } catch (error) {
+                    console.error(`Failed to reveal Match ${pairing.match_number}:`, error);
+                    statusEl.textContent = `Error revealing Match ${pairing.match_number}`;
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            }
+            
+            statusEl.textContent = `Successfully revealed ${pairingsToReveal.length} pairings`;
+            setTimeout(() => {
+                statusEl.textContent = 'Ready';
+            }, 3000);
         }
         
         // Save all pairings
