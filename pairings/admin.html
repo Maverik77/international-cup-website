@@ -555,6 +555,8 @@
                                 ${pairing.revealStep === 0 ? 'Reveal First Side' :
                                   pairing.revealStep === 1 ? 'Reveal Second Side' : 'Fully Revealed'}
                             </button>
+                            ${pairing.revealStep === 0 ? 
+                                '<button class="btn-reveal-both" onclick="revealBoth(\'' + pairing.id + '\')">Reveal Both</button>' : ''}
                             <button class="btn-save-pairing" onclick="saveSinglePairing('${pairing.id}')">Save This Match</button>
                         </div>
                     </div>
@@ -763,6 +765,60 @@
                 }
             } catch (error) {
                 console.error('Reveal error:', error);
+                alert('Failed to reveal pairing');
+            }
+        }
+        
+        // Reveal both sides of a single pairing
+        async function revealBoth(pairingId) {
+            const pairing = pairings.find(p => p.id === pairingId);
+            if (!pairing || pairing.revealStep !== 0) return;
+            
+            try {
+                // Reveal step 1 (first side)
+                await fetch(`${CONFIG.REST_API_URL}/reveal`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({
+                        action: 'reveal',
+                        pairingId: pairingId,
+                        step: 1
+                    })
+                });
+                pairing.revealStep = 1;
+                renderEditors();
+                
+                // Wait 2 seconds before revealing second side
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Reveal step 2 (second side)
+                await fetch(`${CONFIG.REST_API_URL}/reveal`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({
+                        action: 'reveal',
+                        pairingId: pairingId,
+                        step: 2
+                    })
+                });
+                pairing.revealStep = 2;
+                renderEditors();
+                
+                // Auto-collapse after reveal
+                setTimeout(() => {
+                    const card = document.querySelector(`[data-pairing-id="${pairingId}"]`);
+                    if (card && !card.classList.contains('collapsed')) {
+                        card.classList.add('collapsed');
+                    }
+                }, 500);
+            } catch (error) {
+                console.error('Reveal both error:', error);
                 alert('Failed to reveal pairing');
             }
         }

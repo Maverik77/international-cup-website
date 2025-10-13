@@ -667,6 +667,21 @@ body.pairings-admin {
     background: #45a049;
 }
 
+.btn-reveal-both {
+    background: #9C27B0;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-reveal-both:hover {
+    background: #7B1FA2;
+}
+
 .pairing-actions {
     display: flex;
     gap: 10px;
