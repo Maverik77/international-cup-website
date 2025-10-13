@@ -1,7 +1,7 @@
 // Service Worker for International Cup Website
 // Provides offline functionality and caching
 
-const CACHE_NAME = 'international-cup-v1.0.1';
+const CACHE_NAME = 'international-cup-v1.0.2';
 const urlsToCache = [
   '/',
   '/index.html',
