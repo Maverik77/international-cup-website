@@ -123,7 +123,7 @@ class PhotoGallery {
                     <p>${album.description}</p>
                 </div>
                 <div class="year-card-footer">
-                    ${album.photos.length} ${album.photos.length === 1 ? 'photo' : 'photos'}
+                    View Album →
                 </div>
             </div>
         `).join('');
