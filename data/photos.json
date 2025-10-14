@@ -1,9 +1,33 @@
 [
   {
+    "year": "2021",
+    "title": "International Cup 2021",
+    "description": "Highlights from the 2021 tournament",
+    "shareUrl": "https://photos.app.goo.gl/sKr553XB4zABit8F9"
+  },
+  {
+    "year": "2022",
+    "title": "International Cup 2022",
+    "description": "Highlights from the 2022 tournament",
+    "shareUrl": "https://photos.app.goo.gl/oihCpwuC2Axtkw4A8"
+  },
+  {
+    "year": "2023",
+    "title": "International Cup 2023",
+    "description": "Highlights from the 2023 tournament",
+    "shareUrl": "https://photos.app.goo.gl/CX3bKP7vMdqiypta7"
+  },
+  {
     "year": "2024",
     "title": "International Cup 2024",
     "description": "Highlights from the 2024 tournament at Lansdowne Golf Club",
-    "shareUrl": "PASTE_YOUR_GOOGLE_PHOTOS_SHARE_LINK_HERE"
+    "shareUrl": "https://photos.app.goo.gl/LXYW7iTeoUMXGWWT7"   
+  },
+  {
+    "year": "2025",
+    "title": "International Cup 2025",
+    "description": "Highlights from the 2025 tournament",
+    "shareUrl": "https://photos.app.goo.gl/iEE8n4KAZLL76ozFA"
   }
 ]
 

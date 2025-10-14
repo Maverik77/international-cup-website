@@ -72,13 +72,28 @@ exports.handler = async (event) => {
     }
 };
 
-function fetchAlbumPage(url) {
+function fetchAlbumPage(url, redirectCount = 0) {
     return new Promise((resolve, reject) => {
+        if (redirectCount > 5) {
+            reject(new Error('Too many redirects'));
+            return;
+        }
+        
         https.get(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         }, (res) => {
+            // Handle redirects (301, 302, 307, 308)
+            if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                const redirectUrl = res.headers.location.startsWith('http') 
+                    ? res.headers.location 
+                    : `https://photos.google.com${res.headers.location}`;
+                
+                resolve(fetchAlbumPage(redirectUrl, redirectCount + 1));
+                return;
+            }
+            
             let data = '';
             
             res.on('data', (chunk) => {
@@ -97,30 +112,59 @@ function fetchAlbumPage(url) {
 function parsePhotosFromHTML(html) {
     const photos = [];
     
-    // Google Photos embeds photo data in the page
-    // Look for the photo URLs in the HTML
-    // Pattern: https://lh3.googleusercontent.com/[photoId]
-    const photoRegex = /https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9_-]+/g;
+    // Google Photos embeds photo data in the page as URLs in various formats
+    // We need to capture long photo IDs that can include many special characters
+    // Format: https://lh3.googleusercontent.com/[path]/[base64-like-id][optional-size-params]
+    // Use a more permissive pattern to capture everything up to whitespace or quotes
+    const photoRegex = /https:\/\/lh3\.googleusercontent\.com\/[^\s"'<>]+/gi;
     const matches = html.match(photoRegex);
     
     if (matches) {
+        console.log(`Found ${matches.length} URL matches`);
+        
         // Deduplicate and format
         const uniqueUrls = [...new Set(matches)];
+        const seenBaseUrls = new Set();
         
-        uniqueUrls.forEach((url, index) => {
-            // Skip very small images (likely thumbnails or icons)
-            if (url.includes('=s')) {
+        uniqueUrls.forEach((url) => {
+            // Extract base URL (without size parameters like =s400 or =w1920)
+            const baseUrl = url.replace(/=(s|w|h|d)\d+.*$/, '');
+            
+            // Skip profile pictures (they have /a/ path pattern)
+            if (baseUrl.match(/\/a\/[A-Za-z0-9_-]+$/)) {
                 return;
             }
             
+            // Skip duplicates (same photo with different sizes)
+            if (seenBaseUrls.has(baseUrl)) {
+                return;
+            }
+            
+            // Skip very small icons (likely UI elements, not photos)
+            if (url.match(/=s(16|24|32|48|64)($|-|\/)/)) {
+                return;
+            }
+            
+            // Google Photos IDs can vary in length
+            // Domain https://lh3.googleusercontent.com/ is 31 chars
+            // IDs are typically 20-150+ chars, so base URL should be 51+ chars minimum
+            if (baseUrl.length < 55) {
+                console.log(`Skipping short URL: ${baseUrl} (length: ${baseUrl.length})`);
+                return;
+            }
+            
+            seenBaseUrls.add(baseUrl);
+            
             photos.push({
-                url: url,
-                thumbnail: `${url}=s400`, // 400px thumbnail
-                caption: `Photo ${index + 1}`,
+                url: `${baseUrl}=w1920-h1080`, // High res version
+                thumbnail: `${baseUrl}=s400`, // 400px square thumbnail
+                caption: `Photo ${seenBaseUrls.size}`,
                 width: 1920,
                 height: 1080
             });
         });
+        
+        console.log(`Returning ${photos.length} unique photos`);
     }
     
     return photos;
