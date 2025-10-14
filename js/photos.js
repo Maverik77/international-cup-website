@@ -106,6 +106,11 @@ class PhotoGallery {
         const grid = document.getElementById('years-grid');
         
         if (!grid) return;
+        
+        if (!this.albums || !Array.isArray(this.albums) || this.albums.length === 0) {
+            this.showError('No photo albums available.');
+            return;
+        }
 
         // Sort albums by year (newest first)
         const sortedAlbums = [...this.albums].sort((a, b) => parseInt(b.year) - parseInt(a.year));
