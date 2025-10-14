@@ -130,6 +130,11 @@ function parsePhotosFromHTML(html) {
             // Extract base URL (without size parameters like =s400 or =w1920)
             const baseUrl = url.replace(/=(s|w|h|d)\d+.*$/, '');
             
+            // Skip profile pictures (they have /a/ path pattern)
+            if (baseUrl.match(/\/a\/[A-Za-z0-9_-]+$/)) {
+                return;
+            }
+            
             // Skip duplicates (same photo with different sizes)
             if (seenBaseUrls.has(baseUrl)) {
                 return;
