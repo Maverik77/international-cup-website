@@ -1,9 +1,16 @@
 [
   {
+    "id": 1758565536449,
+    "title": "Course change",
+    "content": "Due to the aeration schedule this year we will play both days on the Norman course. ",
+    "date": "2023-10-17",
+    "timestamp": 1697515200000
+  },
+  {
     "id": 1758565536448,
     "title": "Pairings Party Details Announced!",
     "content": "The 5th Annual International Cup Pairings Party will be held at Shutters on King in Leesburg, VA on October 16th from 6:30-9:30 PM. Food, drinks, and pairings revealed! Check out the [schedule](#schedule) for complete details including the menu.",
-    "date": "2025-09-30",
+    "date": "2025-09-30", 
     "timestamp": 1738108800000
   },
   {
