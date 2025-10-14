@@ -72,13 +72,28 @@ exports.handler = async (event) => {
     }
 };
 
-function fetchAlbumPage(url) {
+function fetchAlbumPage(url, redirectCount = 0) {
     return new Promise((resolve, reject) => {
+        if (redirectCount > 5) {
+            reject(new Error('Too many redirects'));
+            return;
+        }
+        
         https.get(url, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         }, (res) => {
+            // Handle redirects (301, 302, 307, 308)
+            if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                const redirectUrl = res.headers.location.startsWith('http') 
+                    ? res.headers.location 
+                    : `https://photos.google.com${res.headers.location}`;
+                
+                resolve(fetchAlbumPage(redirectUrl, redirectCount + 1));
+                return;
+            }
+            
             let data = '';
             
             res.on('data', (chunk) => {
