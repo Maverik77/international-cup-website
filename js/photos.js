@@ -12,11 +12,23 @@ class PhotoGallery {
     async init() {
         try {
             const response = await fetch('./data/photos.json');
-            this.albums = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            this.albums = data;
+            
+            if (!this.albums || this.albums.length === 0) {
+                this.showError('No photo albums configured yet. Please add albums to data/photos.json');
+                return;
+            }
+            
             this.renderYearSelection();
         } catch (error) {
             console.error('Failed to load photo albums:', error);
-            this.showError('Failed to load photo albums. Please try again later.');
+            this.showError(`Failed to load photo albums: ${error.message}`);
         }
     }
 
