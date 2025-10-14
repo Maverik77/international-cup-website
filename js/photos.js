@@ -147,6 +147,13 @@ class PhotoGallery {
         document.getElementById('gallery-year').textContent = this.currentAlbum.title;
         document.getElementById('gallery-description').textContent = this.currentAlbum.description;
         
+        // Show Google Photos link if available
+        const googlePhotosLink = document.getElementById('google-photos-link');
+        if (this.currentAlbum.shareUrl && googlePhotosLink) {
+            googlePhotosLink.href = this.currentAlbum.shareUrl;
+            googlePhotosLink.style.display = 'inline-block';
+        }
+        
         // Show loading state
         document.getElementById('photos-grid').innerHTML = `
             <div class="loading" style="grid-column: 1/-1;">
@@ -164,10 +171,13 @@ class PhotoGallery {
         // Fallback to photos array if available
         if (!this.currentAlbum.photos || this.currentAlbum.photos.length === 0) {
             this.currentAlbum.photos = [];
+            const albumLink = this.currentAlbum.shareUrl ? 
+                `<p style="margin-top: 1rem;"><a href="${this.currentAlbum.shareUrl}" target="_blank" rel="noopener noreferrer" style="color: #667eea; text-decoration: none;">View Album on Google Photos →</a></p>` : '';
+            
             document.getElementById('photos-grid').innerHTML = `
                 <div class="loading" style="grid-column: 1/-1;">
-                    <p style="color: #e53e3e;">No photos found. Please configure the Google Photos share URL in data/photos.json or add photos manually.</p>
-                    <p style="margin-top: 1rem;"><a href="PHOTOS_SETUP.md" style="color: #667eea;">View setup instructions →</a></p>
+                    <p style="color: #e53e3e;">No photos found in this album yet.</p>
+                    ${albumLink}
                 </div>
             `;
             window.scrollTo({ top: 0, behavior: 'smooth' });

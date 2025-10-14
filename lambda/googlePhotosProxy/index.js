@@ -99,24 +99,35 @@ function parsePhotosFromHTML(html) {
     
     // Google Photos embeds photo data in the page
     // Look for the photo URLs in the HTML
-    // Pattern: https://lh3.googleusercontent.com/[photoId]
-    const photoRegex = /https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9_-]+/g;
+    // Pattern: https://lh3.googleusercontent.com/[photoId] with optional size parameters
+    const photoRegex = /https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9_-]+(=[a-z0-9-]+)?/gi;
     const matches = html.match(photoRegex);
     
     if (matches) {
         // Deduplicate and format
         const uniqueUrls = [...new Set(matches)];
+        const seenBaseUrls = new Set();
         
         uniqueUrls.forEach((url, index) => {
-            // Skip very small images (likely thumbnails or icons)
-            if (url.includes('=s')) {
+            // Extract base URL (without size parameters)
+            const baseUrl = url.split('=')[0];
+            
+            // Skip duplicates (same photo with different sizes)
+            if (seenBaseUrls.has(baseUrl)) {
                 return;
             }
             
+            // Skip very small icons (check if URL contains very small size params like =s16, =s32)
+            if (url.match(/=s(16|24|32|48|64)($|-)/)) {
+                return;
+            }
+            
+            seenBaseUrls.add(baseUrl);
+            
             photos.push({
-                url: url,
-                thumbnail: `${url}=s400`, // 400px thumbnail
-                caption: `Photo ${index + 1}`,
+                url: `${baseUrl}=w1920-h1080`, // High res version
+                thumbnail: `${baseUrl}=s400`, // 400px square thumbnail
+                caption: `Photo ${seenBaseUrls.size}`,
                 width: 1920,
                 height: 1080
             });
