@@ -112,28 +112,39 @@ function fetchAlbumPage(url, redirectCount = 0) {
 function parsePhotosFromHTML(html) {
     const photos = [];
     
-    // Google Photos embeds photo data in the page
-    // Look for the photo URLs in the HTML
-    // Pattern: https://lh3.googleusercontent.com/[photoId] with optional size parameters
-    const photoRegex = /https:\/\/lh3\.googleusercontent\.com\/[a-zA-Z0-9_-]+(=[a-z0-9-]+)?/gi;
+    // Google Photos embeds photo data in the page as URLs in various formats
+    // We need to capture long photo IDs that can include many special characters
+    // Format: https://lh3.googleusercontent.com/[path]/[base64-like-id][optional-size-params]
+    // Use a more permissive pattern to capture everything up to whitespace or quotes
+    const photoRegex = /https:\/\/lh3\.googleusercontent\.com\/[^\s"'<>]+/gi;
     const matches = html.match(photoRegex);
     
     if (matches) {
+        console.log(`Found ${matches.length} URL matches`);
+        
         // Deduplicate and format
         const uniqueUrls = [...new Set(matches)];
         const seenBaseUrls = new Set();
         
-        uniqueUrls.forEach((url, index) => {
-            // Extract base URL (without size parameters)
-            const baseUrl = url.split('=')[0];
+        uniqueUrls.forEach((url) => {
+            // Extract base URL (without size parameters like =s400 or =w1920)
+            const baseUrl = url.replace(/=(s|w|h|d)\d+.*$/, '');
             
             // Skip duplicates (same photo with different sizes)
             if (seenBaseUrls.has(baseUrl)) {
                 return;
             }
             
-            // Skip very small icons (check if URL contains very small size params like =s16, =s32)
-            if (url.match(/=s(16|24|32|48|64)($|-)/)) {
+            // Skip very small icons (likely UI elements, not photos)
+            if (url.match(/=s(16|24|32|48|64)($|-|\/)/)) {
+                return;
+            }
+            
+            // Google Photos IDs can vary in length
+            // Domain https://lh3.googleusercontent.com/ is 31 chars
+            // IDs are typically 20-150+ chars, so base URL should be 51+ chars minimum
+            if (baseUrl.length < 55) {
+                console.log(`Skipping short URL: ${baseUrl} (length: ${baseUrl.length})`);
                 return;
             }
             
@@ -147,6 +158,8 @@ function parsePhotosFromHTML(html) {
                 height: 1080
             });
         });
+        
+        console.log(`Returning ${photos.length} unique photos`);
     }
     
     return photos;
