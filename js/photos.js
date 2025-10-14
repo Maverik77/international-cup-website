@@ -78,7 +78,7 @@ class PhotoGallery {
             // Use the Google Photos proxy API endpoint
             const apiUrl = `${window.location.origin.includes('staging') 
                 ? 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod'
-                : 'https://p6t8fgm1qf.execute-api.us-east-1.amazonaws.com/prod'}/google-photos?shareUrl=${encodeURIComponent(url)}`;
+                : 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod'}/google-photos?shareUrl=${encodeURIComponent(url)}`;
             
             const response = await fetch(apiUrl);
             
