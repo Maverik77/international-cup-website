@@ -6,6 +6,7 @@ class PhotoGallery {
         this.currentPhotoIndex = 0;
         this.slideshowInterval = null;
         this.slideshowSpeed = 3000; // 3 seconds
+        this.photoCache = {}; // Cache loaded photos
     }
 
     async init() {
@@ -16,6 +17,75 @@ class PhotoGallery {
         } catch (error) {
             console.error('Failed to load photo albums:', error);
             this.showError('Failed to load photo albums. Please try again later.');
+        }
+    }
+
+    // Extract album ID from Google Photos share URL
+    extractAlbumId(shareUrl) {
+        // Google Photos share URLs: https://photos.app.goo.gl/xxxxx
+        // or https://photos.google.com/share/xxxxx
+        const match = shareUrl.match(/(?:photos\.app\.goo\.gl\/|share\/)([a-zA-Z0-9_-]+)/);
+        return match ? match[1] : null;
+    }
+
+    // Load photos from Google Photos shared album
+    async loadPhotosFromGoogleAlbum(album) {
+        const albumId = this.extractAlbumId(album.shareUrl);
+        
+        if (!albumId) {
+            console.error('Invalid Google Photos share URL');
+            return [];
+        }
+
+        // Check cache first
+        if (this.photoCache[albumId]) {
+            return this.photoCache[albumId];
+        }
+
+        try {
+            // Use Google Photos album JSON endpoint (works for public shared albums)
+            // This endpoint returns album data without authentication
+            const embedUrl = `https://photos.app.goo.gl/${albumId}`;
+            
+            // Since we can't directly fetch due to CORS, we'll use an iframe approach
+            // For now, return a message to use the manual setup
+            // In production, you'd set up a simple backend proxy or use the embed viewer
+            
+            // Alternative: Use the RSS feed if available
+            // For this implementation, we'll provide a fallback message
+            return this.fetchAlbumViaProxy(embedUrl, albumId);
+            
+        } catch (error) {
+            console.error('Failed to load photos from Google Photos:', error);
+            return [];
+        }
+    }
+
+    async fetchAlbumViaProxy(url, albumId) {
+        try {
+            // Use the Google Photos proxy API endpoint
+            const apiUrl = `${window.location.origin.includes('staging') 
+                ? 'https://ym8eizanxh.execute-api.us-east-1.amazonaws.com/prod'
+                : 'https://p6t8fgm1qf.execute-api.us-east-1.amazonaws.com/prod'}/google-photos?shareUrl=${encodeURIComponent(url)}`;
+            
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error(`API returned ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.photos && data.photos.length > 0) {
+                // Cache the results
+                this.photoCache[albumId] = data.photos;
+                return data.photos;
+            }
+            
+            return [];
+        } catch (error) {
+            console.error('Failed to fetch via proxy:', error);
+            return [];
         }
     }
 
@@ -44,7 +114,7 @@ class PhotoGallery {
         container.style.display = 'block';
     }
 
-    showAlbum(year) {
+    async showAlbum(year) {
         this.currentAlbum = this.albums.find(album => album.year === year);
         
         if (!this.currentAlbum) return;
@@ -52,13 +122,40 @@ class PhotoGallery {
         // Hide year selection
         document.getElementById('year-selection').style.display = 'none';
         
-        // Show gallery
+        // Show gallery with loading state
         const gallerySection = document.getElementById('gallery-section');
         gallerySection.classList.add('active');
         
         // Update header
         document.getElementById('gallery-year').textContent = this.currentAlbum.title;
         document.getElementById('gallery-description').textContent = this.currentAlbum.description;
+        
+        // Show loading state
+        document.getElementById('photos-grid').innerHTML = `
+            <div class="loading" style="grid-column: 1/-1;">
+                <div class="loading-spinner"></div>
+                <p>Loading photos...</p>
+            </div>
+        `;
+        
+        // Load photos from Google Photos if shareUrl is provided
+        if (this.currentAlbum.shareUrl && this.currentAlbum.shareUrl !== 'PASTE_YOUR_GOOGLE_PHOTOS_SHARE_LINK_HERE') {
+            const photos = await this.loadPhotosFromGoogleAlbum(this.currentAlbum);
+            this.currentAlbum.photos = photos;
+        }
+        
+        // Fallback to photos array if available
+        if (!this.currentAlbum.photos || this.currentAlbum.photos.length === 0) {
+            this.currentAlbum.photos = [];
+            document.getElementById('photos-grid').innerHTML = `
+                <div class="loading" style="grid-column: 1/-1;">
+                    <p style="color: #e53e3e;">No photos found. Please configure the Google Photos share URL in data/photos.json or add photos manually.</p>
+                    <p style="margin-top: 1rem;"><a href="PHOTOS_SETUP.md" style="color: #667eea;">View setup instructions →</a></p>
+                </div>
+            `;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
         
         // Render photos
         this.renderPhotos();
