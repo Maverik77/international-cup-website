@@ -257,6 +257,21 @@ Resources:
           PLAYERS_TABLE: !Sub 'icup-players-${Environment}'
           WEBSOCKET_TABLE: !Sub 'icup-websocket-connections-${Environment}'
 
+  GooglePhotosProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/googlePhotosProxy/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Timeout: 30
+      Events:
+        GetPhotos:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /google-photos
+            Method: GET
+
   # REST API
   PairingsApi:
     Type: AWS::Serverless::Api

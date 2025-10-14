@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="International Cup Photo Gallery - View tournament highlights and memories">
+    <title>Photos - International Cup</title>
+    
+    <!-- Preconnect to improve performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/photos.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">International Cup</a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="index.html#news" class="nav-link">News</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#format" class="nav-link">Format</a>
+                <a href="index.html#teams" class="nav-link">Teams</a>
+                <a href="index.html#schedule" class="nav-link">Schedule</a>
+                <a href="index.html#history" class="nav-link">History</a>
+                <a href="photos.html" class="nav-link active">Photos</a>
+            </div>
+            <div class="nav-hamburger" id="nav-hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="photos-hero">
+        <div class="container">
+            <h1>Photo Gallery</h1>
+            <p>Relive the memorable moments from past International Cup tournaments</p>
+        </div>
+    </section>
+
+    <!-- Year Selection -->
+    <section id="year-selection" class="year-selection">
+        <div class="container">
+            <h2>Select a Year</h2>
+            <div id="years-grid" class="years-grid">
+                <!-- Year cards will be inserted here by JavaScript -->
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading albums...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section (Hidden by default) -->
+    <section id="gallery-section" class="gallery-section">
+        <div class="container">
+            <div class="gallery-header">
+                <div class="gallery-title">
+                    <h2 id="gallery-year">Album Title</h2>
+                    <p id="gallery-description">Album description</p>
+                </div>
+                <div class="gallery-controls">
+                    <button class="btn-back" onclick="photoGallery.backToYears()">
+                        ← Back to Albums
+                    </button>
+                    <button id="btn-slideshow" class="btn-slideshow" onclick="photoGallery.toggleSlideshow()">
+                        <span>▶</span> Start Slideshow
+                    </button>
+                </div>
+            </div>
+            
+            <div id="photos-grid" class="photos-grid">
+                <!-- Photos will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" onclick="photoGallery.closeLightbox()" aria-label="Close">
+            ×
+        </button>
+        
+        <div class="lightbox-counter" id="lightbox-counter">1 / 1</div>
+        
+        <button class="lightbox-nav lightbox-prev" onclick="photoGallery.prevPhoto()" aria-label="Previous">
+            ‹
+        </button>
+        
+        <div class="lightbox-content">
+            <img id="lightbox-image" class="lightbox-image" src="" alt="" style="transition: opacity 0.3s ease;">
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+        </div>
+        
+        <button class="lightbox-nav lightbox-next" onclick="photoGallery.nextPhoto()" aria-label="Next">
+            ›
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 International Cup. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/photos.js"></script>
+</body>
+</html>
+
