@@ -1,0 +1,52 @@
+[
+  {
+    "year": "2024",
+    "title": "International Cup 2024",
+    "description": "Highlights from the 2024 tournament at Lansdowne Golf Club",
+    "photos": [
+      {
+        "url": "https://via.placeholder.com/800x600/667eea/ffffff?text=2024+Photo+1",
+        "thumbnail": "https://via.placeholder.com/400x300/667eea/ffffff?text=2024+Photo+1",
+        "caption": "Tournament Day 1",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "https://via.placeholder.com/800x600/764ba2/ffffff?text=2024+Photo+2",
+        "thumbnail": "https://via.placeholder.com/400x300/764ba2/ffffff?text=2024+Photo+2",
+        "caption": "Team USA",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "https://via.placeholder.com/800x600/f093fb/ffffff?text=2024+Photo+3",
+        "thumbnail": "https://via.placeholder.com/400x300/f093fb/ffffff?text=2024+Photo+3",
+        "caption": "International Team",
+        "width": 800,
+        "height": 600
+      }
+    ]
+  },
+  {
+    "year": "2023",
+    "title": "International Cup 2023",
+    "description": "Memorable moments from the 2023 tournament",
+    "photos": [
+      {
+        "url": "https://via.placeholder.com/800x600/4facfe/ffffff?text=2023+Photo+1",
+        "thumbnail": "https://via.placeholder.com/400x300/4facfe/ffffff?text=2023+Photo+1",
+        "caption": "Opening Ceremony",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "https://via.placeholder.com/800x600/00f2fe/ffffff?text=2023+Photo+2",
+        "thumbnail": "https://via.placeholder.com/400x300/00f2fe/ffffff?text=2023+Photo+2",
+        "caption": "Competition Highlights",
+        "width": 800,
+        "height": 600
+      }
+    ]
+  }
+]
+
