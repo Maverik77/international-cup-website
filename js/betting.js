@@ -10,11 +10,10 @@ class BettingSystem {
     }
 
     getApiConfig() {
-        const isStaging = window.location.origin.includes('staging');
+        // Prefer staging first, then production as failover
         return {
-            restApi: isStaging 
-                ? 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod'
-                : 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod'
+            stagingRest: 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod',
+            prodRest: 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod'
         };
     }
 
@@ -29,9 +28,7 @@ class BettingSystem {
 
     async loadPlayers() {
         try {
-            const response = await fetch(`${this.apiConfig.restApi}/players`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
+            const data = await this.fetchJsonWithFailover('/players');
             this.players = Array.isArray(data.players) ? data.players : [];
         } catch (err) {
             console.error('Error loading players:', err);
@@ -41,17 +38,28 @@ class BettingSystem {
 
     async loadPairings() {
         try {
-            const response = await fetch(`${this.apiConfig.restApi}/pairings`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
+            const data = await this.fetchJsonWithFailover('/pairings');
             this.pairings = data.pairings || [];
             this.renderPairings();
         } catch (error) {
             console.error('Error loading pairings:', error);
             this.showError('Failed to load pairings. Please refresh the page.');
         }
+    }
+
+    async fetchJsonWithFailover(path) {
+        const endpoints = [this.apiConfig.stagingRest, this.apiConfig.prodRest];
+        let lastError;
+        for (const base of endpoints) {
+            try {
+                const resp = await fetch(`${base}${path}`);
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                return await resp.json();
+            } catch (e) {
+                lastError = e;
+            }
+        }
+        throw lastError || new Error('All endpoints failed');
     }
 
     renderPairings() {
