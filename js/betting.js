@@ -4,6 +4,7 @@ class BettingSystem {
     constructor() {
         this.selectedBets = [];
         this.pairings = [];
+        this.players = [];
         this.apiConfig = this.getApiConfig();
         this.init();
     }
@@ -18,9 +19,24 @@ class BettingSystem {
     }
 
     async init() {
-        await this.loadPairings();
+        await Promise.all([
+            this.loadPlayers(),
+            this.loadPairings()
+        ]);
         this.setupEventListeners();
         this.updateBetSlip();
+    }
+
+    async loadPlayers() {
+        try {
+            const response = await fetch(`${this.apiConfig.restApi}/players`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            this.players = Array.isArray(data.players) ? data.players : [];
+        } catch (err) {
+            console.error('Error loading players:', err);
+            this.players = [];
+        }
     }
 
     async loadPairings() {
@@ -39,15 +55,15 @@ class BettingSystem {
     }
 
     renderPairings() {
-        this.renderDayMatches('day1', 'Day 1');
-        this.renderDayMatches('day2', 'Day 2');
+        this.renderDayMatches(1, 'Day 1');
+        this.renderDayMatches(2, 'Day 2');
     }
 
-    renderDayMatches(dayId, dayLabel) {
-        const container = document.getElementById(`${dayId}-matches`);
+    renderDayMatches(dayNumber, dayLabel) {
+        const container = document.getElementById(`${dayNumber === 1 ? 'day1' : 'day2'}-matches`);
         if (!container) return;
 
-        const dayMatches = this.pairings.filter(p => p.day === dayId);
+        const dayMatches = this.pairings.filter(p => p.day === dayNumber);
         
         if (dayMatches.length === 0) {
             container.innerHTML = `<p class="no-matches">No ${dayLabel} matches available yet.</p>`;
@@ -58,17 +74,39 @@ class BettingSystem {
     }
 
     createMatchCard(match) {
-        const isTeamMatch = match.day === 'day1';
-        const usaPlayers = isTeamMatch ? match.usa_team : [match.usa_player];
-        const intlPlayers = isTeamMatch ? match.international_team : [match.international_player];
-        
-        const usaPlayerNames = usaPlayers.map(p => typeof p === 'string' ? p : `${p.firstName} ${p.lastName}`).join(' & ');
-        const intlPlayerNames = intlPlayers.map(p => typeof p === 'string' ? p : `${p.firstName} ${p.lastName}`).join(' & ');
+        const isTeamMatch = match.type === 'team';
+
+        // Resolve player IDs to names from loaded players list
+        const resolveName = (playerId) => {
+            if (!playerId) return 'TBD';
+            const p = this.players.find(pl => pl.id === playerId);
+            if (!p) return 'TBD';
+            const first = p.firstName || p.first_name || '';
+            const last = p.lastName || p.last_name || '';
+            return `${first} ${last}`.trim() || 'TBD';
+        };
+
+        let usaPlayerNames = '';
+        let intlPlayerNames = '';
+
+        if (isTeamMatch) {
+            usaPlayerNames = [
+                resolveName(match.usa_team?.player1_id),
+                resolveName(match.usa_team?.player2_id)
+            ].filter(Boolean).join(' & ');
+            intlPlayerNames = [
+                resolveName(match.intl_team?.player1_id),
+                resolveName(match.intl_team?.player2_id)
+            ].filter(Boolean).join(' & ');
+        } else {
+            usaPlayerNames = resolveName(match.usa_player_id);
+            intlPlayerNames = resolveName(match.intl_player_id);
+        }
 
         return `
             <div class="match-card" data-match-id="${match.id}">
                 <div class="match-header">
-                    <span class="match-number">${match.match_no}</span>
+                    <span class="match-number">${match.match_number}</span>
                     <span class="match-type">${isTeamMatch ? 'Team Match' : 'Singles'}</span>
                 </div>
                 <div class="match-teams">
@@ -152,7 +190,7 @@ class BettingSystem {
         
         container.innerHTML = this.selectedBets.map((bet, index) => {
             const match = this.pairings.find(p => p.id === bet.matchId);
-            const matchLabel = match ? `Match ${match.match_no}` : 'Unknown Match';
+            const matchLabel = match ? `Match ${match.match_number}` : 'Unknown Match';
             
             return `
                 <div class="bet-item">
