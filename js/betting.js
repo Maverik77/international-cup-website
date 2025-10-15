@@ -63,15 +63,22 @@ class BettingSystem {
     }
 
     renderPairings() {
+        const day1 = this.getMatchesByDay(1);
+        const day2 = this.getMatchesByDay(2);
+        this.updateStatsBanner(day1.length, day2.length, (this.pairings || []).length);
         this.renderDayMatches(1, 'Day 1');
         this.renderDayMatches(2, 'Day 2');
+    }
+
+    getMatchesByDay(dayNumber) {
+        return (this.pairings || []).filter(p => Number(p.day) === dayNumber);
     }
 
     renderDayMatches(dayNumber, dayLabel) {
         const container = document.getElementById(`${dayNumber === 1 ? 'day1' : 'day2'}-matches`);
         if (!container) return;
 
-        const dayMatches = this.pairings.filter(p => p.day === dayNumber);
+        const dayMatches = this.getMatchesByDay(dayNumber);
         
         if (dayMatches.length === 0) {
             container.innerHTML = `<p class="no-matches">No ${dayLabel} matches available yet.</p>`;
@@ -313,6 +320,13 @@ class BettingSystem {
 
     showError(message) {
         alert(message); // Simple error display for now
+    }
+
+    updateStatsBanner(day1Count, day2Count, total) {
+        const el = document.getElementById('pairings-stats');
+        if (!el) return;
+        el.style.display = 'block';
+        el.textContent = `Loaded pairings: Day 1 = ${day1Count}, Day 2 = ${day2Count}, Total = ${total}`;
     }
 }
 
