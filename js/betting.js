@@ -278,7 +278,7 @@ class BettingSystem {
                 }))
             };
 
-            const response = await fetch(`${this.apiConfig.restApi}/betslips`, {
+            const response = await fetch(`${this.apiConfig.stagingRest}/betslips`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
