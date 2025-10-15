@@ -65,6 +65,16 @@ jobs:
           cp photos.html build/
         fi
         
+        # Copy betting page if it exists
+        if [ -f betting.html ]; then
+          cp betting.html build/
+        fi
+        
+        # Copy betting admin page if it exists
+        if [ -d betting ]; then
+          cp -r betting build/
+        fi
+        
         cp -r css build/
         cp -r js build/
         
@@ -208,6 +218,16 @@ jobs:
         # Copy photos page if it exists
         if [ -f photos.html ]; then
           cp photos.html build/
+        fi
+        
+        # Copy betting page if it exists
+        if [ -f betting.html ]; then
+          cp betting.html build/
+        fi
+        
+        # Copy betting admin page if it exists
+        if [ -d betting ]; then
+          cp -r betting build/
         fi
         
         cp -r css build/

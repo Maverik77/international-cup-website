@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Your Bets - International Cup 2025</title>
+    <link rel="stylesheet" href="css/betting.css">
+    <link rel="stylesheet" href="css/pairings.css">
+</head>
+<body class="betting-page">
+    <div class="betting-container">
+        <!-- Header -->
+        <header class="betting-header">
+            <div class="container">
+                <h1>🏆 Place Your Bets - International Cup 2025</h1>
+                <p>Bet on your favorite teams and players before the tournament begins!</p>
+            </div>
+        </header>
+
+        <!-- Tournament Info -->
+        <section class="tournament-info">
+            <div class="container">
+                <div class="info-card">
+                    <h2>Tournament Details</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Date:</span>
+                            <span class="info-value">October 2025</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Venue:</span>
+                            <span class="info-value">Lansdowne Resort</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Bet Amount:</span>
+                            <span class="info-value">$10 or $20 per match</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Payment:</span>
+                            <span class="info-value">Venmo or PayPal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="betting-main">
+            <div class="container">
+                <div class="betting-content">
+                    <!-- Pairings Section -->
+                    <section class="pairings-section">
+                        <h2>Tournament Pairings</h2>
+                        <p>Select your bets below. Click $10 or $20 to add a bet to your bet slip.</p>
+                        
+                        <!-- Day 1 Matches -->
+                        <div class="day-section">
+                            <h3>Day 1 - Team Matches</h3>
+                            <div id="day1-matches" class="matches-grid">
+                                <!-- Day 1 matches will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Day 2 Matches -->
+                        <div class="day-section">
+                            <h3>Day 2 - Singles Matches</h3>
+                            <div id="day2-matches" class="matches-grid">
+                                <!-- Day 2 matches will be loaded here -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Bet Slip Sidebar -->
+                <aside class="bet-slip-sidebar">
+                    <div class="bet-slip-header">
+                        <h3>Your Bet Slip</h3>
+                        <button id="clear-bets" class="btn-clear">Clear All</button>
+                    </div>
+                    
+                    <div class="bet-slip-content">
+                        <div id="selected-bets" class="selected-bets">
+                            <p class="no-bets">No bets selected yet</p>
+                        </div>
+                        
+                        <div class="bet-slip-total">
+                            <div class="total-row">
+                                <span>Total Amount:</span>
+                                <span id="total-amount">$0</span>
+                            </div>
+                        </div>
+
+                        <div class="bet-slip-form">
+                            <h4>Your Information</h4>
+                            <div class="form-group">
+                                <label for="bettor-name">Name *</label>
+                                <input type="text" id="bettor-name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bettor-email">Email *</label>
+                                <input type="email" id="bettor-email" placeholder="Enter your email" required>
+                            </div>
+                            <button id="submit-bets" class="btn-submit" disabled>Submit Bets</button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Bets Submitted Successfully!</h2>
+                <button class="modal-close" onclick="closeSuccessModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="betslip-info">
+                    <h3>Your Bet Slip ID: <span id="betslip-id"></span></h3>
+                    <p><strong>Total Amount:</strong> <span id="modal-total"></span></p>
+                </div>
+                
+                <div class="payment-section">
+                    <h3>Complete Your Payment</h3>
+                    <p>Please pay using one of the methods below and include your Bet Slip ID in the payment note:</p>
+                    
+                    <div class="payment-buttons">
+                        <a id="venmo-link" href="#" class="payment-btn venmo-btn" target="_blank">
+                            <span class="payment-icon">💳</span>
+                            Pay with Venmo
+                        </a>
+                        <a id="paypal-link" href="#" class="payment-btn paypal-btn" target="_blank">
+                            <span class="payment-icon">💰</span>
+                            Pay with PayPal
+                        </a>
+                    </div>
+                    
+                    <div class="payment-note">
+                        <p><strong>Important:</strong> Include this Bet Slip ID in your payment note:</p>
+                        <code id="payment-note-id"></code>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeSuccessModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Submitting your bets...</p>
+    </div>
+
+    <script src="js/betting.js"></script>
+</body>
+</html>

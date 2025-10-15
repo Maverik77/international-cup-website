@@ -1,0 +1,288 @@
+// Betting Page JavaScript
+
+class BettingSystem {
+    constructor() {
+        this.selectedBets = [];
+        this.pairings = [];
+        this.apiConfig = this.getApiConfig();
+        this.init();
+    }
+
+    getApiConfig() {
+        const isStaging = window.location.origin.includes('staging');
+        return {
+            restApi: isStaging 
+                ? 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod'
+                : 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod'
+        };
+    }
+
+    async init() {
+        await this.loadPairings();
+        this.setupEventListeners();
+        this.updateBetSlip();
+    }
+
+    async loadPairings() {
+        try {
+            const response = await fetch(`${this.apiConfig.restApi}/pairings`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            this.pairings = data.pairings || [];
+            this.renderPairings();
+        } catch (error) {
+            console.error('Error loading pairings:', error);
+            this.showError('Failed to load pairings. Please refresh the page.');
+        }
+    }
+
+    renderPairings() {
+        this.renderDayMatches('day1', 'Day 1');
+        this.renderDayMatches('day2', 'Day 2');
+    }
+
+    renderDayMatches(dayId, dayLabel) {
+        const container = document.getElementById(`${dayId}-matches`);
+        if (!container) return;
+
+        const dayMatches = this.pairings.filter(p => p.day === dayId);
+        
+        if (dayMatches.length === 0) {
+            container.innerHTML = `<p class="no-matches">No ${dayLabel} matches available yet.</p>`;
+            return;
+        }
+
+        container.innerHTML = dayMatches.map(match => this.createMatchCard(match)).join('');
+    }
+
+    createMatchCard(match) {
+        const isTeamMatch = match.day === 'day1';
+        const usaPlayers = isTeamMatch ? match.usa_team : [match.usa_player];
+        const intlPlayers = isTeamMatch ? match.international_team : [match.international_player];
+        
+        const usaPlayerNames = usaPlayers.map(p => typeof p === 'string' ? p : `${p.firstName} ${p.lastName}`).join(' & ');
+        const intlPlayerNames = intlPlayers.map(p => typeof p === 'string' ? p : `${p.firstName} ${p.lastName}`).join(' & ');
+
+        return `
+            <div class="match-card" data-match-id="${match.id}">
+                <div class="match-header">
+                    <span class="match-number">${match.match_no}</span>
+                    <span class="match-type">${isTeamMatch ? 'Team Match' : 'Singles'}</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team-row">
+                        <span class="team-name">🇺🇸 USA</span>
+                        <span class="team-players">${usaPlayerNames}</span>
+                    </div>
+                    <div class="team-row">
+                        <span class="team-name">🌍 International</span>
+                        <span class="team-players">${intlPlayerNames}</span>
+                    </div>
+                </div>
+                <div class="bet-buttons">
+                    <button class="bet-btn" data-match-id="${match.id}" data-team="USA" data-amount="10" onclick="bettingSystem.addBet('${match.id}', 'USA', 10)">
+                        $10 USA
+                    </button>
+                    <button class="bet-btn" data-match-id="${match.id}" data-team="USA" data-amount="20" onclick="bettingSystem.addBet('${match.id}', 'USA', 20)">
+                        $20 USA
+                    </button>
+                    <button class="bet-btn" data-match-id="${match.id}" data-team="International" data-amount="10" onclick="bettingSystem.addBet('${match.id}', 'International', 10)">
+                        $10 INT
+                    </button>
+                    <button class="bet-btn" data-match-id="${match.id}" data-team="International" data-amount="20" onclick="bettingSystem.addBet('${match.id}', 'International', 20)">
+                        $20 INT
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    addBet(matchId, team, amount) {
+        // Check if bet already exists for this match
+        const existingBetIndex = this.selectedBets.findIndex(bet => bet.matchId === matchId);
+        
+        if (existingBetIndex !== -1) {
+            // Replace existing bet
+            this.selectedBets[existingBetIndex] = { matchId, team, amount };
+        } else {
+            // Add new bet
+            this.selectedBets.push({ matchId, team, amount });
+        }
+
+        this.updateBetSlip();
+        this.updateBetButtons();
+    }
+
+    removeBet(matchId) {
+        this.selectedBets = this.selectedBets.filter(bet => bet.matchId !== matchId);
+        this.updateBetSlip();
+        this.updateBetButtons();
+    }
+
+    updateBetButtons() {
+        // Reset all bet buttons
+        document.querySelectorAll('.bet-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+
+        // Mark selected bets
+        this.selectedBets.forEach(bet => {
+            const btn = document.querySelector(`[data-match-id="${bet.matchId}"][data-team="${bet.team}"][data-amount="${bet.amount}"]`);
+            if (btn) {
+                btn.classList.add('selected');
+            }
+        });
+    }
+
+    updateBetSlip() {
+        const container = document.getElementById('selected-bets');
+        const totalElement = document.getElementById('total-amount');
+        const submitBtn = document.getElementById('submit-bets');
+
+        if (this.selectedBets.length === 0) {
+            container.innerHTML = '<p class="no-bets">No bets selected yet</p>';
+            totalElement.textContent = '$0';
+            submitBtn.disabled = true;
+            return;
+        }
+
+        const totalAmount = this.selectedBets.reduce((sum, bet) => sum + bet.amount, 0);
+        
+        container.innerHTML = this.selectedBets.map((bet, index) => {
+            const match = this.pairings.find(p => p.id === bet.matchId);
+            const matchLabel = match ? `Match ${match.match_no}` : 'Unknown Match';
+            
+            return `
+                <div class="bet-item">
+                    <div class="bet-match">${matchLabel}</div>
+                    <div class="bet-team">${bet.team}</div>
+                    <div class="bet-amount">$${bet.amount}</div>
+                    <button class="bet-remove" onclick="bettingSystem.removeBet('${bet.matchId}')">&times;</button>
+                </div>
+            `;
+        }).join('');
+
+        totalElement.textContent = `$${totalAmount}`;
+        submitBtn.disabled = false;
+    }
+
+    setupEventListeners() {
+        // Clear all bets
+        document.getElementById('clear-bets').addEventListener('click', () => {
+            this.selectedBets = [];
+            this.updateBetSlip();
+            this.updateBetButtons();
+        });
+
+        // Submit bets
+        document.getElementById('submit-bets').addEventListener('click', () => {
+            this.submitBets();
+        });
+
+        // Form validation
+        const nameInput = document.getElementById('bettor-name');
+        const emailInput = document.getElementById('bettor-email');
+        
+        [nameInput, emailInput].forEach(input => {
+            input.addEventListener('input', () => {
+                this.validateForm();
+            });
+        });
+    }
+
+    validateForm() {
+        const name = document.getElementById('bettor-name').value.trim();
+        const email = document.getElementById('bettor-email').value.trim();
+        const submitBtn = document.getElementById('submit-bets');
+        
+        const isValid = name.length > 0 && email.length > 0 && this.selectedBets.length > 0;
+        submitBtn.disabled = !isValid;
+    }
+
+    async submitBets() {
+        const name = document.getElementById('bettor-name').value.trim();
+        const email = document.getElementById('bettor-email').value.trim();
+
+        if (!name || !email || this.selectedBets.length === 0) {
+            this.showError('Please fill in all required fields and select at least one bet.');
+            return;
+        }
+
+        // Show loading overlay
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        try {
+            const betslipData = {
+                name,
+                email,
+                bets: this.selectedBets.map(bet => ({
+                    matchId: bet.matchId,
+                    team: bet.team,
+                    amount: bet.amount
+                }))
+            };
+
+            const response = await fetch(`${this.apiConfig.restApi}/betslips`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(betslipData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            this.showSuccessModal(result);
+
+        } catch (error) {
+            console.error('Error submitting bets:', error);
+            this.showError('Failed to submit bets. Please try again.');
+        } finally {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+    }
+
+    showSuccessModal(result) {
+        const modal = document.getElementById('success-modal');
+        const betslipId = document.getElementById('betslip-id');
+        const modalTotal = document.getElementById('modal-total');
+        const paymentNoteId = document.getElementById('payment-note-id');
+        const venmoLink = document.getElementById('venmo-link');
+        const paypalLink = document.getElementById('paypal-link');
+
+        betslipId.textContent = result.betslipId;
+        modalTotal.textContent = `$${result.totalAmount}`;
+        paymentNoteId.textContent = result.betslipId;
+
+        venmoLink.href = result.paymentUrls.venmo;
+        paypalLink.href = result.paymentUrls.paypal;
+
+        modal.style.display = 'flex';
+    }
+
+    showError(message) {
+        alert(message); // Simple error display for now
+    }
+}
+
+// Global functions for modal
+function closeSuccessModal() {
+    document.getElementById('success-modal').style.display = 'none';
+    // Reset form
+    bettingSystem.selectedBets = [];
+    bettingSystem.updateBetSlip();
+    bettingSystem.updateBetButtons();
+    document.getElementById('bettor-name').value = '';
+    document.getElementById('bettor-email').value = '';
+}
+
+// Initialize betting system when page loads
+let bettingSystem;
+document.addEventListener('DOMContentLoaded', () => {
+    bettingSystem = new BettingSystem();
+});
