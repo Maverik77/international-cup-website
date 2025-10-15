@@ -66,7 +66,14 @@ exports.handler = async (event) => {
             betslipId,
             name: name.trim(),
             email: email.trim().toLowerCase(),
-            bets,
+            bets: bets.map(b => ({
+                matchId: b.matchId,
+                team: b.team,
+                amount: b.amount,
+                matchLabel: b.matchLabel,
+                usaPlayers: b.usaPlayers,
+                intlPlayers: b.intlPlayers
+            })),
             totalAmount,
             isPaid: false,
             timestamp: new Date().toISOString(),

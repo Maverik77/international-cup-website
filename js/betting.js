@@ -268,14 +268,44 @@ class BettingSystem {
         document.getElementById('loading-overlay').style.display = 'flex';
 
         try {
+            // Enrich bets with player names and match label for storage/display
+            const enrichBet = (bet) => {
+                const pairing = this.pairings.find(p => p.id === bet.matchId) || {};
+                const isTeam = pairing.type === 'team';
+
+                const resolveName = (playerId) => {
+                    if (!playerId) return 'TBD';
+                    const p = this.players.find(pl => pl.id === playerId);
+                    if (!p) return 'TBD';
+                    const first = p.firstName || p.first_name || '';
+                    const last = p.lastName || p.last_name || '';
+                    return `${first} ${last}`.trim() || 'TBD';
+                };
+
+                const usaPlayers = isTeam
+                    ? [resolveName(pairing.usa_team?.player1_id), resolveName(pairing.usa_team?.player2_id)].join(' & ')
+                    : resolveName(pairing.usa_player_id);
+
+                const intlPlayers = isTeam
+                    ? [resolveName(pairing.intl_team?.player1_id), resolveName(pairing.intl_team?.player2_id)].join(' & ')
+                    : resolveName(pairing.intl_player_id);
+
+                const matchLabel = pairing.match_number ? `Match ${pairing.match_number}` : 'Match';
+
+                return {
+                    matchId: bet.matchId,
+                    team: bet.team,
+                    amount: bet.amount,
+                    matchLabel,
+                    usaPlayers,
+                    intlPlayers
+                };
+            };
+
             const betslipData = {
                 name,
                 email,
-                bets: this.selectedBets.map(bet => ({
-                    matchId: bet.matchId,
-                    team: bet.team,
-                    amount: bet.amount
-                }))
+                bets: this.selectedBets.map(enrichBet)
             };
 
             const response = await fetch(`${this.apiConfig.stagingRest}/betslips`, {
