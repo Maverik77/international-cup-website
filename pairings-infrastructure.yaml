@@ -351,8 +351,8 @@ Resources:
     Properties:
       StageName: prod
       Cors:
-        AllowMethods: "'GET,POST,OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Admin-Password'"
+        AllowMethods: "'GET,POST,PUT,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization,X-Admin-Password'"
         AllowOrigin: "'*'"
 
   # WebSocket API
