@@ -15,6 +15,13 @@ Parameters:
       - prod
       - staging
     Description: Environment name for resource naming (prod or staging)
+  SenderEmail:
+    Type: String
+    Default: noreply@lansdowne-international-cup.com
+    Description: Email address to send confirmation emails from (must be verified in SES)
+
+Conditions:
+  IsProduction: !Equals [!Ref Environment, 'prod']
 
 Resources:
   # Lambda Execution Role
@@ -58,6 +65,23 @@ Resources:
                 Action:
                   - execute-api:ManageConnections
                 Resource: '*'
+        - PolicyName: SESAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+        - PolicyName: LambdaInvokeAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !Sub 'arn:aws:lambda:us-east-1:*:function:*'
 
   # DynamoDB Tables
   
@@ -297,6 +321,7 @@ Resources:
       Environment:
         Variables:
           BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          EMAIL_FUNCTION_NAME: !Ref SendBetslipConfirmationFunction
       Events:
         CreateBetslip:
           Type: Api
@@ -304,6 +329,24 @@ Resources:
             RestApiId: !Ref PairingsApi
             Path: /betslips
             Method: POST
+
+  SendBetslipConfirmationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/sendBetslipConfirmation/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          SENDER_EMAIL: !Ref SenderEmail
+          WEBSITE_URL: !Sub 
+            - 'https://${Domain}'
+            - Domain: !If 
+              - IsProduction
+              - 'lansdowne-international-cup.com'
+              - 'staging.lansdowne-international-cup.com'
 
   GetBetslipsFunction:
     Type: AWS::Serverless::Function

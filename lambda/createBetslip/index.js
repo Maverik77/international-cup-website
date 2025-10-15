@@ -1,10 +1,13 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 
-const client = new DynamoDBClient({ region: 'us-east-1' });
-const docClient = DynamoDBDocumentClient.from(client);
+const dynamoClient = new DynamoDBClient({ region: 'us-east-1' });
+const docClient = DynamoDBDocumentClient.from(dynamoClient);
+const lambdaClient = new LambdaClient({ region: 'us-east-1' });
 
 const BETSLIPS_TABLE = process.env.BETSLIPS_TABLE || 'icup-betslips';
+const EMAIL_FUNCTION_NAME = process.env.EMAIL_FUNCTION_NAME;
 
 exports.handler = async (event) => {
     console.log('CREATE Betslip request:', JSON.stringify(event));
@@ -86,6 +89,30 @@ exports.handler = async (event) => {
             TableName: BETSLIPS_TABLE,
             Item: betslip
         }));
+
+        // Send confirmation email (async, don't wait for it)
+        if (EMAIL_FUNCTION_NAME) {
+            try {
+                const emailPayload = {
+                    betslipId,
+                    name: betslip.name,
+                    email: betslip.email,
+                    totalAmount,
+                    bets: betslip.bets
+                };
+
+                await lambdaClient.send(new InvokeCommand({
+                    FunctionName: EMAIL_FUNCTION_NAME,
+                    InvocationType: 'Event', // Async invocation
+                    Payload: JSON.stringify({ body: JSON.stringify(emailPayload) })
+                }));
+
+                console.log('Confirmation email triggered for', betslipId);
+            } catch (emailError) {
+                // Log but don't fail the betslip creation
+                console.error('Failed to trigger confirmation email:', emailError);
+            }
+        }
 
         // Generate payment URLs
         const venmoUrl = `https://venmo.com/erikwagner77?txn=pay&amount=${totalAmount}&note=LIC-${betslipId}`;
