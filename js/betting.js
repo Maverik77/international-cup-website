@@ -208,10 +208,40 @@ class BettingSystem {
             const match = this.pairings.find(p => p.id === bet.matchId);
             const matchLabel = match ? `Match ${match.match_number}` : 'Unknown Match';
             
+            // Get player names for this match
+            const resolveName = (playerId) => {
+                if (!playerId) return 'TBD';
+                const p = this.players.find(pl => pl.id === playerId);
+                if (!p) return 'TBD';
+                const first = p.firstName || p.first_name || '';
+                const last = p.lastName || p.last_name || '';
+                return `${first} ${last}`.trim() || 'TBD';
+            };
+
+            let usaPlayerNames = '';
+            let intlPlayerNames = '';
+            
+            if (match) {
+                const isTeamMatch = match.type === 'team';
+                if (isTeamMatch) {
+                    usaPlayerNames = [
+                        resolveName(match.usa_team?.player1_id),
+                        resolveName(match.usa_team?.player2_id)
+                    ].filter(Boolean).join(' & ');
+                    intlPlayerNames = [
+                        resolveName(match.intl_team?.player1_id),
+                        resolveName(match.intl_team?.player2_id)
+                    ].filter(Boolean).join(' & ');
+                } else {
+                    usaPlayerNames = resolveName(match.usa_player_id);
+                    intlPlayerNames = resolveName(match.intl_player_id);
+                }
+            }
+            
             return `
                 <div class="bet-item">
                     <div class="bet-match">${matchLabel}</div>
-                    <div class="bet-team">${bet.team}</div>
+                    <div class="bet-team">${bet.team} - ${bet.team === 'USA' ? usaPlayerNames : intlPlayerNames}</div>
                     <div class="bet-amount">$${bet.amount}</div>
                     <button class="bet-remove" onclick="bettingSystem.removeBet('${bet.matchId}')">&times;</button>
                 </div>

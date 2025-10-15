@@ -212,9 +212,15 @@ class BettingAdmin {
         const betsHTML = (betslip.bets || []).map(bet => `
             <div class="bet-item">
                 <div class="bet-match">${bet.matchLabel || ('Match ' + bet.matchId)}</div>
-                <div class="bet-team">${bet.team}</div>
-                <div class="bet-team">🇺🇸 ${bet.usaPlayers || ''}</div>
-                <div class="bet-team">🌍 ${bet.intlPlayers || ''}</div>
+                <div class="bet-team" style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">
+                    Betting on: ${bet.team}
+                </div>
+                <div class="bet-team" style="margin-bottom: 0.25rem;">
+                    🇺🇸 USA: ${bet.usaPlayers || 'TBD'}
+                </div>
+                <div class="bet-team" style="margin-bottom: 0.5rem;">
+                    🌍 International: ${bet.intlPlayers || 'TBD'}
+                </div>
                 <div class="bet-amount">$${bet.amount}</div>
             </div>
         `).join('');
