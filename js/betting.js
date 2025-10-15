@@ -368,6 +368,7 @@ class BettingSystem {
         const paymentNoteId = document.getElementById('payment-note-id');
         const venmoLink = document.getElementById('venmo-link');
         const paypalLink = document.getElementById('paypal-link');
+        const viewBetslipLink = document.getElementById('view-betslip-link');
 
         betslipId.textContent = result.betslipId;
         modalTotal.textContent = `$${result.totalAmount}`;
@@ -375,6 +376,7 @@ class BettingSystem {
 
         venmoLink.href = result.paymentUrls.venmo;
         paypalLink.href = result.paymentUrls.paypal;
+        viewBetslipLink.href = `lookup.html?id=${result.betslipId}`;
 
         modal.style.display = 'flex';
     }

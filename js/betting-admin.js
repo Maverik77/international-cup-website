@@ -209,8 +209,10 @@ class BettingAdmin {
         const modal = document.getElementById('betslip-modal');
         const detailsElement = document.getElementById('betslip-details');
 
-        const betsHTML = (betslip.bets || []).map(bet => `
-            <div class="bet-item">
+        const betsHTML = (betslip.bets || []).map((bet, index) => {
+            const status = bet.status || 'open';
+            return `
+            <div class="bet-item" style="position: relative;">
                 <div class="bet-match">${bet.matchLabel || ('Match ' + bet.matchId)}</div>
                 <div class="bet-team" style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">
                     Betting on: ${bet.team}
@@ -221,9 +223,29 @@ class BettingAdmin {
                 <div class="bet-team" style="margin-bottom: 0.5rem;">
                     🌍 International: ${bet.intlPlayers || 'TBD'}
                 </div>
-                <div class="bet-amount">$${bet.amount}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
+                    <div class="bet-amount">$${bet.amount}</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="status-btn ${status === 'open' ? 'active' : ''}" 
+                                style="background: #e6fffa; color: #234e52; border: 2px solid ${status === 'open' ? '#81e6d9' : '#cbd5e0'};"
+                                onclick="bettingAdmin.updateBetStatus('${betslip.betslipId}', ${index}, 'open')">
+                            Open
+                        </button>
+                        <button class="status-btn ${status === 'won' ? 'active' : ''}"
+                                style="background: #c6f6d5; color: #22543d; border: 2px solid ${status === 'won' ? '#48bb78' : '#cbd5e0'};"
+                                onclick="bettingAdmin.updateBetStatus('${betslip.betslipId}', ${index}, 'won')">
+                            Won
+                        </button>
+                        <button class="status-btn ${status === 'lost' ? 'active' : ''}"
+                                style="background: #fed7d7; color: #742a2a; border: 2px solid ${status === 'lost' ? '#fc8181' : '#cbd5e0'};"
+                                onclick="bettingAdmin.updateBetStatus('${betslip.betslipId}', ${index}, 'lost')">
+                            Lost
+                        </button>
+                    </div>
+                </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         detailsElement.innerHTML = `
             <div class="betslip-info">
@@ -260,6 +282,34 @@ class BettingAdmin {
         `;
 
         modal.style.display = 'flex';
+    }
+
+    async updateBetStatus(betslipId, betIndex, status) {
+        try {
+            const password = document.getElementById('admin-password').value;
+            const response = await fetch(`${this.apiConfig.restApi}/betslips/${betslipId}/bets/${betIndex}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${password}`
+                },
+                body: JSON.stringify({ status })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Reload the betslip details to show updated status
+            await this.viewBetslipDetails(betslipId);
+
+            // Also reload the main list
+            await this.loadBetslips();
+
+        } catch (error) {
+            console.error('Error updating bet status:', error);
+            alert('Failed to update bet status. Please try again.');
+        }
     }
 
     closeBetslipModal() {

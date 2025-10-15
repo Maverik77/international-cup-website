@@ -249,6 +249,25 @@
             background: #5a67d8;
         }
         
+        .status-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .status-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+        
+        .status-btn.active {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-weight: 700;
+        }
+        
         @media (max-width: 768px) {
             .admin-container {
                 padding: 1rem;

@@ -72,7 +72,8 @@ exports.handler = async (event) => {
                 amount: b.amount,
                 matchLabel: b.matchLabel,
                 usaPlayers: b.usaPlayers,
-                intlPlayers: b.intlPlayers
+                intlPlayers: b.intlPlayers,
+                status: 'open'  // Default status: open, won, lost
             })),
             totalAmount,
             isPaid: false,
