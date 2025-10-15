@@ -36,6 +36,11 @@ exports.handler = async (event) => {
         `).join('');
 
         const lookupUrl = `${WEBSITE_URL}/betting/lookup.html?id=${betslipId}`;
+        
+        // Generate mobile-friendly payment URLs
+        const venmoUrl = `venmo://paycharge?txn=pay&recipients=erikwagner77&amount=${totalAmount}&note=BetSlip-${betslipId}`;
+        const venmoWebUrl = `https://venmo.com/u/erikwagner77`;
+        const paypalUrl = `https://www.paypal.com/paypalme/erikwagner77/${totalAmount}`;
 
         const emailParams = {
             Source: SENDER_EMAIL,
@@ -126,8 +131,30 @@ exports.handler = async (event) => {
                                 <h3 style="margin: 0 0 10px 0; color: #92400e; font-size: 16px; font-weight: 700;">
                                     ⚠️ Important - Complete Your Payment
                                 </h3>
-                                <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">
+                                <p style="margin: 0 0 15px 0; color: #78350f; font-size: 14px; line-height: 1.6;">
                                     Please complete your payment via Venmo or PayPal and include your Bet Slip ID (<strong>${betslipId}</strong>) in the payment note.
+                                </p>
+                                
+                                <!-- Payment Buttons -->
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td align="center" style="padding: 10px;">
+                                            <a href="${venmoUrl}" style="display: inline-block; background-color: #008CFF; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-size: 16px; font-weight: 600; margin: 0 5px;">
+                                                💳 Pay with Venmo
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" style="padding: 10px;">
+                                            <a href="${paypalUrl}" style="display: inline-block; background-color: #0070BA; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-size: 16px; font-weight: 600; margin: 0 5px;">
+                                                💰 Pay with PayPal
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <p style="margin: 15px 0 0 0; color: #78350f; font-size: 12px; text-align: center;">
+                                    If buttons don't work, send payment to @erikwagner77 on Venmo or PayPal
                                 </p>
                             </div>
 

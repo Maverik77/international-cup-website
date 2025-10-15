@@ -115,8 +115,10 @@ exports.handler = async (event) => {
         }
 
         // Generate payment URLs
-        const venmoUrl = `https://venmo.com/erikwagner77?txn=pay&amount=${totalAmount}&note=LIC-${betslipId}`;
-        const paypalUrl = `https://www.paypal.com/paypalme/erikwagner77/${totalAmount}?note=LIC-${betslipId}`;
+        // Venmo: Use app deep link that works on both mobile and web
+        const venmoUrl = `venmo://paycharge?txn=pay&recipients=erikwagner77&amount=${totalAmount}&note=BetSlip-${betslipId}`;
+        // PayPal: Use paypalme which auto-redirects to app on mobile
+        const paypalUrl = `https://www.paypal.com/paypalme/erikwagner77/${totalAmount}`;
 
         return {
             statusCode: 200,
