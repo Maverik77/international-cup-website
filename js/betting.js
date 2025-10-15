@@ -48,7 +48,8 @@ class BettingSystem {
     }
 
     async fetchJsonWithFailover(path) {
-        const endpoints = [this.apiConfig.stagingRest, this.apiConfig.prodRest];
+        // Prefer production first since admin currently saves to prod endpoints
+        const endpoints = [this.apiConfig.prodRest, this.apiConfig.stagingRest];
         let lastError;
         for (const base of endpoints) {
             try {
