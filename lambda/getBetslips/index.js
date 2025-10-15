@@ -49,10 +49,11 @@ exports.handler = async (event) => {
             name: betslip.name,
             email: betslip.email,
             totalAmount: betslip.totalAmount,
-            betCount: betslip.bets.length,
+            betCount: Array.isArray(betslip.bets) ? betslip.bets.length : 0,
             isPaid: betslip.isPaid,
             timestamp: betslip.timestamp,
-            createdAt: betslip.createdAt
+            createdAt: betslip.createdAt,
+            bets: Array.isArray(betslip.bets) ? betslip.bets : []
         }));
 
         // Sort by creation time (newest first)

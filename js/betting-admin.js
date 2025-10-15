@@ -209,7 +209,7 @@ class BettingAdmin {
         const modal = document.getElementById('betslip-modal');
         const detailsElement = document.getElementById('betslip-details');
 
-        const betsHTML = betslip.bets.map(bet => `
+        const betsHTML = (betslip.bets || []).map(bet => `
             <div class="bet-item">
                 <div class="bet-match">Match ${bet.matchId}</div>
                 <div class="bet-team">${bet.team}</div>
