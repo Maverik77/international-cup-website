@@ -220,8 +220,16 @@
     justify-content: center;
 }
 
+/* Bet buttons container */
+.bet-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
 .bet-btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1rem;
     border: 2px solid #667eea;
     background: white;
     color: #667eea;
@@ -229,7 +237,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    flex: 0 0 calc(50% - 0.25rem); /* Two buttons per row with gap */
+    min-width: 0; /* Allow shrinking */
 }
 
 .bet-btn:hover {
@@ -620,6 +630,12 @@
     
     .info-grid {
         grid-template-columns: 1fr;
+    }
+    
+    /* Smaller buttons on mobile */
+    .bet-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
     }
 }
 
