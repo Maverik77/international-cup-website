@@ -5,6 +5,7 @@ class BettingSystem {
         this.selectedBets = [];
         this.pairings = [];
         this.players = [];
+        this.bettingCutoff = { day1Closed: false, day2Closed: false };
         this.apiConfig = this.getApiConfig();
         this.init();
     }
@@ -20,10 +21,20 @@ class BettingSystem {
     async init() {
         await Promise.all([
             this.loadPlayers(),
-            this.loadPairings()
+            this.loadPairings(),
+            this.loadBettingCutoff()
         ]);
         this.setupEventListeners();
         this.updateBetSlip();
+    }
+
+    async loadBettingCutoff() {
+        try {
+            const data = await this.fetchJsonWithFailover('/betting/cutoff');
+            this.bettingCutoff = data;
+        } catch (err) {
+            console.error('Error loading betting cutoff:', err);
+        }
     }
 
     async loadPlayers() {
@@ -91,6 +102,10 @@ class BettingSystem {
 
     createMatchCard(match) {
         const isTeamMatch = match.type === 'team';
+        
+        // Check if betting is closed for this day
+        const isClosed = (match.day === 1 && this.bettingCutoff.day1Closed) || 
+                        (match.day === 2 && this.bettingCutoff.day2Closed);
 
         // Resolve player IDs to names from loaded players list
         const resolveName = (playerId) => {
@@ -117,6 +132,30 @@ class BettingSystem {
         } else {
             usaPlayerNames = resolveName(match.usa_player_id);
             intlPlayerNames = resolveName(match.intl_player_id);
+        }
+
+        if (isClosed) {
+            return `
+                <div class="match-card" data-match-id="${match.id}" style="opacity: 0.6;">
+                    <div class="match-header">
+                        <span class="match-number">${match.match_number}</span>
+                        <span class="match-type">${isTeamMatch ? 'Team Match' : 'Singles'}</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team-row">
+                            <span class="team-name">🇺🇸 USA</span>
+                            <span class="team-players">${usaPlayerNames}</span>
+                        </div>
+                        <div class="team-row">
+                            <span class="team-name">🌍 International</span>
+                            <span class="team-players">${intlPlayerNames}</span>
+                        </div>
+                    </div>
+                    <div style="background: #fed7d7; color: #742a2a; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 600;">
+                        🔒 Betting Closed - Match Started
+                    </div>
+                </div>
+            `;
         }
 
         return `

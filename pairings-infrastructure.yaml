@@ -57,6 +57,7 @@ Resources:
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-websocket-connections-${Environment}'
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-players-${Environment}'
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-betslips-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-betting-config-${Environment}'
         - PolicyName: APIGatewayManageConnections
           PolicyDocument:
             Version: '2012-10-17'
@@ -147,6 +148,19 @@ Resources:
           AttributeType: S
       KeySchema:
         - AttributeName: betslipId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Betting Config Table (for cutoff times, etc.)
+  BettingConfigTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-betting-config-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: configId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: configId
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
@@ -426,6 +440,52 @@ Resources:
             RestApiId: !Ref PairingsApi
             Path: /betslips/{id}/bets/{betIndex}/status
             Method: PUT
+
+  BulkRevealMatchesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/bulkRevealMatches/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        BulkReveal:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /pairings/bulk-reveal
+            Method: POST
+
+  SetBettingCutoffFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/setBettingCutoff/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETTING_CONFIG_TABLE: !Sub 'icup-betting-config-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        SetCutoff:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betting/cutoff
+            Method: POST
+        GetCutoff:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betting/cutoff
+            Method: GET
 
   # REST API
   PairingsApi:

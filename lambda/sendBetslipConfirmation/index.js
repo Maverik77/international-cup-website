@@ -38,8 +38,8 @@ exports.handler = async (event) => {
         const lookupUrl = `${WEBSITE_URL}/betting/lookup.html?id=${betslipId}`;
         
         // Generate mobile-friendly payment URLs
-        const venmoUrl = `venmo://paycharge?txn=pay&recipients=erikwagner77&amount=${totalAmount}&note=BetSlip-${betslipId}`;
-        const venmoWebUrl = `https://venmo.com/u/erikwagner77`;
+        // Use web URL for email (deep links don't work well in email clients)
+        const venmoUrl = `https://venmo.com/u/erikwagner77`;
         const paypalUrl = `https://www.paypal.com/paypalme/erikwagner77/${totalAmount}`;
 
         const emailParams = {
@@ -154,7 +154,8 @@ exports.handler = async (event) => {
                                 </table>
                                 
                                 <p style="margin: 15px 0 0 0; color: #78350f; font-size: 12px; text-align: center;">
-                                    If buttons don't work, send payment to @erikwagner77 on Venmo or PayPal
+                                    Send <strong>$${totalAmount}</strong> to <strong>@erikwagner77</strong><br>
+                                    Include <strong>${betslipId}</strong> in the payment note
                                 </p>
                             </div>
 
