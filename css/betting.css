@@ -10,6 +10,12 @@
 
 .betting-container {
     min-height: 100vh;
+    padding-top: 80px; /* Add space for fixed navbar */
+}
+
+/* Override container max-width for betting page to use more space */
+.betting-page .container {
+    max-width: 1600px;
 }
 
 /* Header */
@@ -88,9 +94,17 @@
 
 .betting-content {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 1fr 380px;
     gap: 2rem;
     align-items: start;
+}
+
+/* Better responsive layout for larger screens */
+@media (min-width: 1400px) {
+    .betting-content {
+        grid-template-columns: 1fr 400px;
+        gap: 3rem;
+    }
 }
 
 /* Pairings Section */
