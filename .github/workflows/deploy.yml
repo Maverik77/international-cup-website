@@ -108,6 +108,11 @@ jobs:
           cp -r pairings build/
         fi
         
+        # Copy admin folder if it exists
+        if [ -d admin ]; then
+          cp -r admin build/
+        fi
+        
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
@@ -261,6 +266,11 @@ jobs:
         # Copy pairings folder if it exists
         if [ -d pairings ]; then
           cp -r pairings build/
+        fi
+        
+        # Copy admin folder if it exists
+        if [ -d admin ]; then
+          cp -r admin build/
         fi
         
         # Copy favicon if it exists
