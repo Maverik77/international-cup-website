@@ -42,7 +42,10 @@ exports.handler = async (event) => {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type,X-Admin-Password',
-                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
+                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             },
             body: JSON.stringify({
                 pairings: sortedPairings,
