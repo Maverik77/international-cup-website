@@ -11,10 +11,15 @@ class BettingSystem {
     }
 
     getApiConfig() {
-        // Prefer staging first, then production as failover
+        // Detect environment based on hostname
+        const isStaging = window.location.hostname.includes('staging');
+        const isProd = window.location.hostname === 'lansdowne-international-cup.com' || 
+                       window.location.hostname === 'www.lansdowne-international-cup.com';
+        
         return {
             stagingRest: 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod',
-            prodRest: 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod'
+            prodRest: 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod',
+            currentEnv: isProd ? 'prod' : 'staging'
         };
     }
 
@@ -61,19 +66,19 @@ class BettingSystem {
     }
 
     async fetchJsonWithFailover(path) {
-        // Staging only per environment isolation
-        const endpoints = [this.apiConfig.stagingRest];
-        let lastError;
-        for (const base of endpoints) {
-            try {
-                const resp = await fetch(`${base}${path}`);
-                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                return await resp.json();
-            } catch (e) {
-                lastError = e;
-            }
+        // Use the correct API based on current environment
+        const apiBase = this.apiConfig.currentEnv === 'prod' 
+            ? this.apiConfig.prodRest 
+            : this.apiConfig.stagingRest;
+        
+        try {
+            const resp = await fetch(`${apiBase}${path}`);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            return await resp.json();
+        } catch (e) {
+            console.error(`API request failed: ${apiBase}${path}`, e);
+            throw e;
         }
-        throw lastError || new Error('All endpoints failed');
     }
 
     renderPairings() {
@@ -379,7 +384,11 @@ class BettingSystem {
                 bets: this.selectedBets.map(enrichBet)
             };
 
-            const response = await fetch(`${this.apiConfig.stagingRest}/betslips`, {
+            const apiBase = this.apiConfig.currentEnv === 'prod' 
+                ? this.apiConfig.prodRest 
+                : this.apiConfig.stagingRest;
+            
+            const response = await fetch(`${apiBase}/betslips`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
