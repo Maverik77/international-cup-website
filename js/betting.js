@@ -27,12 +27,28 @@ class BettingSystem {
         await Promise.all([
             this.loadPlayers(),
             this.loadPairings(),
-            this.loadBettingCutoff()
+            this.loadBettingCutoff(),
+            this.loadBettingStats()
         ]);
         // Render pairings after all data is loaded
         this.renderPairings();
         this.setupEventListeners();
         this.updateBetSlip();
+    }
+
+    async loadBettingStats() {
+        try {
+            const data = await this.fetchJsonWithFailover('/betslips/stats');
+            const totalBets = data.totalBets || 0;
+            const totalAmount = data.totalAmount || 0;
+            
+            document.getElementById('total-bets-count').textContent = totalBets.toLocaleString();
+            document.getElementById('total-prize-pool').textContent = `$${totalAmount.toLocaleString()}`;
+        } catch (err) {
+            console.error('Error loading betting stats:', err);
+            document.getElementById('total-bets-count').textContent = '0';
+            document.getElementById('total-prize-pool').textContent = '$0';
+        }
     }
 
     async loadBettingCutoff() {
@@ -470,7 +486,7 @@ class BettingSystem {
     }
 }
 
-// Global functions for modal
+// Global functions for modals
 function closeSuccessModal() {
     document.getElementById('success-modal').style.display = 'none';
     // Reset form
@@ -479,6 +495,14 @@ function closeSuccessModal() {
     bettingSystem.updateBetButtons();
     document.getElementById('bettor-name').value = '';
     document.getElementById('bettor-email').value = '';
+}
+
+function showPayoutModal() {
+    document.getElementById('payout-modal').style.display = 'flex';
+}
+
+function closePayoutModal() {
+    document.getElementById('payout-modal').style.display = 'none';
 }
 
 // Initialize betting system when page loads

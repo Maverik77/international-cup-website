@@ -1,0 +1,18 @@
+IMPORTANT: Email Confirmation Setup Required
+
+Before deploying, you need to:
+
+1. Decide which email address to send confirmations from:
+   - Option A: Your personal email (e.g., erikwagner77@gmail.com)
+   - Option B: A custom domain email (e.g., noreply@lansdowne-international-cup.com)
+
+2. Verify the email address with AWS SES:
+   ./setup-ses-email.sh YOUR_EMAIL_HERE
+
+3. Check your inbox and click the verification link
+
+4. Then deploy with:
+   sam deploy ... --parameter-overrides SenderEmail=YOUR_EMAIL_HERE
+
+For now, I'll deploy without triggering the email setup script.
+You can verify an email and redeploy when ready.

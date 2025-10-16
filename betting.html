@@ -65,6 +65,19 @@
                             <span class="info-label">Payment:</span>
                             <span class="info-value">Venmo or PayPal</span>
                         </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Bets:</span>
+                            <span class="info-value" id="total-bets-count">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Prize Pool:</span>
+                            <span class="info-value" id="total-prize-pool">Loading...</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <button onclick="showPayoutModal()" style="background: #667eea; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.3s;">
+                            📊 View Payout Structure
+                        </button>
                     </div>
                 </div>
             </div>
@@ -192,6 +205,69 @@
     <div id="loading-overlay" class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
         <p>Submitting your bets...</p>
+    </div>
+
+    <!-- Payout Structure Modal -->
+    <div id="payout-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>💰 Payout Structure</h2>
+                <button class="modal-close" onclick="closePayoutModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: #f7fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0 0 1rem 0; color: #2d3748;">How Payouts Work</h3>
+                    <p style="margin-bottom: 1rem; line-height: 1.6;">
+                        All bets contribute to a <strong>total prize pool</strong>. Payouts are calculated using a 
+                        <strong>payout factor</strong> that ensures winning bets share the pool proportionally.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: #667eea; margin-bottom: 0.75rem;">🏆 Winning Bets</h4>
+                    <p style="line-height: 1.6; margin-bottom: 1rem;">
+                        The payout factor is calculated as:
+                    </p>
+                    <div style="background: #667eea; color: white; padding: 1rem; border-radius: 8px; text-align: center; font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">
+                        Payout Factor = Total Prize Pool ÷ Total Won Bets
+                    </div>
+                    <p style="line-height: 1.6; color: #4a5568;">
+                        Your payout = <strong>Your Bet Amount × Payout Factor</strong>
+                    </p>
+                    
+                    <div style="background: #e6fffa; border-left: 4px solid #38b2ac; padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                        <strong>Example:</strong><br>
+                        • Total Prize Pool: $200<br>
+                        • Total Won Bets: $100<br>
+                        • Payout Factor: $200 ÷ $100 = <strong>2.0×</strong><br>
+                        • If you bet $10 and won: $10 × 2.0 = <strong>$20 payout</strong> (doubled your money!)
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: #f6ad55; margin-bottom: 0.75rem;">🤝 Tied Matches</h4>
+                    <p style="line-height: 1.6;">
+                        Any tied match will <strong>return your bet amount</strong> in full. You get your money back with no win or loss.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <h4 style="color: #fc8181; margin-bottom: 0.75rem;">❌ Losing Bets</h4>
+                    <p style="line-height: 1.6;">
+                        Losing bets contribute to the prize pool for the winners. You lose your bet amount.
+                    </p>
+                </div>
+
+                <div style="background: #fff5f5; border: 2px solid #fc8181; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
+                    <p style="margin: 0; color: #742a2a; font-weight: 600;">
+                        ⚠️ Important: Payouts may be higher or lower than 1:1 depending on how many people bet on winners vs. losers!
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closePayoutModal()">Got It</button>
+            </div>
+        </div>
     </div>
 
     <script src="js/main.js"></script>

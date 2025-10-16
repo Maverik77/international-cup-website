@@ -421,6 +421,25 @@ Resources:
             Path: /betslips/{id}
             Method: GET
 
+  GetBettingStatsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getBettingStats/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+      Events:
+        GetBettingStats:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/stats
+            Method: GET
+
   UpdateBetStatusFunction:
     Type: AWS::Serverless::Function
     Properties:
