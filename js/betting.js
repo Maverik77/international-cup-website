@@ -141,6 +141,9 @@ class BettingSystem {
             intlPlayerNames = resolveName(match.intl_player_id);
         }
 
+        // Check if players are TBD (not assigned yet)
+        const hasTBD = usaPlayerNames.includes('TBD') || intlPlayerNames.includes('TBD');
+
         if (isClosed) {
             return `
                 <div class="match-card" data-match-id="${match.id}" style="opacity: 0.6;">
@@ -160,6 +163,30 @@ class BettingSystem {
                     </div>
                     <div style="background: #fed7d7; color: #742a2a; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 600;">
                         🔒 Betting Closed - Match Started
+                    </div>
+                </div>
+            `;
+        }
+
+        if (hasTBD) {
+            return `
+                <div class="match-card" data-match-id="${match.id}" style="opacity: 0.7;">
+                    <div class="match-header">
+                        <span class="match-number">${match.match_number}</span>
+                        <span class="match-type">${isTeamMatch ? 'Team Match' : 'Singles'}</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team-row">
+                            <span class="team-name">🇺🇸 USA</span>
+                            <span class="team-players">${usaPlayerNames}</span>
+                        </div>
+                        <div class="team-row">
+                            <span class="team-name">🌍 International</span>
+                            <span class="team-players">${intlPlayerNames}</span>
+                        </div>
+                    </div>
+                    <div style="background: #fef3c7; color: #78350f; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 600;">
+                        ⏳ Players Not Yet Assigned - Check Back Later
                     </div>
                 </div>
             `;
