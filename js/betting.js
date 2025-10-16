@@ -24,6 +24,8 @@ class BettingSystem {
             this.loadPairings(),
             this.loadBettingCutoff()
         ]);
+        // Render pairings after all data is loaded
+        this.renderPairings();
         this.setupEventListeners();
         this.updateBetSlip();
     }
@@ -51,7 +53,7 @@ class BettingSystem {
         try {
             const data = await this.fetchJsonWithFailover('/pairings');
             this.pairings = data.pairings || [];
-            this.renderPairings();
+            // Don't render yet - wait for cutoff data to load
         } catch (error) {
             console.error('Error loading pairings:', error);
             this.showError('Failed to load pairings. Please refresh the page.');
