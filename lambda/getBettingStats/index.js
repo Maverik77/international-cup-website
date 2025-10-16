@@ -4,7 +4,7 @@ const { DynamoDBDocumentClient, ScanCommand } = require('@aws-sdk/lib-dynamodb')
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
-const BETSLIPS_TABLE = process.env.BETSLIPS_TABLE_NAME;
+const BETSLIPS_TABLE = process.env.BETSLIPS_TABLE;
 
 exports.handler = async (event) => {
     console.log('Get Betting Stats - Event:', JSON.stringify(event, null, 2));
