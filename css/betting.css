@@ -107,6 +107,13 @@
     }
 }
 
+/* Ensure all sections on betting page use same width */
+.betting-page .tournament-info .container,
+.betting-page .betting-main .container {
+    max-width: 1600px;
+    width: 100%;
+}
+
 /* Pairings Section */
 .pairings-section {
     background: rgba(255, 255, 255, 0.95);
