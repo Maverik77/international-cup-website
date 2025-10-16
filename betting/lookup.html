@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bet Slip Lookup - International Cup 2025</title>
+    <link rel="stylesheet" href="../css/betting.css">
+    <style>
+        .lookup-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+
+        .lookup-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .lookup-header h1 {
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+        }
+
+        .lookup-header p {
+            color: #4a5568;
+            margin: 0;
+        }
+
+        .lookup-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .lookup-btn {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .lookup-btn:hover {
+            background: #5a67d8;
+        }
+
+        .lookup-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .betslip-result {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .betslip-result.show {
+            display: block;
+        }
+
+        .betslip-header {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .betslip-header h2 {
+            color: #2d3748;
+            margin: 0 0 1rem 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+        }
+
+        .info-label {
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-unpaid {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .bets-section {
+            margin-top: 1.5rem;
+        }
+
+        .bets-section h3 {
+            color: #2d3748;
+            margin: 0 0 1rem 0;
+        }
+
+        .bet-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .bet-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .bet-match-info {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .bet-team-info {
+            color: #4a5568;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bet-selection {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin: 0.75rem 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .bet-selection strong {
+            color: #667eea;
+        }
+
+        .bet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .bet-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .bet-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .bet-status.open {
+            background: #e6fffa;
+            color: #234e52;
+            border: 2px solid #81e6d9;
+        }
+
+        .bet-status.won {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #48bb78;
+        }
+
+        .bet-status.lost {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #fc8181;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .stat-box {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+
+        .loading-spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .lookup-container {
+                padding: 1rem;
+            }
+
+            .lookup-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lookup-container">
+        <div class="lookup-header">
+            <h1>🎫 Bet Slip Lookup</h1>
+            <p>Enter your bet slip ID to view your bets and their status</p>
+        </div>
+
+        <div class="lookup-form">
+            <div class="form-group">
+                <label for="betslip-id">Bet Slip ID</label>
+                <input 
+                    type="text" 
+                    id="betslip-id" 
+                    placeholder="ICUP-1234567890-1234"
+                    autocomplete="off"
+                >
+            </div>
+            <button class="lookup-btn" onclick="lookupBetslip()">
+                Look Up Bet Slip
+            </button>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <div class="betslip-result" id="betslip-result">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+
+    <script src="../js/betting-lookup.js"></script>
+</body>
+</html>
+

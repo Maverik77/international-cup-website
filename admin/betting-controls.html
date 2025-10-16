@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting Controls - International Cup Admin</title>
+    <link rel="stylesheet" href="../css/pairings.css">
+    <style>
+        body {
+            background: #f7fafc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .admin-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .control-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-section h2 {
+            margin: 0 0 1.5rem 0;
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-open {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-closed {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .info-box {
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #0050b3;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .password-section {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .password-section input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>⚙️ Betting Controls</h1>
+            <p>Manage betting cutoffs and match reveals</p>
+        </div>
+
+        <!-- Password Section -->
+        <div id="password-section" class="password-section">
+            <h2>Admin Access</h2>
+            <p>Enter admin password</p>
+            <input type="password" id="admin-password" placeholder="Enter password">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="login()">Login</button>
+            <p id="password-error" style="color: red; margin-top: 10px;"></p>
+        </div>
+
+        <!-- Main Admin Interface -->
+        <div id="admin-interface" style="display: none;">
+            <!-- Betting Cutoffs -->
+            <div class="control-section">
+                <h2>🔒 Betting Cutoffs</h2>
+                <p>Close betting when matches start to prevent new bets</p>
+
+                <div style="margin: 1.5rem 0;">
+                    <h3>Day 1 Matches: <span id="day1-status" class="status-badge status-open">Loading...</span></h3>
+                    <div class="button-group">
+                        <button id="day1-close-btn" class="btn btn-danger" onclick="setBettingCutoff(1, true)">
+                            🔒 Close Day 1 Betting
+                        </button>
+                        <button id="day1-open-btn" class="btn btn-success" onclick="setBettingCutoff(1, false)">
+                            🔓 Open Day 1 Betting
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin: 1.5rem 0;">
+                    <h3>Day 2 Matches: <span id="day2-status" class="status-badge status-open">Loading...</span></h3>
+                    <div class="button-group">
+                        <button id="day2-close-btn" class="btn btn-danger" onclick="setBettingCutoff(2, true)">
+                            🔒 Close Day 2 Betting
+                        </button>
+                        <button id="day2-open-btn" class="btn btn-success" onclick="setBettingCutoff(2, false)">
+                            🔓 Open Day 2 Betting
+                        </button>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>ℹ️ Note:</strong> When betting is closed for a day, users will see a message that betting is no longer available for those matches.
+                </div>
+            </div>
+
+            <!-- Bulk Reveal -->
+            <div class="control-section">
+                <h2>🎭 Bulk Reveal Matches</h2>
+                <p>Instantly reveal all matches for a day (skips individual reveal process)</p>
+
+                <div style="margin: 1.5rem 0;">
+                    <h3>Day 1 Matches</h3>
+                    <button class="btn btn-primary" onclick="bulkReveal(1)">
+                        ✨ Reveal All Day 1 Matches
+                    </button>
+                </div>
+
+                <div style="margin: 1.5rem 0;">
+                    <h3>Day 2 Matches</h3>
+                    <button class="btn btn-primary" onclick="bulkReveal(2)">
+                        ✨ Reveal All Day 2 Matches
+                    </button>
+                </div>
+
+                <div class="info-box">
+                    <strong>ℹ️ Note:</strong> This will mark all matches for the selected day as revealed. This action cannot be undone.
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div id="success-message" class="success-message"></div>
+            <div id="error-message" class="error-message"></div>
+        </div>
+    </div>
+
+    <script src="../js/betting-controls-admin.js"></script>
+</body>
+</html>
+

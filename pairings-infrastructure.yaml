@@ -15,6 +15,13 @@ Parameters:
       - prod
       - staging
     Description: Environment name for resource naming (prod or staging)
+  SenderEmail:
+    Type: String
+    Default: noreply@lansdowne-international-cup.com
+    Description: Email address to send confirmation emails from (must be verified in SES)
+
+Conditions:
+  IsProduction: !Equals [!Ref Environment, 'prod']
 
 Resources:
   # Lambda Execution Role
@@ -49,6 +56,8 @@ Resources:
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-reveal-state-${Environment}'
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-websocket-connections-${Environment}'
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-players-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-betslips-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-betting-config-${Environment}'
         - PolicyName: APIGatewayManageConnections
           PolicyDocument:
             Version: '2012-10-17'
@@ -57,6 +66,23 @@ Resources:
                 Action:
                   - execute-api:ManageConnections
                 Resource: '*'
+        - PolicyName: SESAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+        - PolicyName: LambdaInvokeAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !Sub 'arn:aws:lambda:us-east-1:*:function:*'
 
   # DynamoDB Tables
   
@@ -109,6 +135,32 @@ Resources:
           AttributeType: S
       KeySchema:
         - AttributeName: connectionId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Betslips Table
+  BetslipsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-betslips-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: betslipId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: betslipId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Betting Config Table (for cutoff times, etc.)
+  BettingConfigTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-betting-config-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: configId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: configId
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
@@ -272,14 +324,177 @@ Resources:
             Path: /google-photos
             Method: GET
 
+  CreateBetslipFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/createBetslip/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          EMAIL_FUNCTION_NAME: !Ref SendBetslipConfirmationFunction
+      Events:
+        CreateBetslip:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips
+            Method: POST
+
+  SendBetslipConfirmationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/sendBetslipConfirmation/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          SENDER_EMAIL: !Ref SenderEmail
+          WEBSITE_URL: !Sub 
+            - 'https://${Domain}'
+            - Domain: !If 
+              - IsProduction
+              - 'lansdowne-international-cup.com'
+              - 'staging.lansdowne-international-cup.com'
+
+  GetBetslipsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getBetslips/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        GetBetslips:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips
+            Method: GET
+
+  UpdateBetslipFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/updateBetslip/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UpdateBetslip:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/{id}
+            Method: PUT
+
+  GetBetslipFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getBetslip/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+      Events:
+        GetBetslip:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/{id}
+            Method: GET
+
+  UpdateBetStatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/updateBetStatus/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UpdateBetStatus:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/{id}/bets/{betIndex}/status
+            Method: PUT
+
+  BulkRevealMatchesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/bulkRevealMatches/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          PAIRINGS_TABLE: !Sub 'icup-pairings-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        BulkReveal:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /pairings/bulk-reveal
+            Method: POST
+
+  SetBettingCutoffFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/setBettingCutoff/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETTING_CONFIG_TABLE: !Sub 'icup-betting-config-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        SetCutoff:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betting/cutoff
+            Method: POST
+        GetCutoff:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betting/cutoff
+            Method: GET
+
   # REST API
   PairingsApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
       Cors:
-        AllowMethods: "'GET,POST,OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Admin-Password'"
+        AllowMethods: "'GET,POST,PUT,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization,X-Admin-Password'"
         AllowOrigin: "'*'"
 
   # WebSocket API

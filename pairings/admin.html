@@ -73,6 +73,7 @@
                     <button class="btn btn-danger" onclick="resetAllPairings()">Reset All Pairings</button>
                     <button class="btn btn-success" onclick="saveAllPairings()">Save All Pairings</button>
                     <button class="btn btn-secondary" onclick="initializeEmptyPairings()">Initialize Empty Pairings</button>
+                    <button class="btn btn-secondary" onclick="generateRandomPairings()">Generate Random Pairings</button>
                 </div>
                 
                 <div class="status-display">
@@ -98,8 +99,8 @@
     <script>
         // Configuration
         const CONFIG = {
-            REST_API_URL: 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod',
-            WEBSOCKET_URL: 'wss://kgzjvhxu6l.execute-api.us-east-1.amazonaws.com/prod'
+            REST_API_URL: 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod',
+            WEBSOCKET_URL: 'wss://zmxr9vpgg4.execute-api.us-east-1.amazonaws.com/prod'
         };
         
         let adminPassword = '';
@@ -440,6 +441,56 @@
             }
             
             renderEditors();
+        }
+
+        // Generate random pairings from current roster
+        function generateRandomPairings() {
+            if (!Array.isArray(players) || players.length < 36) {
+                alert('Please load/save the roster first. Not enough players.');
+                return;
+            }
+
+            const usa = players.filter(p => p.team === 'USA');
+            const intl = players.filter(p => p.team === 'International');
+
+            if (usa.length < 24 || intl.length < 24) {
+                alert('Need 24 USA and 24 International players in the roster.');
+                return;
+            }
+
+            const shuffle = (arr) => arr.map(x => x).sort(() => Math.random() - 0.5);
+            const usaShuffled = shuffle(usa);
+            const intlShuffled = shuffle(intl);
+
+            // Build Day 1: 12 team matches (pairs of two)
+            for (let i = 0; i < 12; i++) {
+                const pairing = pairings.find(p => p.day === 1 && p.match_number === i + 1);
+                const u1 = usaShuffled[i * 2]?.id || '';
+                const u2 = usaShuffled[i * 2 + 1]?.id || '';
+                const n1 = intlShuffled[i * 2]?.id || '';
+                const n2 = intlShuffled[i * 2 + 1]?.id || '';
+                if (pairing) {
+                    pairing.usa_team.player1_id = u1;
+                    pairing.usa_team.player2_id = u2;
+                    pairing.intl_team.player1_id = n1;
+                    pairing.intl_team.player2_id = n2;
+                }
+            }
+
+            // Build Day 2: 24 singles matches (one-by-one)
+            for (let i = 0; i < 24; i++) {
+                const pairing = pairings.find(p => p.day === 2 && p.match_number === i + 1);
+                const u = usaShuffled[i]?.id || '';
+                const n = intlShuffled[i]?.id || '';
+                if (pairing) {
+                    pairing.usa_player_id = u;
+                    pairing.intl_player_id = n;
+                }
+            }
+
+            renderEditors();
+            saveAllPairings();
+            alert('Random pairings generated and saved.');
         }
         
         // Render pairing editors

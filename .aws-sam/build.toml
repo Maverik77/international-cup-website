@@ -18,15 +18,6 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["UpdatePairingsFunction"]
 
-[function_build_definitions.7dd1ccc1-b251-4d3a-8b13-0e012110c3e3]
-codeuri = "/Users/erikwagner/coding/international_cup_website/lambda/revealNext"
-runtime = "nodejs18.x"
-architecture = "x86_64"
-handler = "index.handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["RevealNextFunction"]
-
 [function_build_definitions.4b3d859a-1f6b-414e-bcd7-bab0746add28]
 codeuri = "/Users/erikwagner/coding/international_cup_website/lambda/websocketConnect"
 runtime = "nodejs18.x"
@@ -44,5 +35,41 @@ handler = "index.handler"
 manifest_hash = ""
 packagetype = "Zip"
 functions = ["WebSocketDisconnectFunction"]
+
+[function_build_definitions.ae19d20e-7093-4bfe-8fe1-5aaccd425919]
+codeuri = "/Users/erikwagner/coding/international_cup_website/lambda/getPlayers"
+runtime = "nodejs18.x"
+architecture = "x86_64"
+handler = "index.handler"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GetPlayersFunction"]
+
+[function_build_definitions.70ce3848-6da0-4846-b385-0c2df2d8ce6a]
+codeuri = "/Users/erikwagner/coding/international_cup_website/lambda/updatePlayers"
+runtime = "nodejs18.x"
+architecture = "x86_64"
+handler = "index.handler"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["UpdatePlayersFunction"]
+
+[function_build_definitions.a111d572-885f-4209-8720-846c7a00f4c4]
+codeuri = "/Users/erikwagner/coding/international_cup_website/lambda/revealPairing"
+runtime = "nodejs18.x"
+architecture = "x86_64"
+handler = "index.handler"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["RevealPairingFunction"]
+
+[function_build_definitions.5cc3870b-3fa5-4283-bc43-317f5b18f327]
+codeuri = "/Users/erikwagner/coding/international_cup_website/lambda/googlePhotosProxy"
+runtime = "nodejs18.x"
+architecture = "x86_64"
+handler = "index.handler"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GooglePhotosProxyFunction"]
 
 [layer_build_definitions]
