@@ -376,7 +376,7 @@ class BettingSystem {
 
         venmoLink.href = result.paymentUrls.venmo;
         paypalLink.href = result.paymentUrls.paypal;
-        viewBetslipLink.href = `lookup.html?id=${result.betslipId}`;
+        viewBetslipLink.href = `betting/lookup.html?id=${result.betslipId}`;
 
         modal.style.display = 'flex';
     }
