@@ -58,6 +58,9 @@ Resources:
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-players-${Environment}'
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-betslips-${Environment}'
                   - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-betting-config-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-match-results-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-tournament-results-${Environment}'
+                  - !Sub 'arn:aws:dynamodb:us-east-1:*:table/icup-tournament-results-${Environment}/index/*'
         - PolicyName: APIGatewayManageConnections
           PolicyDocument:
             Version: '2012-10-17'
@@ -162,6 +165,59 @@ Resources:
       KeySchema:
         - AttributeName: configId
           KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Match Results Table (for storing match winners)
+  MatchResultsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-match-results-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: matchId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: matchId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Tournament Results Table (for storing full tournament results with hole-by-hole data)
+  TournamentResultsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'icup-tournament-results-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: yearMatchId
+          AttributeType: S
+        - AttributeName: dataType
+          AttributeType: S
+        - AttributeName: year
+          AttributeType: N
+        - AttributeName: dayMatchNumber
+          AttributeType: S
+        - AttributeName: playerName
+          AttributeType: S
+      KeySchema:
+        - AttributeName: yearMatchId
+          KeyType: HASH
+        - AttributeName: dataType
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: year-day-index
+          KeySchema:
+            - AttributeName: year
+              KeyType: HASH
+            - AttributeName: dayMatchNumber
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: player-index
+          KeySchema:
+            - AttributeName: playerName
+              KeyType: HASH
+            - AttributeName: yearMatchId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
       BillingMode: PAY_PER_REQUEST
 
   # Lambda Functions
@@ -421,6 +477,26 @@ Resources:
             Path: /betslips/{id}
             Method: GET
 
+  DeleteBetslipFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/deleteBetslip/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        DeleteBetslip:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/{id}
+            Method: DELETE
+
   GetBettingStatsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -459,6 +535,167 @@ Resources:
             RestApiId: !Ref PairingsApi
             Path: /betslips/{id}/bets/{betIndex}/status
             Method: PUT
+
+  GetMatchResultsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getMatchResults/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          MATCH_RESULTS_TABLE: !Sub 'icup-match-results-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        GetResults:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /match-results
+            Method: GET
+
+  UpdateMatchResultsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/updateMatchResults/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          MATCH_RESULTS_TABLE: !Sub 'icup-match-results-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UpdateResults:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /match-results
+            Method: PUT
+
+  CalculatePayoutsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/calculatePayouts/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          MATCH_RESULTS_TABLE: !Sub 'icup-match-results-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        Calculate:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betting/payouts
+            Method: GET
+
+  SendBetslipResultsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/sendBetslipResults/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          MATCH_RESULTS_TABLE: !Sub 'icup-match-results-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+          FROM_EMAIL: !Ref SenderEmail
+      Events:
+        SendResults:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/send-results
+            Method: POST
+
+  UpdateBetslipPaymentInfoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/updateBetslipPaymentInfo/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          BETSLIPS_TABLE: !Sub 'icup-betslips-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UpdatePaymentInfo:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /betslips/{id}/payment-info
+            Method: PUT
+
+  GetTournamentResultsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getTournamentResults/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          TOURNAMENT_RESULTS_TABLE: !Sub 'icup-tournament-results-${Environment}'
+      Events:
+        GetResults:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /tournament-results
+            Method: GET
+
+  UploadTournamentResultsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/uploadTournamentResults/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          TOURNAMENT_RESULTS_TABLE: !Sub 'icup-tournament-results-${Environment}'
+          ADMIN_PASSWORD: !Ref AdminPassword
+      Events:
+        UploadResults:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /tournament-results
+            Method: POST
+
+  GetTournamentReportsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/getTournamentReports/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Role: !GetAtt PairingsLambdaRole.Arn
+      Timeout: 20
+      Environment:
+        Variables:
+          TOURNAMENT_RESULTS_TABLE: !Sub 'icup-tournament-results-${Environment}'
+      Events:
+        GetReports:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PairingsApi
+            Path: /tournament-results/reports
+            Method: GET
 
   BulkRevealMatchesFunction:
     Type: AWS::Serverless::Function
@@ -512,7 +749,7 @@ Resources:
     Properties:
       StageName: prod
       Cors:
-        AllowMethods: "'GET,POST,PUT,OPTIONS'"
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
         AllowHeaders: "'Content-Type,Authorization,X-Admin-Password'"
         AllowOrigin: "'*'"
 

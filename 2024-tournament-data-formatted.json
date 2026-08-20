@@ -1,0 +1,4781 @@
+{
+  "year": 2024,
+  "matches": [
+    {
+      "matchNumber": 1,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Crouse, Christopher"
+      ],
+      "internationalPlayers": [
+        "Davuluri, Vijay"
+      ],
+      "winner": "Tie",
+      "finalScore": "All Square",
+      "usaTotalGross": 79,
+      "internationalTotalGross": 90,
+      "usaTotalNet": 79,
+      "internationalTotalNet": 79,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 2,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 2,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 2,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Walsh, Thomas"
+      ],
+      "internationalPlayers": [
+        "Pearce, Tim"
+      ],
+      "winner": "USA",
+      "finalScore": "5 Up",
+      "usaTotalGross": 69,
+      "internationalTotalGross": 76,
+      "usaTotalNet": 69,
+      "internationalTotalNet": 75,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 2,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": null,
+          "usaNet": null,
+          "internationalStrokes": null,
+          "internationalNet": null,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": null,
+          "usaNet": null,
+          "internationalStrokes": null,
+          "internationalNet": null,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 3,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Taliaferro, Will"
+      ],
+      "internationalPlayers": [
+        "Jewell, Phillip"
+      ],
+      "winner": "International",
+      "finalScore": "2 Up",
+      "usaTotalGross": 92,
+      "internationalTotalGross": 73,
+      "usaTotalNet": 80,
+      "internationalTotalNet": 73,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 6,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 2,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 6,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 4,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Rizzo, Anthony"
+      ],
+      "internationalPlayers": [
+        "Kumar, Anuj"
+      ],
+      "winner": "International",
+      "finalScore": "3 Up",
+      "usaTotalGross": 86,
+      "internationalTotalGross": 81,
+      "usaTotalNet": 85,
+      "internationalTotalNet": 81,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 2,
+          "internationalNet": 2,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 5,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Galkin, Jeff"
+      ],
+      "internationalPlayers": [
+        "Perumbala, Bala"
+      ],
+      "winner": "International",
+      "finalScore": "2 Up",
+      "usaTotalGross": 84,
+      "internationalTotalGross": 84,
+      "usaTotalNet": 84,
+      "internationalTotalNet": 83,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 6,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Altman, John"
+      ],
+      "internationalPlayers": [
+        "Woodisse, Philip"
+      ],
+      "winner": "International",
+      "finalScore": "4 Up",
+      "usaTotalGross": 84,
+      "internationalTotalGross": 78,
+      "usaTotalNet": 84,
+      "internationalTotalNet": 76,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 2,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 7,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Covino, Scott"
+      ],
+      "internationalPlayers": [
+        "Wagner, Erik"
+      ],
+      "winner": "Tie",
+      "finalScore": "All Square",
+      "usaTotalGross": 81,
+      "internationalTotalGross": 87,
+      "usaTotalNet": 81,
+      "internationalTotalNet": 81,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 8,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "O'Braitis, Robert"
+      ],
+      "internationalPlayers": [
+        "Lambert, Stefan"
+      ],
+      "winner": "International",
+      "finalScore": "4 Up",
+      "usaTotalGross": 88,
+      "internationalTotalGross": 82,
+      "usaTotalNet": 88,
+      "internationalTotalNet": 80,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 9,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Murphy, Thomas"
+      ],
+      "internationalPlayers": [
+        "Bae, Jun"
+      ],
+      "winner": "International",
+      "finalScore": "5 Up",
+      "usaTotalGross": 92,
+      "internationalTotalGross": 80,
+      "usaTotalNet": 89,
+      "internationalTotalNet": 80,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 2,
+          "usaNet": 2,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 10,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Chiari, Derek"
+      ],
+      "internationalPlayers": [
+        "Venkataramani, Sundu"
+      ],
+      "winner": "International",
+      "finalScore": "8 Up",
+      "usaTotalGross": 81,
+      "internationalTotalGross": 68,
+      "usaTotalNet": 77,
+      "internationalTotalNet": 68,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": null,
+          "usaNet": null,
+          "internationalStrokes": null,
+          "internationalNet": null,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": null,
+          "usaNet": null,
+          "internationalStrokes": null,
+          "internationalNet": null,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 11,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "McNamee, Michael"
+      ],
+      "internationalPlayers": [
+        "Yedulla, Surender"
+      ],
+      "winner": "International",
+      "finalScore": "3 Up",
+      "usaTotalGross": 76,
+      "internationalTotalGross": 86,
+      "usaTotalNet": 76,
+      "internationalTotalNet": 74,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 2,
+          "usaNet": 2,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 2,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 12,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Hoff, Philip"
+      ],
+      "internationalPlayers": [
+        "Muthusamy, Sridhar"
+      ],
+      "winner": "International",
+      "finalScore": "10 Up",
+      "usaTotalGross": 91,
+      "internationalTotalGross": 85,
+      "usaTotalNet": 91,
+      "internationalTotalNet": 78,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 2,
+          "internationalNet": 2,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 13,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Dunn, Tom"
+      ],
+      "internationalPlayers": [
+        "Kim, Michael"
+      ],
+      "winner": "International",
+      "finalScore": "6 Up",
+      "usaTotalGross": 98,
+      "internationalTotalGross": 88,
+      "usaTotalNet": 96,
+      "internationalTotalNet": 88,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 14,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Sutch, Brett"
+      ],
+      "internationalPlayers": [
+        "Neilson, Robert"
+      ],
+      "winner": "USA",
+      "finalScore": "7 Up",
+      "usaTotalGross": 88,
+      "internationalTotalGross": 85,
+      "usaTotalNet": 77,
+      "internationalTotalNet": 85,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 6,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 8,
+          "internationalNet": 8,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 6,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 15,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Kozlowski, Kevin"
+      ],
+      "internationalPlayers": [
+        "Lin, Terry"
+      ],
+      "winner": "International",
+      "finalScore": "3 Up",
+      "usaTotalGross": 98,
+      "internationalTotalGross": 94,
+      "usaTotalNet": 95,
+      "internationalTotalNet": 94,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 8,
+          "internationalNet": 8,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 8,
+          "internationalNet": 8,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 6,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 7,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 16,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Gillie, Jim"
+      ],
+      "internationalPlayers": [
+        "Wickham, Daren"
+      ],
+      "winner": "USA",
+      "finalScore": "3 Up",
+      "usaTotalGross": 79,
+      "internationalTotalGross": 95,
+      "usaTotalNet": 79,
+      "internationalTotalNet": 82,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 8,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 2,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 2,
+          "usaNet": 2,
+          "internationalStrokes": 3,
+          "internationalNet": 2,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 17,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Haufler, Kurt"
+      ],
+      "internationalPlayers": [
+        "Hedges, Ben"
+      ],
+      "winner": "USA",
+      "finalScore": "1 Up",
+      "usaTotalGross": 91,
+      "internationalTotalGross": 100,
+      "usaTotalNet": 91,
+      "internationalTotalNet": 91,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 18,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Gallo, Bob"
+      ],
+      "internationalPlayers": [
+        "Silpacharn, Jack"
+      ],
+      "winner": "International",
+      "finalScore": "3 Up",
+      "usaTotalGross": 84,
+      "internationalTotalGross": 81,
+      "usaTotalNet": 84,
+      "internationalTotalNet": 79,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 19,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Purpura, Scott"
+      ],
+      "internationalPlayers": [
+        "Ansari, Soban"
+      ],
+      "winner": "USA",
+      "finalScore": "3 Up",
+      "usaTotalGross": 77,
+      "internationalTotalGross": 88,
+      "usaTotalNet": 77,
+      "internationalTotalNet": 79,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 2,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 2,
+          "internationalNet": 1,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 20,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Kritsberg, Jeff"
+      ],
+      "internationalPlayers": [
+        "Hazzard, Troy"
+      ],
+      "winner": "USA",
+      "finalScore": "1 Up",
+      "usaTotalGross": 77,
+      "internationalTotalGross": 79,
+      "usaTotalNet": 76,
+      "internationalTotalNet": 79,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 4,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 21,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Freedman, Mitch"
+      ],
+      "internationalPlayers": [
+        "Siu, James"
+      ],
+      "winner": "USA",
+      "finalScore": "2 Up",
+      "usaTotalGross": 77,
+      "internationalTotalGross": 89,
+      "usaTotalNet": 77,
+      "internationalTotalNet": 85,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 8,
+          "internationalNet": 8,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 8,
+          "internationalNet": 8,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 22,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Barnes, Keith"
+      ],
+      "internationalPlayers": [
+        "Bae, Jaejin"
+      ],
+      "winner": "USA",
+      "finalScore": "2 Up",
+      "usaTotalGross": 82,
+      "internationalTotalGross": 89,
+      "usaTotalNet": 82,
+      "internationalTotalNet": 88,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    },
+    {
+      "matchNumber": 23,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Esposito, Victor"
+      ],
+      "internationalPlayers": [
+        "Olivero, Philip"
+      ],
+      "winner": "USA",
+      "finalScore": "1 Up",
+      "usaTotalGross": 85,
+      "internationalTotalGross": 89,
+      "usaTotalNet": 85,
+      "internationalTotalNet": 86,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 7,
+          "usaNet": 7,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": true
+        }
+      ]
+    },
+    {
+      "matchNumber": 24,
+      "day": 2,
+      "format": "Singles Match Play",
+      "usaPlayers": [
+        "Herman, Victor"
+      ],
+      "internationalPlayers": [
+        "Bharwani, Uttam"
+      ],
+      "winner": "USA",
+      "finalScore": "4 Up",
+      "usaTotalGross": 84,
+      "internationalTotalGross": 89,
+      "usaTotalNet": 83,
+      "internationalTotalNet": 89,
+      "holes": [
+        {
+          "holeNumber": 1,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 2,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 3,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 4,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 5,
+          "usaStrokes": 6,
+          "usaNet": 6,
+          "internationalStrokes": 8,
+          "internationalNet": 8,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 6,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 7,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 8,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 9,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 10,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 11,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 12,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 13,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 3,
+          "internationalNet": 3,
+          "result": "international",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 14,
+          "usaStrokes": 5,
+          "usaNet": 4,
+          "internationalStrokes": 7,
+          "internationalNet": 7,
+          "result": "usa",
+          "usaStrokeReceived": true,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 15,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "tie",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 16,
+          "usaStrokes": 5,
+          "usaNet": 5,
+          "internationalStrokes": 6,
+          "internationalNet": 6,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 17,
+          "usaStrokes": 3,
+          "usaNet": 3,
+          "internationalStrokes": 4,
+          "internationalNet": 4,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        },
+        {
+          "holeNumber": 18,
+          "usaStrokes": 4,
+          "usaNet": 4,
+          "internationalStrokes": 5,
+          "internationalNet": 5,
+          "result": "usa",
+          "usaStrokeReceived": false,
+          "internationalStrokeReceived": false
+        }
+      ]
+    }
+  ]
+}

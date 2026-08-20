@@ -2,6 +2,14 @@
 
 # International Cup Pairings Backend Deployment Script
 # This script deploys the Lambda functions and API Gateway using AWS SAM
+#
+# Usage:
+#   ./deploy-pairings-backend.sh [environment] [admin-password]
+#   
+# Examples:
+#   ./deploy-pairings-backend.sh staging           # Deploy to staging with default password
+#   ./deploy-pairings-backend.sh prod mypass123    # Deploy to prod with custom password
+#   ./deploy-pairings-backend.sh                   # Deploy to staging with default password
 
 set -e
 
@@ -18,10 +26,20 @@ echo ""
 
 # Configuration
 AWS_PROFILE="icup_website_user"
-STACK_NAME="icup-pairings-system"
-ADMIN_PASSWORD="${1:-icup2024}"
+ENVIRONMENT="${1:-staging}"
+ADMIN_PASSWORD="${2:-icup2024}"
+
+# Validate environment
+if [ "$ENVIRONMENT" != "staging" ] && [ "$ENVIRONMENT" != "prod" ]; then
+    echo -e "${RED}❌ Error: Environment must be 'staging' or 'prod'${NC}"
+    echo -e "${YELLOW}Usage: ./deploy-pairings-backend.sh [environment] [admin-password]${NC}"
+    exit 1
+fi
+
+STACK_NAME="icup-pairings-${ENVIRONMENT}"
 
 echo -e "${YELLOW}Configuration:${NC}"
+echo "  Environment: $ENVIRONMENT"
 echo "  AWS Profile: $AWS_PROFILE"
 echo "  Stack Name: $STACK_NAME"
 echo "  Admin Password: ********"
@@ -59,7 +77,7 @@ sam deploy \
     --template-file .aws-sam/build/template.yaml \
     --profile "$AWS_PROFILE" \
     --stack-name "$STACK_NAME" \
-    --parameter-overrides AdminPassword="$ADMIN_PASSWORD" \
+    --parameter-overrides AdminPassword="$ADMIN_PASSWORD" Environment="$ENVIRONMENT" \
     --capabilities CAPABILITY_IAM \
     --resolve-s3 \
     --no-confirm-changeset \
