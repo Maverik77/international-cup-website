@@ -1,0 +1,116 @@
+{
+  "event_name": "2025 International Cup",
+  "round": 1,
+  "date": "2025-10-17",
+  "course": "Norman",
+  "tee_sheet": [
+    {
+      "time": "10:00 AM",
+      "players": [
+        "Bae, Jun",
+        "Bae, Yun-Sang",
+        "Gallo, Robert",
+        "Edelheit, Mike"
+      ]
+    },
+    {
+      "time": "10:10 AM",
+      "players": [
+        "Ansari, Soban",
+        "Siu, James",
+        "Lenihan, Kyle",
+        "Kritsberg, Jeff"
+      ]
+    },
+    {
+      "time": "10:20 AM",
+      "players": [
+        "Park, Joung Kook",
+        "Kim, Jongtaek",
+        "McNamee, Michael",
+        "Collins, Jay"
+      ]
+    },
+    {
+      "time": "10:30 AM",
+      "players": [
+        "Hazzard, Troy",
+        "Olivero, Philip",
+        "Galkin, Jeffrey",
+        "Esposito, Victor"
+      ]
+    },
+    {
+      "time": "10:40 AM",
+      "players": [
+        "Pearce, Timothy",
+        "Neilson, Robert",
+        "Covino, Scott",
+        "Altman, John"
+      ]
+    },
+    {
+      "time": "10:50 AM",
+      "players": [
+        "Woodisse, Philip",
+        "Hedges, Benjamin",
+        "Rizzo, Anthony",
+        "Kerrigan, James"
+      ]
+    },
+    {
+      "time": "11:00 AM",
+      "players": [
+        "Davuluri, Vijay",
+        "Lambert, Stefan",
+        "Murphy, Thomas",
+        "Corkhill, Norman"
+      ]
+    },
+    {
+      "time": "11:10 AM",
+      "players": [
+        "Malyala, Muralidhar",
+        "Kudum, Dinakar",
+        "Freedman, Mitch",
+        "Mitesser, Peter"
+      ]
+    },
+    {
+      "time": "11:20 AM",
+      "players": [
+        "Wickham, Daren",
+        "Silpacharn, Jack",
+        "Barnes, Keith",
+        "Kohlasch, David"
+      ]
+    },
+    {
+      "time": "11:30 AM",
+      "players": [
+        "Jewell, Phillip",
+        "Wagner, Erik",
+        "Crouse, Chris",
+        "Vosburgh, Jay"
+      ]
+    },
+    {
+      "time": "11:40 AM",
+      "players": [
+        "Katarki, Anil",
+        "Saribala, Suresh",
+        "Kozlowski, Kevin",
+        "Ziegler, Mike"
+      ]
+    },
+    {
+      "time": "11:50 AM",
+      "players": [
+        "Bharwani, Uttam",
+        "Gully, Rhys",
+        "Parda, Greg",
+        "Sutch, Brett"
+      ]
+    }
+  ]
+}

@@ -350,7 +350,18 @@
                     <div class="schedule-content">
                         <h3>Day 1: Team Matches</h3>
                         <p>Three team matches featuring Best Ball, Alternate Shot, and Shamble formats, followed by the Day 1 After Party</p>
-                        <span class="schedule-time">Tee times starting at 10:00 AM</span>
+                        <span class="schedule-time">⛳ Norman Course • Tee times: 10:00 AM - 11:50 AM</span>
+                        <button class="btn btn-secondary" onclick="toggleTeeTimes()" style="margin-top: 1rem;">View Tee Times</button>
+                        
+                        <!-- Tee Times Section -->
+                        <div id="tee-times-section" class="tee-times-container" style="display: none;">
+                            <div class="tee-times-header">
+                                <h4>🏌️ Day 1 Tee Sheet - Norman Course</h4>
+                            </div>
+                            <div class="tee-times-grid" id="tee-times-grid">
+                                <!-- Tee times will be loaded here -->
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="schedule-item">
@@ -361,7 +372,21 @@
                     <div class="schedule-content">
                         <h3>Day 2: Singles Matches</h3>
                         <p>Twenty-four individual matchplay battles to determine the International Cup champion, capped off with the championship celebration</p>
-                        <span class="schedule-time">Tee times starting at 10:00 AM</span>
+                        <span class="schedule-time">⛳ Norman Course • Tee times: 10:00 AM - 1:50 PM</span>
+                        <button class="btn btn-secondary" onclick="toggleDay2TeeTimes()" style="margin-top: 1rem;">View Tee Times</button>
+                        
+                        <!-- Day 2 Tee Times Section -->
+                        <div id="day2-tee-times-section" class="tee-times-container" style="display: none;">
+                            <div class="tee-times-header">
+                                <h4>🏌️ Day 2 Tee Sheet - Singles Matches</h4>
+                                <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Norman Course • 24 Singles Matchplay Battles</p>
+                            </div>
+                            <div class="tee-times-grid" id="day2-tee-times-grid">
+                                <div style="text-align: center; padding: 2rem; color: #999;">
+                                    <p>Loading tee times from pairings database...</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -663,6 +688,78 @@
                 font-size: 1.4rem;
             }
         }
+        
+        /* Tee Times Styles */
+        .tee-times-container {
+            margin-top: 2rem;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .tee-times-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #e5e5e5;
+        }
+        
+        .tee-times-header h4 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        .tee-times-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .tee-time-group {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #007bff;
+            transition: all 0.2s;
+        }
+        
+        .tee-time-group:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .tee-time {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tee-players {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .tee-player {
+            padding: 0.5rem;
+            background: white;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .tee-players {
+                grid-template-columns: 1fr;
+            }
+            
+            .tee-times-container {
+                padding: 1rem;
+            }
+        }
     </style>
     <script>
         // Roster Toggle Function
@@ -685,6 +782,189 @@
             } else {
                 // Hide this roster
                 rosterEl.style.display = 'none';
+            }
+        }
+        
+        // Tee Times Toggle Function
+        function toggleTeeTimes() {
+            const teeTimesSection = document.getElementById('tee-times-section');
+            
+            if (teeTimesSection.style.display === 'none' || teeTimesSection.style.display === '') {
+                // Load tee times if not already loaded
+                if (!teeTimesSection.dataset.loaded) {
+                    loadTeeTimes();
+                    teeTimesSection.dataset.loaded = 'true';
+                }
+                
+                // Show tee times
+                teeTimesSection.style.display = 'block';
+                
+                // Smooth scroll to tee times
+                setTimeout(() => {
+                    teeTimesSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                // Hide tee times
+                teeTimesSection.style.display = 'none';
+            }
+        }
+        
+        // Load Tee Times from JSON
+        async function loadTeeTimes() {
+            try {
+                const response = await fetch('2025_ic_day1_tee_times.json');
+                const data = await response.json();
+                
+                const teeTimesGrid = document.getElementById('tee-times-grid');
+                teeTimesGrid.innerHTML = data.tee_sheet.map((group, index) => `
+                    <div class="tee-time-group">
+                        <div class="tee-time">⏰ ${group.time}</div>
+                        <div class="tee-players">
+                            ${group.players.map(player => `
+                                <div class="tee-player">🏌️ ${player}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading tee times:', error);
+                document.getElementById('tee-times-grid').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #999;">
+                        <p>Unable to load tee times. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Day 2 Tee Times Toggle Function
+        function toggleDay2TeeTimes() {
+            const teeTimesSection = document.getElementById('day2-tee-times-section');
+            
+            if (teeTimesSection.style.display === 'none' || teeTimesSection.style.display === '') {
+                // Load tee times if not already loaded
+                if (!teeTimesSection.dataset.loaded) {
+                    loadDay2TeeTimes();
+                    teeTimesSection.dataset.loaded = 'true';
+                }
+                
+                // Show tee times
+                teeTimesSection.style.display = 'block';
+                
+                // Smooth scroll to tee times
+                setTimeout(() => {
+                    teeTimesSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                // Hide tee times
+                teeTimesSection.style.display = 'none';
+            }
+        }
+        
+        // Load Day 2 Tee Times from Pairings API
+        async function loadDay2TeeTimes() {
+            try {
+                // Determine API endpoint based on environment
+                const isStaging = window.location.hostname.includes('staging');
+                const baseUrl = isStaging 
+                    ? 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod'
+                    : 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod';
+                
+                // Fetch both pairings and players
+                const [pairingsResponse, playersResponse] = await Promise.all([
+                    fetch(`${baseUrl}/pairings`),
+                    fetch(`${baseUrl}/players`)
+                ]);
+                
+                const pairingsData = await pairingsResponse.json();
+                const playersData = await playersResponse.json();
+                
+                // Create player lookup map
+                const playerMap = {};
+                (playersData.players || []).forEach(player => {
+                    // Construct full name from firstName and lastName
+                    const fullName = `${player.lastName}, ${player.firstName}`;
+                    playerMap[player.id] = fullName;
+                });
+                
+                // Filter Day 2 singles matches and sort by match number
+                const day2Matches = pairingsData.pairings
+                    .filter(p => p.day === 2 && p.type === 'singles')
+                    .sort((a, b) => a.match_number - b.match_number);
+                
+                // Group matches into tee times (2 matches = 4 players per group)
+                const teeTimeGroups = [];
+                const startHour = 10;
+                const startMinute = 0;
+                const intervalMinutes = 10;
+                
+                for (let i = 0; i < day2Matches.length; i += 2) {
+                    const match1 = day2Matches[i];
+                    const match2 = day2Matches[i + 1];
+                    
+                    // Calculate tee time
+                    const groupIndex = Math.floor(i / 2);
+                    const totalMinutes = startMinute + (groupIndex * intervalMinutes);
+                    const hour = startHour + Math.floor(totalMinutes / 60);
+                    const minute = totalMinutes % 60;
+                    const time = `${hour % 12 || 12}:${minute.toString().padStart(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}`;
+                    
+                    // Get player names from IDs
+                    const players = [];
+                    if (match1) {
+                        players.push({
+                            name: playerMap[match1.usa_player_id] || 'TBD',
+                            match: match1.match_number,
+                            team: 'USA'
+                        });
+                        players.push({
+                            name: playerMap[match1.intl_player_id] || 'TBD',
+                            match: match1.match_number,
+                            team: 'International'
+                        });
+                    }
+                    if (match2) {
+                        players.push({
+                            name: playerMap[match2.usa_player_id] || 'TBD',
+                            match: match2.match_number,
+                            team: 'USA'
+                        });
+                        players.push({
+                            name: playerMap[match2.intl_player_id] || 'TBD',
+                            match: match2.match_number,
+                            team: 'International'
+                        });
+                    }
+                    
+                    teeTimeGroups.push({
+                        time,
+                        matches: [match1?.match_number, match2?.match_number].filter(Boolean),
+                        players
+                    });
+                }
+                
+                // Render tee times
+                const teeTimesGrid = document.getElementById('day2-tee-times-grid');
+                teeTimesGrid.innerHTML = teeTimeGroups.map(group => `
+                    <div class="tee-time-group">
+                        <div class="tee-time">⏰ ${group.time} <span style="font-size: 0.85rem; color: #666; font-weight: 400;">• Matches ${group.matches.join(' & ')}</span></div>
+                        <div class="tee-players">
+                            ${group.players.map(player => `
+                                <div class="tee-player" style="border-left: 3px solid ${player.team === 'USA' ? '#c8102e' : '#007bff'};">
+                                    <span style="font-weight: 600;">${player.team === 'USA' ? '🇺🇸' : '🌍'} ${player.name}</span>
+                                    <span style="font-size: 0.8rem; color: #666;"> (Match ${player.match})</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading Day 2 tee times:', error);
+                document.getElementById('day2-tee-times-grid').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #999;">
+                        <p>Unable to load tee times. Pairings may not be set yet.</p>
+                        <p style="font-size: 0.9rem;">Check the pairings admin page to set Day 2 matches.</p>
+                    </div>
+                `;
             }
         }
         
