@@ -118,6 +118,11 @@ jobs:
           cp -r history build/
         fi
 
+        # Copy tournament folder if it exists
+        if [ -d tournament ]; then
+          cp -r tournament build/
+        fi
+
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
@@ -281,6 +286,11 @@ jobs:
         # Copy history folder if it exists
         if [ -d history ]; then
           cp -r history build/
+        fi
+
+        # Copy tournament folder if it exists
+        if [ -d tournament ]; then
+          cp -r tournament build/
         fi
 
         # Copy favicon if it exists
