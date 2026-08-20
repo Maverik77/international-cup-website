@@ -107,17 +107,22 @@ jobs:
         if [ -d pairings ]; then
           cp -r pairings build/
         fi
-        
+
         # Copy admin folder if it exists
         if [ -d admin ]; then
           cp -r admin build/
         fi
-        
+
+        # Copy history folder if it exists
+        if [ -d history ]; then
+          cp -r history build/
+        fi
+
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
         fi
-        
+
         # Create a simple robots.txt
         echo "User-agent: *" > build/robots.txt
         echo "Allow: /" >> build/robots.txt
@@ -267,17 +272,22 @@ jobs:
         if [ -d pairings ]; then
           cp -r pairings build/
         fi
-        
+
         # Copy admin folder if it exists
         if [ -d admin ]; then
           cp -r admin build/
         fi
-        
+
+        # Copy history folder if it exists
+        if [ -d history ]; then
+          cp -r history build/
+        fi
+
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
         fi
-        
+
         # Create a simple robots.txt (disallow indexing on staging)
         echo "User-agent: *" > build/robots.txt
         echo "Disallow: /" >> build/robots.txt

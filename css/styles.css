@@ -2700,4 +2700,28 @@ textarea:focus {
     .winner-flag {
         font-size: 1.2rem;
     }
-} 
+}
+
+.roster-placeholder {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #555;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.roster-placeholder h4 { font-size: 1.4rem; color: #333; margin: 0; }
+.roster-placeholder p { max-width: 32ch; margin: 0 auto; }
+
+.venue-placeholder {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #555;
+}
+.venue-placeholder h3 { color: #333; margin-bottom: 0.5rem; } 
