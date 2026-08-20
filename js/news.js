@@ -92,9 +92,29 @@ async function updateHomepageNews() {
             setTimeout(updateHomepageNews, 100);
             return;
         }
-        
+
         const articles = await window.newsManager.getNews();
-        
+
+        // Auto-hide the news section and its nav/footer links when there are no articles.
+        // When news is added back, everything reappears automatically.
+        if ((articles || []).length === 0) {
+            const newsSection = document.getElementById('news');
+            if (newsSection) newsSection.style.display = 'none';
+            document.querySelectorAll('a[href="#news"]').forEach((a) => {
+                if (a.parentElement) a.parentElement.style.display = 'none';
+                a.style.display = 'none';
+            });
+            return;
+        } else {
+            // Make sure the section is visible if it was previously hidden.
+            const newsSection = document.getElementById('news');
+            if (newsSection) newsSection.style.display = '';
+            document.querySelectorAll('a[href="#news"]').forEach((a) => {
+                if (a.parentElement && a.parentElement.tagName === 'LI') a.parentElement.style.display = '';
+                a.style.display = '';
+            });
+        }
+
         // Update the news section on index.html if it exists
         const homeNewsGrid = document.querySelector('#homepage-news-grid');
         if (homeNewsGrid && articles.length > 0) {
