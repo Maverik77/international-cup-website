@@ -1,0 +1,33 @@
+{
+  "year": 2025,
+  "dates": "October 16-18, 2025",
+  "annualLabel": "5th Annual",
+  "venue": {
+    "name": "Shutters on King",
+    "address": "102 S King Street, Leesburg, VA 20175",
+    "type": "Reception in Private Event Room"
+  },
+  "days": [
+    {
+      "date": "2025-10-16",
+      "label": "5th Annual International Cup Pairings Party",
+      "location": "Shutters on King",
+      "time": "6:30 PM - 9:30 PM",
+      "notes": "Reception with appetizers, fixed stations, desserts. Beer (Stella & Sam Adams Lager) & Wine by the Glass."
+    },
+    {
+      "date": "2025-10-17",
+      "label": "Day 1: Team Matches",
+      "course": "Norman Course",
+      "teeTimes": "10:00 AM - 11:50 AM",
+      "notes": "Three team matches featuring Best Ball, Alternate Shot, and Shamble formats, followed by the Day 1 After Party"
+    },
+    {
+      "date": "2025-10-18",
+      "label": "Day 2: Singles Matches",
+      "course": "Norman Course",
+      "teeTimes": "10:00 AM - 1:50 PM",
+      "notes": "Twenty-four individual matchplay battles to determine the International Cup champion, capped off with the championship celebration"
+    }
+  ]
+}
