@@ -8,7 +8,7 @@ const BETSLIPS_TABLE = process.env.BETSLIPS_TABLE || 'icup-betslips';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
 
 exports.handler = async (event) => {
-    console.log('UPDATE Betslip request:', JSON.stringify(event));
+    console.log('UPDATE Payment Info request:', JSON.stringify(event));
     
     const headers = {
         'Access-Control-Allow-Origin': '*',
@@ -17,13 +17,8 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json'
     };
 
-    // Handle CORS preflight
     if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers,
-            body: ''
-        };
+        return { statusCode: 200, headers, body: '' };
     }
 
     try {
@@ -52,39 +47,7 @@ exports.handler = async (event) => {
         }
 
         const body = JSON.parse(event.body);
-        const { isPaid, isPaidOut } = body;
-
-        // Validate that at least one field is being updated
-        if (isPaid === undefined && isPaidOut === undefined) {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ 
-                    error: 'Either isPaid or isPaidOut must be provided' 
-                })
-            };
-        }
-
-        // Validate field types if provided
-        if (isPaid !== undefined && typeof isPaid !== 'boolean') {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ 
-                    error: 'isPaid must be a boolean value' 
-                })
-            };
-        }
-
-        if (isPaidOut !== undefined && typeof isPaidOut !== 'boolean') {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ 
-                    error: 'isPaidOut must be a boolean value' 
-                })
-            };
-        }
+        const { venmoUsername, paypalUsername } = body;
 
         // Get existing betslip
         const getResult = await docClient.send(new GetCommand({
@@ -102,19 +65,13 @@ exports.handler = async (event) => {
             };
         }
 
-        // Update betslip with only the fields provided
+        // Update betslip with payment info
         const updatedBetslip = {
             ...getResult.Item,
-            updatedAt: Date.now()
+            venmoUsername: venmoUsername || '',
+            paypalUsername: paypalUsername || '',
+            paymentInfoUpdatedAt: Date.now()
         };
-
-        if (isPaid !== undefined) {
-            updatedBetslip.isPaid = isPaid;
-        }
-
-        if (isPaidOut !== undefined) {
-            updatedBetslip.isPaidOut = isPaidOut;
-        }
 
         await docClient.send(new PutCommand({
             TableName: BETSLIPS_TABLE,
@@ -126,21 +83,26 @@ exports.handler = async (event) => {
             headers,
             body: JSON.stringify({
                 betslipId,
-                isPaid: updatedBetslip.isPaid,
-                isPaidOut: updatedBetslip.isPaidOut,
-                message: 'Betslip updated successfully'
+                venmoUsername: updatedBetslip.venmoUsername,
+                paypalUsername: updatedBetslip.paypalUsername,
+                message: 'Payment info updated successfully'
             })
         };
 
     } catch (error) {
-        console.error('Error updating betslip:', error);
+        console.error('Error updating payment info:', error);
         return {
             statusCode: 500,
             headers,
             body: JSON.stringify({ 
-                error: 'Failed to update betslip',
+                error: 'Failed to update payment info',
                 message: error.message 
             })
         };
     }
 };
+
+
+
+
+

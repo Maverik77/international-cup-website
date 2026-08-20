@@ -99,6 +99,235 @@
             background: #5a67d8;
         }
         
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        
+        .delete-btn:hover {
+            background: #c53030;
+        }
+        
+        /* Tab Styles */
+        .admin-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        
+        .tab-btn:hover {
+            background: #f7fafc;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .tab-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Match Results Styles */
+        .match-result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .match-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .match-label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+        
+        .result-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .result-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .result-btn:hover {
+            background: #f7fafc;
+        }
+        
+        .result-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-save-results {
+            margin: 1rem;
+            padding: 0.75rem 2rem;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .btn-save-results:hover {
+            background: #38a169;
+        }
+        
+        /* Payout Styles */
+        .payout-summary-box {
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-bottom: 2px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .summary-stat {
+            padding: 1rem;
+            background: white;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .summary-stat.highlight {
+            background: #667eea;
+            color: white;
+        }
+        
+        .summary-stat label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .summary-stat value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .payout-amount {
+            font-weight: 700;
+            color: #48bb78;
+            font-size: 1.1rem;
+        }
+        
+        /* Email Status Styles */
+        .email-sent {
+            color: #48bb78;
+            font-weight: 600;
+        }
+        
+        .email-pending {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+        
+        .email-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        
+        .email-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .email-btn.resend {
+            background: #f59e0b;
+        }
+        
+        .email-btn.resend:hover {
+            background: #d97706;
+        }
+        
+        /* Bulk Actions Styles */
+        .bulk-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+        
+        .btn-bulk-email, .btn-bulk-email-all {
+            padding: 0.75rem 1.5rem;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        
+        .btn-bulk-email:hover:not(:disabled) {
+            background: #38a169;
+        }
+        
+        .btn-bulk-email:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .btn-bulk-email-all {
+            background: #f59e0b;
+        }
+        
+        .btn-bulk-email-all:hover {
+            background: #d97706;
+        }
+        
         .betslip-id {
             font-family: monospace;
             font-size: 0.9rem;
@@ -268,6 +497,95 @@
             font-weight: 700;
         }
         
+        /* Payment Info Styles */
+        .payment-info-description {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        
+        .payment-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .payment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .payment-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        
+        .payment-link.venmo {
+            background: #008CFF;
+            color: white;
+        }
+        
+        .payment-link.paypal {
+            background: #0070BA;
+            color: white;
+        }
+        
+        .payment-link.add-info {
+            background: #f0f0f0;
+            color: #666;
+            border: 2px dashed #ccc;
+        }
+        
+        .payment-link.add-info:hover {
+            background: #e8e8e8;
+            border-color: #999;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group input:disabled {
+            background: #f7fafc;
+            cursor: not-allowed;
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 0.25rem;
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
         @media (max-width: 768px) {
             .admin-container {
                 padding: 1rem;
@@ -305,12 +623,46 @@
         
         <!-- Main Admin Interface (hidden until authenticated) -->
         <div id="admin-interface" style="display: none;">
-            <div class="betslips-table">
-                <div class="table-header">
-                    <h2>All Bet Slips</h2>
+            <!-- Tab Navigation -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="bettingAdmin.switchTab('betslips', event)">Bet Slips</button>
+                <button class="tab-btn" onclick="bettingAdmin.switchTab('results', event)">Match Results</button>
+                <button class="tab-btn" onclick="bettingAdmin.switchTab('payouts', event)">Payouts</button>
+            </div>
+            
+            <!-- Bet Slips Tab -->
+            <div id="betslips-tab" class="tab-content">
+                <div class="betslips-table">
+                    <div class="table-header">
+                        <h2>All Bet Slips</h2>
+                    </div>
+                    <div id="betslips-content">
+                        <div class="loading">Loading bet slips...</div>
+                    </div>
                 </div>
-                <div id="betslips-content">
-                    <div class="loading">Loading bet slips...</div>
+            </div>
+            
+            <!-- Match Results Tab -->
+            <div id="results-tab" class="tab-content" style="display: none;">
+                <div class="table-header">
+                    <h2>Match Results</h2>
+                </div>
+                <div id="results-content">
+                    <div class="loading">Loading match results...</div>
+                </div>
+                <button class="btn-save-results" onclick="bettingAdmin.saveMatchResults()">💾 Save Results</button>
+            </div>
+            
+            <!-- Payouts Tab -->
+            <div id="payouts-tab" class="tab-content" style="display: none;">
+                <div class="table-header">
+                    <h2>Payout Calculations</h2>
+                </div>
+                <div id="payout-summary">
+                    <!-- Summary will be loaded here -->
+                </div>
+                <div id="payouts-content">
+                    <div class="loading">Loading payouts...</div>
                 </div>
             </div>
         </div>
@@ -330,6 +682,47 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-primary" onclick="closeBetslipModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Info Modal -->
+    <div id="payment-info-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💳 Payment Information</h2>
+                <button class="modal-close" onclick="closePaymentInfoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="payment-info-description">
+                    Enter the bettor's Venmo or PayPal username to enable quick payment links.
+                </p>
+                <div class="form-group">
+                    <label for="payment-betslip-name">Bettor Name:</label>
+                    <input type="text" id="payment-betslip-name" readonly disabled>
+                </div>
+                <div class="form-group">
+                    <label for="venmo-username">Venmo Username:</label>
+                    <input 
+                        type="text" 
+                        id="venmo-username" 
+                        placeholder="@username"
+                        style="font-family: monospace;">
+                    <small>Optional. Include @ if part of username.</small>
+                </div>
+                <div class="form-group">
+                    <label for="paypal-username">PayPal Email or Username:</label>
+                    <input 
+                        type="text" 
+                        id="paypal-username" 
+                        placeholder="user@example.com or @username"
+                        style="font-family: monospace;">
+                    <small>Optional. Can be email address or username.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closePaymentInfoModal()">Cancel</button>
+                <button class="btn-primary" onclick="bettingAdmin.savePaymentInfo()">💾 Save</button>
             </div>
         </div>
     </div>
