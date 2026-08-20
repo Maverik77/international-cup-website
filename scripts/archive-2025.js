@@ -164,7 +164,7 @@ async function exportStaticSnapshots() {
 
   console.log(`  [OK] wrote players(${players.length}), pairings(${pairings.length}), match-results(${matchResults.length}), news(${news.length})`);
 
-  await updateManifest(matchResults);
+  await updateManifest(matchResults, pairings);
 }
 
 async function scanAll(doc, table) {
@@ -182,9 +182,9 @@ async function writeJson(path, obj) {
   await writeFile(path, JSON.stringify(obj, null, 2) + '\n', 'utf8');
 }
 
-async function updateManifest(matchResults) {
+async function updateManifest(matchResults, pairings) {
   const schedule = JSON.parse(await readFile(SCHEDULE_PATH, 'utf8'));
-  const { winner, finalScore } = summarizeResults(matchResults);
+  const { winner, finalScore } = summarizeResults(matchResults, pairings);
 
   let manifest = { years: [] };
   if (existsSync(MANIFEST_PATH)) {
@@ -204,15 +204,28 @@ async function updateManifest(matchResults) {
   console.log(`  [OK] manifest entry: year=${ARCHIVE_YEAR} winner=${winner} score="${finalScore}"`);
 }
 
-function summarizeResults(matchResults) {
-  // Each match-result item is expected to carry a `winner` field: 'USA', 'International', or 'Tie'.
-  // Score = full points for a win, half-point for a tie (standard match-play scoring).
+function summarizeResults(matchResults, pairings) {
+  // 2025 scoring:
+  //   - Day 1 team matches (type: 'team'): 6 pts per match. Win = 4.5–1.5 (assumed pending exact breakdown). Tie = 3–3.
+  //   - Day 2 singles (type: 'singles'): 3 pts per match. Win = 3–0. Tie = 1.5–1.5.
+  // Total pool = 12*6 + 24*3 = 144 pts.
+  const pairById = new Map(pairings.map((p) => [p.id, p]));
   let usa = 0;
   let intl = 0;
   for (const r of matchResults) {
-    if (r.winner === 'USA') usa += 1;
-    else if (r.winner === 'International') intl += 1;
-    else if (r.winner === 'Tie') { usa += 0.5; intl += 0.5; }
+    const p = pairById.get(r.matchId);
+    if (!p) continue;
+    const isTeam = p.type === 'team';
+    if (r.winner === 'USA') {
+      usa += isTeam ? 4.5 : 3;
+      intl += isTeam ? 1.5 : 0;
+    } else if (r.winner === 'International') {
+      intl += isTeam ? 4.5 : 3;
+      usa += isTeam ? 1.5 : 0;
+    } else if (r.winner === 'Tie') {
+      usa += isTeam ? 3 : 1.5;
+      intl += isTeam ? 3 : 1.5;
+    }
   }
   const winner = usa > intl ? 'USA' : intl > usa ? 'International' : 'Tie';
   const finalScore = `USA ${fmtHalf(usa)} – International ${fmtHalf(intl)}`;
