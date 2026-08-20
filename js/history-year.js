@@ -21,7 +21,7 @@
       renderHeader(schedule);
       renderRosters(players);
       renderSchedule(schedule);
-      renderPairings(pairings, matchResults);
+      renderPairings(pairings, matchResults, players);
       renderDeepResultsCta(year);
       renderNews(news);
     } catch (err) {
@@ -60,8 +60,8 @@
     const intl = players.filter((p) => p.team === 'International' || p.team === 'international');
     const usaList = document.getElementById('roster-usa');
     const intlList = document.getElementById('roster-intl');
-    if (usaList) usaList.innerHTML = usa.map((p) => `<li>${escape(p.name || p.fullName || p.id)}</li>`).join('');
-    if (intlList) intlList.innerHTML = intl.map((p) => `<li>${escape(p.name || p.fullName || p.id)}</li>`).join('');
+    if (usaList) usaList.innerHTML = usa.map((p) => `<li>${escape(playerLabel(p))}</li>`).join('');
+    if (intlList) intlList.innerHTML = intl.map((p) => `<li>${escape(playerLabel(p))}</li>`).join('');
   }
 
   function renderSchedule(schedule) {
@@ -88,10 +88,12 @@
     `;
   }
 
-  function renderPairings(pairings, matchResults) {
+  function renderPairings(pairings, matchResults, players) {
     const mount = document.getElementById('pairings-body');
     if (!mount) return;
     const resultById = new Map(matchResults.map((r) => [r.matchId || r.id, r]));
+    const byId = new Map(players.map((p) => [p.id, p]));
+    const nameFor = (id) => { const p = byId.get(id); return p ? playerLabel(p) : ''; };
     const days = [1, 2];
     let html = '';
     for (const day of days) {
@@ -100,16 +102,16 @@
       if (dayPairs.length === 0) continue;
       html += `<h3>Day ${day}${day === 1 ? ' — Team Matches' : ' — Singles'}</h3>`;
       html += `<table class="pairings-table"><thead><tr>
-        <th>#</th><th>USA</th><th>International</th><th>Winner</th><th>Score</th>
+        <th>#</th><th>USA</th><th>International</th><th>Winner</th>
       </tr></thead><tbody>`;
       for (const p of dayPairs) {
         const r = resultById.get(p.id) || {};
         const usaCell = p.type === 'team'
-          ? `${escape(p.usa_team?.player1 || '')} / ${escape(p.usa_team?.player2 || '')}`
-          : escape(p.usa_player || '');
+          ? `${escape(nameFor(p.usa_team?.player1_id))} / ${escape(nameFor(p.usa_team?.player2_id))}`
+          : escape(nameFor(p.usa_player_id));
         const intlCell = p.type === 'team'
-          ? `${escape(p.intl_team?.player1 || '')} / ${escape(p.intl_team?.player2 || '')}`
-          : escape(p.intl_player || '');
+          ? `${escape(nameFor(p.intl_team?.player1_id))} / ${escape(nameFor(p.intl_team?.player2_id))}`
+          : escape(nameFor(p.intl_player_id));
         const winnerCls = r.winner === 'USA' ? 'winner-usa'
                         : r.winner === 'International' ? 'winner-intl'
                         : 'winner-tie';
@@ -118,7 +120,6 @@
           <td>${usaCell}</td>
           <td>${intlCell}</td>
           <td class="${winnerCls}">${escape(r.winner || '—')}</td>
-          <td>${escape(r.finalScore || '')}</td>
         </tr>`;
       }
       html += `</tbody></table>`;
@@ -148,6 +149,11 @@
     return String(s).replace(/[&<>"']/g, (c) => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
+  }
+
+  function playerLabel(p) {
+    const full = `${p.firstName || ''} ${p.lastName || ''}`.trim();
+    return full || p.id || '';
   }
 
   // Escape all HTML, then hydrate [label](href) markdown-lite links —

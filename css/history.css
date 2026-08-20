@@ -1,7 +1,7 @@
 /* Archive-specific styles. Reuses CSS custom properties from styles.css. */
 
 .history-hero {
-  padding: 3rem 1rem 2rem;
+  padding: 6rem 1rem 2rem;
   text-align: center;
 }
 
@@ -41,7 +41,7 @@
 .history-card__result { margin-top: 0.5rem; font-weight: 600; }
 
 /* Detail page (Task 7) */
-.history-detail { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+.history-detail { max-width: 1100px; margin: 0 auto; padding: 6rem 1rem 4rem; }
 .history-detail section { margin-bottom: 3rem; }
 .history-detail h2 { margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
 
