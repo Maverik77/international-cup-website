@@ -3,7 +3,7 @@
     "id": 1758565536449,
     "title": "Course change",
     "content": "Due to the aeration schedule this year we will play both days on the Norman course. ",
-    "date": "2025-10-17",
+    "date": "2025-10-16",
     "timestamp": 1760601600000
   },
   {
@@ -26,5 +26,20 @@
     "content": "The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th. Check out the [tournament format](#format) and view the [complete schedule](#schedule) for more details.",
     "date": "2025-05-15",
     "timestamp": 1747180800000
+  },
+  {
+    "id": 1758565536450,
+    "title": "Daily Betting Now Open!",
+    "content": "Place your bets in the [betting section](#betting) for both days of competition! Betting closes before the first tee time each morning. Good luck!",
+    "date": "2025-10-17",
+    "timestamp": 1760691600000
+  },
+  {
+    "id": 1758565536451,
+    "title": "Pairings and Tee Times Released",
+    "content": "The official pairings and tee times for both days of competition are now available in the [schedule section](#schedule). Check them out and get ready for an exciting weekend of golf!",
+    "date": "2025-10-17",
+    "timestamp": 1760691601000
   }
+  
 ]

@@ -50,7 +50,7 @@ The Pairings Reveal System is a real-time, interactive platform for revealing to
 
 3. **Deploy the backend**:
    ```bash
-   ./deploy-pairings-backend.sh
+   /deploy-pairings-backend.sh.
    ```
    
    Or with custom admin password:

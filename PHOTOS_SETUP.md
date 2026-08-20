@@ -46,7 +46,7 @@ Add a new album entry at the top of the array (newest first):
 ```bash
 # Commit your changes
 git add data/photos.json
-git commit -m "Add 2025 tournament photos"
+git commit -m "Add 2024 tournament photos"
 git push origin main
 ```
 
