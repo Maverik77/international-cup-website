@@ -38,10 +38,10 @@ class NewsManager {
         return [
             {
                 id: Date.now(),
-                title: "International Cup 2025 dates set",
-                content: "The 2025 Lansdowne International Cup will be held from Oct.17 to Oct 18th.",
-                date: "2024-12-15",
-                timestamp: new Date("2024-12-15").getTime()
+                title: "International Cup 2026 — Save the Date",
+                content: "Save the date: October 22-24, 2026. Venue and rosters coming soon.",
+                date: "2026-08-20",
+                timestamp: Date.now()
             }
         ];
     }

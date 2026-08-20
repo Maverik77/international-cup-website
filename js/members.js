@@ -80,16 +80,16 @@ function loadRecentUpdates() {
     // This would typically load from an API
     const updates = [
         {
-            date: 'Jan 15, 2025',
+            date: 'Jan 15, 2026',
             text: 'Pairings for Day 1 team matches have been released!'
         },
         {
-            date: 'Jan 10, 2025',
-            text: 'Welcome party details announced - cocktails at 6 PM on Oct 16th.'
+            date: 'Jan 10, 2026',
+            text: 'Welcome party details announced - cocktails at 6 PM on Oct 22nd.'
         },
         {
-            date: 'Jan 5, 2025',
-            text: 'Registration deadline extended to February 1st, 2025.'
+            date: 'Jan 5, 2026',
+            text: 'Registration deadline extended to February 1st, 2026.'
         }
     ];
     
@@ -334,7 +334,7 @@ function showRegistrationDetails() {
                         <strong>Status:</strong> Confirmed
                     </div>
                     <div class="detail-item">
-                        <strong>Registration Date:</strong> January 15, 2025
+                        <strong>Registration Date:</strong> January 15, 2026
                     </div>
                     <div class="detail-item">
                         <strong>Handicap:</strong> 12.5
@@ -343,7 +343,7 @@ function showRegistrationDetails() {
                         <strong>Team Assignment:</strong> <span id="modal-team">TBA</span>
                     </div>
                     <div class="detail-item">
-                        <strong>Tournament Dates:</strong> October 16-18, 2025
+                        <strong>Tournament Dates:</strong> October 22-24, 2026
                     </div>
                 </div>
                 <div style="margin-top: 24px;">
