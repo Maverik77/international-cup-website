@@ -116,3 +116,5 @@ coverage/
 # Backup files
 *.bak
 *.backup 
+# SAM build artifacts
+.aws-sam/
