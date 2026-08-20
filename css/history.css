@@ -1,0 +1,72 @@
+/* Archive-specific styles. Reuses CSS custom properties from styles.css. */
+
+.history-hero {
+  padding: 3rem 1rem 2rem;
+  text-align: center;
+}
+
+.history-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto 4rem;
+  padding: 0 1rem;
+}
+
+.history-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.history-card:hover,
+.history-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.history-card.inert { opacity: 0.55; pointer-events: none; }
+
+.history-card__year { font-size: 2rem; font-weight: 700; }
+.history-card__dates { color: #555; font-size: 0.95rem; }
+.history-card__venue { color: #666; font-size: 0.9rem; }
+.history-card__result { margin-top: 0.5rem; font-weight: 600; }
+
+/* Detail page (Task 7) */
+.history-detail { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+.history-detail section { margin-bottom: 3rem; }
+.history-detail h2 { margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+
+.roster-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+}
+@media (max-width: 640px) { .roster-grid { grid-template-columns: 1fr; } }
+
+.roster-column h3 { margin-bottom: 0.75rem; }
+.roster-list { list-style: none; padding: 0; margin: 0; columns: 2; }
+.roster-list li { padding: 0.25rem 0; break-inside: avoid; }
+
+.pairings-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.pairings-table th, .pairings-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #eee; text-align: left; }
+.pairings-table .winner-usa { color: #b91c1c; font-weight: 600; }
+.pairings-table .winner-intl { color: #1e3a8a; font-weight: 600; }
+.pairings-table .winner-tie { color: #666; font-style: italic; }
+
+.news-archive-list { list-style: none; padding: 0; }
+.news-archive-item { border-bottom: 1px solid #eee; padding: 1rem 0; }
+.news-archive-item h3 { margin: 0 0 0.25rem; }
+.news-archive-item time { color: #888; font-size: 0.85rem; }
+
+.deep-results-cta {
+  display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem;
+  background: #667eea; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600;
+}
+.deep-results-cta:hover { background: #5568d3; }
