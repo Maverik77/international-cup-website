@@ -150,19 +150,17 @@
     }[c]));
   }
 
-  // Very small allowlist — news content includes anchor tags.
+  // Escape all HTML, then hydrate [label](href) markdown-lite links —
+  // matches js/news.js's escape-first approach and handles all real news content.
   function sanitizeHtml(s) {
     const div = document.createElement('div');
-    div.innerHTML = String(s);
-    div.querySelectorAll('*').forEach((el) => {
-      const allowed = ['A', 'B', 'STRONG', 'I', 'EM', 'BR', 'P', 'UL', 'OL', 'LI'];
-      if (!allowed.includes(el.tagName)) el.replaceWith(document.createTextNode(el.textContent || ''));
-      else if (el.tagName === 'A') {
-        const href = el.getAttribute('href') || '';
-        if (!/^(https?:|mailto:|#|\/)/.test(href)) el.removeAttribute('href');
-        el.setAttribute('rel', 'noopener noreferrer');
-      }
-    });
-    return div.innerHTML;
+    div.textContent = String(s);
+    let escaped = div.innerHTML;
+    // Allow [label](#anchor) and [label](/path) — same restricted pattern as js/news.js:69-72.
+    escaped = escaped.replace(
+      /\[([^\]]+)\]\((#[a-zA-Z0-9-]+|\/[a-zA-Z0-9-\/]*)\)/g,
+      '<a href="$2" class="news-link" rel="noopener noreferrer">$1</a>'
+    );
+    return escaped;
   }
 })();
