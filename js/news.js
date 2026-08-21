@@ -101,7 +101,9 @@ async function updateHomepageNews() {
             const newsSection = document.getElementById('news');
             if (newsSection) newsSection.style.display = 'none';
             document.querySelectorAll('a[href="#news"]').forEach((a) => {
-                if (a.parentElement) a.parentElement.style.display = 'none';
+                // Only hide the parent when it's an LI (footer sub-nav pattern).
+                // In the top nav, the parent is a <div class="nav-menu"> and hiding it would kill every nav link.
+                if (a.parentElement && a.parentElement.tagName === 'LI') a.parentElement.style.display = 'none';
                 a.style.display = 'none';
             });
             return;
