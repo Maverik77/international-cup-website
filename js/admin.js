@@ -48,6 +48,12 @@ class AdminPanel {
         if (cancelBtn) {
             cancelBtn.addEventListener('click', () => this.hideNewsForm());
         }
+
+        // Publish (download news.json) button
+        const downloadNewsBtn = document.getElementById('download-news-btn');
+        if (downloadNewsBtn) {
+            downloadNewsBtn.addEventListener('click', () => this.downloadNewsJson());
+        }
     }
 
     checkAuthStatus() {
@@ -185,12 +191,25 @@ class AdminPanel {
         }
     }
 
-    loadArticlesList() {
+    async loadArticlesList() {
         const container = document.getElementById('admin-news-list');
+        if (!container) return;
+
+        // Seed localStorage from the live data/news.json the first time the
+        // news editor opens with no local drafts, so admins start from the
+        // current live state instead of an empty list.
+        await this.loadInitialNews();
+
+        const banner = `
+            <div class="admin-news-banner" style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; color: #78350f; font-size: 0.95rem;">
+                <strong>How news publishing works:</strong> Your edits are saved locally in this browser as drafts. To publish to the live site: click <strong>Publish (Download news.json)</strong>, replace <code>data/news.json</code> in the repo with the downloaded file, then commit and push. The GitHub Actions deploy takes 1–2 minutes; hard-refresh to see changes.
+            </div>
+        `;
+
         const articles = this.getNews();
-        
+
         if (articles.length === 0) {
-            container.innerHTML = '<div class="loading">No articles found. Add your first article!</div>';
+            container.innerHTML = banner + '<div class="loading">No articles found. Add your first article!</div>';
             return;
         }
 
@@ -215,7 +234,7 @@ class AdminPanel {
             </div>
         `).join('');
 
-        container.innerHTML = articlesHTML;
+        container.innerHTML = banner + articlesHTML;
     }
 
     editArticle(id) {
@@ -229,20 +248,44 @@ class AdminPanel {
     // Get news from localStorage
     getNews() {
         const news = localStorage.getItem(this.storageKey);
-        return news ? JSON.parse(news) : [
-            {
-                id: Date.now(),
-                title: "International Cup 2026 — Save the Date",
-                content: "Save the date: October 22-24, 2026. Venue and rosters coming soon.",
-                date: "2026-08-20",
-                timestamp: Date.now()
-            }
-        ];
+        return news ? JSON.parse(news) : [];
     }
 
     // Save news to localStorage
     saveNews(articles) {
         localStorage.setItem(this.storageKey, JSON.stringify(articles));
+    }
+
+    // Seed localStorage from the live data/news.json on first open, so the
+    // admin starts editing from the current published articles rather than
+    // an empty list. No-ops if drafts already exist locally.
+    async loadInitialNews() {
+        if (localStorage.getItem(this.storageKey)) return; // already has drafts
+        try {
+            const resp = await fetch('../data/news.json?t=' + Date.now(), { cache: 'no-store' });
+            if (!resp.ok) return;
+            const articles = await resp.json();
+            if (Array.isArray(articles)) {
+                localStorage.setItem(this.storageKey, JSON.stringify(articles));
+            }
+        } catch (e) {
+            console.warn('[admin] could not seed news from data/news.json:', e);
+        }
+    }
+
+    // Download the current draft articles as news.json, ready to replace
+    // data/news.json in the repo for a real publish (commit + push).
+    downloadNewsJson() {
+        const articles = this.getNews();
+        const blob = new Blob([JSON.stringify(articles, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'news.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     // Format date for display

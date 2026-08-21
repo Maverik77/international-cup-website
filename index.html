@@ -763,7 +763,19 @@
                 const day2Matches = pairingsData.pairings
                     .filter(p => p.day === 2 && p.type === 'singles')
                     .sort((a, b) => a.match_number - b.match_number);
-                
+
+                // If no Day 2 singles matches exist yet (e.g., pre-tournament, or right after a rollover wipe),
+                // render the same "not available yet" message the catch block uses.
+                if (day2Matches.length === 0) {
+                    document.getElementById('day2-tee-times-grid').innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #999;">
+                            <p>Pairings not yet posted for Day 2.</p>
+                            <p style="font-size: 0.9rem;">Tee times will appear here once the pairings are set closer to the event.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
                 // Group matches into tee times (2 matches = 4 players per group)
                 const teeTimeGroups = [];
                 const startHour = 10;
