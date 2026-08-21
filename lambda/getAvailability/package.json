@@ -1,0 +1,11 @@
+{
+  "name": "icup-get-availability",
+  "version": "1.0.0",
+  "description": "Admin-gated availability list handler",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.400.0",
+    "@aws-sdk/lib-dynamodb": "^3.400.0"
+  }
+}
