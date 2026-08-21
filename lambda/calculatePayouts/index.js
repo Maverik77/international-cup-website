@@ -6,7 +6,10 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 const BETSLIPS_TABLE = process.env.BETSLIPS_TABLE || 'icup-betslips-staging';
 const MATCH_RESULTS_TABLE = process.env.MATCH_RESULTS_TABLE || 'icup-match-results-staging';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 
 exports.handler = async (event) => {
     console.log('Calculate Payouts request:', JSON.stringify(event));

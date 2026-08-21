@@ -5,7 +5,10 @@ const { ApiGatewayManagementApiClient, PostToConnectionCommand } = require('@aws
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 const WEBSOCKET_ENDPOINT = process.env.WEBSOCKET_ENDPOINT;
 const PAIRINGS_TABLE = process.env.PAIRINGS_TABLE || 'icup-pairings';
 const WEBSOCKET_TABLE = process.env.WEBSOCKET_TABLE || 'icup-websocket-connections';

@@ -40,7 +40,7 @@ The backend has been successfully deployed to AWS:
 
 - **REST API URL**: `https://35taqw9rrk.execute-api.us-east-1.amazonaws.com/prod`
 - **WebSocket URL**: `wss://5xshmnvtv2.execute-api.us-east-1.amazonaws.com/prod`
-- **Admin Password**: `icup2024`
+- **Admin Password**: `<see ~/.icup-admin-passwords/ or ask administrator>`
 
 Frontend files (`admin.html` and `display.html`) are already configured with these URLs!
 
@@ -66,7 +66,7 @@ Wait ~2 minutes for GitHub Actions deployment.
 ### Step 2: Test Player Roster
 
 1. **Open admin panel**: https://staging.lansdowne-international-cup.com/pairings/admin.html
-2. **Login** (password: `icup2024`)
+2. **Login** (password: `<see ~/.icup-admin-passwords/ or ask administrator>`)
 3. **Click "Load Sample Data"** to populate test players
 4. **Click "Save Roster"** to persist
 5. **Verify** players appear in dropdowns below
@@ -206,7 +206,7 @@ Access at:
 
 ## 🔒 Security Notes
 
-- **Admin Password**: Default is `icup2024`, change for production
+- **Admin Password**: No default — required at deploy time; `<see ~/.icup-admin-passwords/ or ask administrator>`
 - **Update Password**: Redeploy backend with: `./deploy-pairings-backend.sh your-new-password`
 - **Display Access**: No password required (read-only view)
 
@@ -250,5 +250,5 @@ setTimeout(resolve, 1500);  // ← Change delay (milliseconds)
 
 ---
 
-**Ready to deploy?** Run: `./deploy-pairings-backend.sh icup2024`
+**Ready to deploy?** Run: `./deploy-pairings-backend.sh <environment> <see ~/.icup-admin-passwords/ or ask administrator>`
 

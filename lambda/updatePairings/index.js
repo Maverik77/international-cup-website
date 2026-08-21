@@ -4,7 +4,10 @@ const { DynamoDBDocumentClient, PutCommand, BatchWriteCommand } = require('@aws-
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 const PAIRINGS_TABLE = process.env.PAIRINGS_TABLE || 'icup-pairings';
 
 exports.handler = async (event) => {

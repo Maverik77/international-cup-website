@@ -8,7 +8,10 @@ const sesClient = new SESClient({ region: 'us-east-1' });
 
 const BETSLIPS_TABLE = process.env.BETSLIPS_TABLE || 'icup-betslips-staging';
 const MATCH_RESULTS_TABLE = process.env.MATCH_RESULTS_TABLE || 'icup-match-results-staging';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@lansdowne-international-cup.com';
 
 exports.handler = async (event) => {

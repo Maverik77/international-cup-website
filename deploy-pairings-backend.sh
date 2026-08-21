@@ -4,12 +4,13 @@
 # This script deploys the Lambda functions and API Gateway using AWS SAM
 #
 # Usage:
-#   ./deploy-pairings-backend.sh [environment] [admin-password]
-#   
-# Examples:
-#   ./deploy-pairings-backend.sh staging           # Deploy to staging with default password
-#   ./deploy-pairings-backend.sh prod mypass123    # Deploy to prod with custom password
-#   ./deploy-pairings-backend.sh                   # Deploy to staging with default password
+#   ./deploy-pairings-backend.sh <environment> <admin-password>
+#
+# Environment: staging | prod
+# Password:    retrieve from ~/.icup-admin-passwords/ or password manager
+#
+# Example:
+#   ./deploy-pairings-backend.sh staging "$(cat ~/.icup-admin-passwords/staging-2026-08-20.txt)"
 
 set -e
 
@@ -27,7 +28,14 @@ echo ""
 # Configuration
 AWS_PROFILE="icup_website_user"
 ENVIRONMENT="${1:-staging}"
-ADMIN_PASSWORD="${2:-icup2024}"
+ADMIN_PASSWORD="${2:-}"
+
+if [ -z "$ADMIN_PASSWORD" ]; then
+    echo -e "${RED}❌ Error: admin password required as 2nd arg${NC}"
+    echo -e "${YELLOW}Usage: ./deploy-pairings-backend.sh <staging|prod> <admin-password>${NC}"
+    echo -e "${YELLOW}Retrieve current values from ~/.icup-admin-passwords/${NC}"
+    exit 1
+fi
 
 # Validate environment
 if [ "$ENVIRONMENT" != "staging" ] && [ "$ENVIRONMENT" != "prod" ]; then

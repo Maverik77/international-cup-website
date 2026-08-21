@@ -73,7 +73,7 @@ sam deploy \
   --stack-name icup-pairings-staging \
   --parameter-overrides \
     Environment=staging \
-    AdminPassword=icup2024 \
+    AdminPassword='<see ~/.icup-admin-passwords/ or ask administrator>' \
     SenderEmail=your-verified-email@example.com \
   --capabilities CAPABILITY_IAM \
   --resolve-s3 \

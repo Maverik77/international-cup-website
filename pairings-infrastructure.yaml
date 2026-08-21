@@ -5,9 +5,9 @@ Description: International Cup Pairings Reveal System
 Parameters:
   AdminPassword:
     Type: String
-    Default: icup2024
     NoEcho: true
-    Description: Password for admin access to pairing management
+    MinLength: 16
+    Description: Password for admin access. Required — no default; must be passed via --parameter-overrides at deploy time.
   Environment:
     Type: String
     Default: prod

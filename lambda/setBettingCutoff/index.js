@@ -5,7 +5,10 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
 const BETTING_CONFIG_TABLE = process.env.BETTING_CONFIG_TABLE || 'icup-betting-config';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 
 exports.handler = async (event) => {
     console.log('Set Betting Cutoff request:', JSON.stringify(event));

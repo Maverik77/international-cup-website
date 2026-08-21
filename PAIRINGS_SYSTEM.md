@@ -107,7 +107,7 @@ Test at: `https://staging.lansdowne-international-cup.com/pairings/admin.html`
    Navigate to `/pairings/admin.html`
 
 2. **Login**:
-   Enter admin password (default: `icup2024`)
+   Enter admin password (`<see ~/.icup-admin-passwords/ or ask administrator>`)
 
 3. **Load Sample Data** (optional):
    Click "Load Sample Data" to populate with test names

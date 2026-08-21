@@ -5,7 +5,10 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
 const TOURNAMENT_RESULTS_TABLE = process.env.TOURNAMENT_RESULTS_TABLE || 'icup-tournament-results-staging';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 
 exports.handler = async (event) => {
     console.log('UPLOAD Tournament Results request:', JSON.stringify(event));

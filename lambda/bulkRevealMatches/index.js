@@ -5,7 +5,10 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const docClient = DynamoDBDocumentClient.from(client);
 
 const PAIRINGS_TABLE = process.env.PAIRINGS_TABLE || 'icup-pairings';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'icup2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is required');
+}
 
 exports.handler = async (event) => {
     console.log('Bulk Reveal Matches request:', JSON.stringify(event));

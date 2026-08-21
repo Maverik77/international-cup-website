@@ -102,7 +102,7 @@ Successfully implemented a scalable, database-backed tournament results system f
 
 ### Option 1: Via Admin Interface
 1. Go to https://staging.{your-domain}/tournament/admin.html
-2. Login with password: `icup2024staging`
+2. Login with password: `<see ~/.icup-admin-passwords/ or ask administrator>`
 3. Click "Upload" tab
 4. Enter year: `2025`
 5. Either:
@@ -113,7 +113,7 @@ Successfully implemented a scalable, database-backed tournament results system f
 ### Option 2: Via API (curl)
 ```bash
 curl -X POST https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod/tournament-results \
-  -H "Authorization: Bearer icup2024staging" \
+  -H "Authorization: Bearer $ADMIN_PASSWORD" \
   -H "Content-Type: application/json" \
   -d @your-2025-data.json
 ```

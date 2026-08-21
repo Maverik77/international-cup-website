@@ -101,12 +101,12 @@ https://www.paypal.com/paypalme/{username}/{amount}
 
 ### Backend (Staging)
 ```bash
-./deploy-pairings-backend.sh staging icup2024staging
+./deploy-pairings-backend.sh staging "<see ~/.icup-admin-passwords/ or ask administrator>"
 ```
 
 ### Backend (Production)
 ```bash
-./deploy-pairings-backend.sh prod icup2024
+./deploy-pairings-backend.sh prod "<see ~/.icup-admin-passwords/ or ask administrator>"
 ```
 
 ### Frontend

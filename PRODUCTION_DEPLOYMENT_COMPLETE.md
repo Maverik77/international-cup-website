@@ -70,7 +70,7 @@ Once deployment completes:
 
 1. **Access Production Admin Panel**:
    - Go to: `https://www.lansdowne-international-cup.com/pairings/admin.html`
-   - Login with password: `icup2024`
+   - Login with password: `<see ~/.icup-admin-passwords/ or ask administrator>`
 
 2. **Load Team Rosters**:
    - Click "Load Sample Data" button

@@ -169,7 +169,7 @@ padding: clamp(8px, 1vh, 12px);
 - ✅ Deployed to AWS (us-east-1)
 - ✅ REST API: `https://35taqw9rrk.execute-api.us-east-1.amazonaws.com/prod`
 - ✅ WebSocket: `wss://5xshmnvtv2.execute-api.us-east-1.amazonaws.com/prod`
-- ✅ Admin Password: `icup2024`
+- ✅ Admin Password: `<see ~/.icup-admin-passwords/ or ask administrator>`
 
 ### Frontend
 - ✅ Committed to `feature/pairing-reveal` branch

@@ -82,7 +82,7 @@ console.log(`✅ Converted ${newFormat.matches.length} matches`);
 console.log('Output saved to: 2024-tournament-data-formatted.json');
 console.log('\nYou can now upload this file via the tournament admin interface or use curl:');
 console.log('\ncurl -X POST https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod/tournament-results \\');
-console.log('  -H "Authorization: Bearer icup2024staging" \\');
+console.log('  -H "Authorization: Bearer $ADMIN_PASSWORD" \\');
 console.log('  -H "Content-Type: application/json" \\');
 console.log('  -d @2024-tournament-data-formatted.json');
 

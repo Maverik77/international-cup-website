@@ -9,7 +9,7 @@ The International Cup Pairings Reveal System allows you to manage player rosters
 ### 1. Admin Panel Access
 
 1. Navigate to `/pairings/admin.html`
-2. Enter the admin password (default: `icup2024`)
+2. Enter the admin password (`<see ~/.icup-admin-passwords/ or ask administrator>`)
 3. Click **Login**
 
 ### 2. Set Up Player Roster
