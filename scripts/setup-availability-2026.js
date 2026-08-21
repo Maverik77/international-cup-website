@@ -133,7 +133,7 @@ async function createRole() {
         const res = await iam.send(new CreateRoleCommand({
             RoleName: ROLE_NAME,
             AssumeRolePolicyDocument: JSON.stringify(trust),
-            Description: 'Availability form Lambda role — narrow DDB + SES only',
+            Description: 'Availability form Lambda role - narrow DDB + SES only',
         }));
         existing = res;
         console.log('  [OK] role created');
