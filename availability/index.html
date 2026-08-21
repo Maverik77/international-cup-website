@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>RSVP · International Cup 2026</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/availability.css?v=2026-08-20">
+    <link rel="icon" href="../favicon.ico">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../" class="nav-logo">International Cup</a>
+            <div class="nav-menu">
+                <a href="../" class="nav-link">Home</a>
+                <a href="../#teams" class="nav-link">Teams</a>
+                <a href="../#schedule" class="nav-link">Schedule</a>
+                <a href="./" class="nav-link" aria-current="page">RSVP</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="availability-hero">
+        <h1>🏌️ Playing the 2026 International Cup?</h1>
+        <p>October 22–24 · Venue TBA · Let us know if you're in.</p>
+    </header>
+
+    <main>
+        <form class="availability-form" id="availability-form" novalidate>
+            <fieldset>
+                <legend>Your info</legend>
+                <label class="field">
+                    <span>Name</span>
+                    <input type="text" id="name" name="name" required autocomplete="name" maxlength="100">
+                </label>
+                <label class="field">
+                    <span>Email</span>
+                    <input type="email" id="email" name="email" required autocomplete="email" maxlength="200">
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Availability</legend>
+                <label class="radio-row">
+                    <input type="radio" id="attending-yes" name="attending" value="yes">
+                    <span>Yes, I'm in</span>
+                </label>
+                <label class="radio-row">
+                    <input type="radio" id="attending-no" name="attending" value="no">
+                    <span>Can't make it this year</span>
+                </label>
+
+                <div class="days-block" id="days-block" hidden>
+                    <p style="margin: 0 0 0.5rem; font-weight: 600;">Which parts? (check all that apply)</p>
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="day-party" checked>
+                        <span>Pairings party — Wed Oct 22 evening</span>
+                    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="day-1" checked>
+                        <span>Day 1 team matches — Thu Oct 23</span>
+                    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="day-2" checked>
+                        <span>Day 2 singles — Fri Oct 24</span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <div class="submit-row">
+                <button type="submit" id="submit-btn">Submit RSVP</button>
+            </div>
+            <div class="status" id="status" hidden></div>
+        </form>
+    </main>
+
+    <footer style="text-align:center; padding: 2rem 1rem; color: #666;">
+        <p>© 2026 International Cup</p>
+    </footer>
+
+    <script src="../js/availability.js?v=2026-08-20"></script>
+</body>
+</html>
