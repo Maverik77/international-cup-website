@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Availability RSVPs · Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/availability.css?v=2026-08-20">
+    <link rel="icon" href="../favicon.ico">
+    <style>
+        .login-box {
+            max-width: 400px; margin: 8rem auto 4rem; padding: 2rem;
+            background: #fff; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .login-box h2 { margin-bottom: 1rem; }
+        .login-box input {
+            width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1;
+            border-radius: 6px; font-size: 1rem; box-sizing: border-box; margin-bottom: 1rem;
+        }
+        .login-box button {
+            width: 100%; padding: 0.75rem; background: #667eea; color: #fff;
+            border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+        }
+        .login-error { color: #991b1b; margin-top: 0.5rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../" class="nav-logo">International Cup</a>
+            <div class="nav-menu">
+                <a href="../" class="nav-link">Home</a>
+                <a href="./" class="nav-link" aria-current="page">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="login-box" id="login-box">
+        <h2>Availability admin</h2>
+        <input type="password" id="password-input" placeholder="Admin password" autocomplete="current-password">
+        <button id="login-btn">Unlock</button>
+        <p class="login-error" id="login-error" hidden>Wrong password.</p>
+    </div>
+
+    <main class="availability-admin" id="dashboard" hidden>
+        <h1>Availability RSVPs — 2026</h1>
+        <p class="summary" id="summary"></p>
+        <div class="toolbar">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="attending">Attending</button>
+            <button class="chip" data-filter="declined">Declined</button>
+            <button class="chip" data-filter="updated">Updated</button>
+            <button class="export" id="export-btn">Export CSV</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th data-sortkey="name">Name</th>
+                    <th data-sortkey="email">Email</th>
+                    <th data-sortkey="attending">Attending</th>
+                    <th data-sortkey="pairingsParty">Party</th>
+                    <th data-sortkey="day1">Day 1</th>
+                    <th data-sortkey="day2">Day 2</th>
+                    <th data-sortkey="firstSubmittedAt">First RSVP</th>
+                    <th data-sortkey="updatedAt">Last update</th>
+                    <th data-sortkey="submissionCount">Count</th>
+                </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+        </table>
+    </main>
+
+    <script src="../js/availability-admin.js?v=2026-08-20"></script>
+</body>
+</html>
