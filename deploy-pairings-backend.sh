@@ -45,6 +45,7 @@ if [ "$ENVIRONMENT" != "staging" ] && [ "$ENVIRONMENT" != "prod" ]; then
 fi
 
 STACK_NAME="icup-pairings-${ENVIRONMENT}"
+EXPECTED_ACCOUNT="792782029232"
 
 echo -e "${YELLOW}Configuration:${NC}"
 echo "  Environment: $ENVIRONMENT"
@@ -52,6 +53,30 @@ echo "  AWS Profile: $AWS_PROFILE"
 echo "  Stack Name: $STACK_NAME"
 echo "  Admin Password: ********"
 echo ""
+
+# Guard: confirm we're pointing at the correct AWS account before deploying.
+ACCOUNT=$(aws sts get-caller-identity --profile "$AWS_PROFILE" --query 'Account' --output text 2>/dev/null || echo "unknown")
+if [ "$ACCOUNT" != "$EXPECTED_ACCOUNT" ]; then
+    echo -e "${RED}❌ Wrong AWS account: $ACCOUNT (expected $EXPECTED_ACCOUNT)${NC}"
+    echo -e "${YELLOW}Refresh SSO: aws sso login --profile default${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Account guard: $ACCOUNT${NC}"
+echo ""
+
+# Prod deploys require explicit confirmation — redeploys ~28 Lambda functions
+# and can silently reset ADMIN_PASSWORD env vars if the wrong value is passed.
+if [ "$ENVIRONMENT" = "prod" ]; then
+    echo -e "${RED}⚠️  You are about to redeploy the icup-pairings-prod stack (~28 Lambda functions).${NC}"
+    echo -e "${RED}⚠️  This will overwrite live Lambda code and env vars in production.${NC}"
+    printf "${YELLOW}Type DEPLOY-PROD to confirm: ${NC}"
+    read CONFIRM
+    if [ "$CONFIRM" != "DEPLOY-PROD" ]; then
+        echo -e "${RED}❌ Confirmation failed; aborting.${NC}"
+        exit 1
+    fi
+    echo ""
+fi
 
 # Check if AWS SAM CLI is installed
 if ! command -v sam &> /dev/null; then
