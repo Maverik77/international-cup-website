@@ -22,7 +22,6 @@
       renderRosters(players);
       renderSchedule(schedule);
       renderPairings(pairings, matchResults, players);
-      renderDeepResultsCta(year);
       renderNews(news);
     } catch (err) {
       console.error('[history-year] load failed', err);
@@ -125,11 +124,6 @@
       html += `</tbody></table>`;
     }
     mount.innerHTML = html;
-  }
-
-  function renderDeepResultsCta(year) {
-    const el = document.getElementById('deep-results-cta');
-    if (el) el.href = `../../tournament/results.html?year=${year}`;
   }
 
   function renderNews(news) {
