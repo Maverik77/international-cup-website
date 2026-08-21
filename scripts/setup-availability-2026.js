@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 import { readFileSync, existsSync, statSync } from 'node:fs';
-import { readFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { homedir } from 'node:os';
 import { execSync } from 'node:child_process';
+import { fromIni } from '@aws-sdk/credential-providers';
 import {
-    DynamoDBClient,
     CreateTableCommand,
     DescribeTableCommand,
     ResourceNotFoundException,
@@ -42,7 +41,7 @@ import {
     CreateDeploymentCommand,
 } from '@aws-sdk/client-api-gateway';
 import { CloudFormationClient, ListStackResourcesCommand } from '@aws-sdk/client-cloudformation';
-import { getClients, assertAccount } from './lib/aws.js';
+import { getClients, assertAccount, sleep } from './lib/aws.js';
 
 const REGION = 'us-east-1';
 const ACCOUNT_ID = '792782029232';
@@ -56,11 +55,13 @@ const SENDER_EMAIL = 'noreply@lansdowne-international-cup.com';
 const NOTIFY_EMAIL = 'erikwagner77@gmail.com,ash@cavlog.com,tim_pearce36@hotmail.com';
 const PROD_PASSWORD_FILE = resolve(homedir(), '.icup-admin-passwords/prod-2026-08-20.txt');
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const AWS_PROFILE = 'icup_website_user';
+const credentials = fromIni({ profile: AWS_PROFILE });
 
-const iam = new IAMClient({ region: REGION });
-const lambda = new LambdaClient({ region: REGION });
-const apigw = new APIGatewayClient({ region: REGION });
-const cfn = new CloudFormationClient({ region: REGION });
+const iam = new IAMClient({ region: REGION, credentials });
+const lambda = new LambdaClient({ region: REGION, credentials });
+const apigw = new APIGatewayClient({ region: REGION, credentials });
+const cfn = new CloudFormationClient({ region: REGION, credentials });
 
 async function main() {
     await assertAccount();
@@ -69,14 +70,12 @@ async function main() {
     const roleArn = await createRole();
     await sleep(10000); // IAM propagation delay before Lambda can assume the role
     await packageAndDeployLambdas(roleArn);
-    const { apiId, resourceId } = await wireApiGateway();
+    const { apiId } = await wireApiGateway();
     await deployApi(apiId);
     await verify(apiId);
     console.log('\n[ok] availability setup complete');
     console.log(`  POST/GET https://${apiId}.execute-api.${REGION}.amazonaws.com/${API_STAGE}/availability`);
 }
-
-function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
 async function precheck() {
     console.log('\n=== precheck ===');
