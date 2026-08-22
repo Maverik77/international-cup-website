@@ -123,6 +123,11 @@ jobs:
           cp -r tournament build/
         fi
 
+        # Copy availability folder if it exists
+        if [ -d availability ]; then
+          cp -r availability build/
+        fi
+
         # Copy favicon if it exists
         if [ -f favicon.ico ]; then
           cp favicon.ico build/
@@ -291,6 +296,11 @@ jobs:
         # Copy tournament folder if it exists
         if [ -d tournament ]; then
           cp -r tournament build/
+        fi
+
+        # Copy availability folder if it exists
+        if [ -d availability ]; then
+          cp -r availability build/
         fi
 
         # Copy favicon if it exists

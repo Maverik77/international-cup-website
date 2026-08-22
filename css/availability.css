@@ -1,0 +1,74 @@
+/* Availability form + admin dashboard shared styles */
+
+.availability-hero {
+    max-width: 720px;
+    margin: 6rem auto 1.5rem;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+
+.availability-hero h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+.availability-hero p { color: #666; }
+
+.availability-form {
+    max-width: 720px;
+    margin: 0 auto 4rem;
+    padding: 2rem 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.availability-form fieldset { border: none; padding: 0; margin: 0 0 1.5rem; }
+.availability-form legend { font-weight: 600; margin-bottom: 0.75rem; }
+
+.availability-form label.field { display: block; margin-bottom: 1rem; }
+.availability-form label.field span { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+.availability-form input[type="text"],
+.availability-form input[type="email"] {
+    width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1;
+    border-radius: 6px; font-size: 1rem; box-sizing: border-box;
+}
+
+.availability-form .radio-row, .availability-form .checkbox-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
+.availability-form .radio-row input, .availability-form .checkbox-row input { flex-shrink: 0; }
+.availability-form .days-block { padding: 1rem; background: #f8fafc; border-radius: 8px; margin-top: 0.5rem; }
+.availability-form .days-block[hidden] { display: none; }
+
+.availability-form .submit-row {
+    display: flex; justify-content: center; margin-top: 1.5rem;
+}
+.availability-form button {
+    padding: 0.75rem 2rem; background: #667eea; color: #fff;
+    border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+    cursor: pointer;
+}
+.availability-form button:disabled { opacity: 0.6; cursor: wait; }
+.availability-form button:hover:not(:disabled) { background: #5568d3; }
+
+.availability-form .status { margin-top: 1rem; padding: 1rem; border-radius: 8px; text-align: center; }
+.availability-form .status.ok { background: #d1fae5; color: #065f46; }
+.availability-form .status.err { background: #fee2e2; color: #991b1b; }
+.availability-form .status[hidden] { display: none; }
+
+/* Admin dashboard */
+.availability-admin { max-width: 1200px; margin: 6rem auto 4rem; padding: 0 1.5rem; }
+.availability-admin h1 { margin-bottom: 0.5rem; }
+.availability-admin .summary { color: #444; margin-bottom: 1rem; }
+.availability-admin .toolbar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.availability-admin .chip {
+    padding: 0.4rem 0.9rem; background: #e2e8f0; border: none;
+    border-radius: 999px; cursor: pointer; font-size: 0.9rem;
+}
+.availability-admin .chip.active { background: #667eea; color: #fff; }
+.availability-admin .export {
+    margin-left: auto; padding: 0.4rem 1rem; background: #10b981;
+    color: #fff; border: none; border-radius: 6px; cursor: pointer;
+}
+.availability-admin table { width: 100%; border-collapse: collapse; font-size: 0.9rem; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border-radius: 8px; overflow: hidden; }
+.availability-admin th, .availability-admin td { padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: left; }
+.availability-admin th { background: #f8fafc; cursor: pointer; user-select: none; }
+.availability-admin tr:hover { background: #f8fafc; }
+.availability-admin .yes { color: #065f46; font-weight: 600; }
+.availability-admin .no { color: #991b1b; }
+.availability-admin .updated-row { background: #fef3c7; }
