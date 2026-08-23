@@ -156,6 +156,9 @@
         var csv = [header].concat(rows).map(function (r) {
             return r.map(function (v) {
                 var s = String(v);
+                // OWASP CSV formula-injection guard: prefix cells that Excel/Sheets
+                // would evaluate as formulas with a single quote so they render as text.
+                if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
                 return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
             }).join(',');
         }).join('\n');
