@@ -70,3 +70,59 @@
   background: #667eea; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600;
 }
 .deep-results-cta:hover { background: #5568d3; }
+
+/* Per-format / per-segment pairings tables (Day 1 + Day 2). */
+.pairings-note {
+  color: #666; font-size: 0.9rem; margin: 0 0 0.75rem;
+}
+.pairings-table.pairings-day1,
+.pairings-table.pairings-day2 {
+  font-size: 0.9rem;
+  table-layout: auto;
+}
+.pairings-table .match-num { width: 2.5rem; font-weight: 600; text-align: center; color: #555; }
+.pairings-table .pair-cell { font-weight: 500; line-height: 1.35; white-space: nowrap; }
+.pairings-table .format-cell,
+.pairings-table .seg-cell {
+  text-align: center;
+  min-width: 5rem;
+  vertical-align: middle;
+}
+.pairings-table .format-cell.empty,
+.pairings-table .seg-cell.empty { color: #ccc; }
+.pairings-table .format-status,
+.pairings-table .seg-status {
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+.pairings-table .format-points,
+.pairings-table .seg-points {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.pairings-table .format-cell.winner-intl .format-points,
+.pairings-table .format-cell.winner-usa .format-points,
+.pairings-table .seg-cell.winner-intl .seg-points,
+.pairings-table .seg-cell.winner-usa .seg-points {
+  color: inherit; opacity: 0.75;
+}
+.pairings-table th .format-name {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #888;
+  margin-top: 0.15rem;
+}
+.pairings-table .total-cell {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  min-width: 4rem;
+}
+
+/* Small screens: let the tables scroll horizontally rather than break layout. */
+@media (max-width: 900px) {
+  .pairings-day1, .pairings-day2 { display: block; overflow-x: auto; white-space: nowrap; }
+}

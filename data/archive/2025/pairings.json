@@ -1,434 +1,362 @@
 [
   {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-6",
-      "player2_id": "player-intl-8"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-9",
-      "player2_id": "player-usa-11"
-    },
-    "revealOrder": "intl-first",
-    "match_number": 8,
-    "id": "day1-team-8",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 23,
-    "id": "day2-singles-23",
-    "usa_player_id": "player-usa-21",
-    "intl_player_id": "player-intl-20",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 7,
-    "id": "day2-singles-7",
-    "usa_player_id": "player-usa-4",
-    "intl_player_id": "player-intl-12",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-13",
-      "player2_id": "player-intl-15"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-7",
-      "player2_id": "player-usa-8"
-    },
-    "revealOrder": "intl-first",
-    "match_number": 1,
     "id": "day1-team-1",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 3,
-    "id": "day2-singles-3",
-    "usa_player_id": "player-usa-16",
-    "intl_player_id": "player-intl-10",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-18",
-      "player2_id": "player-intl-14"
-    },
+    "type": "team",
     "day": 1,
+    "match_number": 1,
+    "usa_team": {
+      "player1_id": "player-usa-11",
+      "player2_id": "player-usa-7"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-2",
+      "player2_id": "player-intl-3"
+    }
+  },
+  {
+    "id": "day1-team-2",
+    "type": "team",
+    "day": 1,
+    "match_number": 2,
+    "usa_team": {
+      "player1_id": "player-usa-16",
+      "player2_id": "player-usa-15"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-1",
+      "player2_id": "player-intl-21"
+    }
+  },
+  {
+    "id": "day1-team-3",
+    "type": "team",
+    "day": 1,
+    "match_number": 3,
     "usa_team": {
       "player1_id": "player-usa-17",
       "player2_id": "player-usa-3"
     },
-    "revealOrder": "usa-first",
-    "match_number": 6,
-    "id": "day1-team-6",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 19,
-    "id": "day2-singles-19",
-    "usa_player_id": "player-usa-7",
-    "intl_player_id": "player-intl-11",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 17,
-    "id": "day2-singles-17",
-    "usa_player_id": "player-usa-10",
-    "intl_player_id": "player-intl-23",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
     "intl_team": {
-      "player1_id": "player-intl-12",
-      "player2_id": "player-intl-19"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-20",
-      "player2_id": "player-usa-4"
-    },
-    "revealOrder": "usa-first",
-    "match_number": 4,
+      "player1_id": "player-intl-17",
+      "player2_id": "player-intl-11"
+    }
+  },
+  {
     "id": "day1-team-4",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 13,
-    "id": "day2-singles-13",
-    "usa_player_id": "player-usa-20",
-    "intl_player_id": "player-intl-22",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 10,
-    "id": "day2-singles-10",
-    "usa_player_id": "player-usa-14",
-    "intl_player_id": "player-intl-8",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-5",
-      "player2_id": "player-intl-7"
-    },
+    "type": "team",
     "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-18",
-      "player2_id": "player-usa-22"
-    },
-    "revealOrder": "intl-first",
-    "match_number": 12,
-    "id": "day1-team-12",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 20,
-    "id": "day2-singles-20",
-    "usa_player_id": "player-usa-6",
-    "intl_player_id": "player-intl-15",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 1,
-    "id": "day2-singles-1",
-    "usa_player_id": "player-usa-15",
-    "intl_player_id": "player-intl-16",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-21",
-      "player2_id": "player-intl-23"
-    },
-    "day": 1,
+    "match_number": 4,
     "usa_team": {
       "player1_id": "player-usa-10",
-      "player2_id": "player-usa-19"
+      "player2_id": "player-usa-8"
     },
-    "revealOrder": "usa-first",
-    "match_number": 7,
-    "id": "day1-team-7",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 8,
-    "id": "day2-singles-8",
-    "usa_player_id": "player-usa-24",
-    "intl_player_id": "player-intl-18",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
     "intl_team": {
-      "player1_id": "player-intl-16",
-      "player2_id": "player-intl-4"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-13",
-      "player2_id": "player-usa-2"
-    },
-    "revealOrder": "usa-first",
-    "match_number": 9,
-    "id": "day1-team-9",
-    "type": "team"
+      "player1_id": "player-intl-7",
+      "player2_id": "player-intl-16"
+    }
   },
   {
-    "revealStep": 2,
+    "id": "day1-team-5",
+    "type": "team",
+    "day": 1,
+    "match_number": 5,
+    "usa_team": {
+      "player1_id": "player-usa-5",
+      "player2_id": "player-usa-1"
+    },
     "intl_team": {
-      "player1_id": "player-intl-24",
-      "player2_id": "player-intl-17"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-15",
-      "player2_id": "player-usa-16"
-    },
-    "revealOrder": "usa-first",
-    "match_number": 11,
-    "id": "day1-team-11",
-    "type": "team"
+      "player1_id": "player-intl-18",
+      "player2_id": "player-intl-15"
+    }
   },
   {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
+    "id": "day1-team-6",
+    "type": "team",
+    "day": 1,
     "match_number": 6,
-    "id": "day2-singles-6",
-    "usa_player_id": "player-usa-19",
-    "intl_player_id": "player-intl-5",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 11,
-    "id": "day2-singles-11",
-    "usa_player_id": "player-usa-12",
-    "intl_player_id": "player-intl-6",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 14,
-    "id": "day2-singles-14",
-    "usa_player_id": "player-usa-8",
-    "intl_player_id": "player-intl-14",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-10",
-      "player2_id": "player-intl-3"
-    },
-    "day": 1,
     "usa_team": {
-      "player1_id": "player-usa-6",
-      "player2_id": "player-usa-23"
-    },
-    "revealOrder": "intl-first",
-    "match_number": 3,
-    "id": "day1-team-3",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 2,
-    "id": "day2-singles-2",
-    "usa_player_id": "player-usa-2",
-    "intl_player_id": "player-intl-13",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 15,
-    "id": "day2-singles-15",
-    "usa_player_id": "player-usa-13",
-    "intl_player_id": "player-intl-24",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 22,
-    "id": "day2-singles-22",
-    "usa_player_id": "player-usa-22",
-    "intl_player_id": "player-intl-21",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 4,
-    "id": "day2-singles-4",
-    "usa_player_id": "player-usa-23",
-    "intl_player_id": "player-intl-2",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 21,
-    "id": "day2-singles-21",
-    "usa_player_id": "player-usa-3",
-    "intl_player_id": "player-intl-17",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 18,
-    "id": "day2-singles-18",
-    "usa_player_id": "player-usa-18",
-    "intl_player_id": "player-intl-4",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 24,
-    "id": "day2-singles-24",
-    "usa_player_id": "player-usa-11",
-    "intl_player_id": "player-intl-9",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 12,
-    "id": "day2-singles-12",
-    "usa_player_id": "player-usa-1",
-    "intl_player_id": "player-intl-19",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-20",
-      "player2_id": "player-intl-22"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-24",
-      "player2_id": "player-usa-14"
-    },
-    "revealOrder": "intl-first",
-    "match_number": 10,
-    "id": "day1-team-10",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "intl-first",
-    "match_number": 16,
-    "id": "day2-singles-16",
-    "usa_player_id": "player-usa-9",
-    "intl_player_id": "player-intl-7",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 9,
-    "id": "day2-singles-9",
-    "usa_player_id": "player-usa-17",
-    "intl_player_id": "player-intl-3",
-    "type": "singles"
-  },
-  {
-    "revealStep": 2,
-    "intl_team": {
-      "player1_id": "player-intl-2",
-      "player2_id": "player-intl-11"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-21",
+      "player1_id": "player-usa-22",
       "player2_id": "player-usa-12"
     },
-    "revealOrder": "usa-first",
-    "match_number": 2,
-    "id": "day1-team-2",
-    "type": "team"
-  },
-  {
-    "revealStep": 2,
     "intl_team": {
-      "player1_id": "player-intl-1",
-      "player2_id": "player-intl-9"
-    },
-    "day": 1,
-    "usa_team": {
-      "player1_id": "player-usa-1",
-      "player2_id": "player-usa-5"
-    },
-    "revealOrder": "intl-first",
-    "match_number": 5,
-    "id": "day1-team-5",
-    "type": "team"
+      "player1_id": "player-intl-24",
+      "player2_id": "player-intl-8"
+    }
   },
   {
-    "revealStep": 2,
+    "id": "day1-team-7",
+    "type": "team",
+    "day": 1,
+    "match_number": 7,
+    "usa_team": {
+      "player1_id": "player-usa-19",
+      "player2_id": "player-usa-4"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-5",
+      "player2_id": "player-intl-13"
+    }
+  },
+  {
+    "id": "day1-team-8",
+    "type": "team",
+    "day": 1,
+    "match_number": 8,
+    "usa_team": {
+      "player1_id": "player-usa-9",
+      "player2_id": "player-usa-18"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-14",
+      "player2_id": "player-intl-12"
+    }
+  },
+  {
+    "id": "day1-team-9",
+    "type": "team",
+    "day": 1,
+    "match_number": 9,
+    "usa_team": {
+      "player1_id": "player-usa-2",
+      "player2_id": "player-usa-13"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-23",
+      "player2_id": "player-intl-20"
+    }
+  },
+  {
+    "id": "day1-team-10",
+    "type": "team",
+    "day": 1,
+    "match_number": 10,
+    "usa_team": {
+      "player1_id": "player-usa-6",
+      "player2_id": "player-usa-24"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-9",
+      "player2_id": "player-intl-22"
+    }
+  },
+  {
+    "id": "day1-team-11",
+    "type": "team",
+    "day": 1,
+    "match_number": 11,
+    "usa_team": {
+      "player1_id": "player-usa-14",
+      "player2_id": "player-usa-25"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-10",
+      "player2_id": "player-intl-19"
+    }
+  },
+  {
+    "id": "day1-team-12",
+    "type": "team",
+    "day": 1,
+    "match_number": 12,
+    "usa_team": {
+      "player1_id": "player-usa-20",
+      "player2_id": "player-usa-23"
+    },
+    "intl_team": {
+      "player1_id": "player-intl-4",
+      "player2_id": "player-intl-6"
+    }
+  },
+  {
+    "id": "day2-singles-1",
+    "type": "singles",
     "day": 2,
-    "revealOrder": "usa-first",
-    "match_number": 5,
+    "match_number": 1,
+    "usa_player_id": "player-usa-15",
+    "intl_player_id": "player-intl-20"
+  },
+  {
+    "id": "day2-singles-2",
+    "type": "singles",
+    "day": 2,
+    "match_number": 2,
+    "usa_player_id": "player-usa-2",
+    "intl_player_id": "player-intl-2"
+  },
+  {
+    "id": "day2-singles-3",
+    "type": "singles",
+    "day": 2,
+    "match_number": 3,
+    "usa_player_id": "player-usa-16",
+    "intl_player_id": "player-intl-9"
+  },
+  {
+    "id": "day2-singles-4",
+    "type": "singles",
+    "day": 2,
+    "match_number": 4,
+    "usa_player_id": "player-usa-24",
+    "intl_player_id": "player-intl-24"
+  },
+  {
     "id": "day2-singles-5",
+    "type": "singles",
+    "day": 2,
+    "match_number": 5,
     "usa_player_id": "player-usa-5",
-    "intl_player_id": "player-intl-1",
-    "type": "singles"
+    "intl_player_id": "player-intl-18"
+  },
+  {
+    "id": "day2-singles-6",
+    "type": "singles",
+    "day": 2,
+    "match_number": 6,
+    "usa_player_id": "player-usa-18",
+    "intl_player_id": "player-intl-6"
+  },
+  {
+    "id": "day2-singles-7",
+    "type": "singles",
+    "day": 2,
+    "match_number": 7,
+    "usa_player_id": "player-usa-4",
+    "intl_player_id": "player-intl-13"
+  },
+  {
+    "id": "day2-singles-8",
+    "type": "singles",
+    "day": 2,
+    "match_number": 8,
+    "usa_player_id": "player-usa-25",
+    "intl_player_id": "player-intl-11"
+  },
+  {
+    "id": "day2-singles-9",
+    "type": "singles",
+    "day": 2,
+    "match_number": 9,
+    "usa_player_id": "player-usa-17",
+    "intl_player_id": "player-intl-22"
+  },
+  {
+    "id": "day2-singles-10",
+    "type": "singles",
+    "day": 2,
+    "match_number": 10,
+    "usa_player_id": "player-usa-21",
+    "intl_player_id": "player-intl-16"
+  },
+  {
+    "id": "day2-singles-11",
+    "type": "singles",
+    "day": 2,
+    "match_number": 11,
+    "usa_player_id": "player-usa-12",
+    "intl_player_id": "player-intl-7"
+  },
+  {
+    "id": "day2-singles-12",
+    "type": "singles",
+    "day": 2,
+    "match_number": 12,
+    "usa_player_id": "player-usa-1",
+    "intl_player_id": "player-intl-5"
+  },
+  {
+    "id": "day2-singles-13",
+    "type": "singles",
+    "day": 2,
+    "match_number": 13,
+    "usa_player_id": "player-usa-19",
+    "intl_player_id": "player-intl-10"
+  },
+  {
+    "id": "day2-singles-14",
+    "type": "singles",
+    "day": 2,
+    "match_number": 14,
+    "usa_player_id": "player-usa-7",
+    "intl_player_id": "player-intl-17"
+  },
+  {
+    "id": "day2-singles-15",
+    "type": "singles",
+    "day": 2,
+    "match_number": 15,
+    "usa_player_id": "player-usa-13",
+    "intl_player_id": "player-intl-1"
+  },
+  {
+    "id": "day2-singles-16",
+    "type": "singles",
+    "day": 2,
+    "match_number": 16,
+    "usa_player_id": "player-usa-8",
+    "intl_player_id": "player-intl-4"
+  },
+  {
+    "id": "day2-singles-17",
+    "type": "singles",
+    "day": 2,
+    "match_number": 17,
+    "usa_player_id": "player-usa-9",
+    "intl_player_id": "player-intl-12"
+  },
+  {
+    "id": "day2-singles-18",
+    "type": "singles",
+    "day": 2,
+    "match_number": 18,
+    "usa_player_id": "player-usa-20",
+    "intl_player_id": "player-intl-23"
+  },
+  {
+    "id": "day2-singles-19",
+    "type": "singles",
+    "day": 2,
+    "match_number": 19,
+    "usa_player_id": "player-usa-11",
+    "intl_player_id": "player-intl-8"
+  },
+  {
+    "id": "day2-singles-20",
+    "type": "singles",
+    "day": 2,
+    "match_number": 20,
+    "usa_player_id": "player-usa-6",
+    "intl_player_id": "player-intl-3"
+  },
+  {
+    "id": "day2-singles-21",
+    "type": "singles",
+    "day": 2,
+    "match_number": 21,
+    "usa_player_id": "player-usa-3",
+    "intl_player_id": "player-intl-21"
+  },
+  {
+    "id": "day2-singles-22",
+    "type": "singles",
+    "day": 2,
+    "match_number": 22,
+    "usa_player_id": "player-usa-23",
+    "intl_player_id": "player-intl-14"
+  },
+  {
+    "id": "day2-singles-23",
+    "type": "singles",
+    "day": 2,
+    "match_number": 23,
+    "usa_player_id": "player-usa-22",
+    "intl_player_id": "player-intl-19"
+  },
+  {
+    "id": "day2-singles-24",
+    "type": "singles",
+    "day": 2,
+    "match_number": 24,
+    "usa_player_id": "player-usa-10",
+    "intl_player_id": "player-intl-15"
   }
 ]

@@ -93,37 +93,92 @@
     const resultById = new Map(matchResults.map((r) => [r.matchId || r.id, r]));
     const byId = new Map(players.map((p) => [p.id, p]));
     const nameFor = (id) => { const p = byId.get(id); return p ? playerLabel(p) : ''; };
-    const days = [1, 2];
+
     let html = '';
-    for (const day of days) {
-      const dayPairs = pairings.filter((p) => Number(p.day) === day)
-        .sort((a, b) => Number(a.match_number || 0) - Number(b.match_number || 0));
-      if (dayPairs.length === 0) continue;
-      html += `<h3>Day ${day}${day === 1 ? ' — Team Matches' : ' — Singles'}</h3>`;
-      html += `<table class="pairings-table"><thead><tr>
-        <th>#</th><th>USA</th><th>International</th><th>Winner</th>
+
+    // --- Day 1: team matches, each pairing plays 3 formats (T1/T2/T3). ---
+    const day1Pairs = pairings.filter((p) => Number(p.day) === 1)
+      .sort((a, b) => Number(a.match_number || 0) - Number(b.match_number || 0));
+    if (day1Pairs.length > 0) {
+      html += `<h3>Day 1 — Team Matches (Fri Oct 17)</h3>`;
+      html += `<p class="pairings-note">Each pairing plays three formats: Best Ball, Alt-Shot, Best Ball. Two points per format (win 2, tie 1).</p>`;
+      html += `<table class="pairings-table pairings-day1"><thead><tr>
+        <th>#</th><th>USA</th><th>International</th>
+        <th>T1<br><span class="format-name">Best Ball</span></th>
+        <th>T2<br><span class="format-name">Alt-Shot</span></th>
+        <th>T3<br><span class="format-name">Best Ball</span></th>
+        <th>Total</th>
       </tr></thead><tbody>`;
-      for (const p of dayPairs) {
+      for (const p of day1Pairs) {
         const r = resultById.get(p.id) || {};
-        const usaCell = p.type === 'team'
-          ? `${escape(nameFor(p.usa_team?.player1_id))} / ${escape(nameFor(p.usa_team?.player2_id))}`
-          : escape(nameFor(p.usa_player_id));
-        const intlCell = p.type === 'team'
-          ? `${escape(nameFor(p.intl_team?.player1_id))} / ${escape(nameFor(p.intl_team?.player2_id))}`
-          : escape(nameFor(p.intl_player_id));
-        const winnerCls = r.winner === 'USA' ? 'winner-usa'
-                        : r.winner === 'International' ? 'winner-intl'
-                        : 'winner-tie';
+        const formats = Array.isArray(r.formats) ? r.formats : [];
+        const usaCell = `${escape(nameFor(p.usa_team?.player1_id))}<br>${escape(nameFor(p.usa_team?.player2_id))}`;
+        const intlCell = `${escape(nameFor(p.intl_team?.player1_id))}<br>${escape(nameFor(p.intl_team?.player2_id))}`;
+        const fmtCell = (f) => {
+          if (!f) return '<td class="format-cell empty">—</td>';
+          const cls = f.winner === 'USA' ? 'winner-usa'
+                    : f.winner === 'International' ? 'winner-intl'
+                    : 'winner-tie';
+          return `<td class="format-cell ${cls}"><div class="format-status">${escape(f.status)}</div><div class="format-points">${fmtPts(f.usaPoints)}–${fmtPts(f.intlPoints)}</div></td>`;
+        };
+        const totCls = r.usaTotal > r.intlTotal ? 'winner-usa'
+                     : r.intlTotal > r.usaTotal ? 'winner-intl'
+                     : 'winner-tie';
         html += `<tr>
-          <td>${escape(p.match_number || '')}</td>
-          <td>${usaCell}</td>
-          <td>${intlCell}</td>
-          <td class="${winnerCls}">${escape(r.winner || '—')}</td>
+          <td class="match-num">${escape(p.match_number || '')}</td>
+          <td class="pair-cell">${usaCell}</td>
+          <td class="pair-cell">${intlCell}</td>
+          ${fmtCell(formats[0])}
+          ${fmtCell(formats[1])}
+          ${fmtCell(formats[2])}
+          <td class="total-cell ${totCls}"><strong>${fmtPts(r.usaTotal)}–${fmtPts(r.intlTotal)}</strong></td>
         </tr>`;
       }
       html += `</tbody></table>`;
     }
+
+    // --- Day 2: singles, each pairing plays 3 segments worth 1 pt each. ---
+    const day2Pairs = pairings.filter((p) => Number(p.day) === 2)
+      .sort((a, b) => Number(a.match_number || 0) - Number(b.match_number || 0));
+    if (day2Pairs.length > 0) {
+      html += `<h3>Day 2 — Singles (Sat Oct 18)</h3>`;
+      html += `<p class="pairings-note">Each singles pairing plays three segments. One point per segment (win 1, tie 0.5).</p>`;
+      html += `<table class="pairings-table pairings-day2"><thead><tr>
+        <th>#</th><th>USA</th><th>International</th>
+        <th>Seg 1</th><th>Seg 2</th><th>Seg 3</th><th>Total</th>
+      </tr></thead><tbody>`;
+      for (const p of day2Pairs) {
+        const r = resultById.get(p.id) || {};
+        const segments = Array.isArray(r.segments) ? r.segments : [];
+        const segCell = (s) => {
+          if (!s) return '<td class="seg-cell empty">—</td>';
+          const cls = s.winner === 'USA' ? 'winner-usa'
+                    : s.winner === 'International' ? 'winner-intl'
+                    : 'winner-tie';
+          return `<td class="seg-cell ${cls}"><div class="seg-status">${escape(s.status)}</div><div class="seg-points">${fmtPts(s.usaPoints)}–${fmtPts(s.intlPoints)}</div></td>`;
+        };
+        const totCls = r.usaTotal > r.intlTotal ? 'winner-usa'
+                     : r.intlTotal > r.usaTotal ? 'winner-intl'
+                     : 'winner-tie';
+        html += `<tr>
+          <td class="match-num">${escape(p.match_number || '')}</td>
+          <td class="pair-cell">${escape(nameFor(p.usa_player_id))}</td>
+          <td class="pair-cell">${escape(nameFor(p.intl_player_id))}</td>
+          ${segCell(segments[0])}
+          ${segCell(segments[1])}
+          ${segCell(segments[2])}
+          <td class="total-cell ${totCls}"><strong>${fmtPts(r.usaTotal)}–${fmtPts(r.intlTotal)}</strong></td>
+        </tr>`;
+      }
+      html += `</tbody></table>`;
+    }
+
     mount.innerHTML = html;
+  }
+
+  function fmtPts(n) {
+    if (n === undefined || n === null) return '';
+    return Number.isInteger(n) ? String(n) : n.toFixed(1);
   }
 
   function renderNews(news) {

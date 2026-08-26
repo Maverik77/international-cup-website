@@ -1,218 +1,1070 @@
 [
   {
-    "matchId": "day1-team-8",
-    "winner": "Tie",
-    "updatedAt": "2025-10-19T14:15:39.927Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-23",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.208Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-7",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.088Z",
-    "timestamp": 1760883339927
-  },
-  {
     "matchId": "day1-team-1",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:39.987Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-3",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.087Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-6",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:39.988Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-19",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.208Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-17",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.207Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-4",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:39.989Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-13",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.206Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-10",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.089Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-12",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:39.989Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-20",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.208Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-1",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.049Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-7",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:39.990Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-8",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.088Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-9",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.047Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-11",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.047Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-6",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.088Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-11",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.089Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-14",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.207Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-3",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.048Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-2",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.086Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-15",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.207Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-22",
-    "winner": "Tie",
-    "updatedAt": "2025-10-19T14:15:40.208Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-4",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.087Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-21",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.208Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-18",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.207Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-24",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.209Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-12",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.090Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day1-team-10",
-    "winner": "Tie",
-    "updatedAt": "2025-10-19T14:15:40.048Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-16",
-    "winner": "USA",
-    "updatedAt": "2025-10-19T14:15:40.207Z",
-    "timestamp": 1760883339927
-  },
-  {
-    "matchId": "day2-singles-9",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.089Z",
-    "timestamp": 1760883339927
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 6
   },
   {
     "matchId": "day1-team-2",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.049Z",
-    "timestamp": 1760883339927
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "L 3 & 1",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "L 2 & 1",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 4,
+    "intlTotal": 2
+  },
+  {
+    "matchId": "day1-team-3",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "2 down",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "2 down",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 4,
+    "intlTotal": 2
+  },
+  {
+    "matchId": "day1-team-4",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "Tied",
+        "usaPoints": 1,
+        "intlPoints": 1,
+        "winner": "Tie"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "L 2 & 1",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 3
   },
   {
     "matchId": "day1-team-5",
-    "winner": "Tie",
-    "updatedAt": "2025-10-19T14:15:40.049Z",
-    "timestamp": 1760883339927
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "L 3 & 2",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "Tied",
+        "usaPoints": 1,
+        "intlPoints": 1,
+        "winner": "Tie"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 3
+  },
+  {
+    "matchId": "day1-team-6",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "Tied",
+        "usaPoints": 1,
+        "intlPoints": 1,
+        "winner": "Tie"
+      }
+    ],
+    "usaTotal": 1,
+    "intlTotal": 5
+  },
+  {
+    "matchId": "day1-team-7",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "L 3 & 2",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 2,
+    "intlTotal": 4
+  },
+  {
+    "matchId": "day1-team-8",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 6
+  },
+  {
+    "matchId": "day1-team-9",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "1 down",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "Tied",
+        "usaPoints": 1,
+        "intlPoints": 1,
+        "winner": "Tie"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "L 3 & 2",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 5,
+    "intlTotal": 1
+  },
+  {
+    "matchId": "day1-team-10",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "Tied",
+        "usaPoints": 1,
+        "intlPoints": 1,
+        "winner": "Tie"
+      }
+    ],
+    "usaTotal": 1,
+    "intlTotal": 5
+  },
+  {
+    "matchId": "day1-team-11",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "2 down",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "Tied",
+        "usaPoints": 1,
+        "intlPoints": 1,
+        "winner": "Tie"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "2 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 3
+  },
+  {
+    "matchId": "day1-team-12",
+    "day": 1,
+    "type": "team",
+    "formats": [
+      {
+        "round": "T1",
+        "format": "Best Ball",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T2",
+        "format": "Alt-Shot",
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 2,
+        "winner": "International"
+      },
+      {
+        "round": "T3",
+        "format": "Best Ball",
+        "status": "L 2 & 1",
+        "usaPoints": 2,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 2,
+    "intlTotal": 4
+  },
+  {
+    "matchId": "day2-singles-1",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "2 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "4 & 3",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 0,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-2",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "L 3 & 1",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 1,
+    "intlTotal": 2,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-3",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "4 & 3",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "4 & 3",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 2.5,
+    "intlTotal": 0.5,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-4",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "L 3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "4 & 3",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 1,
+    "intlTotal": 2,
+    "winner": "International"
   },
   {
     "matchId": "day2-singles-5",
-    "winner": "International",
-    "updatedAt": "2025-10-19T14:15:40.087Z",
-    "timestamp": 1760883339927
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "2 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0.5,
+    "intlTotal": 2.5,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-6",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 3,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-7",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "1 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "2 & 1",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 0,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-8",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "5 & 4",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 3,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-9",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 3,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-10",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0.5,
+    "intlTotal": 2.5,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-11",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 3,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-12",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 1",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "4 & 3",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "5 & 4",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 0,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-13",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0.5,
+    "intlTotal": 2.5,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-14",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0.5,
+    "intlTotal": 2.5,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-15",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "7 & 5",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 0,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-16",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "1 down",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "3 & 1",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "2 & 1",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 2,
+    "intlTotal": 1,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-17",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "2 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "7 & 6",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 3,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-18",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "2 & 1",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "2 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 0,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-19",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "2 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "2 up",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 3,
+    "intlTotal": 0,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-20",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "1 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "4 & 3",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0,
+    "intlTotal": 3,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-21",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "tied",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "tied",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      }
+    ],
+    "usaTotal": 1.5,
+    "intlTotal": 1.5,
+    "winner": "Tie"
+  },
+  {
+    "matchId": "day2-singles-22",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "2 up",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      }
+    ],
+    "usaTotal": 0.5,
+    "intlTotal": 2.5,
+    "winner": "International"
+  },
+  {
+    "matchId": "day2-singles-23",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "L 2 & 1",
+        "usaPoints": 0,
+        "intlPoints": 1,
+        "winner": "International"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 2,
+    "intlTotal": 1,
+    "winner": "USA"
+  },
+  {
+    "matchId": "day2-singles-24",
+    "day": 2,
+    "type": "singles",
+    "segments": [
+      {
+        "status": "tied",
+        "usaPoints": 0.5,
+        "intlPoints": 0.5,
+        "winner": "Tie"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      },
+      {
+        "status": "3 & 2",
+        "usaPoints": 1,
+        "intlPoints": 0,
+        "winner": "USA"
+      }
+    ],
+    "usaTotal": 2.5,
+    "intlTotal": 0.5,
+    "winner": "USA"
   }
 ]
