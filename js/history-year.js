@@ -181,13 +181,17 @@
     return Number.isInteger(n) ? String(n) : n.toFixed(1);
   }
 
-  // Golf Genius records some statuses with a leading "L " (e.g. "L 3 & 1") when
-  // reporting from the losing team's perspective. Our display shows one row per
-  // pairing with the winner cell color-coded, so the "L" is redundant and reads as
-  // if the winning team lost. Strip it so the status always reads from the winner's
-  // point of view.
+  // Golf Genius records match statuses from a specific team's perspective:
+  //   "L 3 & 1" = that team lost 3 & 1 (winner won 3 & 1)
+  //   "2 down"  = that team was 2 holes down (winner was 2 up)
+  // Our archive display shows one row per pairing with the winner cell color-coded,
+  // so a losing-perspective status reads as if the winning team lost. Rewrite to
+  // the winner's point of view: strip "L " prefix and flip "N down" → "N up".
   function cleanStatus(s) {
-    return String(s || '').replace(/^L\s+/i, '').trim();
+    let out = String(s || '').trim();
+    out = out.replace(/^L\s+/i, '');
+    out = out.replace(/^(\d+)\s+down\b/i, '$1 up');
+    return out;
   }
 
   function renderNews(news) {
