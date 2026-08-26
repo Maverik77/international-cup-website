@@ -142,10 +142,10 @@
       .sort((a, b) => Number(a.match_number || 0) - Number(b.match_number || 0));
     if (day2Pairs.length > 0) {
       html += `<h3>Day 2 — Singles (Sat Oct 18)</h3>`;
-      html += `<p class="pairings-note">Each singles pairing plays three segments. One point per segment (win 1, tie 0.5).</p>`;
+      html += `<p class="pairings-note">Each singles pairing awards three points: <strong>Front 9</strong>, <strong>Back 9</strong>, and <strong>Overall</strong> (win 1, tie 0.5). Overall is decided by total holes won across all 18 — you can split front + back and still tie overall.</p>`;
       html += `<table class="pairings-table pairings-day2"><thead><tr>
         <th>#</th><th>USA</th><th>International</th>
-        <th>Seg 1</th><th>Seg 2</th><th>Seg 3</th><th>Total</th>
+        <th>Front 9</th><th>Back 9</th><th>Overall</th><th>Total</th>
       </tr></thead><tbody>`;
       for (const p of day2Pairs) {
         const r = resultById.get(p.id) || {};
