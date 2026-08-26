@@ -119,7 +119,7 @@
           const cls = f.winner === 'USA' ? 'winner-usa'
                     : f.winner === 'International' ? 'winner-intl'
                     : 'winner-tie';
-          return `<td class="format-cell ${cls}"><div class="format-status">${escape(f.status)}</div><div class="format-points">${fmtPts(f.usaPoints)}–${fmtPts(f.intlPoints)}</div></td>`;
+          return `<td class="format-cell ${cls}"><div class="format-status">${escape(cleanStatus(f.status))}</div><div class="format-points">${fmtPts(f.usaPoints)}–${fmtPts(f.intlPoints)}</div></td>`;
         };
         const totCls = r.usaTotal > r.intlTotal ? 'winner-usa'
                      : r.intlTotal > r.usaTotal ? 'winner-intl'
@@ -155,7 +155,7 @@
           const cls = s.winner === 'USA' ? 'winner-usa'
                     : s.winner === 'International' ? 'winner-intl'
                     : 'winner-tie';
-          return `<td class="seg-cell ${cls}"><div class="seg-status">${escape(s.status)}</div><div class="seg-points">${fmtPts(s.usaPoints)}–${fmtPts(s.intlPoints)}</div></td>`;
+          return `<td class="seg-cell ${cls}"><div class="seg-status">${escape(cleanStatus(s.status))}</div><div class="seg-points">${fmtPts(s.usaPoints)}–${fmtPts(s.intlPoints)}</div></td>`;
         };
         const totCls = r.usaTotal > r.intlTotal ? 'winner-usa'
                      : r.intlTotal > r.usaTotal ? 'winner-intl'
@@ -179,6 +179,15 @@
   function fmtPts(n) {
     if (n === undefined || n === null) return '';
     return Number.isInteger(n) ? String(n) : n.toFixed(1);
+  }
+
+  // Golf Genius records some statuses with a leading "L " (e.g. "L 3 & 1") when
+  // reporting from the losing team's perspective. Our display shows one row per
+  // pairing with the winner cell color-coded, so the "L" is redundant and reads as
+  // if the winning team lost. Strip it so the status always reads from the winner's
+  // point of view.
+  function cleanStatus(s) {
+    return String(s || '').replace(/^L\s+/i, '').trim();
   }
 
   function renderNews(news) {
