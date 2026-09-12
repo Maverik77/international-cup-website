@@ -118,3 +118,4 @@ coverage/
 *.backup 
 # SAM build artifacts
 .aws-sam/
+lambda/*/fn.zip
