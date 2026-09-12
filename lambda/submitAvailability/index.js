@@ -147,11 +147,13 @@ async function sendAdminEmail(item) {
         `Admin dashboard: https://www.lansdowne-international-cup.com/admin/availability.html`,
     ].join('\n');
 
+    // Address the notify list directly. Putting SENDER_EMAIL in To used to be
+    // harmless because the domain had no MX record, but now that it receives
+    // mail every notification would hard bounce and suppress the address.
     await ses.send(new SendEmailCommand({
         Source: SENDER_EMAIL,
         Destination: {
-            ToAddresses: [SENDER_EMAIL],
-            BccAddresses: NOTIFY_LIST,
+            ToAddresses: NOTIFY_LIST,
         },
         Message: {
             Subject: { Charset: 'UTF-8', Data: subject },
@@ -181,9 +183,12 @@ async function sendSubmitterConfirmation(item) {
         `— International Cup 2026`,
     ].join('\n');
 
+    // The body invites a reply, so point it somewhere a human reads. Replies to
+    // SENDER_EMAIL are archived to S3 and seen by nobody.
     await ses.send(new SendEmailCommand({
         Source: SENDER_EMAIL,
         Destination: { ToAddresses: [item.email] },
+        ReplyToAddresses: NOTIFY_LIST,
         Message: {
             Subject: { Charset: 'UTF-8', Data: subject },
             Body: { Text: { Charset: 'UTF-8', Data: body } },
