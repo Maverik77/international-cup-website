@@ -49,7 +49,13 @@ class NewsManager {
     // Format date for display
     formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
+        // A bare YYYY-MM-DD parses as UTC midnight, which renders as the day
+        // before for anyone west of Greenwich. Build it in local time instead.
+        const ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString);
+        const date = ymd
+            ? new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]))
+            : new Date(dateString);
+        return date.toLocaleDateString('en-US', options);
     }
 
     // Escape HTML to prevent XSS, but allow safe internal links
