@@ -88,6 +88,19 @@ p {
     transform: translateY(-2px);
 }
 
+/* On the hero the default indigo sits on an indigo gradient, which left
+   "See Schedule" at a 1.32:1 contrast ratio. Invert it against the purple. */
+.hero .btn-secondary {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+.hero .btn-secondary:hover {
+    background: #ffffff;
+    color: #4c51bf;
+    border-color: #ffffff;
+}
+
 /* Navigation */
 .navbar {
     position: fixed;
@@ -185,12 +198,14 @@ p {
 
 /* Hero Section */
 .hero {
-    min-height: 100vh;
+    /* The content is only ~370px tall, so a full 100vh left a large empty
+       band above and below it on tall displays. Cap the height instead. */
+    min-height: clamp(480px, 68vh, 660px);
     display: flex;
     align-items: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 5rem 1rem;
+    padding: clamp(3rem, 6vh, 4.5rem) 1rem;
     position: relative;
     overflow: hidden;
 }
@@ -851,7 +866,8 @@ section {
     .hero {
         flex-direction: column;
         text-align: center;
-        padding: 8rem 1rem 4rem;
+        min-height: auto;
+        padding: 6rem 1rem 3.5rem;
     }
 
     .hero-image {
@@ -2064,7 +2080,7 @@ textarea:focus {
 /* News Section Styles */
 .news {
     background: #f8fafc;
-    padding: 6rem 0;
+    padding: clamp(3rem, 7vh, 4.5rem) 0;
 }
 
 .news-grid {
