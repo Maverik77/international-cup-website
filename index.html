@@ -190,7 +190,7 @@
                     <h3>Team USA</h3>
                     <p>Representing the red, white, and blue with pride and determination.</p>
                     <div class="team-stats">
-                        <span class="stat-item">🏌️‍♂️ 24 Players</span>
+                        <span class="stat-item">🏌️‍♂️ 26 Players</span>
                         <span class="stat-item">🏠 1 Country One dream</span>
                     </div>
                     <button class="btn btn-secondary roster-toggle" onclick="toggleRoster('usa')">View Roster</button>
@@ -202,7 +202,7 @@
                     <h3>Team International</h3>
                     <p>A diverse coalition of golfers from around the globe, bringing together different playing styles and cultures. Unity through diversity on the fairways.</p>
                     <div class="team-stats">
-                        <span class="stat-item">🌍 12+ Countries</span>
+                        <span class="stat-item">🌍 9 Countries</span>
                         <span class="stat-item">🏌️‍♂️ 24 Players</span>
                     </div>
                     <button class="btn btn-secondary roster-toggle" onclick="toggleRoster('intl')">View Roster</button>
@@ -217,10 +217,35 @@
                         <h3>🇺🇸 Team USA Roster</h3>
                         <span class="close-roster" onclick="toggleRoster('usa')">&times;</span>
                     </div>
-                    <div class="roster-placeholder">
-                        <h4>Roster being finalized</h4>
-                        <p>The 2026 USA team roster will be announced closer to the event. Check back soon.</p>
-                    </div>
+                    <p class="squad-note">26 players. Listed alphabetically by surname.</p>
+                    <ul class="squad-names squad-names--flat">
+                        <li>John Altman</li>
+                        <li>Frank Ambrose</li>
+                        <li>Keith Barnes</li>
+                        <li>Jeff Barnette</li>
+                        <li>Jay Collins</li>
+                        <li>Scott Covino</li>
+                        <li>Chris Crouse</li>
+                        <li>Chrissy Crouse</li>
+                        <li>John Daley</li>
+                        <li>Victor Esposito</li>
+                        <li>Mitch Freedman</li>
+                        <li>Jeff Galkin</li>
+                        <li>Jim Gillie</li>
+                        <li>Seth Holladay</li>
+                        <li>Dave Kohlasch</li>
+                        <li>Kevin Kozlowski</li>
+                        <li>Jeff Kritsberg</li>
+                        <li>Kyle Lenihan</li>
+                        <li>Dominic Michael</li>
+                        <li>Jeff Miller</li>
+                        <li>Tom Murphy</li>
+                        <li>Greg Parda</li>
+                        <li>Anthony Rizzo</li>
+                        <li>Jay Vosburgh</li>
+                        <li>Maggie Vosburgh</li>
+                        <li>Tom Walsh</li>
+                    </ul>
                 </div>
 
                 <!-- International Roster -->
@@ -229,9 +254,82 @@
                         <h3>🌍 Team International Roster</h3>
                         <span class="close-roster" onclick="toggleRoster('intl')">&times;</span>
                     </div>
-                    <div class="roster-placeholder">
-                        <h4>Roster being finalized</h4>
-                        <p>The 2026 International team roster will be announced closer to the event. Check back soon.</p>
+                    <p class="squad-note">24 players from 9 countries. Listed alphabetically by surname within each country.</p>
+                    <div class="squad-countries">
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇮🇳</span>India</h4>
+                          <ul class="squad-names">
+                            <li>Ashvini Anjutgi</li>
+                            <li>Vijay Davuluri</li>
+                            <li>Chakshush Kumar</li>
+                            <li>Raj Malik</li>
+                            <li>Sridhar Muthusamy</li>
+                            <li>Suresh Saribala</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England</h4>
+                          <ul class="squad-names">
+                            <li>Mohammed Ashraf</li>
+                            <li>Ben Hedges</li>
+                            <li>Tim Pearce</li>
+                            <li>Daren Wickham</li>
+                            <li>Philip Woodisse</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇦🇺</span>Australia</h4>
+                          <ul class="squad-names">
+                            <li>Rhys Gully</li>
+                            <li>Troy Hazzard</li>
+                            <li>Phillip Jewell</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇰🇷</span>Korea</h4>
+                          <ul class="squad-names">
+                            <li>Jun Bae</li>
+                            <li>Yun Sang Bae</li>
+                            <li>Michael Kim</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇩🇪</span>Germany</h4>
+                          <ul class="squad-names">
+                            <li>Stefan Lambert</li>
+                            <li>Erik Wagner</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇨🇦</span>Canada</h4>
+                          <ul class="squad-names">
+                            <li>Jonathan Doan</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇵🇰</span>Pakistan</h4>
+                          <ul class="squad-names">
+                            <li>Soban Ansari</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Scotland</h4>
+                          <ul class="squad-names">
+                            <li>Robbie Neilson</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇹🇿</span>Tanzania</h4>
+                          <ul class="squad-names">
+                            <li>Uttam Bharwani</li>
+                          </ul>
+                        </div>
+                        <div class="squad-group">
+                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🌍</span>To be confirmed</h4>
+                          <ul class="squad-names">
+                            <li>Jim Lee</li>
+                          </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -602,6 +700,78 @@
             border-radius: 8px;
             color: #666;
             font-size: 0.95rem;
+        }
+
+        /* Published squad lists (Teams section) */
+        .squad-note {
+            margin: 0 0 1.75rem;
+            color: #5a6472;
+            font-size: 0.95rem;
+        }
+
+        .squad-names {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .squad-names li {
+            padding: 0.4rem 0;
+            color: #2d3748;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        /* Team USA has no country grouping, so the 26 names flow as one list. */
+        .squad-names--flat {
+            columns: 3 190px;
+            column-gap: 2.5rem;
+        }
+
+        .squad-names--flat li {
+            break-inside: avoid;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .squad-countries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1.75rem 2.5rem;
+        }
+
+        .squad-group {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 0.85rem;
+        }
+
+        .squad-country {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin: 0 0 0.35rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a202c;
+            letter-spacing: 0.01em;
+        }
+
+        .squad-flag {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .squad-group .squad-names li {
+            padding: 0.3rem 0;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .squad-names--flat { columns: 1; }
+            .squad-countries { gap: 1.5rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .team-roster { animation: none; }
         }
         
         @media (max-width: 768px) {
