@@ -37,8 +37,10 @@ function hashOf(file) {
     return hashes.get(file);
 }
 
-// Local .css/.js only: skip absolute URLs and protocol-relative CDN links.
-const REF = /(href|src)="((?!https?:|\/\/)[^"]+?\.(?:css|js))(\?[^"]*)?"/g;
+// Local assets only: skip absolute URLs and protocol-relative CDN links.
+// Images are included because S3 serves them with no cache-control at all,
+// which leaves browsers free to cache them heuristically for weeks.
+const REF = /(href|src)="((?!https?:|\/\/)[^"]+?\.(?:css|js|png|jpe?g|gif|svg|webp|ico))(\?[^"]*)?"/g;
 
 let changed = 0, stale = [];
 for (const html of htmlFiles(root)) {
