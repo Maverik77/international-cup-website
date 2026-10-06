@@ -2740,4 +2740,18 @@ textarea:focus {
   border-radius: 12px;
   color: #555;
 }
-.venue-placeholder h3 { color: #333; margin-bottom: 0.5rem; } 
+.venue-placeholder h3 { color: #333; margin-bottom: 0.5rem; }
+
+/* Venue link in the schedule: the surrounding copy is grey, so the link needs
+   to read as a link without shouting. */
+.venue-link {
+  color: var(--primary-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.venue-link:hover,
+.venue-link:focus-visible {
+  color: var(--secondary-color);
+}
