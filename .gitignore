@@ -119,3 +119,6 @@ coverage/
 # SAM build artifacts
 .aws-sam/
 lambda/*/fn.zip
+
+# Local contact lists - public repo, these must not be committed
+contacts/

@@ -1,0 +1,267 @@
+{
+  "updated": "2026-10-08",
+  "note": "publish=true means the player agreed to appear on the public website. publish=false means party cards only, keep off the site. publish=null means we have heard nothing from them yet. Anyone can withdraw at any time; honour that over whatever is recorded here.",
+  "teams": {
+    "international": [
+      {
+        "name": "Ashvini Anjutgi",
+        "country": "India",
+        "publish": null
+      },
+      {
+        "name": "Vijay Davuluri",
+        "country": "India",
+        "publish": null
+      },
+      {
+        "name": "Anil Katarki",
+        "country": "India",
+        "publish": null
+      },
+      {
+        "name": "Chakshush Kumar",
+        "country": "India",
+        "publish": null
+      },
+      {
+        "name": "Raj Malik",
+        "country": "India",
+        "publish": null
+      },
+      {
+        "name": "Sridhar Muthusamy",
+        "country": "India",
+        "publish": null
+      },
+      {
+        "name": "Suresh Saribala",
+        "country": "India",
+        "photo": "pics/players/suresh-saribala.jpg",
+        "publish": true
+      },
+      {
+        "name": "Mohammed Ashraf",
+        "country": "England",
+        "publish": null
+      },
+      {
+        "name": "Ben Hedges",
+        "country": "England",
+        "publish": null
+      },
+      {
+        "name": "Tim Pearce",
+        "country": "England",
+        "publish": null
+      },
+      {
+        "name": "Daren Wickham",
+        "country": "England",
+        "publish": null
+      },
+      {
+        "name": "Philip Woodisse",
+        "country": "England",
+        "publish": null
+      },
+      {
+        "name": "Jun Bae",
+        "country": "Korea",
+        "publish": null
+      },
+      {
+        "name": "Yun Sang Bae",
+        "country": "Korea",
+        "hometown": "Seoul",
+        "photo": "pics/players/yun-sang-bae.jpg",
+        "publish": true
+      },
+      {
+        "name": "Joung Barnes",
+        "country": "Korea",
+        "publish": null
+      },
+      {
+        "name": "Michael Kim",
+        "country": "Korea",
+        "publish": null
+      },
+      {
+        "name": "Jim Lee",
+        "country": "Korea",
+        "publish": null
+      },
+      {
+        "name": "Rhys Gully",
+        "country": "Australia",
+        "publish": null
+      },
+      {
+        "name": "Phillip Jewell",
+        "country": "Australia",
+        "publish": null
+      },
+      {
+        "name": "Stefan Lambert",
+        "country": "Germany",
+        "hometown": "Wiesbaden",
+        "photo": "pics/players/stefan-lambert.jpg",
+        "publish": true
+      },
+      {
+        "name": "Erik Wagner",
+        "country": "Germany",
+        "publish": null
+      },
+      {
+        "name": "Jonathan Doan",
+        "country": "Canada",
+        "publish": null
+      },
+      {
+        "name": "Soban Ansari",
+        "country": "Pakistan",
+        "hometown": "Rawalpindi",
+        "school": "VCU",
+        "photo": "pics/players/soban-ansari.jpg",
+        "publish": true
+      },
+      {
+        "name": "Robbie Neilson",
+        "country": "Scotland",
+        "hometown": "Wishaw",
+        "publish": true
+      },
+      {
+        "name": "Alba Phillips",
+        "country": "Spain",
+        "publish": null
+      },
+      {
+        "name": "Uttam Bharwani",
+        "country": "Tanzania",
+        "publish": null
+      }
+    ],
+    "usa": [
+      {
+        "name": "John Altman",
+        "hometown": "Washington, DC",
+        "school": "Virginia Tech",
+        "publish": true
+      },
+      {
+        "name": "Frank Ambrose",
+        "hometown": "Kingston, NY",
+        "school": "Siena University",
+        "photo": "pics/players/frank-ambrose.jpg",
+        "publish": true
+      },
+      {
+        "name": "Keith Barnes",
+        "publish": null
+      },
+      {
+        "name": "Jeff Barnette",
+        "publish": null
+      },
+      {
+        "name": "Jay Collins",
+        "publish": null
+      },
+      {
+        "name": "Scott Covino",
+        "publish": null
+      },
+      {
+        "name": "Chris Crouse",
+        "publish": null
+      },
+      {
+        "name": "Chrissy Crouse",
+        "publish": null
+      },
+      {
+        "name": "John Daley",
+        "publish": null
+      },
+      {
+        "name": "Victor Esposito",
+        "publish": null
+      },
+      {
+        "name": "Mitch Freedman",
+        "publish": null
+      },
+      {
+        "name": "Jeff Galkin",
+        "publish": null
+      },
+      {
+        "name": "Jim Gillie",
+        "publish": null
+      },
+      {
+        "name": "Seth Holladay",
+        "publish": null
+      },
+      {
+        "name": "Dave Kohlasch",
+        "photo": "pics/players/dave-kohlasch.jpg",
+        "publish": true
+      },
+      {
+        "name": "Kevin Kozlowski",
+        "school": "James Madison University",
+        "photo": "pics/players/kevin-kozlowski.jpg",
+        "publish": true
+      },
+      {
+        "name": "Jeff Kritsberg",
+        "hometown": "Syracuse, NY",
+        "publish": true
+      },
+      {
+        "name": "Kyle Lenihan",
+        "publish": null
+      },
+      {
+        "name": "Dominic Michael",
+        "publish": null
+      },
+      {
+        "name": "Jeff Miller",
+        "hometown": "Clifton Heights, PA",
+        "school": "Penn State",
+        "photo": "pics/players/jeff-miller.jpg",
+        "publish": true
+      },
+      {
+        "name": "Tom Murphy",
+        "publish": null
+      },
+      {
+        "name": "Greg Parda",
+        "publish": null
+      },
+      {
+        "name": "Anthony Rizzo",
+        "publish": null
+      },
+      {
+        "name": "Jay Vosburgh",
+        "publish": null
+      },
+      {
+        "name": "Maggie Vosburgh",
+        "publish": null
+      },
+      {
+        "name": "Tom Walsh",
+        "hometown": "Great Falls, VA",
+        "school": "University of Delaware",
+        "publish": false
+      }
+    ]
+  }
+}
