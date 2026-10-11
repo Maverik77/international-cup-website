@@ -1,266 +1,220 @@
 {
-  "updated": "2026-10-08",
-  "note": "publish=true means the player agreed to appear on the public website. publish=false means party cards only, keep off the site. publish=null means we have heard nothing from them yet. Anyone can withdraw at any time; honour that over whatever is recorded here.",
+  "updated": "2026-10-11",
+  "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
       {
         "name": "Ashvini Anjutgi",
-        "country": "India",
-        "publish": null
+        "country": "India"
       },
       {
         "name": "Vijay Davuluri",
-        "country": "India",
-        "publish": null
+        "country": "India"
       },
       {
         "name": "Anil Katarki",
-        "country": "India",
-        "publish": null
+        "country": "India"
       },
       {
         "name": "Chakshush Kumar",
-        "country": "India",
-        "publish": null
+        "country": "India"
       },
       {
         "name": "Raj Malik",
-        "country": "India",
-        "publish": null
+        "country": "India"
       },
       {
         "name": "Sridhar Muthusamy",
-        "country": "India",
-        "publish": null
+        "country": "India"
       },
       {
         "name": "Suresh Saribala",
         "country": "India",
-        "photo": "pics/players/suresh-saribala.jpg",
-        "publish": true
+        "photo": "pics/players/suresh-saribala.jpg"
       },
       {
         "name": "Mohammed Ashraf",
-        "country": "England",
-        "publish": null
+        "country": "England"
       },
       {
         "name": "Ben Hedges",
-        "country": "England",
-        "publish": null
+        "country": "England"
       },
       {
         "name": "Tim Pearce",
-        "country": "England",
-        "publish": null
+        "country": "England"
       },
       {
         "name": "Daren Wickham",
-        "country": "England",
-        "publish": null
+        "country": "England"
       },
       {
         "name": "Philip Woodisse",
-        "country": "England",
-        "publish": null
+        "country": "England"
       },
       {
         "name": "Jun Bae",
-        "country": "Korea",
-        "publish": null
+        "country": "Korea"
       },
       {
         "name": "Yun Sang Bae",
         "country": "Korea",
         "hometown": "Seoul",
-        "photo": "pics/players/yun-sang-bae.jpg",
-        "publish": true
+        "photo": "pics/players/yun-sang-bae.jpg"
       },
       {
         "name": "Joung Barnes",
-        "country": "Korea",
-        "publish": null
+        "country": "Korea"
       },
       {
         "name": "Michael Kim",
-        "country": "Korea",
-        "publish": null
+        "country": "Korea"
       },
       {
         "name": "Jim Lee",
-        "country": "Korea",
-        "publish": null
+        "country": "Korea"
       },
       {
         "name": "Rhys Gully",
-        "country": "Australia",
-        "publish": null
+        "country": "Australia"
       },
       {
         "name": "Phillip Jewell",
-        "country": "Australia",
-        "publish": null
+        "country": "Australia"
       },
       {
         "name": "Stefan Lambert",
         "country": "Germany",
         "hometown": "Wiesbaden",
-        "photo": "pics/players/stefan-lambert.jpg",
-        "publish": true
+        "photo": "pics/players/stefan-lambert.jpg"
       },
       {
         "name": "Erik Wagner",
-        "country": "Germany",
-        "publish": null
+        "country": "Germany"
       },
       {
         "name": "Jonathan Doan",
-        "country": "Canada",
-        "publish": null
+        "country": "Canada"
       },
       {
         "name": "Soban Ansari",
         "country": "Pakistan",
         "hometown": "Rawalpindi",
         "school": "VCU",
-        "photo": "pics/players/soban-ansari.jpg",
-        "publish": true
+        "photo": "pics/players/soban-ansari.jpg"
       },
       {
         "name": "Robbie Neilson",
         "country": "Scotland",
-        "hometown": "Wishaw",
-        "publish": true
+        "hometown": "Wishaw"
       },
       {
         "name": "Alba Phillips",
         "country": "Spain",
-        "publish": null
+        "hometown": "Barcelona",
+        "school": "Indiana University of Pennsylvania",
+        "photo": "pics/players/alba-phillips.jpg"
       },
       {
         "name": "Uttam Bharwani",
-        "country": "Tanzania",
-        "publish": null
+        "country": "Tanzania"
       }
     ],
     "usa": [
       {
         "name": "John Altman",
         "hometown": "Washington, DC",
-        "school": "Virginia Tech",
-        "publish": true
+        "school": "Virginia Tech"
       },
       {
         "name": "Frank Ambrose",
         "hometown": "Kingston, NY",
         "school": "Siena University",
-        "photo": "pics/players/frank-ambrose.jpg",
-        "publish": true
+        "photo": "pics/players/frank-ambrose.jpg"
       },
       {
         "name": "Keith Barnes",
-        "publish": null
+        "photo": "pics/players/keith-barnes.jpg"
       },
       {
-        "name": "Jeff Barnette",
-        "publish": null
+        "name": "Jeff Barnette"
       },
       {
-        "name": "Jay Collins",
-        "publish": null
+        "name": "Jay Collins"
       },
       {
-        "name": "Scott Covino",
-        "publish": null
+        "name": "Scott Covino"
       },
       {
-        "name": "Chris Crouse",
-        "publish": null
+        "name": "Chris Crouse"
       },
       {
-        "name": "Chrissy Crouse",
-        "publish": null
+        "name": "Chrissy Crouse"
       },
       {
-        "name": "John Daley",
-        "publish": null
+        "name": "John Daley"
       },
       {
-        "name": "Victor Esposito",
-        "publish": null
+        "name": "Victor Esposito"
       },
       {
-        "name": "Mitch Freedman",
-        "publish": null
+        "name": "Mitch Freedman"
       },
       {
-        "name": "Jeff Galkin",
-        "publish": null
+        "name": "Jeff Galkin"
       },
       {
-        "name": "Jim Gillie",
-        "publish": null
+        "name": "Jim Gillie"
       },
       {
         "name": "Seth Holladay",
-        "publish": null
+        "hometown": "Unionville, PA",
+        "school": "Penn State University",
+        "photo": "pics/players/seth-holladay.jpg"
       },
       {
         "name": "Dave Kohlasch",
-        "photo": "pics/players/dave-kohlasch.jpg",
-        "publish": true
+        "photo": "pics/players/dave-kohlasch.jpg"
       },
       {
         "name": "Kevin Kozlowski",
+        "hometown": "Endicott, NY",
         "school": "James Madison University",
-        "photo": "pics/players/kevin-kozlowski.jpg",
-        "publish": true
+        "photo": "pics/players/kevin-kozlowski.jpg"
       },
       {
         "name": "Jeff Kritsberg",
-        "hometown": "Syracuse, NY",
-        "publish": true
+        "hometown": "Syracuse, NY"
       },
       {
-        "name": "Kyle Lenihan",
-        "publish": null
+        "name": "Kyle Lenihan"
       },
       {
-        "name": "Dominic Michael",
-        "publish": null
+        "name": "Dominic Michael"
       },
       {
         "name": "Jeff Miller",
         "hometown": "Clifton Heights, PA",
         "school": "Penn State",
-        "photo": "pics/players/jeff-miller.jpg",
-        "publish": true
+        "photo": "pics/players/jeff-miller.jpg"
       },
       {
-        "name": "Tom Murphy",
-        "publish": null
+        "name": "Tom Murphy"
       },
       {
-        "name": "Greg Parda",
-        "publish": null
+        "name": "Greg Parda"
       },
       {
-        "name": "Anthony Rizzo",
-        "publish": null
+        "name": "Anthony Rizzo"
       },
       {
-        "name": "Jay Vosburgh",
-        "publish": null
+        "name": "Jay Vosburgh"
       },
       {
-        "name": "Maggie Vosburgh",
-        "publish": null
+        "name": "Maggie Vosburgh"
       },
       {
-        "name": "Tom Walsh",
-        "hometown": "Great Falls, VA",
-        "school": "University of Delaware",
-        "publish": false
+        "name": "Tom Walsh"
       }
     ]
   }
