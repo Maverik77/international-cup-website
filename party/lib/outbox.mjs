@@ -14,6 +14,7 @@ export function createOutbox({
   maxDelay = 30000,
   enabled = true,
   pushTimeout = 20000,
+  timers = { set: setTimeout, clear: clearTimeout }, // injectable so tests can pin clear/unref
 }) {
   let timer = null;
   let inFlight = false;
@@ -51,11 +52,14 @@ export function createOutbox({
   // injected push gets no such protection. Keep the two numbers in this order.
   function withTimeout(promise) {
     return new Promise((resolve, reject) => {
-      const t = setTimeout(() => { abortWait = null; reject(new Error('timeout')); }, pushTimeout);
-      abortWait = () => { clearTimeout(t); abortWait = null; reject(new Error('stopped')); };
+      const t = timers.set(() => { abortWait = null; reject(new Error('timeout')); }, pushTimeout);
+      // Belt and braces: even if a future edit drops the clear, this timer can
+      // never hold the process open (measured: 20 s extra exit time otherwise).
+      if (t && typeof t.unref === 'function') t.unref();
+      abortWait = () => { timers.clear(t); abortWait = null; reject(new Error('stopped')); };
       promise.then(
-        (v) => { clearTimeout(t); abortWait = null; resolve(v); },
-        (e) => { clearTimeout(t); abortWait = null; reject(e); },
+        (v) => { timers.clear(t); abortWait = null; resolve(v); },
+        (e) => { timers.clear(t); abortWait = null; reject(e); },
       );
     });
   }

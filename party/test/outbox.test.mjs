@@ -36,6 +36,13 @@ function fakeClock() {
   };
 }
 
+// Real timers whose handle ignores unref(): the production code unrefs its
+// timeout timer, but a test that awaits a hung push needs the loop kept alive.
+const keepAliveTimers = {
+  set: (fn, ms) => ({ h: setTimeout(fn, ms), unref() {} }),
+  clear: (x) => clearTimeout(x.h),
+};
+
 function harness({ pushImpl, enabled = true, pushTimeout = 30 } = {}) {
   const clock = fakeClock();
   let state = initialState(show);
@@ -47,7 +54,7 @@ function harness({ pushImpl, enabled = true, pushTimeout = 30 } = {}) {
     onStatus: (s) => statuses.push(s),
     now: () => '2026-10-22T23:00:00.000Z',
     schedule: clock.schedule, cancel: clock.cancel,
-    minDelay: 1000, maxDelay: 30000, enabled, pushTimeout,
+    minDelay: 1000, maxDelay: 30000, enabled, pushTimeout, timers: keepAliveTimers,
   });
   return {
     clock, outbox, pushes, statuses,
@@ -513,4 +520,35 @@ test('markDirty after a failure schedules at the backed-off delay, not minDelay'
   fail = false;
   await h.clock.run();
   assert.equal(h.statuses.at(-1).lastError, null);
+});
+
+test('the push-timeout timer is unref\'d, and stop() clears exactly that handle', async () => {
+  const log = { set: [], cleared: [], unref: [] };
+  const timers = {
+    set: (fn, ms) => { const h = { id: log.set.length, unref() { log.unref.push(this.id); } }; log.set.push({ h, ms }); return h; },
+    clear: (h) => log.cleared.push(h),
+  };
+  const outbox = createOutbox({
+    getState: () => initialState(show), push: () => new Promise(() => {}),
+    schedule: () => 1, cancel: () => {}, pushTimeout: 4321, timers,
+  });
+  const running = outbox.flushNow();
+  await Promise.resolve();
+  await Promise.resolve();
+  assert.equal(log.set.length, 1);
+  assert.equal(log.set[0].ms, 4321);
+  assert.deepEqual(log.unref, [0], 'timeout timer must be unref\'d');
+  assert.equal(log.cleared.length, 0);
+  outbox.stop();
+  await running;
+  assert.deepEqual(log.cleared, [log.set[0].h], 'stop() must clear the timeout handle');
+});
+
+test('a completed push clears its timeout handle too', async () => {
+  const cleared = [];
+  const handles = [];
+  const timers = { set: () => { const h = { unref() {} }; handles.push(h); return h; }, clear: (h) => cleared.push(h) };
+  const outbox = createOutbox({ getState: () => initialState(show), push: async () => {}, schedule: () => 1, cancel: () => {}, timers });
+  await outbox.flushNow();
+  assert.deepEqual(cleared, handles);
 });
