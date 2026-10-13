@@ -91,7 +91,7 @@ test('next on the last slot completes it and stays put; a second next is rejecte
   s = run(s, { name: 'next' });
   assert.equal(s.current['1'], 12);
   assert.equal(s.slots['1'][12].done, true);
-  rejects(s, { name: 'next' }, /^Day 1: that was the last match\.$/);
+  rejects(s, { name: 'next' }, /^Day 1: that was the last match\. Use Undo, or pick another match\.$/);
 });
 
 test('assign rejects the wrong number of players, for both days', () => {
@@ -349,7 +349,7 @@ test('every command type runs against a deeply frozen state without mutating it'
         assert.ok(e instanceof CommandError, `${cmd.name} threw ${e.name}: ${e.message}`);
         continue;
       }
-      if (cmd.name !== 'reveal') assert.notEqual(out, frozen, cmd.name);
+      if (out === frozen) assert.ok(['reveal', 'goto', 'setDay'].includes(cmd.name), `${cmd.name} returned its input`);
       assert.equal(JSON.stringify(frozen), snapshot, `${cmd.name} changed its input`);
       project(out, show);
     }
@@ -474,4 +474,56 @@ test('day 2 duplicates are checked within day 2 only', () => {
 
 test('a clean slot has no problems', () => {
   assert.deepEqual(slotProblems(P(['player-intl-1', 'player-intl-2'], ['player-usa-1', 'player-usa-2']), 1, []), []);
+});
+
+// A show that went through JSON has lost its non-enumerable byId.
+const unindexed = JSON.parse(JSON.stringify(show));
+
+test('reduce fails fast and loudly on a show without byId, and does not blame the operator', () => {
+  assert.equal(unindexed.byId, undefined);
+  for (const bad of [unindexed, undefined, null, {}]) {
+    for (const cmd of [{ name: 'assign', side: 'usa', players: ['player-usa-1', 'player-usa-2'] }, C, { name: 'undo' }]) {
+      assert.throws(() => reduce(initialState(show), cmd, bad),
+        (e) => !(e instanceof CommandError) && /no byId index.*indexShow/.test(e.message));
+    }
+  }
+  assert.doesNotThrow(() => reduce(initialState(show), C, indexShowCopy()));
+});
+function indexShowCopy() { return indexShow(JSON.parse(JSON.stringify(show))); }
+
+test('slotProblems on an unindexed show never throws and does not silently skip the check', () => {
+  const slot = P(['player-intl-1', 'player-intl-2'], ['', '']);
+  for (const bad of [unindexed, {}, null]) {
+    let out;
+    assert.doesNotThrow(() => { out = slotProblems(slot, 1, [], bad); });
+    assert.equal(out.length, 1);
+    assert.match(out[0], /not been indexed/);
+  }
+  assert.deepEqual(slotProblems(slot, 1, []), []);
+  const w = project(initialState(show), unindexed);
+  assert.match(w.slot.problems[0], /not been indexed/);
+  assert.doesNotThrow(() => project(initialState(show), undefined));
+  assert.match(project(initialState(show), undefined).slot.problems[0], /not been indexed/);
+});
+
+test('ids that collide with inherited object members are not players', () => {
+  for (const id of ['constructor', 'toString', '__proto__', 'hasOwnProperty']) {
+    assert.match(slotProblems(P([id, ''], ['', '']), 1, [], show)[0], /is not a player in the show/);
+    rejects(initialState(show), { name: 'assign', side: 'usa', players: [id, 'player-usa-2'] }, /is not on the roster/);
+  }
+});
+
+test('goto to the current slot and setDay to the current day are silent no-ops', () => {
+  const s = run(initialState(show), C);
+  for (const cmd of [{ name: 'goto', index: 0 }, { name: 'setDay', day: 1 }]) {
+    const out = reduce(s, cmd, show);
+    assert.equal(out, s);
+    assert.equal(out.rev, s.rev);
+    assert.equal(out.history.length, s.history.length);
+  }
+  const moved = reduce(s, { name: 'goto', index: 1 }, show);
+  assert.equal(moved.rev, s.rev + 1);
+  assert.equal(reduce(s, { name: 'setDay', day: 2 }, show).rev, s.rev + 1);
+  rejects(s, { name: 'goto', index: 99 }, /There is no match/);
+  rejects(s, { name: 'setDay', day: 3 }, /The day must be/);
 });

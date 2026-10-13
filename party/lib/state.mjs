@@ -17,6 +17,17 @@ const SIDE_OF_TEAM = { international: 'intl', usa: 'usa' };
 const NO_CHANGE = Symbol('no change');
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
+const hasIndex = (show) => Boolean(show && typeof show === 'object' && show.byId && typeof show.byId === 'object');
+const lookup = (show, id) => (typeof id === 'string' && Object.hasOwn(show.byId, id) ? show.byId[id] : undefined);
+
+// A missing index is a programming error (indexShow not called after loading
+// JSON), not bad operator input, so it fails fast and loudly.
+function assertIndexed(show) {
+  if (!hasIndex(show)) {
+    throw new Error('This show has no byId index. Call indexShow(show) after loading it from JSON.');
+  }
+}
+
 export function sideSize(day) { return day === 1 ? 2 : 1; }
 
 export function initialState(show) {
@@ -57,9 +68,13 @@ export function slotProblems(slot, day, allSlots, show) {
     for (const [id, n] of count) {
       if (n > 1) problems.push(`${id} appears twice in this match`);
     }
-    if (show && show.byId) {
-      for (const id of count.keys()) {
-        if (!show.byId[id]) problems.push(`${id} is not a player in the show`);
+    if (show !== undefined) {
+      if (!hasIndex(show)) {
+        problems.push('The show has not been indexed, so players cannot be checked. Reload the app.');
+      } else {
+        for (const id of count.keys()) {
+          if (!lookup(show, id)) problems.push(`${id} is not a player in the show`);
+        }
       }
     }
     for (const other of allSlots || []) {
@@ -94,6 +109,7 @@ function checkIndex(slots, index, day) {
 const HANDLERS = {
   setDay(state, cmd) {
     if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
+    if (cmd.day === state.day) return NO_CHANGE;
     const next = clone(state);
     next.day = cmd.day;
     return next;
@@ -101,6 +117,7 @@ const HANDLERS = {
 
   goto(state, cmd) {
     checkIndex(state.slots[String(state.day)], cmd.index, state.day);
+    if (cmd.index === state.current[state.day]) return NO_CHANGE;
     const next = clone(state);
     next.current[next.day] = cmd.index;
     return next;
@@ -119,7 +136,7 @@ const HANDLERS = {
     }
     for (const id of cmd.players) {
       if (id === '') continue; // empty slot: still to be drawn
-      const player = typeof id === 'string' ? show.byId?.[id] : undefined;
+      const player = lookup(show, id);
       if (!player) throw new CommandError(`${typeof id === 'string' ? id : JSON.stringify(id)} is not on the roster for this show. Pick someone from the list.`);
       if (player.team !== TEAM_OF[cmd.side]) {
         const actual = SIDE_OF_TEAM[player.team];
@@ -141,7 +158,7 @@ const HANDLERS = {
     const i = state.current[state.day];
     const slots = state.slots[day];
     if (i === slots.length - 1 && slots[i].done) {
-      throw new CommandError(`Day ${state.day}: that was the last match.`);
+      throw new CommandError(`Day ${state.day}: that was the last match. Use Undo, or pick another match.`);
     }
     const next = clone(state);
     const slot = next.slots[day][i];
@@ -186,6 +203,8 @@ const HANDLERS = {
 
 export function reduce(state, command, show) {
   if (!command || typeof command.name !== 'string') throw new CommandError('The console sent an empty command. Reload the console and try again.');
+
+  assertIndexed(show);
 
   if (command.name === 'undo') {
     if (state.history.length === 0) throw new CommandError('Nothing to undo.');
@@ -247,7 +266,7 @@ export function project(state, show) {
       intl: [...slot.intl],
       usa: [...slot.usa],
       shown: slot.shown,
-      problems: slotProblems(slot, state.day, slots, show),
+      problems: slotProblems(slot, state.day, slots, show ?? {}),
     },
     next: peek ? { intl: [...peek.intl], usa: [...peek.usa] } : { intl: [], usa: [] },
     completed,
