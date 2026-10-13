@@ -14,6 +14,7 @@ const TEAM_OF = { intl: 'international', usa: 'usa' };
 const TEAM_LABEL = { intl: 'International', usa: 'USA' };
 const SIDE_OF_TEAM = { international: 'intl', usa: 'usa' };
 
+const NO_CHANGE = Symbol('no change');
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
 export function sideSize(day) { return day === 1 ? 2 : 1; }
@@ -81,18 +82,18 @@ function editCurrentSlot(state, mutate) {
 }
 
 function checkSide(side) {
-  if (!SIDES.includes(side)) throw new CommandError(`side must be "intl" or "usa", got ${JSON.stringify(side)}`);
+  if (!SIDES.includes(side)) throw new CommandError('Pick International or USA for that side.');
 }
 
 function checkIndex(slots, index, day) {
   if (!Number.isInteger(index) || index < 0 || index >= slots.length) {
-    throw new CommandError(`there is no match ${Number.isInteger(index) ? index + 1 : JSON.stringify(index)} on day ${day} (matches run 1 to ${slots.length})`);
+    throw new CommandError(`There is no match ${Number.isInteger(index) ? index + 1 : JSON.stringify(index)} on Day ${day}. Pick a match from 1 to ${slots.length}.`);
   }
 }
 
 const HANDLERS = {
   setDay(state, cmd) {
-    if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError(`day must be 1 or 2, got ${JSON.stringify(cmd.day)}`);
+    if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
     const next = clone(state);
     next.day = cmd.day;
     return next;
@@ -114,15 +115,15 @@ const HANDLERS = {
     checkSide(cmd.side);
     const want = sideSize(state.day);
     if (!Array.isArray(cmd.players) || cmd.players.length !== want) {
-      throw new CommandError(`day ${state.day} takes ${want} player${want === 1 ? '' : 's'} a side, got ${Array.isArray(cmd.players) ? cmd.players.length : 'none'}`);
+      throw new CommandError(`Day ${state.day} matches take ${want} player${want === 1 ? '' : 's'} a side, not ${Array.isArray(cmd.players) ? cmd.players.length : 'none'}. Pick again.`);
     }
     for (const id of cmd.players) {
       if (id === '') continue; // empty slot: still to be drawn
       const player = typeof id === 'string' ? show.byId?.[id] : undefined;
-      if (!player) throw new CommandError(`no player "${id}" in the show`);
+      if (!player) throw new CommandError(`${typeof id === 'string' ? id : JSON.stringify(id)} is not on the roster for this show. Pick someone from the list.`);
       if (player.team !== TEAM_OF[cmd.side]) {
         const actual = SIDE_OF_TEAM[player.team];
-        throw new CommandError(`${player.name} plays for ${TEAM_LABEL[actual] ?? player.team}, not ${TEAM_LABEL[cmd.side]}`);
+        throw new CommandError(`${player.name} plays for ${TEAM_LABEL[actual] ?? player.team}, not ${TEAM_LABEL[cmd.side]}. Pick someone from the ${TEAM_LABEL[cmd.side]} list.`);
       }
     }
     return editCurrentSlot(state, (slot) => { slot[cmd.side] = [...cmd.players]; });
@@ -130,9 +131,8 @@ const HANDLERS = {
 
   reveal(state) {
     const slot = state.slots[String(state.day)][state.current[state.day]];
-    if (slot.shown === 'both') {
-      throw new CommandError(`match ${slot.index} is already fully revealed; press Next to move on`);
-    }
+    // Already fully revealed: a double-tap is harmless, so do nothing at all.
+    if (slot.shown === 'both') return NO_CHANGE;
     return editCurrentSlot(state, (s) => { s.shown = s.shown === 'none' ? 'first' : 'both'; });
   },
 
@@ -141,7 +141,7 @@ const HANDLERS = {
     const i = state.current[state.day];
     const slots = state.slots[day];
     if (i === slots.length - 1 && slots[i].done) {
-      throw new CommandError(`match ${slots[i].index} is the last on day ${state.day} and is already complete`);
+      throw new CommandError(`Day ${state.day}: that was the last match.`);
     }
     const next = clone(state);
     const slot = next.slots[day][i];
@@ -153,7 +153,7 @@ const HANDLERS = {
   },
 
   reopen(state, cmd) {
-    if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError(`day must be 1 or 2, got ${JSON.stringify(cmd.day)}`);
+    if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
     const day = String(cmd.day);
     checkIndex(state.slots[day], cmd.index, cmd.day);
     const next = clone(state);
@@ -166,7 +166,7 @@ const HANDLERS = {
 
   setMode(state, cmd) {
     if (!MODES.includes(cmd.mode)) {
-      throw new CommandError(`mode must be one of ${MODES.join(', ')}, got ${JSON.stringify(cmd.mode)}`);
+      throw new CommandError('The screen mode must be idle, live or slideshow.');
     }
     const next = clone(state);
     next.mode = cmd.mode;
@@ -176,7 +176,7 @@ const HANDLERS = {
 
   slideshowGoto(state, cmd) {
     if (!Number.isInteger(cmd.position) || cmd.position < 0) {
-      throw new CommandError(`slideshow position must be a whole number from 0, got ${JSON.stringify(cmd.position)}`);
+      throw new CommandError('The slideshow position must be a whole number, 0 or more.');
     }
     const next = clone(state);
     next.slideshow.position = cmd.position;
@@ -185,10 +185,10 @@ const HANDLERS = {
 };
 
 export function reduce(state, command, show) {
-  if (!command || typeof command.name !== 'string') throw new CommandError('command needs a name');
+  if (!command || typeof command.name !== 'string') throw new CommandError('The console sent an empty command. Reload the console and try again.');
 
   if (command.name === 'undo') {
-    if (state.history.length === 0) throw new CommandError('nothing to undo');
+    if (state.history.length === 0) throw new CommandError('Nothing to undo.');
     const previous = clone(state.history[state.history.length - 1]);
     return {
       ...previous,
@@ -201,8 +201,8 @@ export function reduce(state, command, show) {
 
   if (command.name === 'setSync') {
     const s = command.sync;
-    if (!s || typeof s !== 'object' || Array.isArray(s)) throw new CommandError('setSync needs a sync object');
-    if ('dirty' in s && typeof s.dirty !== 'boolean') throw new CommandError('sync.dirty must be true or false');
+    if (!s || typeof s !== 'object' || Array.isArray(s)) throw new CommandError('The sync status was missing. Reload the console.');
+    if ('dirty' in s && typeof s.dirty !== 'boolean') throw new CommandError('The sync status was malformed. Reload the console.');
     const next = clone(state);
     next.sync = { ...next.sync, ...clone(s) };
     next.history = state.history.slice();
@@ -211,9 +211,10 @@ export function reduce(state, command, show) {
   }
 
   const handler = Object.hasOwn(HANDLERS, command.name) ? HANDLERS[command.name] : null;
-  if (!handler) throw new CommandError(`unknown command "${command.name}"`);
+  if (!handler) throw new CommandError(`The console sent "${command.name}", which the show does not understand. Reload the console.`);
 
   const next = handler(state, command, show);
+  if (next === NO_CHANGE) return state;
   const { history: _drop, ...bare } = clone(state);
   next.history = [...state.history, bare].slice(-HISTORY_LIMIT);
   next.rev = state.rev + 1;

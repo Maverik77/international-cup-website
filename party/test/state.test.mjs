@@ -30,7 +30,7 @@ function deepFreeze(o) {
 function rejects(state, cmd, pattern) {
   const before = JSON.stringify(state);
   assert.throws(() => reduce(state, cmd, show),
-    (e) => e instanceof CommandError && (!pattern || pattern.test(e.message)) && e.message.length > 10);
+    (e) => e instanceof CommandError && (!pattern || pattern.test(e.message)) && /[.]$/.test(e.message) && e.message.length > 10);
   assert.equal(JSON.stringify(state), before, 'a rejected command must leave state untouched');
 }
 
@@ -58,8 +58,17 @@ test('reveal walks none -> first -> both', () => {
   assert.equal(s.slots['1'][0].shown, 'both');
 });
 
-test('reveal when everything is already revealed is rejected', () => {
-  rejects(run(initialState(show), C, C), C, /already fully revealed/);
+test('reveal when everything is already revealed is a silent no-op: same state, no rev bump, no history', () => {
+  const both = run(initialState(show), C, C);
+  const frozen = deepFreeze(JSON.parse(JSON.stringify(both)));
+  const again = reduce(frozen, C, show);
+  assert.equal(again, frozen);
+  assert.equal(again.rev, both.rev);
+  assert.equal(again.history.length, both.history.length);
+  assert.equal(again.sync.dirty, true);
+  const clean = run(both, { name: 'setSync', sync: { dirty: false } });
+  assert.equal(reduce(clean, C, show).sync.dirty, false);
+  assert.equal(reduce(clean, C, show).rev, clean.rev);
 });
 
 test('next completes the slot and advances', () => {
@@ -82,34 +91,34 @@ test('next on the last slot completes it and stays put; a second next is rejecte
   s = run(s, { name: 'next' });
   assert.equal(s.current['1'], 12);
   assert.equal(s.slots['1'][12].done, true);
-  rejects(s, { name: 'next' }, /last on day 1/);
+  rejects(s, { name: 'next' }, /^Day 1: that was the last match\.$/);
 });
 
 test('assign rejects the wrong number of players, for both days', () => {
   const s = initialState(show);
-  rejects(s, { name: 'assign', side: 'usa', players: ['player-usa-1'] }, /takes 2 players/);
-  rejects(s, { name: 'assign', side: 'usa', players: [] }, /takes 2 players/);
-  rejects(s, { name: 'assign', side: 'usa', players: 'player-usa-1' }, /takes 2 players/);
+  rejects(s, { name: 'assign', side: 'usa', players: ['player-usa-1'] }, /take 2 players a side, not 1/);
+  rejects(s, { name: 'assign', side: 'usa', players: [] }, /take 2 players a side, not 0/);
+  rejects(s, { name: 'assign', side: 'usa', players: 'player-usa-1' }, /take 2 players a side, not none/);
   const d2 = run(s, { name: 'setDay', day: 2 });
-  rejects(d2, { name: 'assign', side: 'usa', players: ['player-usa-1', 'player-usa-2'] }, /takes 1 player a side/);
+  rejects(d2, { name: 'assign', side: 'usa', players: ['player-usa-1', 'player-usa-2'] }, /take 1 player a side, not 2/);
 });
 
 test('assign rejects an id that is not in the show', () => {
   const s = initialState(show);
-  rejects(s, { name: 'assign', side: 'usa', players: ['nope', 'player-usa-2'] }, /no player "nope"/);
-  rejects(s, { name: 'assign', side: 'usa', players: [42, 'player-usa-2'] }, /no player/);
+  rejects(s, { name: 'assign', side: 'usa', players: ['nope', 'player-usa-2'] }, /nope is not on the roster for this show/);
+  rejects(s, { name: 'assign', side: 'usa', players: [42, 'player-usa-2'] }, /42 is not on the roster/);
 });
 
 test('assign rejects a bad side', () => {
-  rejects(initialState(show), { name: 'assign', side: 'left', players: ['player-usa-1', 'player-usa-2'] }, /intl.*usa/);
+  rejects(initialState(show), { name: 'assign', side: 'left', players: ['player-usa-1', 'player-usa-2'] }, /Pick International or USA/);
 });
 
 test('assign rejects a player from the other team, naming both teams', () => {
   const s = initialState(show);
   const cmd = { name: 'assign', side: 'usa', players: ['player-intl-1', 'player-intl-2'] };
   rejects(s, cmd, /International/);
-  rejects(s, cmd, /not USA/);
-  rejects(s, { name: 'assign', side: 'intl', players: ['player-usa-1', 'player-usa-2'] }, /plays for USA, not International/);
+  rejects(s, cmd, /not USA\. Pick someone from the USA list/);
+  rejects(s, { name: 'assign', side: 'intl', players: ['player-usa-1', 'player-usa-2'] }, /U1 plays for USA, not International/);
 });
 
 test('assign accepts empty placeholders, so a side can be cleared', () => {
@@ -141,14 +150,14 @@ test('setDay switches day and keeps each day\'s position', () => {
 
 test('setDay rejects any day other than 1 or 2', () => {
   const s = initialState(show);
-  for (const day of [0, 3, '1', null, undefined, 1.5]) rejects(s, { name: 'setDay', day }, /day must be 1 or 2/);
+  for (const day of [0, 3, '1', null, undefined, 1.5]) rejects(s, { name: 'setDay', day }, /The day must be 1 or 2/);
 });
 
 test('setFirstSide sets the current slot and rejects a bad side', () => {
   const s = run(initialState(show), { name: 'setFirstSide', side: 'usa' });
   assert.equal(s.slots['1'][0].firstSide, 'usa');
   assert.equal(s.slots['1'][1].firstSide, 'intl');
-  rejects(s, { name: 'setFirstSide', side: 'both' }, /intl.*usa/);
+  rejects(s, { name: 'setFirstSide', side: 'both' }, /Pick International or USA/);
 });
 
 test('goto jumps anywhere and keeps what was there', () => {
@@ -161,7 +170,7 @@ test('goto jumps anywhere and keeps what was there', () => {
 
 test('goto rejects out-of-range and non-integer indexes', () => {
   const s = initialState(show);
-  for (const index of [13, 99, -1, 1.5, '3', undefined]) rejects(s, { name: 'goto', index }, /no match/);
+  for (const index of [13, 99, -1, 1.5, '3', undefined]) rejects(s, { name: 'goto', index }, /There is no match/);
   rejects(run(s, { name: 'setDay', day: 2 }), { name: 'goto', index: 26 }, /1 to 26/);
 });
 
@@ -181,9 +190,9 @@ test('reopen can switch to the other day', () => {
 
 test('reopen rejects a bad day or index', () => {
   const s = initialState(show);
-  rejects(s, { name: 'reopen', day: 3, index: 0 }, /day must be 1 or 2/);
-  rejects(s, { name: 'reopen', day: 1, index: 13 }, /no match/);
-  rejects(s, { name: 'reopen', day: 2, index: -1 }, /no match/);
+  rejects(s, { name: 'reopen', day: 3, index: 0 }, /The day must be 1 or 2/);
+  rejects(s, { name: 'reopen', day: 1, index: 13 }, /There is no match/);
+  rejects(s, { name: 'reopen', day: 2, index: -1 }, /There is no match/);
 });
 
 test('undo reverses the last action', () => {
@@ -195,8 +204,8 @@ test('undo reverses the last action', () => {
 });
 
 test('undo with empty history is rejected', () => {
-  rejects(initialState(show), { name: 'undo' }, /nothing to undo/);
-  rejects(run(initialState(show), C, { name: 'undo' }), { name: 'undo' }, /nothing to undo/);
+  rejects(initialState(show), { name: 'undo' }, /^Nothing to undo\.$/);
+  rejects(run(initialState(show), C, { name: 'undo' }), { name: 'undo' }, /^Nothing to undo\.$/);
 });
 
 test('undo marks the outbox dirty and keeps the latest push record', () => {
@@ -228,14 +237,14 @@ test('setMode accepts the three modes; slideshow restarts at 0', () => {
 });
 
 test('setMode rejects an unknown mode', () => {
-  rejects(initialState(show), { name: 'setMode', mode: 'party' }, /idle, live, slideshow/);
-  rejects(initialState(show), { name: 'setMode' }, /mode must be/);
+  rejects(initialState(show), { name: 'setMode', mode: 'party' }, /idle, live or slideshow/);
+  rejects(initialState(show), { name: 'setMode' }, /screen mode must be/);
 });
 
 test('slideshowGoto sets the position and rejects nonsense', () => {
   const s = run(initialState(show), { name: 'slideshowGoto', position: 7 });
   assert.equal(s.slideshow.position, 7);
-  for (const position of [-1, 1.5, '2', undefined]) rejects(s, { name: 'slideshowGoto', position }, /slideshow position/);
+  for (const position of [-1, 1.5, '2', undefined]) rejects(s, { name: 'slideshowGoto', position }, /slideshow position must be a whole number/);
 });
 
 test('history is bounded to 50 and its entries carry no history', () => {
@@ -277,17 +286,17 @@ test('setSync can record an error and rejects malformed input', () => {
   const b = reduce(a, { name: 'setSync', sync: { lastError: 'offline' } }, show);
   assert.equal(b.sync.lastError, 'offline');
   assert.equal(b.sync.dirty, false);
-  rejects(a, { name: 'setSync' }, /sync object/);
-  rejects(a, { name: 'setSync', sync: 'ok' }, /sync object/);
-  rejects(a, { name: 'setSync', sync: { dirty: 'yes' } }, /true or false/);
+  rejects(a, { name: 'setSync' }, /sync status was missing/);
+  rejects(a, { name: 'setSync', sync: 'ok' }, /sync status was missing/);
+  rejects(a, { name: 'setSync', sync: { dirty: 'yes' } }, /sync status was malformed/);
 });
 
 test('a command the reducer does not know is rejected, not ignored', () => {
-  rejects(initialState(show), { name: 'launchMissiles' }, /unknown command/);
-  rejects(initialState(show), { name: 'toString' }, /unknown command/);
-  rejects(initialState(show), { name: 'constructor' }, /unknown command/);
-  rejects(initialState(show), {}, /needs a name/);
-  rejects(initialState(show), null, /needs a name/);
+  rejects(initialState(show), { name: 'launchMissiles' }, /does not understand/);
+  rejects(initialState(show), { name: 'toString' }, /does not understand/);
+  rejects(initialState(show), { name: 'constructor' }, /does not understand/);
+  rejects(initialState(show), {}, /empty command/);
+  rejects(initialState(show), null, /empty command/);
 });
 
 test('reduce never mutates the state it was given', () => {
@@ -340,7 +349,7 @@ test('every command type runs against a deeply frozen state without mutating it'
         assert.ok(e instanceof CommandError, `${cmd.name} threw ${e.name}: ${e.message}`);
         continue;
       }
-      assert.notEqual(out, frozen, cmd.name);
+      if (cmd.name !== 'reveal') assert.notEqual(out, frozen, cmd.name);
       assert.equal(JSON.stringify(frozen), snapshot, `${cmd.name} changed its input`);
       project(out, show);
     }
