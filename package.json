@@ -15,7 +15,7 @@
     "lint:js": "eslint 'js/**/*.js'",
     "test:a11y": "pa11y http://localhost:8000",
     "test:lighthouse": "lighthouse http://localhost:8000 --output=html --output-path=./lighthouse-report.html",
-    "deploy:manual": "aws s3 sync . s3://$S3_BUCKET_NAME --exclude 'node_modules/*' --exclude '.git/*' --exclude 'package*' --exclude '*.md'",
+    "deploy:manual": "aws s3 sync . s3://$S3_BUCKET_NAME --exclude 'node_modules/*' --exclude '.git/*' --exclude 'package*' --exclude '*.md' --exclude 'contacts/*' --exclude 'party/*' --exclude '.superpowers/*' --exclude '.worktrees/*' --exclude 'scratchpad/*'",
     "clean": "rm -rf node_modules package-lock.json",
     "party:flags": "node party/build/fetch-flags.mjs",
     "party:build": "node party/build/build-show.mjs",
@@ -63,6 +63,6 @@
     "not op_mini all"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   }
 } 

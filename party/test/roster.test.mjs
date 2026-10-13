@@ -1,8 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { writeFileSync, mkdtempSync } from 'node:fs';
+import { writeFileSync, mkdtempSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { loadRoster, RosterError } from '../build/roster.mjs';
 
 function fixture(teams) {
@@ -56,8 +57,12 @@ test('rejects a player with no name', () => {
   assert.throws(() => loadRoster(path), RosterError);
 });
 
-test('reads the real roster: 26 and 26', () => {
-  const players = loadRoster('contacts/player-details.json');
+const REAL = fileURLToPath(new URL('../../contacts/player-details.json', import.meta.url));
+
+test('reads the real roster: 26 and 26', {
+  skip: !existsSync(REAL) && 'contacts/player-details.json is not present (gitignored)',
+}, () => {
+  const players = loadRoster(REAL);
   assert.equal(players.filter((p) => p.team === 'international').length, 26);
   assert.equal(players.filter((p) => p.team === 'usa').length, 26);
   assert.equal(new Set(players.map((p) => p.id)).size, 52);
