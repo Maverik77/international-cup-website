@@ -1,0 +1,98 @@
+{
+  "note": "Day 1 International pairs, pre-filled on the console as suggestions. USA sides are drawn live. Player ids come from party/build/roster.mjs. Day 2 is one player per side in roster order.",
+  "days": {
+    "1": [
+      {
+        "index": 1,
+        "intl": [
+          "player-intl-1",
+          "player-intl-2"
+        ]
+      },
+      {
+        "index": 2,
+        "intl": [
+          "player-intl-3",
+          "player-intl-4"
+        ]
+      },
+      {
+        "index": 3,
+        "intl": [
+          "player-intl-5",
+          "player-intl-6"
+        ]
+      },
+      {
+        "index": 4,
+        "intl": [
+          "player-intl-7",
+          "player-intl-8"
+        ]
+      },
+      {
+        "index": 5,
+        "intl": [
+          "player-intl-9",
+          "player-intl-10"
+        ]
+      },
+      {
+        "index": 6,
+        "intl": [
+          "player-intl-11",
+          "player-intl-12"
+        ]
+      },
+      {
+        "index": 7,
+        "intl": [
+          "player-intl-13",
+          "player-intl-14"
+        ]
+      },
+      {
+        "index": 8,
+        "intl": [
+          "player-intl-15",
+          "player-intl-16"
+        ]
+      },
+      {
+        "index": 9,
+        "intl": [
+          "player-intl-17",
+          "player-intl-18"
+        ]
+      },
+      {
+        "index": 10,
+        "intl": [
+          "player-intl-19",
+          "player-intl-20"
+        ]
+      },
+      {
+        "index": 11,
+        "intl": [
+          "player-intl-21",
+          "player-intl-22"
+        ]
+      },
+      {
+        "index": 12,
+        "intl": [
+          "player-intl-23",
+          "player-intl-24"
+        ]
+      },
+      {
+        "index": 13,
+        "intl": [
+          "player-intl-25",
+          "player-intl-26"
+        ]
+      }
+    ]
+  }
+}
