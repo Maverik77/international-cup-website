@@ -144,3 +144,35 @@ test('SLOW: a card with no hometown (country only) renders', { skip: !haveFfmpeg
   const p = probe(out);
   assert.deepEqual([p.width, p.height], [480, 1080]);
 });
+
+// YMAX of the last decoded frame, via signalstats (the same measure the coordinator used).
+function finalFrameYmax(path) {
+  const r = spawnSync('ffmpeg', ['-v', 'error', '-i', path, '-vf',
+    'signalstats,metadata=print:key=lavfi.signalstats.YMAX:file=-', '-f', 'null', '-']);
+  assert.equal(r.status, 0, r.stderr.toString());
+  const all = [...r.stdout.toString().matchAll(/YMAX=(\d+)/g)].map((m) => Number(m[1]));
+  assert.ok(all.length >= 269, `expected ~270 frames, got ${all.length}`);
+  return all.at(-1);
+}
+
+test('SLOW: the final frame stays bright (card holds as the info panel, no fade-out)', { skip: !haveFfmpeg, timeout: 120_000 }, async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'card-'));
+  for (const format of ['4x9', '8x9']) {
+    const out = join(dir, `hold-${format}.mp4`);
+    await buildGenericCard({ player: { name: 'Ann Test', hometown: 'Washington, DC', country: 'USA' },
+      format, outPath: out, flagsDir: FLAGS, workDir: dir });
+    const ymax = finalFrameYmax(out);
+    assert.ok(ymax > 200, `${format} final frame YMAX ${ymax}`);
+  }
+});
+
+test('SLOW: a relative flagsDir, workDir and outPath work', { skip: !haveFfmpeg, timeout: 120_000 }, async () => {
+  const { relative } = await import('node:path');
+  const dir = mkdtempSync(join(tmpdir(), 'card-'));
+  const rel = (p) => relative(process.cwd(), p);
+  const out = join(dir, 'rel-4x9.mp4');
+  const res = await buildGenericCard({ player: { name: "Pat O'Brien", hometown: 'Reno, NV', country: 'USA' },
+    format: '4x9', outPath: rel(out), flagsDir: rel(FLAGS), workDir: rel(dir) });
+  assert.equal(res, rel(out));
+  assert.deepEqual([probe(out).width, probe(out).height], [480, 1080]);
+});

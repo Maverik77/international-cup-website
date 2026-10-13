@@ -1,5 +1,5 @@
 import { writeFileSync, readFileSync, mkdtempSync, mkdirSync, existsSync, renameSync, rmSync } from 'node:fs';
-import { join, dirname, basename } from 'node:path';
+import { join, dirname, basename, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { randomBytes } from 'node:crypto';
 import { spawn } from 'node:child_process';
@@ -71,7 +71,7 @@ export function buildFilterGraph(g, lines, files) {
   } else {
     steps.push('[s3]null[s4]');
   }
-  steps.push(`[s4]fade=t=out:st=${DURATION - 0.6}:d=0.6,format=yuv420p[out]`);
+  steps.push(`[s4]format=yuv420p[out]`);
   return steps.join(';');
 }
 
@@ -89,7 +89,7 @@ export async function buildGenericCard({ player, format, outPath, flagsDir = DEF
 
   let flag;
   try {
-    flag = flagPathFor(player.country, flagsDir);
+    flag = resolve(flagPathFor(player.country, flagsDir)); // ffmpeg runs in another cwd
   } catch (e) {
     throw new Error(`Cannot build card for ${who}: ${e.message}`);
   }
@@ -106,8 +106,8 @@ export async function buildGenericCard({ player, format, outPath, flagsDir = DEF
   const lines = cardLines(player);
   mkdirSync(workDir || tmpdir(), { recursive: true });
   // A private scratch dir per call, so concurrent builds never share text files.
-  const scratch = mkdtempSync(join(workDir || tmpdir(), 'genericcard-'));
-  const tmpOut = join(dirname(outPath), `.${basename(outPath)}.${randomBytes(4).toString('hex')}.tmp`);
+  const scratch = resolve(mkdtempSync(join(workDir || tmpdir(), 'genericcard-')));
+  const tmpOut = join(resolve(dirname(outPath)), `.${basename(outPath)}.${randomBytes(4).toString('hex')}.tmp`);
   try {
     mkdirSync(dirname(outPath), { recursive: true });
     const files = {
