@@ -126,6 +126,11 @@ contacts/
 # Party card videos - large local build artefacts, never deployed
 party/cards/
 
+# Party show manifest and live state - built from contacts/, must never be published
+party/show.json
+party/state.json
+party/state.rehearsal.json
+
 # Git worktrees for isolated feature work
 .worktrees/
 

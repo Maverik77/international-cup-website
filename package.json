@@ -16,7 +16,14 @@
     "test:a11y": "pa11y http://localhost:8000",
     "test:lighthouse": "lighthouse http://localhost:8000 --output=html --output-path=./lighthouse-report.html",
     "deploy:manual": "aws s3 sync . s3://$S3_BUCKET_NAME --exclude 'node_modules/*' --exclude '.git/*' --exclude 'package*' --exclude '*.md'",
-    "clean": "rm -rf node_modules package-lock.json"
+    "clean": "rm -rf node_modules package-lock.json",
+    "party:flags": "node party/build/fetch-flags.mjs",
+    "party:build": "node party/build/build-show.mjs",
+    "party:start": "node party/hub.mjs",
+    "party:rehearse": "node party/hub.mjs --rehearsal",
+    "party:preflight": "node party/build/preflight.mjs",
+    "party:push-roster": "node party/build/push-roster.mjs",
+    "party:test": "node --test 'party/test/*.test.mjs'"
   },
   "repository": {
     "type": "git",
