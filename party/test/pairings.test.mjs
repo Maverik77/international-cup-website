@@ -20,7 +20,10 @@ const show = makeShow();
 const LIVE_TEAM = JSON.parse(`{"revealStep":0,"intl_team":{"player1_id":"","player2_id":""},"day":1,
  "usa_team":{"player1_id":"","player2_id":""},"revealOrder":"usa-first",
  "match_number":1,"id":"day1-team-1","type":"team"}`);
-// Singles shape per pairings/admin.html initializeEmptyPairings.
+// Key sets verified against the live staging API (read-only GET /pairings,
+// HTTP 200, 36 items) on 13 October 2026. Team items: LIVE_TEAM above plus the
+// list below; singles items have no team objects and use per-player ids.
+const TEAM_KEYS = ['day', 'id', 'intl_team', 'match_number', 'revealOrder', 'revealStep', 'type', 'usa_team'];
 const SINGLES_KEYS = ['day', 'id', 'intl_player_id', 'match_number', 'revealOrder', 'revealStep', 'type', 'usa_player_id'];
 
 const keys = (o) => Object.keys(o).sort();
@@ -55,6 +58,13 @@ test('team item has exactly the key set of the live table item', () => {
   assert.deepEqual(keys(item.intl_team), keys(LIVE_TEAM.intl_team));
   assert.deepEqual(keys(item.usa_team), keys(LIVE_TEAM.usa_team));
   for (const k of keys(LIVE_TEAM)) assert.equal(typeof item[k], typeof LIVE_TEAM[k], k);
+});
+
+test('every item has exactly the live key set for its type (staging, 13 Oct 2026)', () => {
+  for (const item of toPairingItems(initialState(show))) {
+    assert.deepEqual(keys(item), item.type === 'team' ? TEAM_KEYS : SINGLES_KEYS, item.id);
+  }
+  assert.deepEqual(keys(LIVE_TEAM), TEAM_KEYS);
 });
 
 test('a team item matches the live table shape exactly', () => {
