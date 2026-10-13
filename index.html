@@ -215,124 +215,30 @@
                 <div id="usa-roster" class="team-roster" style="display: none;">
                     <div class="roster-header">
                         <h3>🇺🇸 Team USA Roster</h3>
+                        <div class="roster-views view-options" role="group" aria-label="Team USA roster view">
+                            <button type="button" class="view-btn" data-view="detailed">Detailed</button>
+                            <button type="button" class="view-btn" data-view="simple">Simple</button>
+                        </div>
                         <span class="close-roster" onclick="toggleRoster('usa')">&times;</span>
                     </div>
                     <p class="squad-note">26 players. Listed alphabetically by surname.</p>
-                    <ul class="squad-names squad-names--flat">
-                        <li>John Altman</li>
-                        <li>Frank Ambrose</li>
-                        <li>Keith Barnes</li>
-                        <li>Jeff Barnette</li>
-                        <li>Jay Collins</li>
-                        <li>Scott Covino</li>
-                        <li>Chris Crouse</li>
-                        <li>Chrissy Crouse</li>
-                        <li>John Daley</li>
-                        <li>Victor Esposito</li>
-                        <li>Mitch Freedman</li>
-                        <li>Jeff Galkin</li>
-                        <li>Jim Gillie</li>
-                        <li>Seth Holladay</li>
-                        <li>Dave Kohlasch</li>
-                        <li>Kevin Kozlowski</li>
-                        <li>Jeff Kritsberg</li>
-                        <li>Kyle Lenihan</li>
-                        <li>Dominic Michael</li>
-                        <li>Jeff Miller</li>
-                        <li>Tom Murphy</li>
-                        <li>Greg Parda</li>
-                        <li>Anthony Rizzo</li>
-                        <li>Jay Vosburgh</li>
-                        <li>Maggie Vosburgh</li>
-                        <li>Tom Walsh</li>
-                    </ul>
+                    <div data-roster="usa"></div>
+                    <noscript><p class="roster-error">The Team USA roster needs JavaScript to display.</p></noscript>
                 </div>
 
                 <!-- International Roster -->
                 <div id="intl-roster" class="team-roster" style="display: none;">
                     <div class="roster-header">
                         <h3>🌍 Team International Roster</h3>
+                        <div class="roster-views view-options" role="group" aria-label="Team International roster view">
+                            <button type="button" class="view-btn" data-view="detailed">Detailed</button>
+                            <button type="button" class="view-btn" data-view="simple">Simple</button>
+                        </div>
                         <span class="close-roster" onclick="toggleRoster('intl')">&times;</span>
                     </div>
                     <p class="squad-note">26 players from ten countries. Listed alphabetically by surname within each country.</p>
-                    <div class="squad-countries">
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇮🇳</span>India</h4>
-                          <ul class="squad-names">
-                            <li>Ashvini Anjutgi</li>
-                            <li>Vijay Davuluri</li>
-                            <li>Anil Katarki</li>
-                            <li>Chakshush Kumar</li>
-                            <li>Raj Malik</li>
-                            <li>Sridhar Muthusamy</li>
-                            <li>Suresh Saribala</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England</h4>
-                          <ul class="squad-names">
-                            <li>Mohammed Ashraf</li>
-                            <li>Ben Hedges</li>
-                            <li>Tim Pearce</li>
-                            <li>Daren Wickham</li>
-                            <li>Philip Woodisse</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇰🇷</span>Korea</h4>
-                          <ul class="squad-names">
-                            <li>Jun Bae</li>
-                            <li>Yun Sang Bae</li>
-                            <li>Joung Barnes</li>
-                            <li>Michael Kim</li>
-                            <li>Jim Lee</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇦🇺</span>Australia</h4>
-                          <ul class="squad-names">
-                            <li>Rhys Gully</li>
-                            <li>Phillip Jewell</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇩🇪</span>Germany</h4>
-                          <ul class="squad-names">
-                            <li>Stefan Lambert</li>
-                            <li>Erik Wagner</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇨🇦</span>Canada</h4>
-                          <ul class="squad-names">
-                            <li>Jonathan Doan</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇵🇰</span>Pakistan</h4>
-                          <ul class="squad-names">
-                            <li>Soban Ansari</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Scotland</h4>
-                          <ul class="squad-names">
-                            <li>Robbie Neilson</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇪🇸</span>Spain</h4>
-                          <ul class="squad-names">
-                            <li>Alba Phillips</li>
-                          </ul>
-                        </div>
-                        <div class="squad-group">
-                          <h4 class="squad-country"><span class="squad-flag" aria-hidden="true">🇹🇿</span>Tanzania</h4>
-                          <ul class="squad-names">
-                            <li>Uttam Bharwani</li>
-                          </ul>
-                        </div>
-                    </div>
+                    <div data-roster="international"></div>
+                    <noscript><p class="roster-error">The Team International roster needs JavaScript to display.</p></noscript>
                 </div>
             </div>
         </div>
@@ -553,6 +459,7 @@
     <script src="js/historic-data-embedded.js?v=11e6d119"></script>
     <script src="js/historic-data.js?v=049d7a91"></script>
     <script src="js/news.js?v=2c0b550e"></script>
+    <script src="js/roster.js?v=43f1de2e"></script>
     <style>
         /* News Actions Styles */
         .news-actions {
@@ -768,13 +675,118 @@
             font-weight: 500;
         }
 
+        /* Player cards (detailed roster view) */
+        .roster-views {
+            margin-left: auto;
+            margin-right: 1rem;
+            gap: 0.5rem;
+        }
+
+        .roster-views .view-btn {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.85rem;
+            border-width: 1px;
+        }
+
+        .roster-error {
+            margin: 0;
+            color: #b3261e;
+            font-size: 0.95rem;
+        }
+
+        .pcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .squad-countries--cards {
+            grid-template-columns: 1fr;
+            gap: 2.25rem;
+        }
+
+        .pcard {
+            background: #fff;
+            border: 1px solid #e7eaef;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pcard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(16, 24, 40, 0.12);
+        }
+
+        .pcard-media {
+            aspect-ratio: 4 / 5;
+            background: #eef1f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pcard-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .pcard-anon {
+            width: 46%;
+            height: auto;
+            fill: #c2c9d4;
+        }
+
+        .pcard--anon .pcard-media {
+            background: #e9edf2;
+        }
+
+        .pcard-body {
+            padding: 0.7rem 0.8rem 0.85rem;
+        }
+
+        .pcard-name {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a202c;
+            line-height: 1.3;
+        }
+
+        .pcard-meta {
+            margin: 0.3rem 0 0;
+            font-size: 0.85rem;
+            color: #4a5568;
+            line-height: 1.35;
+        }
+
+        .pcard-flag {
+            margin-right: 0.35rem;
+        }
+
+        .pcard-school {
+            margin: 0.2rem 0 0;
+            font-size: 0.8rem;
+            color: #718096;
+            line-height: 1.35;
+        }
+
         @media (max-width: 600px) {
             .squad-names--flat { columns: 1; }
             .squad-countries { gap: 1.5rem; }
+            .pcard-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.9rem; }
+            .roster-header { flex-wrap: wrap; row-gap: 0.75rem; }
+            .roster-views { margin-left: 0; order: 3; width: 100%; }
         }
 
         @media (prefers-reduced-motion: reduce) {
             .team-roster { animation: none; }
+            .pcard { transition: none; }
+            .pcard:hover { transform: none; }
         }
         
         @media (max-width: 768px) {

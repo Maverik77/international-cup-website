@@ -1,31 +1,47 @@
 {
-  "updated": "2026-10-11",
+  "updated": "2026-10-12",
   "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
       {
         "name": "Ashvini Anjutgi",
-        "country": "India"
+        "country": "India",
+        "hometown": "Hyderabad, India",
+        "school": "Bowie State University",
+        "photo": "pics/players/ashvini-anjutgi.jpg"
       },
       {
         "name": "Vijay Davuluri",
-        "country": "India"
+        "country": "India",
+        "hometown": "Hyderabad, India",
+        "school": "Andhra University",
+        "photo": "pics/players/vijay-davuluri.jpg"
       },
       {
         "name": "Anil Katarki",
-        "country": "India"
+        "country": "India",
+        "hometown": "Belagavi",
+        "school": "George Washington University"
       },
       {
         "name": "Chakshush Kumar",
-        "country": "India"
+        "country": "India",
+        "hometown": "New Delhi, India",
+        "school": "George Mason University",
+        "photo": "pics/players/chakshush-kumar.jpg"
       },
       {
         "name": "Raj Malik",
-        "country": "India"
+        "country": "India",
+        "hometown": "Delhi, India",
+        "school": "Kansas State University",
+        "photo": "pics/players/raj-malik.jpg"
       },
       {
         "name": "Sridhar Muthusamy",
-        "country": "India"
+        "country": "India",
+        "hometown": "Vellore, Tamil Nadu, India",
+        "photo": "pics/players/sridhar-muthusamy.jpg"
       },
       {
         "name": "Suresh Saribala",
@@ -50,7 +66,9 @@
       },
       {
         "name": "Philip Woodisse",
-        "country": "England"
+        "country": "England",
+        "hometown": "Cheltenham, Gloucestershire, England",
+        "photo": "pics/players/philip-woodisse.jpg"
       },
       {
         "name": "Jun Bae",
@@ -80,7 +98,9 @@
       },
       {
         "name": "Phillip Jewell",
-        "country": "Australia"
+        "country": "Australia",
+        "hometown": "Canberra, Australia",
+        "photo": "pics/players/phillip-jewell.jpg"
       },
       {
         "name": "Stefan Lambert",
@@ -149,7 +169,9 @@
         "name": "Chris Crouse"
       },
       {
-        "name": "Chrissy Crouse"
+        "name": "Chrissy Crouse",
+        "hometown": "Reston, VA",
+        "photo": "pics/players/chrissy-crouse.jpg"
       },
       {
         "name": "John Daley"
@@ -190,7 +212,10 @@
         "name": "Kyle Lenihan"
       },
       {
-        "name": "Dominic Michael"
+        "name": "Dominic Michael",
+        "hometown": "Lansdowne, VA",
+        "school": "University of South Carolina",
+        "photo": "pics/players/dominic-michael.jpg"
       },
       {
         "name": "Jeff Miller",
@@ -208,10 +233,15 @@
         "name": "Anthony Rizzo"
       },
       {
-        "name": "Jay Vosburgh"
+        "name": "Jay Vosburgh",
+        "hometown": "Poughkeepsie, NY",
+        "photo": "pics/players/jay-vosburgh.jpg"
       },
       {
-        "name": "Maggie Vosburgh"
+        "name": "Maggie Vosburgh",
+        "hometown": "Hyde Park, NY",
+        "school": "Manhattan College",
+        "photo": "pics/players/maggie-vosburgh.jpg"
       },
       {
         "name": "Tom Walsh"
