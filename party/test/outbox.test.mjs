@@ -36,7 +36,7 @@ function fakeClock() {
   };
 }
 
-function harness({ pushImpl, enabled = true } = {}) {
+function harness({ pushImpl, enabled = true, pushTimeout = 30 } = {}) {
   const clock = fakeClock();
   let state = initialState(show);
   const pushes = [];
@@ -47,7 +47,7 @@ function harness({ pushImpl, enabled = true } = {}) {
     onStatus: (s) => statuses.push(s),
     now: () => '2026-10-22T23:00:00.000Z',
     schedule: clock.schedule, cancel: clock.cancel,
-    minDelay: 1000, maxDelay: 30000, enabled, pushTimeout: 30,
+    minDelay: 1000, maxDelay: 30000, enabled, pushTimeout,
   });
   return {
     clock, outbox, pushes, statuses,
@@ -370,16 +370,111 @@ test('markDirty during a flush that then FAILS is not lost either', async () => 
   assert.equal(h.statuses.at(-1).dirty, false);
 });
 
-test('a second flushNow while one is in flight does not double-push', async () => {
+test('flushNow during an in-flight flush does not resolve until that push has landed', async () => {
   let n = 0;
   let release;
   const gate = new Promise((r) => { release = r; });
-  const h = harness({ pushImpl: async () => { n += 1; await gate; } });
-  const a = h.outbox.flushNow();
-  await h.outbox.flushNow();
-  assert.equal(n, 1);
+  const h = harness({ pushImpl: async () => { n += 1; await gate; }, pushTimeout: 5000 });
+  const first = h.outbox.flushNow();
+  let landed = false;
+  const second = h.outbox.flushNow().then(() => { assert.equal(landed, true, 'resolved before the push landed'); });
+  await new Promise((r) => setTimeout(r, 20));
+  landed = true;
   release();
-  await a;
+  await Promise.all([first, second]);
+  assert.equal(n, 1); // nothing newer, so no double push
+});
+
+test('flushNow during an in-flight flush then pushes once more if state moved on, and never rejects', async () => {
+  const pushes = [];
+  let release;
+  const gate = new Promise((r) => { release = r; });
+  const h = harness({ pushImpl: async (items) => { pushes.push(items); if (pushes.length === 1) await gate; }, pushTimeout: 5000 });
+  h.change({ name: 'reveal' });
+  const first = h.outbox.flushNow();
+  await Promise.resolve();
+  h.change({ name: 'reveal' });
+  const second = h.outbox.flushNow();
+  release();
+  await Promise.all([first, second]);
+  assert.equal(pushes.length, 2);
+  assert.equal(JSON.stringify(pushes[1]), JSON.stringify(toPairingItems(h.state)));
+  assert.equal(h.statuses.at(-1).dirty, false);
+});
+
+test('flushNow during an in-flight flush that fails still resolves', async () => {
+  let release;
+  const gate = new Promise((r) => { release = r; });
+  const h = harness({ pushImpl: async () => { await gate; throw new AwsError('pairings POST returned HTTP 503'); }, pushTimeout: 5000 });
+  const first = h.outbox.flushNow();
+  const second = h.outbox.flushNow();
+  release();
+  await assert.doesNotReject(() => Promise.all([first, second]));
+});
+
+test('timer path: a hostile error object cannot produce an unhandled rejection', async () => {
+  const hostileErr = {};
+  for (const k of ['name', 'message']) Object.defineProperty(hostileErr, k, { get() { throw new Error('getter'); } });
+  const seen = [];
+  const onUnhandled = (e) => seen.push(e);
+  process.on('unhandledRejection', onUnhandled);
+  try {
+    const h = harness({ pushImpl: async () => { throw hostileErr; } });
+    h.change({ name: 'reveal' });
+    await h.clock.run();
+    await new Promise((r) => setImmediate(r));
+    await new Promise((r) => setImmediate(r));
+    assert.deepEqual(seen, []);
+    assert.equal(h.statuses.at(-1).lastError, 'push failed');
+  } finally {
+    process.off('unhandledRejection', onUnhandled);
+  }
+});
+
+test('a throwing onStatus on the timer path is not an unhandled rejection', async () => {
+  const seen = [];
+  const onUnhandled = (e) => seen.push(e);
+  process.on('unhandledRejection', onUnhandled);
+  try {
+    const clock = fakeClock();
+    const outbox = createOutbox({
+      getState: () => initialState(show), push: async () => {}, onStatus: () => { throw new Error('listener'); },
+      schedule: clock.schedule, cancel: clock.cancel, pushTimeout: 30,
+    });
+    outbox.markDirty();
+    await clock.run();
+    await new Promise((r) => setImmediate(r));
+    assert.deepEqual(seen, []);
+  } finally {
+    process.off('unhandledRejection', onUnhandled);
+  }
+});
+
+test('stop clears the push timeout, abandons the hung push promptly, and says nothing afterwards', async () => {
+  const h = harness({ pushImpl: () => new Promise(() => {}), pushTimeout: 1500 });
+  h.change({ name: 'reveal' });
+  const running = h.clock.run();
+  await Promise.resolve();
+  const before = h.statuses.length;
+  h.outbox.stop();
+  const outcome = await Promise.race([running.then(() => 'settled'), new Promise((r) => setTimeout(() => r('STILL WAITING'), 300))]);
+  assert.equal(outcome, 'settled');
+  assert.equal(h.statuses.length, before);
+  assert.equal(h.outbox.pending(), false);
+  assert.deepEqual(h.clock.pending(), []);
+});
+
+test('stop during a push that later succeeds does not call onStatus', async () => {
+  let release;
+  const gate = new Promise((r) => { release = r; });
+  const h = harness({ pushImpl: async () => { await gate; }, pushTimeout: 5000 });
+  h.change({ name: 'reveal' });
+  const running = h.clock.run();
+  await Promise.resolve();
+  h.outbox.stop();
+  release();
+  await running;
+  assert.deepEqual(h.statuses, []);
 });
 
 test('flushNow cancels the timer it supersedes, so there is no redundant push', async () => {
