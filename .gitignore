@@ -135,3 +135,4 @@ party/cards/
 # party/build/ and party/public/ would be silently untrackable.
 !party/build/
 !party/public/
+.superpowers/
