@@ -15,6 +15,7 @@ OVERRIDES = {
     'dominic-michael': (521, 0, 903, 477),    # full-length; crest fills the generic crop
     'keith-barnes':    (293, 365, 733, 915),  # distant figure mid-fairway
     'dave-kohlasch':   (300, 0, 900, 750),    # standing figure, off to the right
+    'erik-wagner':     (105, 195, 665, 895), # full-length with the trophy; keep the cup in frame
     'seth-holladay':   (488, 80, 1200, 970), # close selfie at the right edge
 }
 

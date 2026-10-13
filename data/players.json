@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12",
+  "updated": "2026-10-13",
   "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
@@ -110,7 +110,8 @@
       },
       {
         "name": "Erik Wagner",
-        "country": "Germany"
+        "country": "Germany",
+        "photo": "pics/players/erik-wagner.jpg"
       },
       {
         "name": "Jonathan Doan",
