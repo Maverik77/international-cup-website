@@ -1,0 +1,63 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  overflow: hidden;
+  cursor: none;
+}
+
+.layer {
+  position: absolute; inset: 0;
+  display: flex;
+  opacity: 0;
+  transition: opacity 600ms ease-in-out;
+  pointer-events: none;
+}
+.layer.live { opacity: 1; }
+
+/* International is always the left half: the DOM order is the plan order. */
+.panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+.panel video {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 180ms linear;
+}
+.panel.shown video { opacity: 1; }
+
+/* A panel whose clip will not play at all: the name, so the slot is never blank. */
+.panel .fallback-name {
+  position: absolute; inset: auto 0 12%;
+  text-align: center;
+  font: 700 2.2vw/1.2 -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  letter-spacing: .06em;
+  color: #fff;
+  opacity: 0;
+}
+.panel.text-only .fallback-name { opacity: 1; }
+.panel.text-only video { opacity: 0; }
+
+#preload { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+#cover {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: #000;
+  cursor: pointer;
+  z-index: 10;
+}
+#cover p {
+  font: 400 1.6vw/1 -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  letter-spacing: .3em; text-transform: uppercase; color: #FEB619;
+}
+#cover.gone { display: none; }
