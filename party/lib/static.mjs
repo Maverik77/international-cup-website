@@ -72,7 +72,10 @@ export function safeJoin(root, urlPath) {
   return abs;
 }
 
-// RFC 9110 range handling.
+// RFC 9110 range handling. Per RFC 9110 section 14.2 a Range header that is
+// syntactically invalid, uses another unit, or asks for several ranges MAY be
+// ignored, and is: the answer is a plain 200 with the whole file. Do NOT "fix"
+// that into a 416. 416 is only for a well-formed range that lies outside the file.
 //   { start, end }  satisfiable single range
 //   'unsatisfiable' syntactically valid but outside the file -> 416
 //   null            absent, not bytes, malformed or multi-range -> ignore, send 200
@@ -116,10 +119,37 @@ export function serveFile(req, res, absPath) {
 
   const { size } = st;
   const type = contentTypeFor(absPath);
-  const cache = type.startsWith('video/') || type.startsWith('image/')
-    ? 'public, max-age=86400'
-    : 'no-store';
-  const range = parseRange(req.headers.range, size);
+  // DELIBERATE DEVIATION from the original brief's `max-age=86400`. Card
+  // filenames are deterministic, so a rebuild reuses them: a browser that cached
+  // a card at rehearsal would play yesterday's clip on the big screen. Everything
+  // is served over a LAN from a laptop a few feet away, so caching buys nothing.
+  // Media is revalidated every time (ETag / Last-Modified, 304 when unchanged).
+  // Do not put max-age back.
+  const media = type.startsWith('video/') || type.startsWith('image/');
+  const cache = media ? 'no-cache' : 'no-store';
+  const etag = `"${size.toString(16)}-${Math.floor(st.mtimeMs).toString(16)}"`;
+  const lastModified = st.mtime.toUTCString();
+  const validators = media ? { ETag: etag, 'Last-Modified': lastModified } : {};
+
+  if (media) {
+    const inm = req.headers['if-none-match'];
+    const ims = Date.parse(req.headers['if-modified-since']);
+    const unchanged = inm !== undefined
+      ? inm.split(',').some((t) => t.trim() === etag || t.trim() === `W/${etag}` || t.trim() === '*')
+      : Number.isFinite(ims) && Math.floor(st.mtimeMs / 1000) * 1000 <= ims;
+    if (unchanged) {
+      res.writeHead(304, { ETag: etag, 'Last-Modified': lastModified, 'Cache-Control': cache });
+      res.end();
+      return;
+    }
+  }
+
+  // If-Range: only honour the range if the validator still matches the file.
+  const ifRange = req.headers['if-range'];
+  const rangeHeader = ifRange !== undefined && media && ifRange.trim() !== etag && ifRange.trim() !== lastModified
+    ? undefined
+    : req.headers.range;
+  const range = parseRange(rangeHeader, size);
 
   if (range === 'unsatisfiable') {
     res.writeHead(416, { 'Content-Range': `bytes */${size}`, 'Accept-Ranges': 'bytes', 'Content-Length': 0 });
@@ -135,6 +165,7 @@ export function serveFile(req, res, absPath) {
     'Content-Length': size === 0 ? 0 : end - start + 1,
     'Accept-Ranges': 'bytes',
     'Cache-Control': cache,
+    ...validators,
   };
   if (partial) headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
   res.writeHead(partial ? 206 : 200, headers);

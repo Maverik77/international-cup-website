@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { createHub, parseArgs, MAX_BODY_BYTES } from '../hub.mjs';
 import { CommandError } from '../lib/state.mjs';
 
-function fixtureShow(dir) {
+function fixtureShow(dir, tweak) {
   const players = [];
   for (let i = 1; i <= 26; i++) players.push({ id: `player-intl-${i}`, team: 'international', name: `I${i}`, country: 'India', hometown: '', school: '', generic: true, cards: { '4x9': `cards/i${i}-4x9.mp4`, '8x9': `cards/i${i}-8x9.mp4` }, fallback: { '4x9': `cards/i${i}-4x9.mp4`, '8x9': `cards/i${i}-8x9.mp4` } });
   for (let i = 1; i <= 26; i++) players.push({ id: `player-usa-${i}`, team: 'usa', name: `U${i}`, country: 'USA', hometown: '', school: '', generic: true, cards: { '4x9': `cards/u${i}-4x9.mp4`, '8x9': `cards/u${i}-8x9.mp4` }, fallback: { '4x9': `cards/u${i}-4x9.mp4`, '8x9': `cards/u${i}-8x9.mp4` } });
@@ -17,7 +17,9 @@ function fixtureShow(dir) {
   const day2 = [];
   for (let i = 1; i <= 26; i++) day2.push({ index: i, intl: [`player-intl-${i}`], usa: [''] });
   const showPath = join(dir, 'show.json');
-  writeFileSync(showPath, JSON.stringify({ built: 'now', players, days: { 1: day1, 2: day2 } }));
+  const show = { built: 'now', players, days: { 1: day1, 2: day2 } };
+  if (tweak) tweak(show);
+  writeFileSync(showPath, JSON.stringify(show));
   return showPath;
 }
 
@@ -31,9 +33,9 @@ async function startHub(opts = {}) {
   mkdirSync(publicDir, { recursive: true });
   writeFileSync(join(publicDir, 'stage.html'), '<h1>stage</h1>');
   writeFileSync(join(publicDir, 'operator.html'), '<h1>operator</h1>');
-  const { dir: _d, ...rest } = opts;
+  const { dir: _d, showTweak, ...rest } = opts;
   const hub = await createHub({
-    showPath: fixtureShow(dir),
+    showPath: fixtureShow(dir, showTweak),
     statePath: join(dir, 'state.json'),
     cardsDir, publicDir, port: 0, enableSync: false, quiet: true,
     ...rest,
@@ -84,6 +86,24 @@ test('serves the show and the initial state', async () => {
   assert.equal(state.day, 1);
   assert.equal(state.slot.index, 1);
   assert.equal(state.slot.shown, 'none');
+});
+
+test('/api/show never carries hometown or school, for any player, anywhere in the body', async () => {
+  // Give every player private details on disk, as the real show.json has.
+  const again = await startHub({ showTweak: (show) => show.players.forEach((p, i) => { p.hometown = `PRIVATE-TOWN-${i}`; p.school = `PRIVATE-SCHOOL-${i}`; }) });
+  const path = join(again.dir, 'show.json');
+  const text = await (await fetch(`${again.base}/api/show`)).text();
+  assert.doesNotMatch(text, /hometown|school|PRIVATE-/);
+  const show = JSON.parse(text);
+  assert.equal(show.players.length, 52);
+  for (const p of show.players) {
+    assert.ok(!('hometown' in p) && !('school' in p));
+    for (const k of ['id', 'name', 'team', 'country', 'cards', 'fallback', 'generic']) assert.ok(k in p, `${k} still served`);
+  }
+  assert.equal(show.days['1'].length, 13);
+  // and nothing else endpoint-wise carries them
+  for (const path2 of ['/api/state', '/api/whoami']) assert.doesNotMatch(await (await fetch(`${again.base}${path2}`)).text(), /PRIVATE-/);
+  assert.match(readFileSync(path, 'utf8'), /PRIVATE-TOWN-0/, 'show.json on disk is untouched');
 });
 
 test('the show is indexed at startup, so a command works on a show loaded from JSON', async () => {
@@ -508,4 +528,169 @@ test('stop() closes even open SSE streams, so shutdown is not blocked by a TV', 
   await hub.stop();
   assert.ok(Date.now() - t < 2000);
   c.kill();
+});
+
+// ---------------------------------------------------------------------------
+// refreshFromAws: the one path that takes outside data into the state.
+// ---------------------------------------------------------------------------
+
+const jsonRes = (body, status = 200) => ({ ok: status < 400, status, json: async () => body });
+const refresh = (base) => post(base, { name: 'refreshFromAws' });
+const slotsOf = async (base) => JSON.parse(readFileSync(join(base.dir, 'state.json'), 'utf8')).slots;
+
+function realisticPayload() {
+  const items = [];
+  for (let i = 1; i <= 13; i++) {
+    items.push({
+      id: `day1-team-${i}`, type: 'team', day: 1, match_number: i,
+      intl_team: { player1_id: `player-intl-${i * 2 - 1}`, player2_id: `player-intl-${i * 2}` },
+      usa_team: { player1_id: `player-usa-${i * 2 - 1}`, player2_id: `player-usa-${i * 2}` },
+      revealOrder: 'intl-first', revealStep: 0,
+    });
+  }
+  for (let i = 1; i <= 26; i++) {
+    items.push({
+      id: `day2-singles-${i}`, type: 'singles', day: 2, match_number: i,
+      intl_player_id: `player-intl-${i}`, usa_player_id: `player-usa-${i}`,
+      revealOrder: 'intl-first', revealStep: 0,
+    });
+  }
+  return { pairings: items };
+}
+
+async function refreshHub(payload, status) {
+  const fetchImpl = async () => (payload instanceof Error ? Promise.reject(payload) : jsonRes(payload, status));
+  const h = await startHub({ fetchImpl });
+  const stateOf = async () => (await (await fetch(`${h.base}/api/state`)).json());
+  const fullState = () => JSON.parse(readFileSync(join(h.dir, 'state.json'), 'utf8'));
+  return { ...h, stateOf, fullState };
+}
+
+test('refresh with a realistic 39-item payload fills every empty side once, and persists', async () => {
+  const h = await refreshHub(realisticPayload());
+  const res = await refresh(h.base);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.filled, 39, 'only the empty USA sides; the INTL sides were already drawn');
+  const slots = h.fullState().slots;
+  assert.deepEqual(slots['1'][4].usa, ['player-usa-9', 'player-usa-10']);
+  assert.deepEqual(slots['2'][25].usa, ['player-usa-26']);
+  assert.deepEqual(slots['1'][4].intl, ['player-intl-9', 'player-intl-10'], 'drawn sides untouched');
+  assert.equal(body.state.rev, 1);
+  // idempotent: a second refresh has nothing left to fill and does not bump rev
+  const again = await (await refresh(h.base)).json();
+  assert.equal(again.filled, 0);
+  assert.equal(again.state.rev, 1);
+});
+
+test('refresh never touches a slot that has begun to be revealed', async () => {
+  const h = await refreshHub(realisticPayload());
+  await post(h.base, { name: 'reveal' });
+  const body = await (await refresh(h.base)).json();
+  assert.equal(body.filled, 38, 'match 1 is on screen; it is left alone');
+  assert.deepEqual(h.fullState().slots['1'][0].usa, ['', '']);
+});
+
+test('refresh cannot resurrect a player id that is not in the show', async () => {
+  const bad = realisticPayload();
+  bad.pairings[0].usa_team = { player1_id: 'player-usa-999', player2_id: 'player-usa-1' };
+  bad.pairings[1].usa_team = { player1_id: 'ghost', player2_id: '' };
+  bad.pairings[2].usa_team = { player1_id: '__proto__', player2_id: 'constructor' };
+  bad.pairings[3].usa_team = { player1_id: 'toString', player2_id: 'hasOwnProperty' };
+  bad.pairings[4].usa_team = { player1_id: { id: 'player-usa-1' }, player2_id: ['player-usa-2'] };
+  bad.pairings[5].usa_team = { player1_id: 7, player2_id: null };
+  const h = await refreshHub(bad);
+  const res = await refresh(h.base);
+  assert.equal(res.status, 200);
+  const slots = h.fullState().slots['1'];
+  for (let i = 0; i < 6; i++) assert.deepEqual(slots[i].usa, ['', ''], `slot ${i + 1} stayed empty`);
+  assert.equal(slots[6].usa[0], 'player-usa-13', 'valid items in the same payload still apply');
+  const everyId = JSON.stringify(h.fullState().slots);
+  assert.doesNotMatch(everyId, /ghost|999|__proto__|constructor|toString/);
+});
+
+test('refresh will not put an international player on the USA side (or vice versa)', async () => {
+  const bad = realisticPayload();
+  bad.pairings[0].usa_team = { player1_id: 'player-intl-5', player2_id: 'player-intl-6' };
+  bad.pairings[13].usa_player_id = 'player-intl-1';
+  const h = await refreshHub(bad);
+  await refresh(h.base);
+  const slots = h.fullState().slots;
+  assert.deepEqual(slots['1'][0].usa, ['', '']);
+  assert.deepEqual(slots['2'][0].usa, ['']);
+});
+
+test('refresh ignores a missing or out-of-range revealStep, and cannot be used to reveal', async () => {
+  const p = realisticPayload();
+  delete p.pairings[0].revealStep;
+  p.pairings[1].revealStep = 7;
+  p.pairings[2].revealStep = -3;
+  p.pairings[3].revealStep = 'two';
+  p.pairings[4].revealStep = null;
+  p.pairings[5].revealOrder = 'sideways-first';
+  const h = await refreshHub(p);
+  const res = await refresh(h.base);
+  assert.equal(res.status, 200);
+  const slots = h.fullState().slots['1'];
+  for (let i = 0; i < 6; i++) {
+    assert.equal(slots[i].shown, 'none');
+    assert.equal(slots[i].firstSide, 'intl');
+    assert.equal(slots[i].done, false);
+  }
+  assert.equal((await h.stateOf()).slot.shown, 'none');
+});
+
+test('refresh with hostile item shapes never throws out of the handler or corrupts the state', async () => {
+  const items = [
+    null, undefined, 5, 'x', [], true,
+    { day: '__proto__', match_number: 1, type: 'team' },
+    { day: 'constructor', match_number: 1 },
+    { day: 'toString' },
+    { day: 3, match_number: 1 },
+    { day: 1 },
+    { day: 1, match_number: 'one' },
+    { day: 1, match_number: 999, type: 'team' },
+    { day: 1, match_number: 1, type: 'team', intl_team: 'nope', usa_team: 12 },
+    { day: 1, match_number: 1, type: 'team', usa_team: { player1_id: 'player-usa-1' } },
+    { day: 2, match_number: 1, type: 'singles', usa_player_id: ['player-usa-1'] },
+    { day: [1], match_number: [1] },
+    { day: 1, match_number: 1, intl_team: { get player1_id() { return 'x'; } } },
+  ];
+  const h = await refreshHub({ pairings: items });
+  const res = await refresh(h.base);
+  assert.equal(res.status, 200);
+  const stateAfter = h.hub.state;
+  assert.equal(stateAfter.slots['1'].length, 13);
+  assert.equal(stateAfter.slots['2'].length, 26);
+  assert.equal(Object.keys(stateAfter.slots).sort().join(), '1,2');
+  assert.equal({}.polluted, undefined, 'prototype not polluted');
+  // A half-drawn team (one id, one blank) is a legitimate draw state and is accepted.
+  assert.deepEqual(stateAfter.slots['1'][0].usa, ['player-usa-1', '']);
+  assert.deepEqual(stateAfter.slots['2'][0].usa, [''], 'an array id on a singles side is refused');
+  assert.equal((await fetch(`${h.base}/api/state`)).status, 200, 'hub alive');
+});
+
+test('refresh: a body that is not the expected shape fills nothing', async () => {
+  for (const payload of [[], {}, null, 'text', 42, true, { pairings: 'nope' }, { pairings: { 0: {} } }, { pairings: null }, { items: [] }, [{ day: 1 }]]) {
+    const h = await refreshHub(payload);
+    const res = await refresh(h.base);
+    assert.equal(res.status, 200, JSON.stringify(payload));
+    assert.equal((await res.json()).filled, 0, JSON.stringify(payload));
+    assert.equal((await h.stateOf()).rev, 0);
+  }
+});
+
+test('refresh: AWS errors are a 502 with a status code only, and the state is unchanged', async () => {
+  const down = await refreshHub(new Error('ENOTFOUND secret-host.internal'));
+  const r1 = await refresh(down.base);
+  assert.equal(r1.status, 502);
+  assert.doesNotMatch(JSON.stringify(await r1.json()), /secret-host/);
+  const err500 = await refreshHub({}, 500);
+  const r2 = await refresh(err500.base);
+  assert.equal(r2.status, 502);
+  assert.match((await r2.json()).error, /HTTP 500/);
+  const notJson = await startHub({ fetchImpl: async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected token <'); } }) });
+  const r3 = await refresh(notJson.base);
+  assert.equal(r3.status, 502);
+  assert.equal((await (await fetch(`${notJson.base}/api/state`)).json()).rev, 0);
 });

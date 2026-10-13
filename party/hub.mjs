@@ -114,6 +114,15 @@ export async function createHub({
     onStatus: (sync) => { apply({ name: 'setSync', sync }); },
   });
 
+  // What the surfaces need and nothing more. hometown and school are printed
+  // inside the cards' final frame (pixels); no surface reads them as data, and
+  // this server is reachable by everyone on the venue wifi. show.json on disk
+  // keeps them: the build needs them.
+  const publicShow = {
+    ...show,
+    players: show.players.map(({ hometown: _h, school: _s, ...rest }) => rest),
+  };
+
   const wireState = () => project(state, show);
 
   function persist() {
@@ -143,7 +152,12 @@ export async function createHub({
     const next = JSON.parse(JSON.stringify(state));
     let filled = 0;
     for (const item of items) {
-      const slot = (next.slots[String(item?.day)] || []).find((s) => s.index === item.match_number);
+      // Outside data: never index with an attacker-chosen key ("__proto__",
+      // "constructor") and never assume the shape.
+      if (!item || typeof item !== 'object') continue;
+      const day = String(item.day);
+      if (day !== '1' && day !== '2') continue;
+      const slot = next.slots[day].find((s) => s.index === item.match_number);
       if (!slot || slot.done || slot.shown !== 'none') continue;
       const team = item.type === 'team';
       const sides = {
@@ -277,7 +291,7 @@ export async function createHub({
       return;
     }
     if (url === '/api/state') { sendJson(res, 200, wireState()); return; }
-    if (url === '/api/show') { sendJson(res, 200, show); return; }
+    if (url === '/api/show') { sendJson(res, 200, publicShow); return; }
     if (url === '/api/whoami') { sendJson(res, 200, whoami()); return; }
 
     if (url === '/') {

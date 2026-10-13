@@ -373,3 +373,64 @@ test('html is served no-cache so a reload always gets the new surface', async ()
   assert.match(res.headers.get('cache-control'), /no-store|no-cache/);
   assert.equal(res.headers.get('content-type'), 'text/html; charset=utf-8');
 });
+
+// ---------------------------------------------------------------------------
+// Caching: cards are revalidated every time (a rebuild reuses filenames).
+// ---------------------------------------------------------------------------
+
+test('media is no-cache with validators, never max-age', async () => {
+  const res = await fetch(`${origin}/clip.mp4`);
+  assert.equal(res.headers.get('cache-control'), 'no-cache');
+  assert.doesNotMatch(res.headers.get('cache-control'), /max-age/);
+  assert.ok(res.headers.get('etag'));
+  assert.ok(res.headers.get('last-modified'));
+  const part = await fetch(`${origin}/clip.mp4`, { headers: { Range: 'bytes=0-9' } });
+  assert.equal(part.status, 206);
+  assert.equal(part.headers.get('cache-control'), 'no-cache');
+  assert.equal(part.headers.get('etag'), res.headers.get('etag'));
+});
+
+test('an unchanged file answers 304 to If-None-Match and If-Modified-Since', async () => {
+  const first = await fetch(`${origin}/clip.mp4`);
+  await first.arrayBuffer();
+  const byEtag = await fetch(`${origin}/clip.mp4`, { headers: { 'If-None-Match': first.headers.get('etag') } });
+  assert.equal(byEtag.status, 304);
+  assert.equal((await byEtag.arrayBuffer()).byteLength, 0);
+  const byDate = await fetch(`${origin}/clip.mp4`, { headers: { 'If-Modified-Since': first.headers.get('last-modified') } });
+  assert.equal(byDate.status, 304);
+  const stale = await fetch(`${origin}/clip.mp4`, { headers: { 'If-None-Match': '"something-else"' } });
+  assert.equal(stale.status, 200);
+  await stale.arrayBuffer();
+});
+
+test('a changed file yields fresh bytes, not a stale response', async () => {
+  const path = join(root, 'rebuilt.mp4');
+  writeFileSync(path, 'yesterday');
+  const before = await fetch(`${origin}/rebuilt.mp4`);
+  assert.equal(await before.text(), 'yesterday');
+  const oldTag = before.headers.get('etag');
+  const oldDate = before.headers.get('last-modified');
+  writeFileSync(path, 'today, rebuilt'); // same name, different bytes, different size
+  const again = await fetch(`${origin}/rebuilt.mp4`, { headers: { 'If-None-Match': oldTag, 'If-Modified-Since': oldDate } });
+  assert.equal(again.status, 200);
+  assert.equal(await again.text(), 'today, rebuilt');
+  assert.notEqual(again.headers.get('etag'), oldTag);
+  // Same size, rewritten later: the ETag must still change.
+  const t1 = again.headers.get('etag');
+  await new Promise((r) => setTimeout(r, 15));
+  writeFileSync(path, 'today, REBUILT');
+  const sameSize = await fetch(`${origin}/rebuilt.mp4`, { headers: { 'If-None-Match': t1 } });
+  assert.equal(sameSize.status, 200);
+  assert.equal(await sameSize.text(), 'today, REBUILT');
+});
+
+test('If-Range with a stale validator gets the whole file, with a current one a 206', async () => {
+  const first = await fetch(`${origin}/clip.mp4`);
+  await first.arrayBuffer();
+  const fresh = await fetch(`${origin}/clip.mp4`, { headers: { Range: 'bytes=0-9', 'If-Range': first.headers.get('etag') } });
+  assert.equal(fresh.status, 206);
+  await fresh.arrayBuffer();
+  const stale = await fetch(`${origin}/clip.mp4`, { headers: { Range: 'bytes=0-9', 'If-Range': '"old"' } });
+  assert.equal(stale.status, 200);
+  assert.equal((await stale.arrayBuffer()).byteLength, SIZE);
+});
