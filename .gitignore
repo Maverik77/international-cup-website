@@ -125,3 +125,13 @@ contacts/
 
 # Party card videos - large local build artefacts, never deployed
 party/cards/
+
+# Git worktrees for isolated feature work
+.worktrees/
+
+# The party hub is source code, not a build artefact. The build/ and public/
+# patterns near the top of this file are unanchored boilerplate (the latter
+# from a Gatsby template) and match at any depth, so without these negations
+# party/build/ and party/public/ would be silently untrackable.
+!party/build/
+!party/public/
