@@ -320,15 +320,35 @@ test('the admin password never appears in logs, state, responses or errors', asy
   assert.ok(!everything.includes(PW), 'password leaked');
 });
 
-test('with no admin password the hub still starts, with sync off and the reason shown', async () => {
-  const saved = process.env.ICUP_ADMIN_PASSWORD;
-  delete process.env.ICUP_ADMIN_PASSWORD;
-  try {
-    const { base } = await startHub({ enableSync: true, target: 'staging', password: null });
-    const who = await (await fetch(`${base}/api/whoami`)).json();
-    // Either the dev machine has a staging password file (sync on) or it does not (sync off, with a note).
-    assert.ok(who.sync === 'staging' || (who.sync === 'off' && /Website sync is off/.test(who.syncNote)));
-  } finally { if (saved !== undefined) process.env.ICUP_ADMIN_PASSWORD = saved; }
+test('with no admin password file the hub still starts, with sync off and the reason shown', async () => {
+  // Deterministic: the password loader is injected, so this does not depend on
+  // whether the machine running the tests has a staging password file.
+  const { AwsError } = await import('../lib/aws.mjs');
+  const loadPasswordImpl = () => { throw new AwsError('cannot read /home/x/.icup-admin-passwords/staging.txt - set ICUP_ADMIN_PASSWORD instead'); };
+  const { base } = await startHub({ enableSync: true, target: 'staging', password: null, loadPasswordImpl });
+  const who = await (await fetch(`${base}/api/whoami`)).json();
+  assert.equal(who.sync, 'off');
+  assert.match(who.syncNote, /Website sync is off: cannot read .*ICUP_ADMIN_PASSWORD/);
+  assert.equal((await post(base, { name: 'reveal' })).status, 200, 'the show runs without the website');
+});
+
+test('an unexpected failure loading the password also degrades to sync off, without leaking its text', async () => {
+  const loadPasswordImpl = () => { throw new Error('boom hunter2-SECRET'); };
+  const { base } = await startHub({ enableSync: true, target: 'staging', password: null, loadPasswordImpl });
+  const who = await (await fetch(`${base}/api/whoami`)).json();
+  assert.equal(who.sync, 'off');
+  assert.match(who.syncNote, /Website sync is off/);
+  assert.doesNotMatch(JSON.stringify(who), /hunter2|boom/);
+});
+
+test('when the password loads, sync is on and the loader is asked for the right target', async () => {
+  let asked;
+  const loadPasswordImpl = (o) => { asked = o; return 'pw'; };
+  const { base } = await startHub({ enableSync: true, target: 'staging', password: null, loadPasswordImpl, fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}) }) });
+  const who = await (await fetch(`${base}/api/whoami`)).json();
+  assert.equal(who.sync, 'staging');
+  assert.equal(who.syncNote, null);
+  assert.equal(asked.target, 'staging');
 });
 
 test('rehearsal never syncs, even if sync was asked for', async () => {

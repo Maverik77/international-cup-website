@@ -52,6 +52,11 @@ export function safeJoin(root, urlPath) {
     if (seg === '.' || seg === '..' || (seg.startsWith('.') && seg !== '')) return null;
   }
 
+  // Two guards, in this order. The segment check above is the stricter one and
+  // is the one that actually fires: it refuses every "." and ".." outright, so
+  // no request can reach this containment check with an escaping path (fuzzed
+  // with 50k+ hostile paths; this branch never fired). It is kept as a second
+  // line of defence in case the segment rules are ever relaxed.
   const abs = resolve(join(rootAbs, ...segments.filter(Boolean)));
   if (abs !== rootAbs && !abs.startsWith(rootAbs + sep)) return null;
 

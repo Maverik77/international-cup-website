@@ -6,6 +6,10 @@ export function createSseHub({ pingMs = 15000 } = {}) {
   let nextId = 0;
 
   const drop = (res) => { clients.delete(res); };
+  // The destroyed/writableEnded guard and the catch are belt and braces for older
+  // runtimes: on Node 23 a res.write() to a dead response does not throw, so the
+  // suite stays green without them. Where that is not guaranteed they stop one
+  // dead client from breaking a broadcast to the others. Keep both.
   const send = (res, frame) => {
     try {
       if (res.destroyed || res.writableEnded) { drop(res); return; }

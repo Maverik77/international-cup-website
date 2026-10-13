@@ -55,6 +55,11 @@ function sendJson(res, code, body, extra = {}) {
   res.end(JSON.stringify(body));
 }
 
+// REHEARSAL WARNING: createHub({ rehearsal: true }) turns sync off and flags the
+// state, but it does NOT choose a different state file. Only parseArgs()
+// (--rehearsal) points statePath at state.rehearsal.json. Any caller that
+// rehearses must go through parseArgs or pass statePath explicitly, or the
+// rehearsal will overwrite the live state.json.
 export async function createHub({
   showPath = join(HERE, 'show.json'),
   statePath = join(HERE, 'state.json'),
@@ -68,6 +73,7 @@ export async function createHub({
   password = null,
   syncMinDelay = 1000,
   quiet = false,
+  loadPasswordImpl = loadPassword, // test seam: pins the no-password-file behaviour deterministically
   reduceImpl = reduce, // test seam: lets a test inject a programming fault
 } = {}) {
   const warn = (...a) => { if (!quiet) console.warn(...a); };
@@ -97,7 +103,7 @@ export async function createHub({
   let secret = null;
   if (syncEnabled) {
     try {
-      secret = password ?? loadPassword({ target });
+      secret = password ?? loadPasswordImpl({ target });
     } catch (e) {
       // The show must go on without the website; say so where the operator looks.
       syncEnabled = false;
@@ -157,7 +163,7 @@ export async function createHub({
       if (!item || typeof item !== 'object') continue;
       const day = String(item.day);
       if (day !== '1' && day !== '2') continue;
-      const slot = next.slots[day].find((s) => s.index === item.match_number);
+      const slot = (next.slots[day] || []).find((s) => s.index === item.match_number);
       if (!slot || slot.done || slot.shown !== 'none') continue;
       const team = item.type === 'team';
       const sides = {
