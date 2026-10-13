@@ -36,6 +36,8 @@ test('a long name shrinks to fit, a short one does not', () => {
   assert.equal(fitFontSize('SETH HOLLADAY', 36, 17), 36);
   assert.equal(fitFontSize('SRIDHAR MUTHUSAMY', 36, 17), 36);
   assert.equal(fitFontSize('BARTHOLOMEW CUMBERBATCH-JONES', 36, 17), 21);
+  assert.equal(fitFontSize('X'.repeat(500), 36, 17), 1, 'never below 1');
+  assert.equal(fitFontSize('XX', 36, 0), 1, 'maxChars 0 still gives a usable size');
 });
 
 test('geometry fills a 16:9 screen exactly', () => {
@@ -84,7 +86,7 @@ test('SLOW: a failed or killed ffmpeg names the player and format and leaves out
     const out = join(dir, 'x.mp4');
     writeFileSync(out, 'precious');
     await assert.rejects(buildGenericCard({ player: { name: 'Ann Test', country: 'USA' }, format: '8x9', outPath: out, flagsDir: FLAGS, workDir: dir, timeoutMs: 300 }),
-      /Ann Test \[8x9\]/);
+      /timed out after 300ms.*Ann Test \[8x9\]/s);
     assert.equal(readFileSync(out, 'utf8'), 'precious');
     assert.deepEqual(readdirSync(dir), ['x.mp4']);
   });
@@ -155,7 +157,9 @@ function finalFrameYmax(path) {
   return all.at(-1);
 }
 
-test('SLOW: the final frame stays bright (card holds as the info panel, no fade-out)', { skip: !haveFfmpeg, timeout: 120_000 }, async () => {
+// Guards only against the fade-out returning: YMAX > 200 would also be met by a white flag
+// stripe, so this is NOT proof the text is present (the edge/centre VMAX test below covers that).
+test('SLOW: the final frame is not faded to black (fade-out has not returned)', { skip: !haveFfmpeg, timeout: 120_000 }, async () => {
   const dir = mkdtempSync(join(tmpdir(), 'card-'));
   for (const format of ['4x9', '8x9']) {
     const out = join(dir, `hold-${format}.mp4`);
@@ -175,4 +179,37 @@ test('SLOW: a relative flagsDir, workDir and outPath work', { skip: !haveFfmpeg,
     format: '4x9', outPath: rel(out), flagsDir: rel(FLAGS), workDir: rel(dir) });
   assert.equal(res, rel(out));
   assert.deepEqual([probe(out).width, probe(out).height], [480, 1080]);
+});
+
+// VMAX of the last frame over a crop (gold text raises chroma well above neutral 128).
+function lastVmax(path, crop) {
+  const r = spawnSync('ffmpeg', ['-v', 'error', '-i', path, '-vf',
+    `crop=${crop},signalstats,metadata=print:key=lavfi.signalstats.VMAX:file=-`, '-f', 'null', '-']);
+  assert.equal(r.status, 0, r.stderr.toString());
+  const all = [...r.stdout.toString().matchAll(/VMAX=(\d+)/g)].map((m) => Number(m[1]));
+  assert.ok(all.length >= 269, `expected ~270 frames, got ${all.length}`);
+  return all.at(-1);
+}
+
+// An invented 36-character hometown, the length of the longest real one.
+const LONG_HOMETOWN = 'Wetherbridge-upon-Marlow, Northshire';
+
+test('SLOW: a 36-character hometown fits inside the frame (not clipped at either edge)', { skip: !haveFfmpeg, timeout: 180_000 }, async () => {
+  assert.equal(LONG_HOMETOWN.length, 36);
+  const dir = mkdtempSync(join(tmpdir(), 'card-'));
+  // gold band per format: y and a height covering the fitted-or-unfitted line
+  const band = { '4x9': { y: 848, h: 46 }, '8x9': { y: 800, h: 70 } };
+  for (const format of ['4x9', '8x9']) {
+    const w = GEOMETRY[format].width;
+    const out = join(dir, `long-${format}.mp4`);
+    await buildGenericCard({ player: { name: 'Ann Test', hometown: LONG_HOMETOWN, country: 'USA' },
+      format, outPath: out, flagsDir: FLAGS, workDir: dir });
+    const { y, h } = band[format];
+    const left = lastVmax(out, `6:${h}:0:${y}`);
+    const right = lastVmax(out, `6:${h}:${w - 6}:${y}`);
+    const centre = lastVmax(out, `${w / 2}:${h}:${w / 4}:${y}`);
+    assert.ok(left <= 140, `${format} left edge VMAX ${left}`);
+    assert.ok(right <= 140, `${format} right edge VMAX ${right}`);
+    assert.ok(centre > 150, `${format} centre VMAX ${centre} (text missing?)`);
+  }
 });

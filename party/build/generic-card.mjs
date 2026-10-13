@@ -20,6 +20,15 @@ export const GEOMETRY = {
     goldY: 808, goldSize: 50, whiteY: 874, whiteSize: 36 },
 };
 
+// Character budgets for the gold (hometown) and white (country) lines, beside the
+// brief's table, not part of it. Derived from the name constants (usable width ~
+// chars x px: 17x36 = 612 on 480, 21x68 = 1428 on 960), so the budget is
+// round(width / size). Confirmed by rendering a 36-character hometown.
+export const LINE_FIT = {
+  '4x9': { goldMaxChars: 22, whiteMaxChars: 30 },
+  '8x9': { goldMaxChars: 28, whiteMaxChars: 39 },
+};
+
 export function cardLines(player) {
   const name = (player.name || '').toUpperCase();
   const hometown = (player.hometown || '').toUpperCase();
@@ -31,7 +40,7 @@ export function cardLines(player) {
 
 export function fitFontSize(text, baseSize, maxChars) {
   if (text.length <= maxChars) return baseSize;
-  return Math.floor((baseSize * maxChars) / text.length);
+  return Math.max(1, Math.floor((baseSize * maxChars) / text.length));
 }
 
 // drawtext text MUST go through a file with expansion=none. Passing it inline as
@@ -51,8 +60,10 @@ function drawtext({ font, file, size, colour, y, fadeAt }) {
     `alpha='min(max((t-${fadeAt})/0.45\\,0)\\,1)'`;
 }
 
-export function buildFilterGraph(g, lines, files) {
+export function buildFilterGraph(g, lines, files, fit = LINE_FIT[g.width === 480 ? '4x9' : '8x9']) {
   const nameSize = fitFontSize(lines.name, g.nameSize, g.nameMaxChars);
+  const goldSize = fitFontSize(lines.gold, g.goldSize, fit.goldMaxChars);
+  const whiteSize = fitFontSize(lines.white, g.whiteSize, fit.whiteMaxChars);
   const steps = [
     `[0:v]split=2[a][b]`,
     `[a]scale=w=${g.width}:h=${g.height}:force_original_aspect_ratio=increase,` +
@@ -64,10 +75,10 @@ export function buildFilterGraph(g, lines, files) {
     `[ph]drawbox=x=0:y=${g.scrimTop}:w=${g.width}:h=${g.height - g.scrimTop}:color=black@0.74:t=fill[s0]`,
     `[s0]${drawtext({ font: BOLD, file: files.name, size: nameSize, colour: 'white', y: g.nameY, fadeAt: 0.7 })}[s1]`,
     `[s1]drawbox=x=${g.ruleX}:y=${g.ruleY}:w=${g.ruleW}:h=3:color=${GOLD}@0.9:t=fill:enable='gte(t,1.0)'[s2]`,
-    `[s2]${drawtext({ font: BOLD, file: files.gold, size: g.goldSize, colour: GOLD, y: g.goldY, fadeAt: 1.1 })}[s3]`,
+    `[s2]${drawtext({ font: BOLD, file: files.gold, size: goldSize, colour: GOLD, y: g.goldY, fadeAt: 1.1 })}[s3]`,
   ];
   if (files.white) {
-    steps.push(`[s3]${drawtext({ font: REG, file: files.white, size: g.whiteSize, colour: 'white@0.88', y: g.whiteY, fadeAt: 1.35 })}[s4]`);
+    steps.push(`[s3]${drawtext({ font: REG, file: files.white, size: whiteSize, colour: 'white@0.88', y: g.whiteY, fadeAt: 1.35 })}[s4]`);
   } else {
     steps.push('[s3]null[s4]');
   }
