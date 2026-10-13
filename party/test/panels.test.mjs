@@ -170,21 +170,42 @@ test('it works on the show as the browser receives it, with no byId', () => {
 
 test('no raw player id is ever a name the stage could print', () => {
   const plan = panelPlan(withSlot({
-    intl: ['player-intl-ghost', 'player-intl-2'], usa: ['player-intl-ghost', ''],
-    problems: ['player-usa-1 appears twice in this match'], shown: 'both',
+    intl: ['player-intl-ghost', 'player-intl-2'], usa: ['player-intl-ghost', ''], shown: 'both',
   }), show);
   for (const p of plan.panels) {
     assert.doesNotMatch(p.name, /player-/);
     assert.equal(typeof p.name, 'string');
   }
-  // slot.problems carries ids; the plan must not pass them on
-  assert.doesNotMatch(JSON.stringify(plan.panels.map(({ name, visible }) => ({ name, visible }))), /player-/);
-  assert.equal(plan.problems, undefined);
-  // and the stage source never reads problems at all
-  const stageJs = readFileSync(new URL('../public/stage.js', import.meta.url), 'utf8');
-  assert.doesNotMatch(stageJs, /problems/);
-  const stageHtml = readFileSync(new URL('../public/stage.html', import.meta.url), 'utf8');
-  assert.doesNotMatch(stageHtml, /problems/);
+  assert.equal(plan.panels[0].playerId, null);
+  assert.equal(plan.panels[0].name, '');
+});
+
+test('slot.problems never reaches the plan, whatever it contains', () => {
+  // ids of real players who are NOT in this slot, so they cannot appear legitimately
+  const leaked = ['player-usa-26', 'player-intl-25', 'player-usa-17'];
+  const problems = [
+    `${leaked[0]} appears twice in this match`,
+    `${leaked[1]} is already in match 3 on day 1`,
+    `${leaked[2]} is not a player in the show`,
+  ];
+  for (const shown of ['none', 'first', 'both']) {
+    const withProblems = panelPlan(withSlot({ problems, shown }), show);
+    const text = JSON.stringify(withProblems);
+    for (const id of leaked) assert.ok(!text.includes(id), `${id} leaked into the plan`);
+    assert.ok(!/appears twice|already in match|not a player/.test(text));
+    // and it is identical to the plan with no problems at all
+    assert.deepEqual(withProblems, panelPlan(withSlot({ problems: [], shown }), show));
+  }
+  const alsoMatch = panelsForMatch({ day: 1, intl: [], usa: [], problems }, show);
+  assert.ok(!JSON.stringify(alsoMatch).includes(leaked[0]));
+});
+
+test('a text-only name only appears once the panel is revealed, and the stage starts on the idle screen', () => {
+  const css = readFileSync(new URL('../public/stage.css', import.meta.url), 'utf8');
+  assert.match(css, /\.panel\.text-only\.shown \.fallback-name\s*\{[^}]*opacity:\s*1/);
+  assert.doesNotMatch(css, /\.panel\.text-only \.fallback-name\s*\{[^}]*opacity:\s*1/);
+  const html = readFileSync(new URL('../public/stage.html', import.meta.url), 'utf8');
+  assert.match(html, /<body class="idle">/);
 });
 
 test('preload lists the next slot, both sides, skipping blanks and unknowns', () => {

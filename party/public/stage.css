@@ -44,7 +44,8 @@ html, body {
   color: #fff;
   opacity: 0;
 }
-.panel.text-only .fallback-name { opacity: 1; }
+/* Only once revealed: a hidden panel that cannot play must not give the pairing away early. */
+.panel.text-only.shown .fallback-name { opacity: 1; }
 .panel.text-only video { opacity: 0; }
 
 #preload { position: absolute; width: 0; height: 0; overflow: hidden; }
