@@ -199,6 +199,9 @@ test('SLOW: a 36-character hometown fits inside the frame (not clipped at either
   const dir = mkdtempSync(join(tmpdir(), 'card-'));
   // gold band per format: y and a height covering the fitted-or-unfitted line
   const band = { '4x9': { y: 848, h: 46 }, '8x9': { y: 800, h: 70 } };
+  // Centre crop must exclude the gold rule (4x9: y 852-855, VMAX 171 alone), or it would
+  // pass with the text gone. 8x9's window already sits below its rule.
+  const centreBand = { '4x9': { y: 858, h: 36 }, '8x9': { y: 800, h: 70 } };
   for (const format of ['4x9', '8x9']) {
     const w = GEOMETRY[format].width;
     const out = join(dir, `long-${format}.mp4`);
@@ -207,7 +210,7 @@ test('SLOW: a 36-character hometown fits inside the frame (not clipped at either
     const { y, h } = band[format];
     const left = lastVmax(out, `6:${h}:0:${y}`);
     const right = lastVmax(out, `6:${h}:${w - 6}:${y}`);
-    const centre = lastVmax(out, `${w / 2}:${h}:${w / 4}:${y}`);
+    const centre = lastVmax(out, `${w / 2}:${centreBand[format].h}:${w / 4}:${centreBand[format].y}`);
     assert.ok(left <= 140, `${format} left edge VMAX ${left}`);
     assert.ok(right <= 140, `${format} right edge VMAX ${right}`);
     assert.ok(centre > 150, `${format} centre VMAX ${centre} (text missing?)`);
