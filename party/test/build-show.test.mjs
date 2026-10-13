@@ -24,7 +24,7 @@ function fixture({ bespoke = {} } = {}) {
 }
 const players = (n = 3) => Array.from({ length: n }, (_, i) =>
   ({ id: `player-intl-${i + 1}`, team: 'international', name: `P${i + 1}`, country: 'England', hometown: '', school: '' }));
-const okProbe = (abs) => ({ width: abs.includes('4x9') ? 480 : 960, height: 1080, duration: 9 });
+const okProbe = (abs) => ({ codec: 'h264', pixFmt: 'yuv420p', width: abs.includes('4x9') ? 480 : 960, height: 1080, duration: 9 });
 
 test('the card-key map has 25 entries and keeps phil and phillip apart', () => {
   assert.equal(Object.keys(CARD_KEYS).length, 25);
@@ -79,7 +79,7 @@ function oneCardShow() {
   return { dir, show: indexShow({ built: 'now', days: {}, players: [{ id: 'p1', name: 'A', cards, fallback: cards }] }) };
 }
 
-test('validation passes good files and shares probes between cards and identical fallbacks', () => {
+test('validation passes good files and probes each distinct file once', () => {
   const { dir, show } = oneCardShow();
   let calls = 0;
   assert.deepEqual(validateCards(show, dir, { probe: (a) => { calls++; return okProbe(a); } }), []);
@@ -88,13 +88,47 @@ test('validation passes good files and shares probes between cards and identical
 
 test('validation reports wrong size, bad duration and unreadable files by file and reason', () => {
   const { dir, show } = oneCardShow();
-  const wrong = validateCards(show, dir, { probe: () => ({ width: 1920, height: 1080, duration: 9 }) });
+  const wrong = validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), width: 1920 }) });
+  assert.equal(wrong.length, 2);
   assert.ok(wrong.some((p) => p.includes('a-4x9.mp4') && p.includes('1920x1080')));
   const short = validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), duration: 0.04 }) });
+  assert.equal(short.length, 2);
   assert.ok(short.every((p) => p.includes('implausible duration')));
+  const long = validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), duration: 600 }) });
+  assert.equal(long.length, 2);
+  const nan = validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), duration: NaN }) });
+  assert.equal(nan.length, 2);
   const bad = validateCards(show, dir, { probe: () => { throw new Error('it has no video stream'); } });
   assert.equal(bad.length, 2);
   assert.ok(bad[0].includes('unreadable') && bad[0].includes('no video stream'));
+});
+
+test('validation requires h264 and accepts both yuv420p and yuvj420p', () => {
+  const { dir, show } = oneCardShow();
+  assert.deepEqual(validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), pixFmt: 'yuvj420p' }) }), []);
+  const hevc = validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), codec: 'hevc' }) });
+  assert.equal(hevc.length, 2);
+  assert.ok(hevc[0].includes('hevc,yuv420p') && hevc[0].includes('a-4x9.mp4'));
+  const odd = validateCards(show, dir, { probe: (a) => ({ ...okProbe(a), pixFmt: 'yuv444p' }) });
+  assert.equal(odd.length, 2);
+  assert.ok(odd[0].includes('h264,yuv444p'));
+});
+
+test('a bad fallback is reported even when the bespoke card is fine', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'show-'));
+  mkdirSync(join(dir, 'cards'));
+  for (const f of ['bespoke-4x9', 'bespoke-8x9', 'p1-4x9']) writeFileSync(join(dir, 'cards', `${f}.mp4`), 'bytes');
+  // p1-8x9 is absent; p1-4x9 will probe as corrupt
+  const show = indexShow({ built: 'now', days: {}, players: [{
+    id: 'p1', name: 'A',
+    cards: { '4x9': 'cards/bespoke-4x9.mp4', '8x9': 'cards/bespoke-8x9.mp4' },
+    fallback: { '4x9': 'cards/p1-4x9.mp4', '8x9': 'cards/p1-8x9.mp4' },
+  }] });
+  const probe = (abs) => { if (abs.includes('p1-4x9')) throw new Error('truncated'); return okProbe(abs); };
+  const problems = validateCards(show, dir, { probe });
+  assert.equal(problems.length, 2);
+  assert.ok(problems.some((p) => p.includes('unreadable') && p.includes('p1-4x9.mp4')));
+  assert.ok(problems.some((p) => p.includes('missing') && p.includes('p1-8x9.mp4')));
 });
 
 test('without ffprobe the validator says so rather than passing', () => {
@@ -125,7 +159,10 @@ test('buildShow with a stub builder: shapes the days, builds only what is missin
   assert.deepEqual(show.days[2][25].intl, ['player-intl-26']);
   assert.equal(show.byId['player-usa-3'].generic, true);
   assert.ok(existsSync(outPath));
-  assert.equal(JSON.parse(readFileSync(outPath, 'utf8')).players.length, 52);
+  const written = JSON.parse(readFileSync(outPath, 'utf8'));
+  assert.equal(written.players.length, 52);
+  assert.equal('byId' in written, false, 'byId must not be serialised into show.json');
+  assert.equal(existsSync(`${outPath}.tmp`), false, 'no temp file left behind');
   // second run: everything exists, nothing is rebuilt
   built.length = 0;
   await buildShow({ ...f, flagsDir: f.dir, runningOrderPath: join(f.dir, 'none.json'), outPath, buildCard, probe: okProbe });
@@ -159,20 +196,65 @@ test('manifestOnly builds the Show without generating, validating or writing', a
   assert.equal(existsSync(outPath), false);
 });
 
-test('a running order naming an unknown or USA player is rejected', async () => {
+const ro = (f, days1) => {
+  const path = join(f.dir, 'ro.json');
+  writeFileSync(path, days1 === undefined ? 'null' : JSON.stringify({ days: { 1: days1 } }));
+  return path;
+};
+const manifest = (f, path) => buildShow({ ...f, runningOrderPath: path, manifestOnly: true });
+
+test('a running order naming a USA player or an unknown id is rejected', async () => {
   const f = fixture();
-  const ro = join(f.dir, 'ro.json');
-  writeFileSync(ro, JSON.stringify({ days: { 1: [{ index: 1, intl: ['player-intl-1', 'player-usa-1'] }] } }));
-  await assert.rejects(buildShow({ ...f, runningOrderPath: ro, manifestOnly: true }), /running-order/);
+  await assert.rejects(manifest(f, ro(f, [{ index: 1, intl: ['player-intl-1', 'player-usa-1'] }])), /International player ids/);
+  await assert.rejects(manifest(f, ro(f, [{ index: 1, intl: ['player-intl-1', 'player-intl-99'] }])), /International player ids/);
 });
 
-test('a running order overrides the default Day 1 pairing', async () => {
+test('a running order overrides the default Day 1 pairing, defaults fill the rest', async () => {
   const f = fixture();
-  const ro = join(f.dir, 'ro.json');
-  writeFileSync(ro, JSON.stringify({ days: { 1: [{ index: 1, intl: ['player-intl-9', 'player-intl-3'] }] } }));
-  const show = await buildShow({ ...f, runningOrderPath: ro, manifestOnly: true });
-  assert.deepEqual(show.days[1][0].intl, ['player-intl-9', 'player-intl-3']);
-  assert.deepEqual(show.days[1][1].intl, ['player-intl-3', 'player-intl-4']);
+  const show = await manifest(f, ro(f, [
+    { index: 1, intl: ['player-intl-4', 'player-intl-3'] },
+    { index: 2, intl: ['player-intl-1', 'player-intl-2'] },
+  ]));
+  assert.deepEqual(show.days[1][0].intl, ['player-intl-4', 'player-intl-3']);
+  assert.deepEqual(show.days[1][1].intl, ['player-intl-1', 'player-intl-2']);
+  assert.deepEqual(show.days[1][2].intl, ['player-intl-5', 'player-intl-6']);
+  const ids = show.days[1].flatMap((m) => m.intl);
+  assert.equal(new Set(ids).size, 26);
+});
+
+test('the same player on both sides of one match is rejected, naming the player', async () => {
+  const f = fixture();
+  await assert.rejects(manifest(f, ro(f, [{ index: 1, intl: ['player-intl-1', 'player-intl-1'] }])),
+    (e) => e instanceof BuildError && e.message.includes('player-intl-1') && e.message.includes('match 1'));
+});
+
+test('the same player in two matches is rejected, naming both, including via a default pairing', async () => {
+  const f = fixture();
+  // explicit vs explicit
+  await assert.rejects(manifest(f, ro(f, [
+    { index: 1, intl: ['player-intl-1', 'player-intl-2'] },
+    { index: 2, intl: ['player-intl-2', 'player-intl-3'] },
+  ])), (e) => e instanceof BuildError && e.message.includes('player-intl-2 ') && e.message.includes('match 1') && e.message.includes('match 2'));
+  // explicit vs the default for match 2 ([3,4])
+  await assert.rejects(manifest(f, ro(f, [{ index: 1, intl: ['player-intl-9', 'player-intl-3'] }])),
+    (e) => e instanceof BuildError && e.message.includes('player-intl-3') && e.message.includes('match 2'));
+});
+
+test('a bad running-order index is an error, not a silent default', async () => {
+  const f = fixture();
+  const pair = ['player-intl-1', 'player-intl-2'];
+  for (const index of [0, 14, '1', 1.5, undefined, null]) {
+    await assert.rejects(manifest(f, ro(f, [{ index, intl: pair }])), (e) => e instanceof BuildError && /index/.test(e.message),
+      `index ${JSON.stringify(index)} should be rejected`);
+  }
+  await assert.rejects(manifest(f, ro(f, [{ index: 1, intl: pair }, { index: 1, intl: pair }])),
+    (e) => e instanceof BuildError && /appears twice/.test(e.message));
+});
+
+test('a null or non-object entry in the running order is a BuildError, not a TypeError', async () => {
+  const f = fixture();
+  await assert.rejects(manifest(f, ro(f, [null])), (e) => e instanceof BuildError);
+  await assert.rejects(manifest(f, ro(f, ['x'])), (e) => e instanceof BuildError);
 });
 
 test('cardsDir must be called cards', async () => {

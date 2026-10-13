@@ -127,9 +127,11 @@ contacts/
 party/cards/
 
 # Party show manifest and live state - built from contacts/, must never be published
-party/show.json
-party/state.json
-party/state.rehearsal.json
+# Patterns, not exact names: atomic writes leave <name>.tmp and corrupt state is
+# moved aside to <name>.corrupt-<timestamp>; each holds the same private data.
+party/show.json*
+party/state.json*
+party/state.rehearsal.json*
 
 # Git worktrees for isolated feature work
 .worktrees/

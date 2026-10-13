@@ -16,6 +16,9 @@ export const DAY2_MATCHES = 26;
 export const FORMATS = ['4x9', '8x9'];
 export const EXPECTED_SIZE = { '4x9': [480, 1080], '8x9': [960, 1080] };
 // Every card we make or were given runs 8-9s. Outside this range something is wrong.
+// Browsers play h264 in either pixel format. Real bespoke cards include yuvj420p
+// (full-range) and play fine, so both are accepted; anything else is not.
+export const PIX_FMTS = ['yuv420p', 'yuvj420p'];
 export const MIN_SECONDS = 3;
 export const MAX_SECONDS = 30;
 
@@ -65,7 +68,7 @@ export class ProbeUnavailable extends Error {}
 
 export function ffprobeCard(abs) {
   const r = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0',
-    '-show_entries', 'stream=codec_type,width,height:format=duration', '-of', 'json', abs],
+    '-show_entries', 'stream=codec_name,pix_fmt,width,height:format=duration', '-of', 'json', abs],
   { encoding: 'utf8', timeout: 30_000 });
   if (r.error) {
     if (r.error.code === 'ENOENT') throw new ProbeUnavailable('ffprobe was not found on PATH');
@@ -76,7 +79,7 @@ export function ffprobeCard(abs) {
   try { j = JSON.parse(r.stdout); } catch { throw new Error('ffprobe gave unreadable output'); }
   const s = j.streams && j.streams[0];
   if (!s) throw new Error('it has no video stream');
-  return { width: s.width, height: s.height, duration: Number(j.format && j.format.duration) };
+  return { codec: s.codec_name, pixFmt: s.pix_fmt, width: s.width, height: s.height, duration: Number(j.format && j.format.duration) };
 }
 
 // `root` is the directory that holds `cards/` (the party directory), because
@@ -109,7 +112,9 @@ export function validateCards(show, root, { probe = ffprobeCard } = {}) {
           continue;
         }
         const [w, h] = EXPECTED_SIZE[fmt];
-        if (info.width !== w || info.height !== h) {
+        if (info.codec !== 'h264' || !PIX_FMTS.includes(info.pixFmt)) {
+          problems.push(`${p.name}: ${rel} is ${info.codec},${info.pixFmt}; the browser needs h264 with yuv420p or yuvj420p`);
+        } else if (info.width !== w || info.height !== h) {
           problems.push(`${p.name}: ${rel} is ${info.width}x${info.height}, expected ${w}x${h}`);
         } else if (!Number.isFinite(info.duration) || info.duration < MIN_SECONDS || info.duration > MAX_SECONDS) {
           problems.push(`${p.name}: ${rel} has implausible duration ${info.duration}s ` +
@@ -128,8 +133,17 @@ function buildDays(players, runningOrder) {
     throw new BuildError(`expected 26 players a side, got ${intl.length} international and ${usa.length} USA`);
   }
   const intlSet = new Set(intl);
+  const entries = runningOrder?.days?.['1'] ?? [];
+  if (!Array.isArray(entries)) throw new BuildError('running-order.json: days["1"] must be an array');
   const preset = new Map();
-  for (const m of runningOrder?.days?.['1'] || []) {
+  for (const m of entries) {
+    if (m === null || typeof m !== 'object') {
+      throw new BuildError(`running-order.json: Day 1 entry ${JSON.stringify(m)} is not a match object`);
+    }
+    if (!Number.isInteger(m.index) || m.index < 1 || m.index > DAY1_MATCHES) {
+      throw new BuildError(`running-order.json: Day 1 index ${JSON.stringify(m.index)} must be an integer from 1 to ${DAY1_MATCHES}`);
+    }
+    if (preset.has(m.index)) throw new BuildError(`running-order.json: Day 1 match ${m.index} appears twice`);
     const ids = m.intl;
     if (!Array.isArray(ids) || ids.length !== 2 || ids.some((id) => !intlSet.has(id))) {
       throw new BuildError(`running-order.json: Day 1 match ${m.index} must name two International player ids, got ${JSON.stringify(ids)}`);
@@ -139,6 +153,19 @@ function buildDays(players, runningOrder) {
   const day1 = [];
   for (let i = 1; i <= DAY1_MATCHES; i++) {
     day1.push({ index: i, intl: [...(preset.get(i) || [intl[(i - 1) * 2], intl[(i - 1) * 2 + 1]])], usa: ['', ''] });
+  }
+  // A player may play once on a day. Defaults count too: overriding one match can
+  // collide with the default pairing of another, and the operator must resolve it.
+  const where = new Map();
+  for (const m of day1) {
+    for (const id of m.intl) {
+      if (where.has(id)) {
+        throw new BuildError(`Day 1: ${id} is in match ${where.get(id)} and match ${m.index}` +
+          (where.get(id) === m.index ? ' (both sides of one match)' : '') +
+          ` - a player can play once. Set both matches in running-order.json.`);
+      }
+      where.set(id, m.index);
+    }
   }
   const day2 = [];
   for (let i = 1; i <= DAY2_MATCHES; i++) day2.push({ index: i, intl: [intl[i - 1]], usa: [''] });

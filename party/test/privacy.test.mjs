@@ -26,6 +26,12 @@ const MUST_BE_IGNORED = [
   'party/cards/seth-4x9.mp4',
 ];
 
+// Atomic writes leave <name>.tmp behind on a crash; Task 6 moves corrupt state
+// aside to <name>.corrupt-<timestamp>. Each holds the same private data.
+for (const base of ['party/show.json', 'party/state.json', 'party/state.rehearsal.json']) {
+  MUST_BE_IGNORED.push(`${base}.tmp`, `${base}.corrupt-2026-10-22T19-00-00-000Z`, `${base}.corrupt-1792695600000`);
+}
+
 for (const path of MUST_BE_IGNORED) {
   test(`${path} is gitignored`, () => {
     const r = git('check-ignore', '-q', path);
