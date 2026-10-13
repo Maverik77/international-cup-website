@@ -67,22 +67,39 @@ test('every item has exactly the live key set for its type (staging, 13 Oct 2026
   assert.deepEqual(keys(LIVE_TEAM), TEAM_KEYS);
 });
 
-test('a team item matches the live table shape exactly', () => {
-  assert.deepEqual(toPairingItems(initialState(show))[0], {
+function revealed(shown, firstSide = 'intl') {
+  const s = initialState(show);
+  for (const day of ['1', '2']) for (const slot of s.slots[day]) { slot.shown = shown; slot.firstSide = firstSide; }
+  for (const slot of s.slots['1']) slot.usa = [`player-usa-${slot.index * 2 - 1}`, `player-usa-${slot.index * 2}`];
+  for (const slot of s.slots['2']) slot.usa = [`player-usa-${slot.index}`];
+  return s;
+}
+
+test('a team item matches the live table shape exactly (fully revealed)', () => {
+  assert.deepEqual(toPairingItems(revealed('both'))[0], {
     id: 'day1-team-1', type: 'team', day: 1, match_number: 1,
     intl_team: { player1_id: 'player-intl-1', player2_id: 'player-intl-2' },
+    usa_team: { player1_id: 'player-usa-1', player2_id: 'player-usa-2' },
+    revealOrder: 'intl-first', revealStep: 2,
+  });
+});
+
+test('an unrevealed team item is the placeholder shape: keys kept, ids blank', () => {
+  assert.deepEqual(toPairingItems(initialState(show))[0], {
+    id: 'day1-team-1', type: 'team', day: 1, match_number: 1,
+    intl_team: { player1_id: '', player2_id: '' },
     usa_team: { player1_id: '', player2_id: '' },
     revealOrder: 'intl-first', revealStep: 0,
   });
 });
 
-test('a singles item matches the live table shape exactly', () => {
-  const item = toPairingItems(initialState(show))[13];
+test('a singles item matches the live table shape exactly (fully revealed)', () => {
+  const item = toPairingItems(revealed('both'))[13];
   assert.deepEqual(keys(item), SINGLES_KEYS);
   assert.deepEqual(item, {
     id: 'day2-singles-1', type: 'singles', day: 2, match_number: 1,
-    intl_player_id: 'player-intl-1', usa_player_id: '',
-    revealOrder: 'intl-first', revealStep: 0,
+    intl_player_id: 'player-intl-1', usa_player_id: 'player-usa-1',
+    revealOrder: 'intl-first', revealStep: 2,
   });
 });
 
@@ -111,7 +128,7 @@ test('every item is JSON-safe: only strings and numbers, one level of nesting', 
 });
 
 test('only ids, numbers and fixed enums appear as values', () => {
-  const s = reduce(initialState(show), { name: 'setFirstSide', side: 'usa' }, show);
+  const s = revealed('both', 'usa');
   const idRe = /^(|player-(intl|usa)-\d+)$/;
   for (const item of toPairingItems(s)) {
     assert.match(item.id, /^day[12]-(team|singles)-\d+$/);
@@ -157,6 +174,7 @@ test('firstSide becomes revealOrder', () => {
 
 test('assigned players land on the correct side and slot', () => {
   const s = initialState(show);
+  for (const day of ['1', '2']) for (const slot of s.slots[day]) slot.shown = 'both';
   s.slots['1'][2].usa = ['player-usa-5', 'player-usa-6'];
   s.slots['2'][3].usa = ['player-usa-9'];
   const items = toPairingItems(s);
@@ -180,4 +198,95 @@ test('two snapshots of the same state are identical, and the state is not mutate
   const before = JSON.stringify(s);
   assert.deepEqual(toPairingItems(s), toPairingItems(s));
   assert.equal(JSON.stringify(s), before);
+});
+
+// ---- Withholding: the table mirrors the room (ruled deviation from the brief) ----
+
+const TEAM_IDS = (it) => ({
+  intl: [it.intl_team.player1_id, it.intl_team.player2_id],
+  usa: [it.usa_team.player1_id, it.usa_team.player2_id],
+});
+const SINGLES_IDS = (it) => ({ intl: [it.intl_player_id], usa: [it.usa_player_id] });
+
+test('withholding: exactly the revealed sides are populated, for every shown x firstSide, both days', () => {
+  for (const shown of ['none', 'first', 'both']) {
+    for (const firstSide of ['intl', 'usa']) {
+      const s = revealed(shown, firstSide);
+      const items = toPairingItems(s);
+      items.forEach((it, i) => {
+        const day = it.day === 1 ? '1' : '2';
+        const slot = s.slots[day][it.match_number - 1];
+        const got = it.type === 'team' ? TEAM_IDS(it) : SINGLES_IDS(it);
+        const open = { intl: shown === 'both' || (shown === 'first' && firstSide === 'intl'),
+                       usa: shown === 'both' || (shown === 'first' && firstSide === 'usa') };
+        for (const side of ['intl', 'usa']) {
+          const want = open[side] ? slot[side] : slot[side].map(() => '');
+          assert.deepEqual(got[side], want, `${shown}/${firstSide} ${it.id} ${side} (#${i})`);
+          if (open[side]) assert.ok(got[side].every((x) => x !== ''), `${it.id} ${side} should be populated`);
+        }
+        assert.equal(it.revealStep, { none: 0, first: 1, both: 2 }[shown]);
+        assert.equal(it.revealOrder, `${firstSide}-first`);
+      });
+    }
+  }
+});
+
+test('regression guard: no id of a not-yet-revealed side appears anywhere in the item JSON', () => {
+  for (const shown of ['none', 'first']) {
+    for (const firstSide of ['intl', 'usa']) {
+      const s = revealed(shown, firstSide);
+      for (const it of toPairingItems(s)) {
+        const json = JSON.stringify(it);
+        const slot = s.slots[it.day === 1 ? '1' : '2'][it.match_number - 1];
+        const hidden = shown === 'none' ? ['intl', 'usa'] : [firstSide === 'intl' ? 'usa' : 'intl'];
+        for (const side of hidden) for (const id of slot[side]) {
+          assert.ok(id !== '' && !json.includes(id), `${it.id} leaks ${id} at ${shown}/${firstSide}`);
+        }
+      }
+    }
+  }
+  // a full unrevealed snapshot contains no player id at all
+  assert.equal(/player-/.test(JSON.stringify(toPairingItems(initialState(show)))), false);
+});
+
+test('revealing through the reducer publishes only what the room has seen', () => {
+  let s = reduce(initialState(show), { name: 'setFirstSide', side: 'usa' }, show);
+  s = reduce(s, { name: 'reveal' }, show);
+  let it = toPairingItems(s)[0];
+  assert.equal(it.revealStep, 1);
+  assert.deepEqual(it.intl_team, { player1_id: '', player2_id: '' });
+  s = reduce(s, { name: 'reveal' }, show);
+  it = toPairingItems(s)[0];
+  assert.equal(it.revealStep, 2);
+  assert.deepEqual(it.intl_team, { player1_id: 'player-intl-1', player2_id: 'player-intl-2' });
+});
+
+test('unrecognised shown falls back to hidden, with no ids and a defined revealStep', () => {
+  for (const bad of ['bogus', undefined, null, 'constructor', '__proto__', 2]) {
+    const s = revealed('both');
+    s.slots['1'][0].shown = bad;
+    s.slots['2'][0].shown = bad;
+    const items = toPairingItems(s);
+    for (const it of [items[0], items[13]]) {
+      assert.equal(it.revealStep, 0, String(bad));
+      assert.equal(/player-/.test(JSON.stringify(it)), false, String(bad));
+    }
+    assert.deepEqual(keys(items[0]), TEAM_KEYS);
+    assert.deepEqual(keys(items[13]), SINGLES_KEYS);
+  }
+});
+
+test('unrecognised firstSide falls back to intl and never prints undefined', () => {
+  for (const bad of ['bogus', undefined, null, 'both']) {
+    const s = revealed('first');
+    s.slots['1'][0].firstSide = bad;
+    s.slots['2'][0].firstSide = bad;
+    const items = toPairingItems(s);
+    for (const it of [items[0], items[13]]) {
+      assert.equal(it.revealOrder, 'intl-first', String(bad));
+    }
+    // intl is the revealed side at step 1, usa stays blank
+    assert.deepEqual(items[0].intl_team, { player1_id: 'player-intl-1', player2_id: 'player-intl-2' });
+    assert.deepEqual(items[0].usa_team, { player1_id: '', player2_id: '' });
+  }
 });
