@@ -122,6 +122,7 @@ function applyPreload() {
 }
 
 function showLayer(key) {
+  document.body.classList.remove('idle');
   layers[key].classList.add('live');
   layers[other(key)].classList.remove('live');
 }
@@ -135,6 +136,7 @@ function renderLive() {
 
 function renderIdle() {
   clearSlideTimer();
+  document.body.classList.add('idle');
   layers.a.classList.remove('live');
   layers.b.classList.remove('live');
 }

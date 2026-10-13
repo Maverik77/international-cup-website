@@ -272,3 +272,10 @@ test('the real manifest plans every player on both days, fallbacks distinct for 
   }
   assert.ok(real.players.some((p) => !p.generic && p.cards['4x9'] !== p.fallback['4x9']));
 });
+
+test('the stage has a static idle screen so a working idle is not mistaken for a dead one', () => {
+  const html = readFileSync(new URL('../public/stage.html', import.meta.url), 'utf8');
+  assert.match(html, /<div id="idle"><p>International Cup<\/p><\/div>/);
+  const js = readFileSync(new URL('../public/stage.js', import.meta.url), 'utf8');
+  assert.match(js, /classList\.add\('idle'\)/);
+});

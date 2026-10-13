@@ -49,6 +49,18 @@ html, body {
 
 #preload { position: absolute; width: 0; height: 0; overflow: hidden; }
 
+/* Idle: something static and plain, so "nothing is on yet" is never mistaken for a dead screen. */
+#idle {
+  position: absolute; inset: 0;
+  display: none; place-items: center;
+  background: #000;
+}
+#idle p {
+  font: 400 3vw/1 -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  letter-spacing: .3em; text-transform: uppercase; color: #FEB619;
+}
+body.idle #idle { display: grid; }
+
 #cover {
   position: absolute; inset: 0;
   display: grid; place-items: center;
