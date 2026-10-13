@@ -4,14 +4,30 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-export const FLAG_CODES = JSON.parse(readFileSync(join(HERE, 'flags.json'), 'utf8'));
+export const CODE_PATTERN = /^[a-z]{2}(-[a-z]{2,3})?$/;
 export const DEFAULT_FLAGS_DIR = resolve(HERE, '..', 'assets', 'flags');
 export const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 export const MIN_PNG_BYTES = 1024;
 
 export class FlagError extends Error {}
 
-export function flagPathFor(country, flagsDir = DEFAULT_FLAGS_DIR) {
+function assertCode(country, code) {
+  if (typeof code !== 'string' || !CODE_PATTERN.test(code)) {
+    throw new FlagError(
+      `party/build/flags.json maps "${country}" to ${JSON.stringify(code)}, which is not a flagcdn code ` +
+      `(expected e.g. "in" or "gb-eng")`,
+    );
+  }
+}
+
+export function validateCodes(codes) {
+  for (const [country, code] of Object.entries(codes)) assertCode(country, code);
+  return codes;
+}
+
+export const FLAG_CODES = validateCodes(JSON.parse(readFileSync(join(HERE, 'flags.json'), 'utf8')));
+
+export function flagPathFor(country, flagsDir = DEFAULT_FLAGS_DIR, codes = FLAG_CODES) {
   if (typeof country !== 'string' || country.trim() === '') {
     throw new FlagError(
       `Player has no country (got ${country === '' ? 'an empty string' : String(country)}), so there is no flag to draw. ` +
@@ -19,13 +35,14 @@ export function flagPathFor(country, flagsDir = DEFAULT_FLAGS_DIR) {
       `party/build/flags.json, then run: npm run party:flags`,
     );
   }
-  const code = Object.hasOwn(FLAG_CODES, country) ? FLAG_CODES[country] : undefined;
+  const code = Object.hasOwn(codes, country) ? codes[country] : undefined;
   if (!code) {
     throw new FlagError(
       `No flag for "${country}". Add it to party/build/flags.json with its flagcdn ` +
       `code (see https://flagcdn.com), then run: npm run party:flags`,
     );
   }
+  assertCode(country, code);
   return join(flagsDir, `${code}.png`);
 }
 
@@ -39,19 +56,23 @@ export function validatePng(buf, label) {
   }
 }
 
-function dimensions(path) {
-  const probe = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0',
+// Returns "WxH", or null when ffprobe is not installed (a skipped check, not a bad file).
+// Throws FlagError only when ffprobe ran and rejected the file.
+function dimensions(path, run) {
+  const probe = run('ffprobe', ['-v', 'error', '-select_streams', 'v:0',
     '-show_entries', 'stream=width,height', '-of', 'csv=p=0', path]);
+  if (probe.error?.code === 'ENOENT' || probe.status === null) return null;
   if (probe.status !== 0) throw new FlagError(`${path} downloaded but ffprobe cannot read it`);
   return probe.stdout.toString().trim().replace(',', 'x');
 }
 
-export async function fetchFlags(flagsDir = DEFAULT_FLAGS_DIR, fetchImpl = fetch) {
+export async function fetchFlags(flagsDir = DEFAULT_FLAGS_DIR, fetchImpl = fetch, run = spawnSync) {
   mkdirSync(flagsDir, { recursive: true });
   const results = [];
   for (const [country, code] of Object.entries(FLAG_CODES)) {
     const path = join(flagsDir, `${code}.png`);
     let status = 'already there';
+    let downloadedNow = false;
     let buf = existsSync(path) ? readFileSync(path) : null;
     try {
       if (buf) validatePng(buf, path);
@@ -65,16 +86,19 @@ export async function fetchFlags(flagsDir = DEFAULT_FLAGS_DIR, fetchImpl = fetch
       buf = Buffer.from(await res.arrayBuffer());
       validatePng(buf, url); // validate before anything touches disk
       writeFileSync(path, buf);
+      downloadedNow = true;
       status = 'downloaded';
     }
     let size;
     try {
-      size = dimensions(path);
+      size = dimensions(path, run);
     } catch (e) {
-      rmSync(path, { force: true });
+      if (downloadedNow) rmSync(path, { force: true }); // never delete a file this run did not write
       throw e;
     }
-    results.push({ country, code, file: `${code}.png`, bytes: buf.length, size, status });
+    if (size === null) size = 'n/a';
+    results.push({ country, code, file: `${code}.png`, bytes: buf.length, size,
+      status: size === 'n/a' ? `${status} (ffprobe not installed: dimensions not checked)` : status });
   }
   return results;
 }
