@@ -322,6 +322,11 @@ test('the gate: a cold start holds, the first Reveal goes live, and the slidesho
 
   assert.deepEqual(onScreen(), { screen: 'idle', plan: null });  // cold start: the holding screen
 
+  // Picking the players shows nothing yet, so the title stays up: a live layer
+  // with no panel revealed is a black TV, and black reads as broken.
+  s = reduce(s, { name: 'assign', side: 'usa', players: ['player-usa-5', 'player-usa-6'] }, drawn);
+  assert.deepEqual(onScreen(), { screen: 'idle', plan: null });
+
   s = reduce(s, { name: 'reveal' }, drawn);
   assert.equal(onScreen().screen, 'live');                       // F1: not the holding screen
   assert.equal(onScreen().plan.fmt, '4x9');

@@ -75,7 +75,8 @@ export function panelPlan(wire, show) {
 // and, for the live screen, the plan to apply to it. stage.js does what this
 // says and decides nothing itself, so the gate can be tested without a DOM.
 // Anything that is not live or slideshow is the holding screen, which is why
-// every command that means "the show has begun" sets mode to live (lib/state.mjs).
+// every command that puts something on the screen sets mode to live, and why
+// `assign`, which puts nothing there yet, deliberately does not (lib/state.mjs).
 export function screenPlan(wire, show) {
   const mode = wire && typeof wire === 'object' ? wire.mode : undefined;
   if (mode === 'slideshow') return { screen: 'slideshow', plan: null };

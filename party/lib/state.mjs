@@ -106,12 +106,17 @@ function checkIndex(slots, index, day) {
   }
 }
 
-// WHY SO MANY OF THESE SET mode = 'live': the state starts on `idle`, and the
-// stage draws its holding screen for any mode that is not live or slideshow.
-// Anything that means the show has begun must leave idle, or the console says a
-// side is revealed while the TV still shows INTERNATIONAL CUP in gold. Reveal,
-// assign and goto mean that, as next and reopen already did. Only setMode
-// (Slideshow, and whatever puts the holding screen back) chooses a mode itself.
+// WHY SOME OF THESE SET mode = 'live': the state starts on `idle`, and the stage
+// draws its holding screen - the event title in gold - for any mode that is not
+// live or slideshow. A command that PUTS SOMETHING ON THE SCREEN must leave
+// idle, or the console says a side is revealed while the TV still shows the
+// title: `reveal` does, and `goto` does (the operator has navigated to a match
+// and the screen should follow), as `next` and `reopen` already did.
+// `assign` deliberately does NOT. It fills a form; nothing is revealed yet, so
+// going live would put an empty black layer in front of the room for as long as
+// it takes to find two names in a list of 26. Black is indistinguishable from
+// broken, which is the whole reason the holding screen shows the event name
+// rather than nothing. Only setMode chooses a mode outright.
 const HANDLERS = {
   setDay(state, cmd) {
     if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
@@ -153,9 +158,8 @@ const HANDLERS = {
         throw new CommandError(`${player.name} plays for ${TEAM_LABEL[actual] ?? player.team}, not ${TEAM_LABEL[cmd.side]}. Pick someone from the ${TEAM_LABEL[cmd.side]} list.`);
       }
     }
-    const next = editCurrentSlot(state, (slot) => { slot[cmd.side] = [...cmd.players]; });
-    next.mode = 'live';
-    return next;
+    // No mode change on purpose: see the note above HANDLERS.
+    return editCurrentSlot(state, (slot) => { slot[cmd.side] = [...cmd.players]; });
   },
 
   reveal(state) {

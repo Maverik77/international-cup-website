@@ -101,13 +101,19 @@ test('next on the last slot completes it and stays put; a second next is rejecte
 });
 
 // F1: the whole night's first operator action used to leave the TV on the idle
-// screen while the console said the side was revealed.
-test('reveal, assign and goto all take the show out of idle', () => {
+// screen while the console said the side was revealed. A command that puts
+// something on the screen leaves idle; assign, which puts nothing there yet,
+// must NOT - going live with no panel revealed is a black TV in front of the
+// room while the operator finds two names in a list of 26.
+test('reveal and goto take the show out of idle; assign leaves the title up', () => {
   const cold = initialState(show);
   assert.equal(cold.mode, 'idle');
   assert.equal(reduce(cold, C, show).mode, 'live');
-  assert.equal(reduce(cold, U1, show).mode, 'live');
   assert.equal(reduce(cold, { name: 'goto', index: 4 }, show).mode, 'live');
+  assert.equal(reduce(cold, U1, show).mode, 'idle', 'picking players shows nothing, so it changes nothing');
+  assert.equal(run(cold, U1, { name: 'assign', side: 'intl', players: ['player-intl-3', 'player-intl-4'] }).mode, 'idle');
+  // and once the show is live, assign does not knock it back to the title either
+  assert.equal(run(cold, C, U1).mode, 'live');
   // Jumping to the match you are already on is only a no-op once the screen is
   // live; from a cold start it is the operator saying "show me this one".
   const here = reduce(cold, { name: 'goto', index: 0 }, show);

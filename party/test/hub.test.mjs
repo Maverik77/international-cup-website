@@ -6,7 +6,7 @@ import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, readdi
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { createHub, parseArgs, MAX_BODY_BYTES, STOP_FLUSH_MS } from '../hub.mjs';
+import { createHub, parseArgs, MAX_BODY_BYTES, STOP_FLUSH_MS, shutdownLines } from '../hub.mjs';
 import { sessionToken } from '../lib/auth.mjs';
 import { CommandError, reduce } from '../lib/state.mjs';
 
@@ -852,6 +852,30 @@ test('a dead network cannot hold Ctrl-C: stop() gives up on the push and closes'
   assert.ok(took < 2000, `stop() took ${took}ms`);
   await assert.rejects(() => fetch(`${base}/api/state`), 'and the hub really is closed');
   assert.ok(STOP_FLUSH_MS <= 3000, `the real cap is ${STOP_FLUSH_MS}ms: Ctrl-C has to come back`);
+});
+
+// R2: and it says so, because a silent pause reads as a freeze and the next
+// move is a second Ctrl-C at the worst possible moment.
+test('Ctrl-C says it is sending the last pairing, and says whether it got there', () => {
+  const sending = shutdownLines({ unpushed: true, stillUnpushed: false });
+  assert.match(sending.before.join('\n'), /Sending the last pairing to the website/);
+  assert.match(sending.before.join('\n'), /few seconds/, 'it says the wait is expected');
+  assert.match(sending.after.join('\n'), /^\s+Sent\./m);
+
+  const failed = shutdownLines({ unpushed: true, stillUnpushed: true });
+  assert.deepEqual(failed.before, sending.before, 'the same line goes out before either outcome');
+  const text = failed.after.join('\n');
+  assert.match(text, /did not get through/);
+  assert.match(text, /saved on this laptop/, 'nothing was lost');
+  assert.match(text, /npm run party:start/, 'and what to do about it');
+  assert.doesNotMatch(text, /Sent\./);
+
+  // nothing to push (sync off, or everything already sent): not a word
+  assert.deepEqual(shutdownLines({ unpushed: false, stillUnpushed: false }), { before: [], after: [] });
+  assert.deepEqual(shutdownLines({ unpushed: false, stillUnpushed: true }), { before: [], after: [] });
+  // no codes, no stacks, no password anywhere in any of it
+  const everything = [sending, failed].flatMap((l) => [...l.before, ...l.after]).join('\n');
+  assert.doesNotMatch(everything, /EACCES|ENOTFOUND|Error|undefined|[a-z]+-[a-z]+-\d{4}/);
 });
 
 // F3: the two boot failures a person reads in the terminal when the show cannot start.

@@ -35,6 +35,14 @@ The laptop is always its own console. If the iPad dies, open the **Operator**
 address in the laptop's browser, enter the password, and carry on from the same
 match.
 
+### When the night is over
+
+Press **Ctrl-C** in the terminal, once. It may sit there for a few seconds: it
+is pushing the last pairing to the website, and it says so. That is not a hang —
+do not press Ctrl-C again. It then prints whether the push got through; if it
+did not, the show is saved on the laptop and the next `npm run party:start`
+finishes sending it.
+
 ### The stage is open to everyone on the wifi
 
 The password protects the **console** only. The stage page is open on purpose
@@ -54,6 +62,7 @@ and can see the next match ahead of the reveal. Do not read the address out.
 | The iPad cannot reach the console at all | The venue wifi is blocking devices from each other. Put the laptop and the iPad both on the phone hotspot and restart with `npm run party:start`. |
 | The sync light says **Offline** | Ignore it. The show runs from the laptop. It catches up when the network returns. |
 | Wrong player revealed | Tap **Undo**, or pick the right player and reveal again. |
+| **Refresh from AWS** pulled in a draw you did not want | Tap **Undo**: it puts the slots back **and** clears those pairings on the website. Then pick the players yourself and reveal as normal. |
 | A match announced out of order | **Jump to…** and pick it. |
 
 If the venue network will not carry it, the order of fallbacks is: phone

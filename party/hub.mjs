@@ -542,6 +542,22 @@ export function bannerLines(hub, { rehearsal = false } = {}) {
   return lines;
 }
 
+// What Ctrl-C shows while stop() pushes the last pairing. A silent pause of up
+// to STOP_FLUSH_MS reads as a freeze, and the next move is a second Ctrl-C or a
+// closed laptop at the one moment the hub is getting the final match out - so
+// say it is working, then say how it went. Pure, so the wording is tested.
+//   unpushed: there is something the website has not had yet (sync on, state dirty)
+//   stillUnpushed: the same question, asked again after stop()
+export function shutdownLines({ unpushed, stillUnpushed }) {
+  if (!unpushed) return { before: [], after: [] };
+  return {
+    before: ['', '  Sending the last pairing to the website. This can take a few seconds - leave it alone.'],
+    after: stillUnpushed
+      ? ['  !! That did not get through. The show is saved on this laptop: run npm run party:start again', '     when there is a network and it will finish sending.', '']
+      : ['  Sent. The website has the whole draw.', ''],
+  };
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let hub;
   try {
@@ -552,7 +568,18 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error(`\n  Could not start the hub: ${e.message}\n`);
     process.exit(1);
   }
-  const bye = async () => { await hub.stop(); process.exit(0); };
+  // One Ctrl-C only: a second one here would kill the last push. Say what is
+  // happening instead of pausing in silence.
+  let going = false;
+  const bye = async () => {
+    if (going) return;
+    going = true;
+    const unpushed = hub.whoami().sync !== 'off' && hub.state.sync.dirty;
+    for (const line of shutdownLines({ unpushed, stillUnpushed: false }).before) console.log(line);
+    await hub.stop();
+    for (const line of shutdownLines({ unpushed, stillUnpushed: hub.state.sync.dirty }).after) console.log(line);
+    process.exit(0);
+  };
   process.on('SIGINT', bye);
   process.on('SIGTERM', bye);
 }
