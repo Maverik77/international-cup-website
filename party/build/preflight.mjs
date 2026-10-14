@@ -28,7 +28,7 @@ export async function preflightChecks({
   } else {
     try {
       show = indexShow(JSON.parse(readFileSync(showPath, 'utf8')));
-      checks.push({ name: 'show.json', ok: true, detail: `${show.players.length} players, built ${show.built}` });
+      checks.push({ name: 'show.json', ok: true, detail: `${show.players.length} players${show.built ? `, built ${show.built}` : ''}` });
     } catch {
       show = null;
       checks.push({ name: 'show.json', ok: false, detail: 'unreadable - run: npm run party:build' });
@@ -55,7 +55,7 @@ export async function preflightChecks({
           checks.push({ name: 'running order', ok: false, detail: 'show.json has no running order - run: npm run party:build' });
         }
       } catch {
-        checks.push({ name: 'show.json', ok: false, detail: 'unreadable - run: npm run party:build' });
+        checks.push({ name: 'cards', ok: false, detail: 'could not be checked - run: npm run party:build' });
       }
     }
   }
@@ -133,6 +133,17 @@ export async function preflightChecks({
   return checks;
 }
 
+// Everything the command line prints above the hand checklist, so the header
+// that says which website was checked can be tested.
+export function renderReport(checks, target) {
+  return [
+    '',
+    `Checking the ${target} website  (${API_URLS[target]})`,
+    '',
+    ...summarise(checks),
+  ].map((l) => (l ? `  ${l}` : l));
+}
+
 export function summarise(checks) {
   const lines = checks.map((c) => `${c.ok ? '[ok]' : '[!!]'} ${c.name.padEnd(16)} ${oneLine(c.detail)}`);
   const failed = checks.filter((c) => !c.ok);
@@ -150,9 +161,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       console.log(`\n  "${target}" is not a target. Use --target prod or --target staging.\n`);
       process.exit(1);
     }
-    console.log(`\n  Checking the ${target} website  (${API_URLS[target]})\n`);
     const checks = await preflightChecks({ apiUrl: API_URLS[target], target });
-    for (const l of summarise(checks).map((x) => `  ${x}`)) console.log(l);
+    for (const l of renderReport(checks, target)) console.log(l);
 
     console.log(`
   Do these by hand, here, in the venue, before the night:

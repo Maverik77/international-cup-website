@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { toPlayerItems, rosterDiff, runPush } from '../build/push-roster.mjs';
-import { preflightChecks, summarise } from '../build/preflight.mjs';
+import { preflightChecks, summarise, renderReport } from '../build/preflight.mjs';
 import { loadRoster } from '../build/roster.mjs';
 
 test('player items match the live table shape', () => {
@@ -383,7 +383,7 @@ test('the roster advice names the table that was checked', async () => {
   } finally { rmSync(dir, { recursive: true }); }
 });
 
-test('the command line names the table in a header and follows --target', async () => {
+test('the command line refuses an unknown target without a stack', async () => {
   const { spawnSync } = await import('node:child_process');
   const script = resolve(dirname(fileURLToPath(import.meta.url)), '../build/preflight.mjs');
   const r = spawnSync(process.execPath, [script, '--target', 'nonsense'], { encoding: 'utf8' });
@@ -461,4 +461,63 @@ test('a write that errors is not reported as "nothing was written"', async () =>
   assert.match(text, /may not have finished/);
   assert.match(text, /safe/);
   assert.equal(text.includes('test-secret'), false);
+});
+
+test('the report names the table it checked, with its URL, above the checks', async () => {
+  const dir = scratch();
+  try {
+    for (const target of ['staging', 'prod']) {
+      const checks = await run(dir, { fetchImpl: live(STALE), target });
+      const lines = renderReport(checks, target);
+      const header = lines.findIndex((l) => l.includes(`Checking the ${target} website`));
+      assert.ok(header >= 0 && header < lines.findIndex((l) => l.includes('show.json')));
+      assert.match(lines[header], /https:\/\/\w+\.execute-api\./);
+      assert.equal(lines.join('\n').includes(`Checking the ${target === 'prod' ? 'staging' : 'prod'}`), false);
+      assert.match(lines.join('\n'), new RegExp(`--target ${target}\\b`));
+    }
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('a show.json without a timestamp does not print "undefined"', async () => {
+  const dir = scratch();
+  try {
+    writeFileSync(join(dir, 'show.json'), JSON.stringify({
+      players: SYNTH.map((p) => ({ ...p })), days: { 1: Array(13).fill({}), 2: Array(26).fill({}) },
+    }));
+    const c = by(await run(dir), 'show.json');
+    assert.doesNotMatch(c.detail, /undefined/);
+    assert.match(c.detail, /2 players/);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('a failure in the cards check is not reported under the name show.json twice', async () => {
+  const dir = scratch();
+  try {
+    writeFileSync(join(dir, 'show.json'), JSON.stringify({
+      players: [{ id: 'player-usa-1', team: 'usa', name: 'Bob Beta', cards: { '4x9': 5 } }],
+      days: { 1: Array(13).fill({}), 2: Array(26).fill({}) },
+    }));
+    const checks = await run(dir);
+    assert.equal(checks.filter((c) => c.name === 'show.json').length, 1);
+    assert.equal(by(checks, 'cards').ok, false);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('a push that leaves a ghost behind says so and fails', async () => {
+  const lines = [];
+  let wrote = false;
+  const ghost = { id: 'player-usa-9', team: 'USA', firstName: 'Old', lastName: 'Timer', teeColor: 'Blue' };
+  const code = await runPush({
+    argv: ['--confirm'], roster: SYNTH, ask: async () => 'REPLACE-ROSTER-STAGING',
+    getPassword: () => 'test-secret', out: (s) => lines.push(s),
+    fetchImpl: async (url, init = {}) => {
+      if (init.method === 'POST') { wrote = true; return { ok: true, status: 200, json: async () => ({}) }; }
+      return { ok: true, status: 200, json: async () => ({ players: wrote ? [...toPlayerItems(SYNTH), ghost] : STALE }) };
+    },
+  });
+  const text = lines.join('\n');
+  assert.equal(code, 1);
+  assert.match(text, /holds 1 more player than this show has/);
+  assert.match(text, /again.*safe|safe/);
+  assert.doesNotMatch(text, /\[ok\]/);
 });

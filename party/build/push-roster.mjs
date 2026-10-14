@@ -126,20 +126,29 @@ export async function runPush({
   // The Lambda can drop a throttled slice without saying so, after it has already
   // deleted. Count what is actually there rather than trusting the write.
   let present;
+  let extra;
   try {
     const after = await getPlayers({ apiUrl, fetchImpl });
     const ids = new Set(after.map((p) => p.id));
     present = incoming.filter((p) => ids.has(p.id)).length;
+    const wanted = new Set(incoming.map((p) => p.id));
+    extra = after.filter((p) => !wanted.has(p.id)).length;
   } catch (e) {
     out(`\n  [!!] The write went through but the roster could not be read back: ${e.message}`);
     out(`       Run the dry run to see where it stands, and this again if anyone is missing. ${AGAIN}\n`);
     return 1;
   }
-  if (present === incoming.length) {
-    out(`\n  [ok] all ${incoming.length} present\n`);
+  if (present === incoming.length && extra === 0) {
+    out(`\n  [ok] all ${incoming.length} present, none left over\n`);
     return 0;
   }
-  out(`\n  [!!] ${present} of ${incoming.length} - run it again. ${AGAIN}\n`);
+  out('');
+  if (present !== incoming.length) out(`  [!!] ${present} of ${incoming.length} - run it again. ${AGAIN}`);
+  if (extra > 0) {
+    out(`  [!!] the roster holds ${extra} more player${extra === 1 ? '' : 's'} than this show has - the removal did not finish.`);
+    out(`       Run it again to clear ${extra === 1 ? 'it' : 'them'}. ${AGAIN}`);
+  }
+  out('');
   return 1;
 }
 
