@@ -86,7 +86,18 @@ export function tokenFromCookie(cookieHeader) {
 // One address, or a handful, always accumulates to its lockout. An attacker with
 // roughly maxTracked real addresses, each spending real guesses, still gets that
 // many lockouts' worth of guessing; the keyspace is what makes that unprofitable.
-export function createGate({ password, now = Date.now, maxFailures = 10, lockoutMs = 60000, maxTracked = 1000 }) {
+// Why the cap is this high: eviction is what lets a determined guesser dodge the
+// limiter, and it only runs when the map is full. An attacker can only use
+// source addresses they can complete a TCP handshake on, so in practice the
+// addresses of this LAN's own subnet. The largest subnet this hub will ever sit
+// on is a /16 (~65,000 addresses; a pub /24 is ~254). A record is ~100 bytes, so
+// 65,536 of them is under 7 MB, and only while someone is actively attacking.
+// With the cap above the number of addresses that can exist, eviction never runs
+// in normal operation and every attacking address accumulates to its lockout;
+// the cap remains only so the map cannot grow without bound.
+export const DEFAULT_MAX_TRACKED = 65536;
+
+export function createGate({ password, now = Date.now, maxFailures = 10, lockoutMs = 60000, maxTracked = DEFAULT_MAX_TRACKED }) {
   const token = sessionToken(password);
   const tokenBuf = Buffer.from(token, 'hex');
   // remote address -> { failures, until }

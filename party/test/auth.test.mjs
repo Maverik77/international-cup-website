@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
   COOKIE_NAME, generatePassword, loadOperatorPassword, sessionToken, checkPassword,
-  tokenFromCookie, createGate, KEYSPACE,
+  tokenFromCookie, createGate, KEYSPACE, DEFAULT_MAX_TRACKED,
 } from '../lib/auth.mjs';
 
 const tmp = () => mkdtempSync(join(tmpdir(), 'auth-'));
@@ -125,6 +125,20 @@ test('11d: with the map full of heavier records, one address still accumulates t
   const results = [];
   for (let i = 0; i < 10; i++) results.push(gate.attempt('4.4.4.4', 'nope').locked);
   assert.deepEqual(results, [...Array(9).fill(false), true], 'the tenth guess locks it');
+});
+
+test('11e: with default options, a whole /24 of attackers each reach their own lockout', () => {
+  const gate = createGate({ password: 'p', now: () => 1 });
+  const locked = new Set();
+  // Interleaved, as a real flood would be: round-robin, not one address at a time.
+  for (let round = 0; round < 10; round++) {
+    for (let host = 1; host <= 254; host++) {
+      if (gate.attempt(`192.168.1.${host}`, 'nope').locked) locked.add(host);
+    }
+  }
+  assert.equal(locked.size, 254, 'no attacker was forgotten before its tenth guess');
+  // Asserted on the exported default rather than by flooding 65k addresses, which is slow.
+  assert.ok(DEFAULT_MAX_TRACKED >= 65536, `default cap ${DEFAULT_MAX_TRACKED} is below a /16`);
 });
 
 test('KEYSPACE is at least 5 million and is the product of the real word lists', () => {
