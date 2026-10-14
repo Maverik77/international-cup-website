@@ -89,9 +89,15 @@ export function tokenFromCookie(cookieHeader) {
 // Why the cap is this high: eviction is what lets a determined guesser dodge the
 // limiter, and it only runs when the map is full. An attacker can only use
 // source addresses they can complete a TCP handshake on, so in practice the
-// addresses of this LAN's own subnet. The largest subnet this hub will ever sit
-// on is a /16 (~65,000 addresses; a pub /24 is ~254). A record is ~100 bytes, so
-// 65,536 of them is under 7 MB, and only while someone is actively attacking.
+// addresses of this LAN's own subnet. The largest IPv4 subnet this hub will ever
+// sit on is a /16 (~65,000 addresses; a pub /24 is ~254), and hub.mjs listens on
+// 0.0.0.0, so IPv4 is the only way in. THAT BIND IS LOAD-BEARING HERE: listening
+// on '::' as well would put a dual-stack /64 in reach, which is 2^64 source
+// addresses and no cap can sit above that. If the bind ever changes, this
+// reasoning has to change with it.
+// A record is 120-180 bytes once the Map entry, the key string and the boxed
+// `until` are counted, so 65,536 of them is roughly 8-12 MB - and only while
+// someone is actively attacking. The laptop has it to spare.
 // With the cap above the number of addresses that can exist, eviction never runs
 // in normal operation and every attacking address accumulates to its lockout;
 // the cap remains only so the map cannot grow without bound.

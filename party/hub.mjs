@@ -424,6 +424,8 @@ export async function createHub({
         ? new Error(`Port ${port} is already in use - is another hub running? Stop it, or start this one with --port <number>.`)
         : e);
     });
+    // IPv4 only, and the login limiter's cap depends on it: see the comment
+    // above DEFAULT_MAX_TRACKED in lib/auth.mjs before widening this to '::'.
     server.listen(port, '0.0.0.0', ok);
   });
   server.on('error', (e) => warn(`  !! server error: ${e?.code || e?.message}`));
