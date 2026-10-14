@@ -7,8 +7,7 @@ export const COOKIE_NAME = 'icup_op';
 const LABEL = 'icup-operator-v1';
 
 // Short enough to read off a terminal and type on an iPad, long enough that
-// 10-tries-then-wait-a-minute makes guessing hopeless: 24 x 24 x 900 =
-// 518,400 combinations, about 19 bits.
+// 10-tries-then-wait-a-minute makes guessing hopeless: see KEYSPACE below.
 const ADJECTIVES = ['amber', 'brave', 'clear', 'dark', 'early', 'first', 'gold', 'high',
   'iron', 'keen', 'last', 'loud', 'north', 'open', 'proud', 'quick', 'red', 'sharp',
   'swift', 'true', 'warm', 'wild', 'wise', 'young'];
@@ -16,10 +15,13 @@ const NOUNS = ['anchor', 'badger', 'cedar', 'dragon', 'eagle', 'falcon', 'grove'
   'island', 'jacket', 'kestrel', 'lantern', 'marble', 'needle', 'otter', 'pebble',
   'quarry', 'ribbon', 'saddle', 'thistle', 'umber', 'valley', 'willow', 'yarrow'];
 
+// adjective x noun x a four-digit number (1000-9999 is 9000 values): about 22 bits.
+export const KEYSPACE = ADJECTIVES.length * NOUNS.length * 9000;
+
 export function generatePassword(rnd = randomInt) {
   const a = ADJECTIVES[rnd(ADJECTIVES.length)];
   const n = NOUNS[rnd(NOUNS.length)];
-  return `${a}-${n}-${String(rnd(100, 1000))}`;
+  return `${a}-${n}-${String(rnd(1000, 10000))}`;
 }
 
 // Returns the password to use, and where it came from. Writes the file only
@@ -76,6 +78,11 @@ export function tokenFromCookie(cookieHeader) {
   return null;
 }
 
+// What this limiter does and does not do. It charges ten guesses a minute per
+// remote address. It does not stop an attacker who can bind many addresses on
+// the LAN; against that, KEYSPACE is what makes guessing unprofitable. There is
+// deliberately no global rate limit or login queue: a bug in one on the night
+// would lock the operator out of their own show.
 export function createGate({ password, now = Date.now, maxFailures = 10, lockoutMs = 60000, maxTracked = 1000 }) {
   const token = sessionToken(password);
   const tokenBuf = Buffer.from(token, 'hex');
@@ -89,17 +96,16 @@ export function createGate({ password, now = Date.now, maxFailures = 10, lockout
     // must survive: only a finished lockout, failures reset to 0, is dropped.)
     for (const [ip, rec] of tries) if (rec.until <= now() && rec.failures === 0) tries.delete(ip);
     if (tries.size <= maxTracked) return;
-    // Over the cap: drop the oldest records that are not locked. If everything
-    // left is locked, the map is allowed to exceed maxTracked on purpose: a
-    // record is ~100 bytes and lives 60 seconds, and forgetting a lockout is
-    // worse than holding a few thousand of them.
-    let excess = tries.size - maxTracked;
-    for (const [ip, rec] of tries) {
-      if (excess <= 0) break;
-      if (rec.until > now()) continue;
-      tries.delete(ip);
-      excess -= 1;
-    }
+    // Over the cap: evict the records with the fewest failures first, so that
+    // forgetting a victim's nine costs an attacker nine real guesses and a flood
+    // of one-failure records buys nothing. Locked records are never evicted; if
+    // everything left is locked, the map is allowed to exceed maxTracked on
+    // purpose: a record is ~100 bytes and lives 60 seconds, and forgetting a
+    // lockout is worse than holding a few thousand of them. (Array.sort is
+    // stable, so ties go oldest first.)
+    const evictable = [...tries].filter(([, rec]) => rec.until <= now())
+      .sort((x, y) => x[1].failures - y[1].failures);
+    for (const [ip] of evictable.slice(0, tries.size - maxTracked)) tries.delete(ip);
   };
 
   return {

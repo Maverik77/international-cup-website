@@ -868,7 +868,7 @@ test('gate 22: a generated password is written to the file and appears in no pub
   assert.equal(hub.operatorPasswordSource, 'generated');
   const generated = readFileSync(path, 'utf8').trim();
   assert.equal(generated, hub.operatorPassword);
-  assert.match(generated, /^[a-z]+-[a-z]+-\d{3}$/);
+  assert.match(generated, /^[a-z]+-[a-z]+-\d{4}$/);
   const bodies = [JSON.stringify(hub.whoami()), ...(await Promise.all(['/api/state', '/api/show', '/'].map(async (p) => (await fetch(`${base}${p}`)).text())))];
   for (const b of bodies) assert.ok(!b.includes(generated));
   assert.equal((await login(base, generated)).status, 200, 'and the generated password does unlock the console');

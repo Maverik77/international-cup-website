@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
   COOKIE_NAME, generatePassword, loadOperatorPassword, sessionToken, checkPassword,
-  tokenFromCookie, createGate,
+  tokenFromCookie, createGate, KEYSPACE,
 } from '../lib/auth.mjs';
 
 const tmp = () => mkdtempSync(join(tmpdir(), 'auth-'));
@@ -46,7 +46,7 @@ test('4: a blank file is regenerated, never booted as an empty password', () => 
 });
 
 test('5: generated passwords are typeable and varied', () => {
-  assert.match(generatePassword(), /^[a-z]+-[a-z]+-\d{3}$/);
+  assert.match(generatePassword(), /^[a-z]+-[a-z]+-\d{4}$/);
   const seen = new Set();
   for (let i = 0; i < 200; i++) seen.add(generatePassword());
   assert.ok(seen.size > 150, `only ${seen.size} distinct of 200`);
@@ -104,12 +104,28 @@ test('11: a flood of fresh addresses cannot flush a running lockout', () => {
   assert.equal(gate.attempt('1.1.1.1', 'p').ok, true, 'and unlocks once the window passes');
 });
 
-test('11b: the tracking map is bounded - unlocked records are evicted oldest first', () => {
+test('11b: the tracking map is bounded - a lone failure is forgotten, oldest first', () => {
+  const gate = createGate({ password: 'p', now: () => 1, maxTracked: 2 });
+  gate.attempt('1.1.1.1', 'nope');
+  for (let i = 0; i < 5; i++) gate.attempt(`2.2.2.${i}`, 'nope');
+  // 1.1.1.1 was evicted, so its count restarted: 9 more is its 9th failure, not its 10th.
+  for (let i = 0; i < 9; i++) assert.equal(gate.attempt('1.1.1.1', 'nope').locked, false);
+});
+
+test('11c: a flood cannot reset a partial failure count - evicting a nine costs nine guesses', () => {
   const gate = createGate({ password: 'p', now: () => 1, maxTracked: 2 });
   for (let i = 0; i < 9; i++) gate.attempt('1.1.1.1', 'nope');
-  for (let i = 0; i < 5; i++) gate.attempt(`2.2.2.${i}`, 'nope');
-  // 1.1.1.1 was evicted, so its count restarted: this is its 1st failure, not its 10th.
-  assert.equal(gate.attempt('1.1.1.1', 'nope').locked, false);
+  for (let i = 0; i < 10; i++) gate.attempt(`2.2.2.${i}`, 'nope');
+  assert.equal(gate.attempt('1.1.1.1', 'nope').locked, true, 'its tenth failure still locks it');
+});
+
+test('KEYSPACE is at least 5 million and is the product of the real word lists', () => {
+  assert.ok(KEYSPACE >= 5_000_000, `keyspace is only ${KEYSPACE}`);
+  // 24 adjectives x 24 nouns x 9000 four-digit numbers; shrinking a list must fail here.
+  assert.equal(KEYSPACE, 24 * 24 * 9000);
+  const seen = new Set();
+  for (let i = 0; i < 20000; i++) seen.add(generatePassword().split('-').slice(0, 2).join('-'));
+  assert.equal(seen.size, 24 * 24, 'every adjective-noun pair is reachable');
 });
 
 test('12: authorized accepts only the gate\'s own token', () => {
