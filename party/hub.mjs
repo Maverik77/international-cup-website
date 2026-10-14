@@ -299,6 +299,8 @@ export async function createHub({
 
     try {
       if (command && typeof command === 'object' && command.name === 'refreshFromAws') {
+        // The button stays, so a rehearsal can practise it; it just goes nowhere.
+        if (rehearsal) throw new CommandError('Refresh is off in a rehearsal. Nothing reaches the website.');
         const filled = await refreshFromAws();
         sendJson(res, 200, { ok: true, filled, state: wireState() });
         return;
@@ -471,24 +473,31 @@ export function parseArgs(argv) {
   return args;
 }
 
+// What the terminal shows once the hub is up. Shared with the rehearsal so the
+// practice run looks exactly like the night.
+export function bannerLines(hub, { rehearsal = false } = {}) {
+  const who = hub.whoami();
+  const operator = who.operatorUrl || `http://localhost:${who.port}/operator`;
+  const lines = [''];
+  for (const line of qrLines(operator)) lines.push(`  ${line}`);
+  lines.push('');
+  lines.push(`  Operator   ${operator}`);
+  if (who.mdnsUrl) lines.push(`  or         ${who.mdnsUrl}`);
+  lines.push(`  Stage      ${who.stageUrl}`);
+  lines.push(`  Password   ${hub.operatorPassword}`);
+  if (hub.operatorPasswordSource === 'generated') lines.push('             (new - saved in party/operator-password.txt)');
+  lines.push(`  Landing    http://localhost:${who.port}/`);
+  lines.push(`  Sync       ${who.sync}${rehearsal ? '  (REHEARSAL - nothing reaches AWS)' : ''}`);
+  lines.push('');
+  return lines;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   let hub;
   try {
     const args = parseArgs(process.argv.slice(2));
     hub = await createHub({ ...args, quiet: false });
-    const who = hub.whoami();
-    const operator = who.operatorUrl || `http://localhost:${who.port}/operator`;
-    console.log('');
-    for (const line of qrLines(operator)) console.log(`  ${line}`);
-    console.log('');
-    console.log(`  Operator   ${operator}`);
-    if (who.mdnsUrl) console.log(`  or         ${who.mdnsUrl}`);
-    console.log(`  Stage      ${who.stageUrl}`);
-    console.log(`  Password   ${hub.operatorPassword}`);
-    if (hub.operatorPasswordSource === 'generated') console.log('             (new - saved in party/operator-password.txt)');
-    console.log(`  Landing    http://localhost:${who.port}/`);
-    console.log(`  Sync       ${who.sync}${args.rehearsal ? '  (REHEARSAL - nothing reaches AWS)' : ''}`);
-    console.log('');
+    for (const line of bannerLines(hub, { rehearsal: args.rehearsal })) console.log(line);
   } catch (e) {
     console.error(`\n  Could not start the hub: ${e.message}\n`);
     process.exit(1);

@@ -62,15 +62,15 @@ hotspot, then a network hosted by the laptop, then the laptop alone. The
 
 ### Rehearse
 
-    npm run party:rehearse -- --pace 3
+    npm run party:rehearse -- --pace 3     # about 12 minutes
 
 Plays all 39 matches (13 team matches on Day 1, 26 singles on Day 2) against the
 real cards, into `party/state.rehearsal.json`, with the network switched off. It
-cannot touch `party/state.json` and cannot reach the website. Every run starts
+cannot touch `party/state.json` and cannot reach the website. The console's Refresh button is still there, and says it is off. Every run starts
 again from match 1.
 
-1. It prints a Stage address. Open it, click once, and press Enter in the terminal.
-2. Watch it run. Use `--pace 11` to sit through it at about real speed.
+1. It prints the same QR code, addresses and password lines as the night. Open it, click once, and press Enter in the terminal.
+2. Watch it run. Use `--pace 11` to sit through it at about real speed (about 43 minutes). Add `--go` to start at once without waiting for Enter.
 3. Ctrl-C when you have seen enough.
 
 It uses the same password as the night, from `party/operator-password.txt`, so

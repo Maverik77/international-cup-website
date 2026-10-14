@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { rehearsalPlan, runRehearsal, startRehearsalHub } from '../rehearse.mjs';
 import { createHub } from '../hub.mjs';
 import { indexShow } from '../build/build-show.mjs';
-import { sessionToken } from '../lib/auth.mjs';
+import { sessionToken, COOKIE_NAME } from '../lib/auth.mjs';
 
 function makeShow() {
   const players = [];
@@ -21,7 +21,7 @@ function makeShow() {
 const show = makeShow();
 
 const PASSWORD = 'test-password-1';
-const cookie = { Cookie: `icup_op=${sessionToken(PASSWORD)}` };
+const cookie = { Cookie: `${COOKIE_NAME}=${sessionToken(PASSWORD)}` };
 
 // A directory shaped like party/, so nothing here can touch the real one.
 function fixtureDir() {
@@ -184,24 +184,9 @@ test('GUARANTEE: the real rehearsal start-up never reaches AWS, even when sync i
   const state = await (await fetch(`${base}/api/state`)).json();
   assert.equal(state.rehearsal, true);
   assert.equal(state.completed.length, 39);
+  assert.equal(state.mode, 'slideshow');
   const who = await (await fetch(`${base}/api/whoami`, { headers: cookie })).json();
   assert.equal(who.sync, 'off');
-});
-
-test('a whole rehearsal completes all 39 matches through the password gate', async () => {
-  const dir = fixtureDir();
-  const hub = await startRehearsalHub({ argv: ['--port', '0'], dir, hubOptions: hubOptions(dir) });
-  hubs.push(hub);
-  const base = `http://127.0.0.1:${hub.server.address().port}`;
-  const outcomes = [];
-  await runRehearsal({
-    baseUrl: base, plan: rehearsalPlan(show), pace: 0, headers: cookie,
-    onStep: (i, t, c, o) => outcomes.push(o),
-  });
-  assert.deepEqual(outcomes.filter((o) => o !== 'ok'), []);
-  const state = await (await fetch(`${base}/api/state`)).json();
-  assert.equal(state.completed.length, 39);
-  assert.equal(state.mode, 'slideshow');
 });
 
 test('without the session, the gate turns the rehearsal away', async () => {
@@ -211,18 +196,45 @@ test('without the session, the gate turns the rehearsal away', async () => {
   const base = `http://127.0.0.1:${hub.server.address().port}`;
   const outcomes = [];
   await runRehearsal({ baseUrl: base, plan: [{ name: 'reveal' }], pace: 0, onStep: (i, t, c, o) => outcomes.push(o) });
-  assert.notEqual(outcomes[0], 'ok');
+  assert.equal(outcomes.length, 1);
+  assert.match(outcomes[0], /password/i, 'the gate should have said so');
+  const raw = await fetch(`${base}/api/command`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"name":"reveal"}' });
+  assert.equal(raw.status, 401);
+  assert.equal((await raw.json()).needPassword, true);
 });
 
 test('a second rehearsal starts from match 1, not where the last one ended', async () => {
   const dir = fixtureDir();
   const first = await startRehearsalHub({ argv: ['--port', '0'], dir, hubOptions: hubOptions(dir) });
   const b1 = `http://127.0.0.1:${first.server.address().port}`;
-  await runRehearsal({ baseUrl: b1, plan: rehearsalPlan(show), pace: 0, headers: cookie });
+  await runRehearsal({ baseUrl: b1, plan: rehearsalPlan(show).slice(0, 7), pace: 0, headers: cookie });
+  assert.equal((await (await fetch(`${b1}/api/state`)).json()).completed.length, 1); // it really left a mark
   await first.stop();
   const second = await startRehearsalHub({ argv: ['--port', '0'], dir, hubOptions: hubOptions(dir) });
   hubs.push(second);
   const b2 = `http://127.0.0.1:${second.server.address().port}`;
   const state = await (await fetch(`${b2}/api/state`)).json();
   assert.equal(state.completed.length, 0);
+});
+
+test('Refresh in a rehearsal is practised but goes nowhere', async () => {
+  const dir = fixtureDir();
+  const calls = [];
+  const hub = await startRehearsalHub({
+    argv: ['--port', '0'], dir,
+    hubOptions: {
+      ...hubOptions(dir),
+      fetchImpl: async (url) => { calls.push(String(url)); throw new Error('rehearsal reached the network'); },
+    },
+  });
+  hubs.push(hub);
+  const base = `http://127.0.0.1:${hub.server.address().port}`;
+  const res = await fetch(`${base}/api/command`, {
+    method: 'POST', headers: { ...cookie, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'refreshFromAws' }),
+  });
+  const body = await res.json();
+  assert.deepEqual(calls, [], 'Refresh reached the network');
+  assert.equal(body.ok, false);
+  assert.equal(body.error, 'Refresh is off in a rehearsal. Nothing reaches the website.');
 });

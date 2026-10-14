@@ -2,9 +2,9 @@
 import { readFileSync, rmSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createHub, parseArgs } from './hub.mjs';
+import { createHub, parseArgs, bannerLines } from './hub.mjs';
 import { indexShow } from './build/build-show.mjs';
-import { sessionToken } from './lib/auth.mjs';
+import { sessionToken, COOKIE_NAME } from './lib/auth.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REHEARSAL_STATE = 'state.rehearsal.json';
@@ -107,19 +107,26 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const port = hub.server.address().port;
   const base = `http://127.0.0.1:${port}`;
   console.log('\n  REHEARSAL. Nothing reaches AWS and party/state.json is untouched.');
-  console.log(`  Stage     ${base}/stage`);
-  console.log(`  Operator  ${base}/operator   (same password as on the night: party/operator-password.txt)`);
-  console.log(`  Pace      ${args.pace}s per step\n`);
+  for (const line of bannerLines(hub, { rehearsal: true })) console.log(line);
+  console.log(`  Pace       ${args.pace}s per step\n`);
   if (!args.go) {
     console.log('  Open the stage, click once to start it, then press Enter here.');
-    await new Promise((r) => process.stdin.once('data', r));
+    const keyed = await new Promise((r) => {
+      process.stdin.once('data', () => r(true));
+      process.stdin.once('end', () => r(false));
+    });
+    if (!keyed) {
+      console.error('\n  Nothing to read from the keyboard here. Run it again with --go to start straight away.\n');
+      await hub.stop();
+      process.exit(1);
+    }
   }
 
   const plan = rehearsalPlan(show);
   let refused = 0;
   await runRehearsal({
     baseUrl: base, plan, pace: args.pace,
-    headers: { Cookie: `icup_op=${sessionToken(hub.operatorPassword)}` },
+    headers: { Cookie: `${COOKIE_NAME}=${sessionToken(hub.operatorPassword)}` },
     onStep: (i, total, c, outcome) => {
       if (outcome !== 'ok') refused += 1;
       console.log(`  [${String(i).padStart(3)}/${total}] ${c.name}${outcome === 'ok' ? '' : `  !! ${outcome}`}`);
