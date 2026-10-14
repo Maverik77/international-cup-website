@@ -20,7 +20,7 @@
     "party:flags": "node party/build/fetch-flags.mjs",
     "party:build": "node party/build/build-show.mjs",
     "party:start": "node party/hub.mjs",
-    "party:rehearse": "node party/hub.mjs --rehearsal",
+    "party:rehearse": "node party/rehearse.mjs",
     "party:preflight": "node party/build/preflight.mjs",
     "party:push-roster": "node party/build/push-roster.mjs",
     "party:test": "node --test 'party/test/*.test.mjs'"
