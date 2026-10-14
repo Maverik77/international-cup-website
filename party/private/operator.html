@@ -1,1 +1,66 @@
-<!doctype html><meta charset="utf-8"><title>Operator</title><h1>operator</h1>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>International Cup — Operator</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="/operator.css">
+</head>
+<body>
+<header>
+  <div id="slot-label">—</div>
+  <div id="sync" class="sync">—</div>
+</header>
+
+<section id="recovered" class="banner banner-warn" hidden></section>
+<section id="fault" class="banner banner-bad" role="alert" hidden></section>
+<section id="note" class="note" role="status" hidden></section>
+<section id="problems" class="problems" hidden></section>
+
+<main>
+  <section class="pane">
+    <h2>On screen</h2>
+    <div class="sides">
+      <div class="side" data-side="intl"><h3>International <span class="first-tag">reveals first</span></h3><div class="picks"></div></div>
+      <div class="side" data-side="usa"><h3>USA <span class="first-tag">reveals first</span></h3><div class="picks"></div></div>
+    </div>
+    <button id="toggle-first" class="btn btn-quiet">Swap which side reveals first</button>
+  </section>
+
+  <section class="pane next">
+    <h2>Up next</h2>
+    <div id="next-summary">—</div>
+  </section>
+</main>
+
+<nav class="actions">
+  <button id="reveal" class="btn btn-primary">Reveal</button>
+  <button id="next" class="btn btn-primary">Next match</button>
+</nav>
+
+<nav class="actions secondary">
+  <button id="day1" class="btn">Day 1</button>
+  <button id="day2" class="btn">Day 2</button>
+  <button id="jump" class="btn">Jump to…</button>
+  <button id="slideshow" class="btn">Slideshow</button>
+  <button id="refresh" class="btn">Refresh from AWS</button>
+  <button id="undo" class="btn btn-danger">Undo</button>
+</nav>
+
+<dialog id="picker">
+  <h3 id="picker-title">Pick a player</h3>
+  <input id="picker-filter" type="search" placeholder="Type a name" autocomplete="off">
+  <ul id="picker-list"></ul>
+  <button id="picker-cancel" class="btn">Cancel</button>
+</dialog>
+
+<dialog id="jumper">
+  <h3>Jump to match</h3>
+  <ul id="jumper-list"></ul>
+  <button id="jumper-cancel" class="btn">Cancel</button>
+</dialog>
+
+<script type="module" src="/operator.js"></script>
+</body>
+</html>
