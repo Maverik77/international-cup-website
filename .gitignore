@@ -133,6 +133,9 @@ party/show.json*
 party/state.json*
 party/state.rehearsal.json*
 
+# The operator console's password: a secret, generated on first boot
+party/operator-password.txt
+
 # Git worktrees for isolated feature work
 .worktrees/
 

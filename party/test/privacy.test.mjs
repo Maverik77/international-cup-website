@@ -24,6 +24,7 @@ const MUST_BE_IGNORED = [
   'party/state.json',
   'party/state.rehearsal.json',
   'party/cards/seth-4x9.mp4',
+  'party/operator-password.txt',
 ];
 
 // Atomic writes leave <name>.tmp behind on a crash; Task 6 moves corrupt state
@@ -44,7 +45,7 @@ for (const path of MUST_BE_IGNORED) {
 // it". A file added with `git add -f` stays tracked despite the rule.
 test('no private party file is tracked by git', () => {
   const r = git('ls-files', 'contacts', 'party/show.json', 'party/state.json',
-    'party/state.rehearsal.json', 'party/cards');
+    'party/state.rehearsal.json', 'party/cards', 'party/operator-password.txt');
   assert.equal(r.status, 0, `git ls-files failed: ${r.stderr}`);
   assert.equal(r.stdout.toString(), '', `tracked private files:\n${r.stdout}`);
 });

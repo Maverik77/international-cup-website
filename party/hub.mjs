@@ -16,6 +16,7 @@ import { createOutbox } from './lib/outbox.mjs';
 import { createSseHub } from './lib/sse.mjs';
 import { safeJoin, serveFile } from './lib/static.mjs';
 import { pickLanAddress, localHostName, operatorUrls, qrLines, qrSvg } from './lib/net.mjs';
+import { loadOperatorPassword, createGate, setCookieHeader } from './lib/auth.mjs';
 import { API_URLS, AwsError, loadPassword, putPairings, getPairings } from './lib/aws.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -71,6 +72,8 @@ export async function createHub({
   rehearsal = false,
   fetchImpl = fetch,
   password = null,
+  operatorPassword = null, // tests only: there is deliberately no CLI flag (argv shows in ps)
+  operatorPasswordPath = join(HERE, 'operator-password.txt'),
   syncMinDelay = 1000,
   quiet = false,
   loadPasswordImpl = loadPassword, // test seam: pins the no-password-file behaviour deterministically
@@ -111,6 +114,11 @@ export async function createHub({
       warn(`\n  !! ${syncNote}\n`);
     }
   }
+
+  // The operator console's own password. Unrelated to the website's admin
+  // password above; this one only gates this server's own console.
+  const operator = loadOperatorPassword({ path: operatorPasswordPath, explicit: operatorPassword });
+  const gate = createGate({ password: operator.password });
 
   const outbox = createOutbox({
     enabled: syncEnabled,
@@ -209,7 +217,9 @@ export async function createHub({
     });
   }
 
-  async function handleCommand(req, res) {
+  // Shared by /api/command and /api/login: the same CSRF, content-type and
+  // size rules. Resolves to the raw body, or null after answering the client.
+  async function readJsonPost(req, res, tooLargeMsg) {
     // CSRF: a web page on someone else's tab can POST text/plain at a LAN
     // address without a preflight. Requiring JSON forces a preflight we never
     // answer, and a foreign Origin is refused outright.
@@ -219,32 +229,64 @@ export async function createHub({
       try { originHost = new URL(origin).host; } catch { /* malformed */ }
       if (originHost !== req.headers.host) {
         sendJson(res, 403, { ok: false, error: 'That request came from another website, so it was refused.' });
-        return;
+        req.resume();
+        return null;
       }
     }
     const ctype = String(req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();
     if (ctype !== 'application/json') {
       sendJson(res, 415, { ok: false, error: 'Commands must be sent as application/json.' });
       req.resume();
-      return;
+      return null;
     }
     const declared = Number(req.headers['content-length']);
     if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) {
-      sendJson(res, 413, { ok: false, error: 'That command is far too large.' }, { Connection: 'close' });
+      sendJson(res, 413, { ok: false, error: tooLargeMsg }, { Connection: 'close' });
       res.on('finish', () => req.destroy());
-      return;
+      return null;
     }
-
-    let body;
     try {
-      body = await readBody(req);
+      return await readBody(req);
     } catch (e) {
       if (e.tooLarge) {
-        sendJson(res, 413, { ok: false, error: 'That command is far too large.' }, { Connection: 'close' });
+        sendJson(res, 413, { ok: false, error: tooLargeMsg }, { Connection: 'close' });
         res.on('finish', () => req.destroy());
       }
-      return; // client went away: nobody to answer
+      return null; // client went away: nobody to answer
     }
+  }
+
+  // Every gated route answers a missing or wrong cookie with exactly this; the
+  // console keys on needPassword to send the operator back to the login page.
+  function denyUnsigned(res) {
+    sendJson(res, 401, { ok: false, needPassword: true, error: 'The console is not signed in. Reload this page and type the password.' });
+  }
+
+  async function handleLogin(req, res) {
+    const body = await readJsonPost(req, res, 'That is far too large to be a password.');
+    if (body === null) return;
+    let given = null;
+    try { given = JSON.parse(body)?.password; } catch { /* handled below */ }
+    if (typeof given !== 'string') {
+      sendJson(res, 400, { ok: false, error: 'Type the password and press Unlock.' });
+      return;
+    }
+    // The submitted password is never logged and never echoed.
+    const result = gate.attempt(req.socket.remoteAddress, given);
+    if (result.locked) {
+      sendJson(res, 429, { ok: false, error: 'Too many wrong tries from this device. Wait a minute, then try again.' });
+    } else if (!result.ok) {
+      sendJson(res, 401, { ok: false, error: 'That is not the password.' });
+    } else {
+      sendJson(res, 200, { ok: true }, { 'Set-Cookie': setCookieHeader(gate.token) });
+    }
+  }
+
+  async function handleCommand(req, res) {
+    // The gate sits in front of everything, the reducer included.
+    if (!gate.authorized(req)) { denyUnsigned(res); req.resume(); return; }
+    const body = await readJsonPost(req, res, 'That command is far too large.');
+    if (body === null) return;
 
     let command;
     try {
@@ -286,6 +328,12 @@ export async function createHub({
       return;
     }
 
+    if (url === '/api/login') {
+      if (method !== 'POST') { sendJson(res, 405, { ok: false, error: 'POST only' }, { Allow: 'POST' }); return; }
+      await handleLogin(req, res);
+      return;
+    }
+
     if (method !== 'GET' && method !== 'HEAD') {
       sendJson(res, 405, { ok: false, error: 'GET only' }, { Allow: 'GET, HEAD' });
       return;
@@ -298,7 +346,11 @@ export async function createHub({
     }
     if (url === '/api/state') { sendJson(res, 200, wireState()); return; }
     if (url === '/api/show') { sendJson(res, 200, publicShow); return; }
-    if (url === '/api/whoami') { sendJson(res, 200, whoami()); return; }
+    if (url === '/api/whoami') {
+      if (!gate.authorized(req)) { denyUnsigned(res); return; }
+      sendJson(res, 200, whoami());
+      return;
+    }
 
     if (url === '/') {
       const who = whoami();
@@ -308,8 +360,15 @@ export async function createHub({
       return;
     }
 
-    if (url === '/operator' || url === '/stage') {
-      serveFile(req, res, join(publicDir, `${url.slice(1)}.html`));
+    // No redirect: the QR code points at /operator and must keep working.
+    // /operator.html is the same page by another name; without this it would be
+    // a way round the gate through the static handler below.
+    if (url === '/operator' || url === '/operator.html') {
+      serveFile(req, res, join(publicDir, gate.authorized(req) ? 'operator.html' : 'login.html'));
+      return;
+    }
+    if (url === '/stage') {
+      serveFile(req, res, join(publicDir, 'stage.html'));
       return;
     }
 
@@ -377,6 +436,9 @@ export async function createHub({
       return { lan: lan?.address || null, port: actualPort };
     })(),
     whoami,
+    // For the boot banner and the tests. Never part of whoami(): that is a route response.
+    operatorPassword: operator.password,
+    operatorPasswordSource: operator.source,
     get state() { return state; },
     async stop() {
       outbox.stop();
@@ -417,6 +479,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log(`  Operator   ${operator}`);
     if (who.mdnsUrl) console.log(`  or         ${who.mdnsUrl}`);
     console.log(`  Stage      ${who.stageUrl}`);
+    console.log(`  Password   ${hub.operatorPassword}`);
+    if (hub.operatorPasswordSource === 'generated') console.log('             (new - saved in party/operator-password.txt)');
     console.log(`  Landing    http://localhost:${who.port}/`);
     console.log(`  Sync       ${who.sync}${args.rehearsal ? '  (REHEARSAL - nothing reaches AWS)' : ''}`);
     console.log('');

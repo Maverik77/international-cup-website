@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Operator console - sign in</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+ :root { color-scheme: dark; }
+ body { margin:0; min-height:100vh; display:grid; place-items:center;
+        background:#0b0d10; color:#f2f3f5; font:16px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;
+        padding:2rem; text-align:center; }
+ main { width:100%; max-width:22rem; display:grid; gap:1.1rem; }
+ h1 { font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase; color:#FEB619; margin:0; }
+ p { margin:0; color:#9aa2ad; }
+ form { display:grid; gap:.9rem; }
+ input { font-size:1.25rem; padding:.8rem 1rem; border-radius:10px; border:1px solid #2b313a;
+         background:#14181d; color:#f2f3f5; width:100%; box-sizing:border-box; text-align:center; }
+ button { font-size:1.25rem; font-weight:700; padding:1rem; min-height:3.5rem; border:0; border-radius:10px;
+          background:#FEB619; color:#0b0d10; cursor:pointer; }
+ button:disabled { opacity:.6; }
+ #err { color:#ff8a80; min-height:1.5em; }
+</style></head><body>
+<main>
+ <h1>Operator console</h1>
+ <p>Type the password from the hub's terminal.</p>
+ <form id="f">
+  <input type="password" name="password" autocomplete="current-password" autofocus aria-label="Password">
+  <button type="submit">Unlock</button>
+ </form>
+ <div id="err" role="alert"></div>
+</main>
+<script>
+ const f = document.getElementById('f');
+ const input = f.elements.password;
+ const btn = f.querySelector('button');
+ const err = document.getElementById('err');
+ f.addEventListener('submit', async (ev) => {
+   ev.preventDefault();
+   err.textContent = '';
+   btn.disabled = true;
+   try {
+     const res = await fetch('/api/login', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ password: input.value }),
+     });
+     let body = null;
+     try { body = await res.json(); } catch { /* not JSON */ }
+     if (res.ok && body && body.ok) { location.replace('/operator'); return; }
+     err.textContent = (body && body.error) || 'That did not work. Try again.';
+   } catch {
+     err.textContent = 'The hub did not answer. Is it still running?';
+   }
+   btn.disabled = false;
+   input.focus();
+   input.select();
+ });
+</script>
+</body></html>

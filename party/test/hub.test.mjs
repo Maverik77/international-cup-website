@@ -2,11 +2,15 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { request } from 'node:http';
 import { connect } from 'node:net';
-import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync, symlinkSync, copyFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { createHub, parseArgs, MAX_BODY_BYTES } from '../hub.mjs';
+import { sessionToken } from '../lib/auth.mjs';
 import { CommandError } from '../lib/state.mjs';
+
+const REAL_LOGIN = join(fileURLToPath(new URL('../public', import.meta.url)), 'login.html');
 
 function fixtureShow(dir, tweak) {
   const players = [];
@@ -33,11 +37,15 @@ async function startHub(opts = {}) {
   mkdirSync(publicDir, { recursive: true });
   writeFileSync(join(publicDir, 'stage.html'), '<h1>stage</h1>');
   writeFileSync(join(publicDir, 'operator.html'), '<h1>operator</h1>');
+  copyFileSync(REAL_LOGIN, join(publicDir, 'login.html')); // the real page: test 13 pins its Unlock button
   const { dir: _d, showTweak, ...rest } = opts;
   const hub = await createHub({
     showPath: fixtureShow(dir, showTweak),
     statePath: join(dir, 'state.json'),
     cardsDir, publicDir, port: 0, enableSync: false, quiet: true,
+    // A known password, and a path in the temp dir: never write into the real party/.
+    operatorPassword: 'test-password-1',
+    operatorPasswordPath: join(dir, 'operator-password.txt'),
     ...rest,
   });
   hubs.push(hub);
@@ -49,8 +57,18 @@ async function startHub(opts = {}) {
 import { after } from 'node:test';
 after(async () => { for (const h of hubs) { try { await h.stop(); } catch { /* already stopped */ } } });
 
-const post = (base, body, headers = { 'Content-Type': 'application/json' }) =>
+const opCookie = (password = 'test-password-1') => ({ Cookie: `icup_op=${sessionToken(password)}` });
+
+const postNoAuth = (base, body, headers = { 'Content-Type': 'application/json' }) =>
   fetch(`${base}/api/command`, { method: 'POST', headers, body: typeof body === 'string' || body === undefined ? body : JSON.stringify(body) });
+
+// Signed in by default. A caller's headers win, so tests can still send the wrong
+// content-type or a foreign Origin.
+const post = (base, body, headers = { 'Content-Type': 'application/json' }) =>
+  postNoAuth(base, body, { ...opCookie(), ...headers });
+
+const login = (base, password, headers = { 'Content-Type': 'application/json' }) =>
+  fetch(`${base}/api/login`, { method: 'POST', headers, body: typeof password === 'string' && headers['Content-Type'] !== 'application/json' ? password : JSON.stringify({ password }) });
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function until(fn, ms = 2000) {
@@ -118,7 +136,7 @@ test('the show is indexed at startup, so a command works on a show loaded from J
 test('serves the surfaces', async () => {
   const { base } = await startHub();
   assert.match(await (await fetch(`${base}/stage`)).text(), /stage/);
-  assert.match(await (await fetch(`${base}/operator`)).text(), /operator/);
+  assert.match(await (await fetch(`${base}/operator`, { headers: opCookie() })).text(), /operator/);
   const landing = await fetch(`${base}/`);
   assert.equal(landing.status, 200);
   assert.match(await landing.text(), /<svg /);
@@ -236,7 +254,7 @@ test('a client that connects and vanishes in the same breath leaks nothing', asy
 
 test('whoami reports where the console lives', async () => {
   const { base } = await startHub();
-  const who = await (await fetch(`${base}/api/whoami`)).json();
+  const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(typeof who.port, 'number');
   assert.ok('operatorUrl' in who);
   assert.ok('mdnsUrl' in who);
@@ -248,7 +266,7 @@ test('a recovered state file is reported to the console with its reason', async 
   const dir = mkdtempSync(join(tmpdir(), 'hub-'));
   writeFileSync(join(dir, 'state.json'), '{"version":1,"day":'); // cut off mid-save
   const { base } = await startHub({ dir });
-  const who = await (await fetch(`${base}/api/whoami`)).json();
+  const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(who.recovered, true);
   assert.match(who.recoveredReason, /unusable|bad JSON/i);
   assert.ok(readdirSync(dir).some((f) => f.startsWith('state.json.corrupt-')), 'the bad file was kept as evidence');
@@ -265,7 +283,7 @@ test('a restart resumes at the same slot', async () => {
   const state = await (await fetch(`${again.base}/api/state`)).json();
   assert.equal(state.slot.index, 2);
   assert.equal(state.completed.length, 1);
-  assert.equal((await (await fetch(`${again.base}/api/whoami`)).json()).recovered, false);
+  assert.equal((await (await fetch(`${again.base}/api/whoami`, { headers: opCookie() })).json()).recovered, false);
 });
 
 test('with sync on, a command pushes a snapshot and the console sees the status', async () => {
@@ -313,7 +331,7 @@ test('the admin password never appears in logs, state, responses or errors', asy
     logged.join('\n'),
     readFileSync(join(dir, 'state.json'), 'utf8'),
     JSON.stringify(await (await fetch(`${base}/api/state`)).json()),
-    JSON.stringify(await (await fetch(`${base}/api/whoami`)).json()),
+    JSON.stringify(await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json()),
     JSON.stringify(await (await fetch(`${base}/api/show`)).json()),
     JSON.stringify(await (await post(base, { name: 'nonsense' })).json()),
   ].join('\n');
@@ -326,7 +344,7 @@ test('with no admin password file the hub still starts, with sync off and the re
   const { AwsError } = await import('../lib/aws.mjs');
   const loadPasswordImpl = () => { throw new AwsError('cannot read /home/x/.icup-admin-passwords/staging.txt - set ICUP_ADMIN_PASSWORD instead'); };
   const { base } = await startHub({ enableSync: true, target: 'staging', password: null, loadPasswordImpl });
-  const who = await (await fetch(`${base}/api/whoami`)).json();
+  const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(who.sync, 'off');
   assert.match(who.syncNote, /Website sync is off: cannot read .*ICUP_ADMIN_PASSWORD/);
   assert.equal((await post(base, { name: 'reveal' })).status, 200, 'the show runs without the website');
@@ -335,7 +353,7 @@ test('with no admin password file the hub still starts, with sync off and the re
 test('an unexpected failure loading the password also degrades to sync off, without leaking its text', async () => {
   const loadPasswordImpl = () => { throw new Error('boom hunter2-SECRET'); };
   const { base } = await startHub({ enableSync: true, target: 'staging', password: null, loadPasswordImpl });
-  const who = await (await fetch(`${base}/api/whoami`)).json();
+  const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(who.sync, 'off');
   assert.match(who.syncNote, /Website sync is off/);
   assert.doesNotMatch(JSON.stringify(who), /hunter2|boom/);
@@ -345,7 +363,7 @@ test('when the password loads, sync is on and the loader is asked for the right 
   let asked;
   const loadPasswordImpl = (o) => { asked = o; return 'pw'; };
   const { base } = await startHub({ enableSync: true, target: 'staging', password: null, loadPasswordImpl, fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}) }) });
-  const who = await (await fetch(`${base}/api/whoami`)).json();
+  const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(who.sync, 'staging');
   assert.equal(who.syncNote, null);
   assert.equal(asked.target, 'staging');
@@ -358,7 +376,7 @@ test('rehearsal never syncs, even if sync was asked for', async () => {
   await post(base, { name: 'reveal' });
   await wait(100);
   assert.equal(called, 0);
-  const who = await (await fetch(`${base}/api/whoami`)).json();
+  const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(who.sync, 'off');
   assert.equal(who.rehearsal, true);
   assert.equal((await (await fetch(`${base}/api/state`)).json()).rehearsal, true);
@@ -403,20 +421,20 @@ test('a body that is not JSON is a 400', async () => {
 
 test('invalid UTF-8 in the body is a 400, not a crash', async () => {
   const { base } = await startHub();
-  const res = await fetch(`${base}/api/command`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: new Uint8Array([0xff, 0xfe, 0xfd]) });
+  const res = await fetch(`${base}/api/command`, { method: 'POST', headers: { ...opCookie(), 'Content-Type': 'application/json' }, body: new Uint8Array([0xff, 0xfe, 0xfd]) });
   assert.equal(res.status, 400);
 });
 
 test('a POST with no body is a 400 and the show is untouched', async () => {
   const { base } = await startHub();
-  const res = await fetch(`${base}/api/command`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+  const res = await fetch(`${base}/api/command`, { method: 'POST', headers: { ...opCookie(), 'Content-Type': 'application/json' } });
   assert.equal(res.status, 400);
   assert.equal((await (await fetch(`${base}/api/state`)).json()).rev, 0);
 });
 
 test('a POST with no Content-Type at all is refused', async () => {
   const { base } = await startHub();
-  const res = await fetch(`${base}/api/command`, { method: 'POST', body: new Uint8Array([123, 125]), headers: { 'Content-Type': '' } });
+  const res = await fetch(`${base}/api/command`, { method: 'POST', body: new Uint8Array([123, 125]), headers: { ...opCookie(), 'Content-Type': '' } });
   assert.equal(res.status, 415);
 });
 
@@ -454,7 +472,7 @@ test('an oversized body is a 413, not buffered without limit', async () => {
 test('an oversized chunked body with no Content-Length is also cut off', async () => {
   const { port, base } = await startHub();
   const status = await new Promise((ok) => {
-    const req = request({ host: '127.0.0.1', port, path: '/api/command', method: 'POST', headers: { 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked' } }, (res) => {
+    const req = request({ host: '127.0.0.1', port, path: '/api/command', method: 'POST', headers: { ...opCookie(), 'Content-Type': 'application/json', 'Transfer-Encoding': 'chunked' } }, (res) => {
       res.resume();
       ok(res.statusCode);
     });
@@ -480,7 +498,7 @@ test('a client that lies about Content-Length and hangs up mid-body does not hur
   const sock = connect(port, '127.0.0.1');
   sock.on('error', () => {});
   await new Promise((r) => sock.on('connect', r));
-  sock.write(`POST /api/command HTTP/1.1\r\nHost: x\r\nContent-Type: application/json\r\nContent-Length: 500\r\n\r\n{"name":"rev`);
+  sock.write(`POST /api/command HTTP/1.1\r\nHost: x\r\nCookie: icup_op=${sessionToken('test-password-1')}\r\nContent-Type: application/json\r\nContent-Length: 500\r\n\r\n{"name":"rev`);
   await wait(30);
   sock.destroy();
   await wait(50);
@@ -713,4 +731,132 @@ test('refresh: AWS errors are a 502 with a status code only, and the state is un
   const r3 = await refresh(notJson.base);
   assert.equal(r3.status, 502);
   assert.equal((await (await fetch(`${notJson.base}/api/state`)).json()).rev, 0);
+});
+
+// ---- Task 10B: the password on the operator console ----
+
+test('gate 13: GET /operator with no cookie is the login page, not the console', async () => {
+  const { base } = await startHub();
+  const res = await fetch(`${base}/operator`);
+  assert.equal(res.status, 200);
+  const text = await res.text();
+  assert.match(text, /Unlock/);
+  assert.doesNotMatch(text, /<h1>operator<\/h1>/);
+  const direct = await (await fetch(`${base}/operator.html`)).text();
+  assert.match(direct, /Unlock/, '/operator.html is not a way round the gate');
+});
+
+test('gate 14: GET /operator with the cookie is the console, not the login page', async () => {
+  const { base } = await startHub();
+  const text = await (await fetch(`${base}/operator`, { headers: opCookie() })).text();
+  assert.match(text, /<h1>operator<\/h1>/);
+  assert.doesNotMatch(text, /Unlock/);
+  assert.match(await (await fetch(`${base}/operator.html`, { headers: opCookie() })).text(), /<h1>operator<\/h1>/);
+});
+
+test('gate 15: an unauthenticated command is refused and never reaches the reducer', async () => {
+  const { base } = await startHub();
+  const res = await postNoAuth(base, { name: 'reveal' }, { 'Content-Type': 'application/json' });
+  assert.equal(res.status, 401);
+  const body = await res.json();
+  assert.equal(body.needPassword, true);
+  assert.equal(body.ok, false);
+  assert.equal(body.error, 'The console is not signed in. Reload this page and type the password.');
+  const state = await (await fetch(`${base}/api/state`)).json();
+  assert.equal(state.slot.shown, 'none', 'the reveal did not happen');
+  assert.equal(state.rev, 0, 'the state was not touched at all');
+  // and the same command, signed in, does happen: the refusal above was the gate
+  assert.equal((await (await post(base, { name: 'reveal' })).json()).state.slot.shown, 'first');
+});
+
+test('gate 16: login with the right password sets an HttpOnly SameSite=Strict cookie that works on /api/command', async () => {
+  const { base } = await startHub();
+  const res = await login(base, 'test-password-1');
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { ok: true });
+  const setCookie = res.headers.get('set-cookie');
+  assert.match(setCookie, /HttpOnly/);
+  assert.match(setCookie, /SameSite=Strict/);
+  assert.match(setCookie, /Path=\//);
+  const cookie = setCookie.split(';')[0];
+  const cmd = await postNoAuth(base, { name: 'reveal' }, { 'Content-Type': 'application/json', Cookie: cookie });
+  assert.equal(cmd.status, 200);
+});
+
+test('gate 17: a wrong password is a 401 that echoes neither the password nor the token', async () => {
+  const { base } = await startHub();
+  const res = await login(base, 'wrong');
+  assert.equal(res.status, 401);
+  assert.equal((await res.json()).error, 'That is not the password.');
+  const everything = JSON.stringify([...res.headers.entries()]);
+  assert.equal(res.headers.get('set-cookie'), null);
+  const again = await login(base, 'wrong');
+  const dump = everything + JSON.stringify(await again.json());
+  assert.ok(!dump.includes('test-password-1'));
+  assert.ok(!dump.includes(sessionToken('test-password-1')));
+  assert.ok(!dump.includes('wrong'), 'the submitted guess is not echoed either');
+});
+
+test('gate 18: eleven wrong tries lock the address out, even for the right password', async () => {
+  const { base } = await startHub();
+  for (let i = 0; i < 11; i++) await login(base, `wrong-${i}`);
+  const res = await login(base, 'test-password-1');
+  assert.equal(res.status, 429);
+  const body = await res.json();
+  assert.match(body.error, /wait/i);
+  assert.equal(res.headers.get('set-cookie'), null, 'no cookie while locked out');
+});
+
+test('gate 19: /api/whoami needs the cookie, and never carries the password or the token', async () => {
+  const { base } = await startHub();
+  const no = await fetch(`${base}/api/whoami`);
+  assert.equal(no.status, 401);
+  assert.equal((await no.json()).needPassword, true);
+  const yes = await fetch(`${base}/api/whoami`, { headers: opCookie() });
+  assert.equal(yes.status, 200);
+  const text = JSON.stringify(await yes.json());
+  assert.ok(!text.includes('test-password-1'));
+  assert.ok(!text.includes(sessionToken('test-password-1')));
+});
+
+test('gate 20: the stage stays public - no cookie needed for anything it consumes', async () => {
+  const { base, port } = await startHub();
+  for (const path of ['/stage', '/api/show', '/api/state', '/cards/i1-4x9.mp4', '/']) {
+    const res = await fetch(`${base}${path}`);
+    assert.equal(res.status, 200, `${path} is public`);
+    await res.arrayBuffer();
+  }
+  const sse = sseClient(port);
+  try {
+    assert.ok(await until(() => sse.frames.some((f) => f.event === 'state')), 'an unauthenticated client gets a state frame');
+  } finally {
+    sse.kill();
+  }
+});
+
+test('gate 21: /api/login has the same protections as /api/command', async () => {
+  const { base } = await startHub();
+  const plain = await login(base, 'test-password-1', { 'Content-Type': 'text/plain' });
+  assert.equal(plain.status, 415);
+  const huge = await login(base, JSON.stringify({ password: 'x'.repeat(MAX_BODY_BYTES + 10) }), { 'Content-Type': 'application/json' }).catch((e) => e);
+  assert.equal(huge.status, 413);
+  const foreign = await login(base, 'test-password-1', { 'Content-Type': 'application/json', Origin: 'http://evil.example' });
+  assert.equal(foreign.status, 403);
+  assert.equal(foreign.headers.get('set-cookie'), null);
+  const noField = await fetch(`${base}/api/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"nope":1}' });
+  assert.equal(noField.status, 400);
+  assert.equal((await fetch(`${base}/api/login`)).status, 405);
+});
+
+test('gate 22: a generated password is written to the file and appears in no public response', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'gen-'));
+  const path = join(dir, 'operator-password.txt');
+  const { hub, base } = await startHub({ dir, operatorPassword: null, operatorPasswordPath: path });
+  assert.equal(hub.operatorPasswordSource, 'generated');
+  const generated = readFileSync(path, 'utf8').trim();
+  assert.equal(generated, hub.operatorPassword);
+  assert.match(generated, /^[a-z]+-[a-z]+-\d{2}$/);
+  const bodies = [JSON.stringify(hub.whoami()), ...(await Promise.all(['/api/state', '/api/show', '/'].map(async (p) => (await fetch(`${base}${p}`)).text())))];
+  for (const b of bodies) assert.ok(!b.includes(generated));
+  assert.equal((await login(base, generated)).status, 200, 'and the generated password does unlock the console');
 });
