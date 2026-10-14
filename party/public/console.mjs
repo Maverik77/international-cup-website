@@ -57,10 +57,12 @@ export const NEXT_FLIGHT_CAP_MS = 10000;
 
 // The sentence shown when the hub came up without the saved state. Silently
 // starting from match 1 mid-show is the worst case, so it names the reason and the way back.
+// Uses the summary only: `recoveredReason` carries a file path and a parse error
+// for the laptop's terminal, and must never reach the iPad, not even as a fallback.
 export function recoveredBanner(who) {
   if (!who || !who.recovered) return null;
-  const why = who.recoveredReason ? ` ${String(who.recoveredReason).trim()}` : '';
-  return `The show started over from Day 1, match 1.${why} If you were part-way through, use Jump to… to get back to your match.`;
+  const what = who.recoveredSummary ? ` ${String(who.recoveredSummary).trim()}` : '';
+  return `The show started over from Day 1, match 1.${what} If you were part-way through, use Jump to… to get back to your match.`;
 }
 
 // Where an unrecognised-session operator is sent.

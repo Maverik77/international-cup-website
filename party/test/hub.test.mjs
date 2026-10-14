@@ -271,6 +271,7 @@ test('a recovered state file is reported to the console with its reason', async 
   const who = await (await fetch(`${base}/api/whoami`, { headers: opCookie() })).json();
   assert.equal(who.recovered, true);
   assert.match(who.recoveredReason, /unusable|bad JSON/i);
+  assert.ok(who.recoveredSummary && !who.recoveredSummary.includes('.corrupt-'), 'whoami carries the iPad summary, without the file path');
   assert.ok(readdirSync(dir).some((f) => f.startsWith('state.json.corrupt-')), 'the bad file was kept as evidence');
   assert.equal((await (await fetch(`${base}/api/state`)).json()).slot.index, 1);
 });

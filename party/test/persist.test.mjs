@@ -317,3 +317,28 @@ test('a filesystem that cannot fsync directories is tolerated, but a real I/O er
   assert.equal(loadState(path, show).recovered, false);
   assert.throws(() => patched(dirFsync('EIO'), () => saveState(path, initialState(show))), /dir EIO/);
 });
+
+// ---- the iPad gets a summary, the terminal gets the detail ----
+
+test('each recovery path gives the iPad a summary with no path, parse error or errno, and the terminal keeps all three', () => {
+  const dir = dirOf();
+  const cases = [];
+  const make = (name, write) => { const path = join(dir, `${name}.json`); write(path); cases.push({ name, path }); };
+  make('unreadable', (p) => fs.mkdirSync(p));
+  make('empty', (p) => fs.writeFileSync(p, ''));
+  make('badjson', (p) => fs.writeFileSync(p, 'this is not json'));
+  make('malformed', (p) => fs.writeFileSync(p, JSON.stringify({ hello: 'world' })));
+
+  const detail = { unreadable: /EISDIR|EACCES/, badjson: /Unexpected token|is not valid JSON/ };
+  for (const { name, path } of cases) {
+    const r = loadState(path, show);
+    assert.equal(r.recovered, true, name);
+    assert.ok(r.summary.length > 20, `${name}: summary should be a sentence`);
+    for (const leak of [path, dir, '.corrupt-', 'Unexpected token', 'EACCES', 'EISDIR', 'state.json']) {
+      assert.equal(r.summary.includes(leak), false, `${name}: summary leaked ${leak}`);
+    }
+    assert.ok(r.reason.includes('.corrupt-') || name === 'unreadable', `${name}: reason keeps the set-aside file`);
+    if (detail[name]) assert.match(r.reason, detail[name], `${name}: reason keeps the detail`);
+  }
+  assert.equal(loadState(join(dir, 'nothing-here.json'), show).summary, null);
+});

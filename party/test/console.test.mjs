@@ -145,35 +145,46 @@ test('an accepted command hands the new state to the page', async () => {
 function slowHarness() {
   const sent = [];
   const nowRef = { t: 1000 };
-  let release;
+  const pending = [];
   const fetch = (_u, init) => {
     sent.push(JSON.parse(init.body));
-    return new Promise((resolve) => { release = () => resolve({ status: 200, json: async () => OK.body }); });
+    return new Promise((resolve) => { pending.push(() => resolve({ status: 200, json: async () => OK.body })); });
   };
   const client = createCommandClient({ fetch, now: () => nowRef.t, onState() {}, onLogin() {} });
-  return { client, sent, nowRef, release: () => release() };
+  // Answer everything still waiting. Tests call this in a finally so no request
+  // outlives its test, and one failure stays one failure.
+  return { client, sent, nowRef, release: () => { while (pending.length) pending.shift()(); } };
 }
 
 test('a Next tap after the lock window, while the first is still unanswered, sends nothing', async () => {
   const h = slowHarness();
   const first = h.client.send({ name: 'next' });
-  h.nowRef.t += 1600;                                   // past the 1.5 s window, hub still silent
-  assert.equal(h.client.nextLocked(), true);
-  assert.deepEqual(await h.client.send({ name: 'next' }), { kind: 'ignored' });
-  assert.equal(h.sent.length, 1);
-  h.release();
-  assert.equal((await first).kind, 'ok');
-  h.nowRef.t += 2000;
-  assert.equal(h.client.nextLocked(), false);
+  try {
+    h.nowRef.t += 1600;                                 // past the 1.5 s window, hub still silent
+    assert.equal(h.client.nextLocked(), true);
+    // If the guard is broken this send goes out and waits on the silent hub; do
+    // not wait with it, or the test hangs instead of failing.
+    const second = await Promise.race([h.client.send({ name: 'next' }), new Promise((r) => setImmediate(() => r('still waiting')))]);
+    assert.deepEqual(second, { kind: 'ignored' });
+    assert.equal(h.sent.length, 1);
+    h.release();
+    assert.equal((await first).kind, 'ok');
+    h.nowRef.t += 2000;
+    assert.equal(h.client.nextLocked(), false);
+  } finally { h.release(); }
 });
 
 test('a hung Next cannot strand the operator forever', async () => {
   const h = slowHarness();
-  h.client.send({ name: 'next' });                      // never answered
-  h.nowRef.t += NEXT_FLIGHT_CAP_MS + 1;
-  assert.equal(h.client.nextLocked(), false);
-  h.client.send({ name: 'next' });
-  assert.equal(h.sent.length, 2);
+  const first = h.client.send({ name: 'next' });        // not answered yet
+  try {
+    h.nowRef.t += NEXT_FLIGHT_CAP_MS + 1;
+    assert.equal(h.client.nextLocked(), false);
+    const second = h.client.send({ name: 'next' });
+    assert.equal(h.sent.length, 2);
+    h.release();
+    await Promise.all([first, second]);
+  } finally { h.release(); }
 });
 
 test('any 401, with or without a body, goes to login; a null reply is a note, not a throw', async () => {
@@ -208,12 +219,27 @@ test('both days know their match count', () => {
   assert.equal(matchCount(2), 26);
 });
 
-test('a recovered start is announced with its reason and the way back; a normal start says nothing', () => {
-  const text = recoveredBanner({ recovered: true, recoveredReason: 'The state file could not be read, so the show started fresh.' });
+const LEAKY = {
+  recovered: true,
+  recoveredSummary: 'The saved show state was unusable, so the show started fresh: bad JSON, probably cut off mid-save.',
+  recoveredReason: "The saved show state was unusable, so the show started fresh: bad JSON, probably cut off mid-save (Unexpected token 'h') . The old file was kept as /tmp/x/state.json.corrupt-2026 (EACCES)",
+};
+
+test('a recovered start is announced with its summary and the way back; a normal start says nothing', () => {
+  const text = recoveredBanner(LEAKY);
   assert.match(text, /started over from Day 1, match 1/);
-  assert.match(text, /could not be read, so the show started fresh/);
+  assert.ok(text.includes(LEAKY.recoveredSummary));
   assert.match(text, /Jump to/);
-  assert.doesNotMatch(text, /\(The state/);          // the hub's sentence stands alone, not in brackets
-  assert.equal(recoveredBanner({ recovered: false, recoveredReason: null }), null);
+  assert.equal(recoveredBanner({ recovered: false, recoveredSummary: null }), null);
   assert.equal(recoveredBanner(undefined), null);
+});
+
+test('the banner never carries the terminal detail: no path, no parse error, not even as a fallback', () => {
+  for (const who of [LEAKY, { ...LEAKY, recoveredSummary: null }]) {
+    const text = recoveredBanner(who);
+    for (const leak of ['/tmp/x', 'state.json', '.corrupt-', 'Unexpected token', 'EACCES']) {
+      assert.equal(text.includes(leak), false, `banner leaked ${leak}`);
+    }
+  }
+  assert.match(recoveredBanner({ ...LEAKY, recoveredSummary: null }), /^The show started over from Day 1, match 1\. If you were/);
 });

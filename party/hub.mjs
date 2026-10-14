@@ -415,6 +415,7 @@ export async function createHub({
       // Set when a saved state file was unusable and the show started fresh.
       recovered: loaded.recovered,
       recoveredReason: loaded.reason,
+      recoveredSummary: loaded.summary,
     };
   }
 

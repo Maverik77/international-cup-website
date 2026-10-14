@@ -112,19 +112,29 @@ export function loadState(path, show) {
   try {
     text = fs.readFileSync(path, 'utf8');
   } catch (err) {
-    if (err?.code === 'ENOENT') return { state: initialState(show), recovered: false, reason: null };
+    if (err?.code === 'ENOENT') return { state: initialState(show), recovered: false, reason: null, summary: null };
     // Unreadable (permissions, a directory...): still start, say why.
     const aside = setAside(path);
     return {
       state: initialState(show),
       recovered: true,
+      // `reason` is for the terminal and keeps the errno; `summary` is for the iPad and does not.
       reason: `The state file could not be read (${err?.code || err?.message}), so the show started fresh. ${aside.note}`,
+      summary: 'The saved show state could not be read, so the show started fresh.',
     };
   }
 
-  const fail = (why) => {
+  // `why` is plain English and goes to both surfaces. `detail` (a parse error)
+  // and the aside note (a file path) go to `reason` only: the laptop's terminal.
+  const fail = (why, detail) => {
     const aside = setAside(path);
-    return { state: initialState(show), recovered: true, reason: `The saved show state was unusable, so the show started fresh: ${why}. ${aside.note}` };
+    const lead = `The saved show state was unusable, so the show started fresh: ${why}`;
+    return {
+      state: initialState(show),
+      recovered: true,
+      reason: `${lead}${detail ? ` (${detail})` : ''}. ${aside.note}`,
+      summary: `${lead}.`,
+    };
   };
 
   if (text.trim() === '') return fail('the file was empty (the laptop probably lost power during a save)');
@@ -133,12 +143,12 @@ export function loadState(path, show) {
   try {
     parsed = JSON.parse(text);
   } catch (err) {
-    return fail(`bad JSON, probably cut off mid-save (${err.message})`);
+    return fail('bad JSON, probably cut off mid-save', err.message);
   }
 
   const problem = stateProblem(parsed, show);
   if (problem) return fail(problem);
 
   if (!Array.isArray(parsed.history)) parsed.history = [];
-  return { state: parsed, recovered: false, reason: null };
+  return { state: parsed, recovered: false, reason: null, summary: null };
 }
