@@ -3,6 +3,8 @@
 const TEAM_OF = { intl: 'international', usa: 'usa' };
 const COUNT = { 1: 13, 2: 26 };
 
+export const matchCount = (day) => COUNT[day];
+
 const surname = (name) => name.trim().split(/\s+/).slice(-1)[0].toLowerCase();
 
 // /api/show arrives as plain JSON, so `byId` (non-enumerable on the hub) is
@@ -43,12 +45,41 @@ export function describeProblems(problems, show) {
 }
 
 export function slotLabel(wire) {
-  return `Day ${wire.day} · Match ${wire.slot.index} of ${COUNT[wire.day]}`;
+  return `Day ${wire.day} · Match ${wire.slot.index} of ${matchCount(wire.day)}`;
 }
 
 // How long Next stays shut after it is pressed. Next marks the match done and
 // moves on, so a second tap would skip a pairing that never reached the screen.
 export const NEXT_LOCK_MS = 1500;
+// A slow hub must not be outrun: a Next still unanswered blocks another, but only
+// this long, so a hung request can never strand the operator.
+export const NEXT_FLIGHT_CAP_MS = 10000;
+
+// The sentence shown when the hub came up without the saved state. Silently
+// starting from match 1 mid-show is the worst case, so it names the reason and the way back.
+export function recoveredBanner(who) {
+  if (!who || !who.recovered) return null;
+  const why = who.recoveredReason ? ` ${String(who.recoveredReason).trim()}` : '';
+  return `The show started over from Day 1, match 1.${why} If you were part-way through, use Jump to… to get back to your match.`;
+}
+
+// Where an unrecognised-session operator is sent.
+export const LOGIN_PATH = '/operator';
+
+// Keeps trying until the console's first load works; each failure is reported
+// and waited out, never swallowed.
+export async function loadUntilReady({ load, onReady, onFail, wait }) {
+  for (;;) {
+    try {
+      const loaded = await load();
+      onReady(loaded);
+      return loaded;
+    } catch (e) {
+      onFail(e);
+      await wait();
+    }
+  }
+}
 
 // Sends commands and sorts what comes back into what the operator should see:
 //   ok      the new state (handed to onState)
@@ -58,39 +89,49 @@ export const NEXT_LOCK_MS = 1500;
 //   ignored a second Next inside the lock window: nothing was sent
 export function createCommandClient({ fetch, onState, onLogin, now = Date.now, nextLockMs = NEXT_LOCK_MS }) {
   let nextOpenAt = 0;
+  let nextSentAt = -Infinity;   // when a Next that has not been answered yet left
+  let nextPending = false;
+  const inFlight = () => nextPending && now() - nextSentAt < NEXT_FLIGHT_CAP_MS;
 
   async function send(command) {
     const isNext = command.name === 'next';
     if (isNext) {
-      if (now() < nextOpenAt) return { kind: 'ignored' };
+      if (inFlight() || now() < nextOpenAt) return { kind: 'ignored' };
+      nextPending = true;
+      nextSentAt = now();
       nextOpenAt = now() + nextLockMs;      // shut before the request leaves, so two taps cannot both go
     }
-    let res;
-    let body;
     try {
-      res = await fetch('/api/command', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(command),
-      });
-      body = await res.json();
-    } catch {
-      if (isNext) nextOpenAt = 0;           // it may never have arrived; let the operator try again
-      return { kind: 'fault', message: 'Cannot reach the show. Check the wifi, then try again.' };
+      let res;
+      let body;
+      try {
+        res = await fetch('/api/command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(command),
+        });
+        // A 401 is the login's business whatever its body looks like.
+        body = res.status === 401 ? null : await res.json();
+      } catch {
+        if (isNext) nextOpenAt = 0;           // it may never have arrived; let the operator try again
+        return { kind: 'fault', message: 'Cannot reach the show. Check the wifi, then try again.' };
+      }
+      if (res.status === 401) {
+        onLogin();
+        return { kind: 'login' };
+      }
+      if (!body || !body.ok) {
+        if (isNext) nextOpenAt = 0;           // refused, so nothing moved
+        const message = (body && body.error) || 'Something went wrong.';
+        return { kind: res.status >= 500 && res.status !== 502 ? 'fault' : 'note', message };
+      }
+      if (isNext) nextOpenAt = now() + nextLockMs;   // count the window from when it was accepted
+      if (body.state) onState(body.state);
+      return { kind: 'ok', body };
+    } finally {
+      if (isNext) nextPending = false;
     }
-    if (res.status === 401 && body && body.needPassword) {
-      onLogin();
-      return { kind: 'login' };
-    }
-    if (!body.ok) {
-      if (isNext) nextOpenAt = 0;           // refused, so nothing moved
-      const message = body.error || 'Something went wrong.';
-      return { kind: res.status >= 500 && res.status !== 502 ? 'fault' : 'note', message };
-    }
-    if (isNext) nextOpenAt = now() + nextLockMs;   // count the window from when it was accepted
-    if (body.state) onState(body.state);
-    return { kind: 'ok', body };
   }
 
-  return { send, nextLocked: () => now() < nextOpenAt };
+  return { send, nextLocked: () => inFlight() || now() < nextOpenAt };
 }

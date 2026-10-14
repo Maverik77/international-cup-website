@@ -2,6 +2,7 @@
 // lives there; this file only draws and listens.
 import {
   rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, NEXT_LOCK_MS,
+  matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH,
 } from '/console.mjs';
 
 const $ = (id) => document.getElementById(id);
@@ -9,8 +10,9 @@ let show = null;
 let wire = null;
 let noteTimer = null;
 let lockTimer = null;
+let repullTimer = null;
 
-const toLogin = () => location.replace('/operator');
+const toLogin = () => location.replace(LOGIN_PATH);
 const client = createCommandClient({
   fetch: (...a) => fetch(...a),
   onState: (state) => { wire = state; render(); },
@@ -33,6 +35,9 @@ function setFault(text) {
 }
 
 async function send(command) {
+  // Shut Next before anything is awaited: the page must not look live while a
+  // request is in flight. The client's own lock is what actually decides.
+  if (command.name === 'next') $('next').disabled = true;
   const out = await client.send(command);
   if (out.kind === 'ok') {
     setFault('');
@@ -95,7 +100,7 @@ function openPicker(side, pos) {
 
 function openJumper() {
   const dialog = $('jumper');
-  const total = wire.day === 1 ? 13 : 26;
+  const total = matchCount(wire.day);
   const list = $('jumper-list');
   list.replaceChildren(...Array.from({ length: total }, (_, i) => {
     const li = document.createElement('li');
@@ -194,18 +199,28 @@ async function checkRecovered() {
     const who = await res.json();
     if (res.status === 401 && who.needPassword) return toLogin();
     const box = $('recovered');
-    box.hidden = !who.recovered;
-    box.textContent = who.recovered
-      ? `The show started over from Day 1, match 1 because the saved state could not be read${who.recoveredReason ? ` (${who.recoveredReason})` : ''}. If you were part-way through, use Jump to… to get back.`
-      : '';
+    const banner = recoveredBanner(who);
+    box.hidden = !banner;
+    box.textContent = banner || '';
   } catch { /* the banner is a courtesy; the console works without it */ }
 }
 
-async function boot() {
-  show = await (await fetch('/api/show')).json();
+async function loadShow() {
+  const shown = await (await fetch('/api/show')).json();
   // JSON loses the hub's byId index; nameOf copes, but index it anyway.
-  show.byId = Object.fromEntries(show.players.map((p) => [p.id, p]));
-  wire = await (await fetch('/api/state')).json();
+  shown.byId = Object.fromEntries(shown.players.map((p) => [p.id, p]));
+  const state = await (await fetch('/api/state')).json();
+  if (!state || !state.slot) throw new Error('no state');
+  return { shown, state };
+}
+
+async function boot() {
+  await loadUntilReady({
+    load: loadShow,
+    onReady: ({ shown, state }) => { show = shown; wire = state; setFault(''); },
+    onFail: () => setFault('Could not load the show. Check the wifi — this page will keep trying.'),
+    wait: () => new Promise((r) => setTimeout(r, 3000)),
+  });
   render();
   checkRecovered();
 
@@ -215,7 +230,8 @@ async function boot() {
   // instead of assuming nothing was missed while the iPad was asleep.
   events.onerror = () => {
     setFault('Lost the connection to the show. Retrying…');
-    setTimeout(repull, 1500);
+    clearTimeout(repullTimer);
+    repullTimer = setTimeout(repull, 1500);
   };
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') repull();

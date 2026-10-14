@@ -4,7 +4,7 @@ process.env.TZ = 'UTC';
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient } from '../public/console.mjs';
+import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS } from '../public/console.mjs';
 import { indexShow } from '../build/build-show.mjs';
 
 const players = [
@@ -139,4 +139,81 @@ test('an accepted command hands the new state to the page', async () => {
   const h = harness([OK]);
   await h.client.send({ name: 'reveal' });
   assert.deepEqual(h.states, [{ rev: 2 }]);
+});
+
+// A hub that answers only when the test says so: models a slow wifi round trip.
+function slowHarness() {
+  const sent = [];
+  const nowRef = { t: 1000 };
+  let release;
+  const fetch = (_u, init) => {
+    sent.push(JSON.parse(init.body));
+    return new Promise((resolve) => { release = () => resolve({ status: 200, json: async () => OK.body }); });
+  };
+  const client = createCommandClient({ fetch, now: () => nowRef.t, onState() {}, onLogin() {} });
+  return { client, sent, nowRef, release: () => release() };
+}
+
+test('a Next tap after the lock window, while the first is still unanswered, sends nothing', async () => {
+  const h = slowHarness();
+  const first = h.client.send({ name: 'next' });
+  h.nowRef.t += 1600;                                   // past the 1.5 s window, hub still silent
+  assert.equal(h.client.nextLocked(), true);
+  assert.deepEqual(await h.client.send({ name: 'next' }), { kind: 'ignored' });
+  assert.equal(h.sent.length, 1);
+  h.release();
+  assert.equal((await first).kind, 'ok');
+  h.nowRef.t += 2000;
+  assert.equal(h.client.nextLocked(), false);
+});
+
+test('a hung Next cannot strand the operator forever', async () => {
+  const h = slowHarness();
+  h.client.send({ name: 'next' });                      // never answered
+  h.nowRef.t += NEXT_FLIGHT_CAP_MS + 1;
+  assert.equal(h.client.nextLocked(), false);
+  h.client.send({ name: 'next' });
+  assert.equal(h.sent.length, 2);
+});
+
+test('any 401, with or without a body, goes to login; a null reply is a note, not a throw', async () => {
+  const h = harness([
+    { status: 401, body: null },
+    { status: 401, body: { ok: false, error: 'x' } },
+    { status: 200, body: null },
+  ]);
+  assert.deepEqual(await h.client.send({ name: 'reveal' }), { kind: 'login' });
+  assert.deepEqual(await h.client.send({ name: 'reveal' }), { kind: 'login' });
+  assert.equal(h.logins.length, 2);
+  assert.equal((await h.client.send({ name: 'next' })).kind, 'note');
+  assert.equal(h.client.nextLocked(), false);           // refused: nothing moved, nothing held
+  assert.equal(LOGIN_PATH, '/operator');
+});
+
+test('the console keeps trying to load until it succeeds, and clears the fault', async () => {
+  let calls = 0;
+  const events = [];
+  const out = await loadUntilReady({
+    load: async () => { calls += 1; if (calls === 1) throw new Error('hub restarting'); return { ok: calls }; },
+    onReady: () => events.push('ready'),
+    onFail: () => events.push('fail'),
+    wait: async () => { events.push('wait'); },
+  });
+  assert.deepEqual(events, ['fail', 'wait', 'ready']);
+  assert.deepEqual(out, { ok: 2 });
+});
+
+test('both days know their match count', () => {
+  assert.equal(matchCount(1), 13);
+  assert.equal(matchCount(2), 26);
+});
+
+test('a recovered start is announced with its reason and the way back; a normal start says nothing', () => {
+  const text = recoveredBanner({ recovered: true, recoveredReason: 'The state file could not be read, so the show started fresh.' });
+  assert.match(text, /started over from Day 1, match 1/);
+  assert.match(text, /could not be read, so the show started fresh/);
+  assert.match(text, /Jump to/);
+  assert.doesNotMatch(text, /\(The state/);          // the hub's sentence stands alone, not in brackets
+  assert.equal(recoveredBanner({ recovered: false, recoveredReason: null }), null);
+  assert.equal(recoveredBanner(undefined), null);
 });

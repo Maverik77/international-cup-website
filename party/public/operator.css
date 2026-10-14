@@ -107,3 +107,5 @@ dialog li button .meta { color: var(--dim); font-size: .85rem; }
 .banner-bad { background: #3b1d1d; border: 1px solid var(--bad); color: #ffd9d9; font-weight: 700; }
 .note { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; color: var(--dim); font-size: .95rem; }
 [hidden] { display: none !important; }
+
+#picker-filter { user-select: text; -webkit-user-select: text; }
