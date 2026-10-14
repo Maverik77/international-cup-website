@@ -1,0 +1,149 @@
+#!/usr/bin/env node
+// Run the day before, in the venue. Writes nothing, asks nothing, and is safe to
+// run at any time. Its job is to fail now rather than on the night.
+import { readFileSync, existsSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { networkInterfaces } from 'node:os';
+import { indexShow, validateCards } from './build-show.mjs';
+import { toPlayerItems, rosterDiff } from './push-roster.mjs';
+import { API_URLS, getPairings, getPlayers } from '../lib/aws.mjs';
+import { pickLanAddress, localHostName } from '../lib/net.mjs';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const PARTY = resolve(HERE, '..');
+
+const oneLine = (s) => String(s).replace(/\s*\n\s*/g, ' ');
+
+export async function preflightChecks({
+  partyDir = PARTY, apiUrl = API_URLS.prod, fetchImpl = fetch,
+  interfaces = networkInterfaces(), hostRunner,
+} = {}) {
+  const checks = [];
+  const showPath = join(partyDir, 'show.json');
+  let show = null;
+
+  if (!existsSync(showPath)) {
+    checks.push({ name: 'show.json', ok: false, detail: `missing at ${showPath} - run: npm run party:build` });
+  } else {
+    try {
+      show = indexShow(JSON.parse(readFileSync(showPath, 'utf8')));
+      checks.push({ name: 'show.json', ok: true, detail: `${show.players.length} players, built ${show.built}` });
+    } catch {
+      show = null;
+      checks.push({ name: 'show.json', ok: false, detail: 'unreadable - run: npm run party:build' });
+    }
+    if (show) {
+      const problems = validateCards(show, partyDir);
+      checks.push({
+        name: 'cards',
+        ok: problems.length === 0,
+        detail: problems.length
+          ? `${problems.length} problem(s), first: ${oneLine(problems[0])} - run: npm run party:build`
+          : 'every card present and the right size',
+      });
+      const slots = show.days['1'].length + show.days['2'].length;
+      checks.push({ name: 'running order', ok: slots === 39, detail: `${show.days['1'].length} team + ${show.days['2'].length} singles` });
+    }
+  }
+
+  const op = join(partyDir, 'operator-password.txt');
+  let opOk = false;
+  try { opOk = readFileSync(op, 'utf8').trim() !== ''; } catch { opOk = false; }
+  checks.push({
+    name: 'operator login',
+    ok: opOk,
+    // Deliberately reads the file and nothing more: the hub invents one when it is
+    // missing, but a check must not write, and the value is never shown.
+    detail: opOk ? 'set (the file is there and not empty)' : 'missing or empty - start the hub once (npm run party:start) and it will make one',
+  });
+
+  const missingPages = ['operator.html', 'login.html'].filter((f) => !existsSync(join(partyDir, 'private', f)));
+  checks.push({
+    name: 'operator pages',
+    ok: missingPages.length === 0,
+    detail: missingPages.length ? `missing party/private/${missingPages.join(', party/private/')} - restore from git` : 'operator.html and login.html present',
+  });
+
+  const lan = pickLanAddress(interfaces);
+  checks.push({
+    name: 'LAN address',
+    ok: Boolean(lan),
+    detail: lan ? `${lan.iface} ${lan.address}` : 'no routable IPv4 - the iPad will not reach the console',
+  });
+
+  const host = hostRunner ? localHostName(hostRunner) : localHostName();
+  checks.push({
+    name: 'Bonjour name',
+    ok: Boolean(host),
+    detail: host || 'scutil gave nothing; use the IP address instead',
+  });
+
+  if (apiUrl) {
+    try {
+      const pairings = await getPairings({ apiUrl, fetchImpl });
+      checks.push({ name: 'AWS reachable', ok: true, detail: `${pairings.length} pairings in the table` });
+    } catch (e) {
+      checks.push({ name: 'AWS reachable', ok: false, detail: `${e.message} - the show is unaffected, sync will queue` });
+    }
+
+    // The failure this whole push exists to prevent: pairings that name players
+    // the website has never heard of render as blanks. Checked against the ids
+    // in show.json, which are the ones the pairings will carry.
+    if (show) {
+      try {
+        const live = await getPlayers({ apiUrl, fetchImpl });
+        const d = rosterDiff(live, toPlayerItems(show.players));
+        const bad = d.added.length + d.changed.length;
+        checks.push({
+          name: 'roster',
+          ok: bad === 0,
+          detail: bad === 0
+            ? `the website knows all ${show.players.length} players`
+            : `the website's roster does not match this show (${d.added.length} missing, ${d.changed.length} renamed) - names would show blank. Run: npm run party:push-roster -- --target prod`,
+        });
+      } catch (e) {
+        checks.push({ name: 'roster', ok: false, detail: `could not read the website's roster: ${e.message}` });
+      }
+    }
+  }
+
+  return checks;
+}
+
+export function summarise(checks) {
+  const lines = checks.map((c) => `${c.ok ? '[ok]' : '[!!]'} ${c.name.padEnd(16)} ${oneLine(c.detail)}`);
+  const failed = checks.filter((c) => !c.ok);
+  lines.push(failed.length === 0
+    ? 'READY - every check passed. Now do the hand checks below.'
+    : `NOT READY - ${failed.length} check${failed.length === 1 ? '' : 's'} failed: ${failed.map((c) => c.name).join(', ')}.`);
+  return lines;
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const i = process.argv.indexOf('--target');
+  const target = i >= 0 ? process.argv[i + 1] : 'prod';
+  if (!Object.hasOwn(API_URLS, target)) {
+    console.log(`\n  "${target}" is not a target. Use --target prod or --target staging.\n`);
+    process.exit(1);
+  }
+  const checks = await preflightChecks({ apiUrl: API_URLS[target] });
+
+  console.log('');
+  for (const l of summarise(checks).map((x) => `  ${x}`)) console.log(l);
+
+  console.log(`
+  Do these by hand, here, in the venue, before the night:
+
+  [ ] Open /operator on the iPad over the venue wifi. If it will not load,
+      that is client isolation: switch both devices to the phone hotspot.
+      It looks nothing like a network fault - both devices show full bars
+      and working internet and still cannot see each other.
+  [ ] Plug the laptop into the TV and run /stage full screen. Click it once.
+  [ ] iPad: Auto-Lock to Never.
+  [ ] Laptop: sleep disabled on AC power.
+  [ ] Laptop: Do Not Disturb on.
+`);
+
+  if (checks.some((c) => !c.ok)) process.exit(1);
+}

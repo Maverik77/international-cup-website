@@ -89,6 +89,20 @@ their nickname to `party/build/card-keys.json`, drop `<nickname>-4x9.mp4` and
 
     npm run party:preflight
 
+One line per check, `[ok]` or `[!!]`, and a last line that says READY or NOT
+READY. It writes nothing and is safe to run at any time. It checks the build and
+cards, the operator password file (present, never shown), the console pages, a
+LAN address for the iPad, and that the website can be reached **and already
+knows all 52 players**. If that last one fails, the website's roster is last
+year's and every pairing would show a blank name. Replace it, well before the
+night:
+
+    npm run party:push-roster -- --target prod             # dry run: reads, prints the diff, writes nothing
+    npm run party:push-roster -- --target prod --confirm   # asks you to type a phrase first
+
+That replaces the whole roster (anyone not on this year's list is deleted), so
+read the diff first. Without `--target` it points at staging.
+
 Start options for the night: `npm run party:start` syncs to the live website;
 add `-- --target staging` to sync to staging, or `-- --no-sync` to stop it
 writing to the website at all. **Refresh from AWS** still reads from the website
