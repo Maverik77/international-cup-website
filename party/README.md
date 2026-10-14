@@ -128,3 +128,33 @@ to read as well.
 appear on the website. It is gitignored, along with `party/state*.json`,
 `party/operator-password.txt` and `party/cards/`. The repo is public. Do not add
 `party/` to `.github/workflows/deploy.yml`, and do not run `npm run deploy:manual`.
+
+## Known limitations
+
+Decided deliberately, not overlooked. Each was weighed and left as it is.
+
+- **Between matches the TV is black.** After Next, and before the first Reveal
+  of the next match, the stage is a live screen with nothing revealed on it. It
+  looks the same as a dead TV. Deciding what *should* be there — the match
+  number, the event name, the previous card held — is a judgement to make while
+  watching a rehearsal, so it was left alone rather than guessed at. The gold
+  title does hold until the first Reveal of the night.
+- **A reopened match stays fully revealed.** Jump to… a finished match and
+  Reveal reads "Both revealed", because reopening does not reset it. Resetting
+  it would blank the TV for someone who jumped back merely to look. To replay
+  the two-step reveal, re-pick a player — that works and the clip plays again.
+- **Undo after Refresh clears those pairings on the website too.** Consistent
+  with every other Undo pushing what it reverted, but it touches public data.
+- **The slideshow position lives in each stage**, so two stage screens would
+  drift apart. There is one stage.
+- **Ctrl-C can take about three seconds**, because it is pushing the last
+  pairing. It says so while it waits. It never hangs; a dead network is capped.
+- **`stop()` flushes whether or not anything is outstanding**, so each shutdown
+  pushes the same snapshot once more and bumps the revision. Harmless: the push
+  is an idempotent whole-snapshot overwrite.
+- **Nothing tests `stage.js`, `stage.html` or `stage.css` directly.** There is no
+  DOM harness, by design — the stage's decisions live in `public/panels.mjs`,
+  which is tested hard. What that leaves unpinned is three lines of dispatch in
+  `stage.js` and some markup. If a DOM harness ever arrives, pin those first.
+- **The SIGINT wiring has no test seam**, so the shutdown *wording* is tested as
+  a pure function while the handler that calls it is not.
