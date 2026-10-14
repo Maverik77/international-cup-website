@@ -328,13 +328,15 @@ test('each recovery path gives the iPad a summary with no path, parse error or e
   make('empty', (p) => fs.writeFileSync(p, ''));
   make('badjson', (p) => fs.writeFileSync(p, 'this is not json'));
   make('malformed', (p) => fs.writeFileSync(p, JSON.stringify({ hello: 'world' })));
+  // A version number is a value the terminal wants and the iPad does not.
+  make('version', (p) => fs.writeFileSync(p, JSON.stringify({ ...initialState(show), version: 7 })));
 
-  const detail = { unreadable: /EISDIR|EACCES/, badjson: /Unexpected token|is not valid JSON/ };
+  const detail = { unreadable: /EISDIR|EACCES/, badjson: /Unexpected token|is not valid JSON/, version: /version 7, expected 1/ };
   for (const { name, path } of cases) {
     const r = loadState(path, show);
     assert.equal(r.recovered, true, name);
     assert.ok(r.summary.length > 20, `${name}: summary should be a sentence`);
-    for (const leak of [path, dir, '.corrupt-', 'Unexpected token', 'EACCES', 'EISDIR', 'state.json']) {
+    for (const leak of [path, dir, '.corrupt-', 'Unexpected token', 'EACCES', 'EISDIR', 'state.json', 'version 7']) {
       assert.equal(r.summary.includes(leak), false, `${name}: summary leaked ${leak}`);
     }
     assert.ok(r.reason.includes('.corrupt-') || name === 'unreadable', `${name}: reason keeps the set-aside file`);

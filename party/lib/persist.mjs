@@ -73,7 +73,14 @@ const isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
 // Returns a problem description, or null if `s` is a usable state for `show`.
 function stateProblem(s, show) {
   if (!isObj(s)) return 'it is not a party state file (expected a JSON object)';
-  if (s.version !== 1) return `it is not a party state file this version understands (version ${JSON.stringify(s.version)}, expected 1)`;
+  // A file with no version at all is not one of ours; a file with a different
+  // one was ours once. The version number itself goes in the detail, so the
+  // terminal keeps it and the operator's iPad is not asked to read
+  // "version undefined, expected 1".
+  if (s.version === undefined) return 'it is not a party state file (no version in it)';
+  if (s.version !== 1) {
+    return { why: 'it was saved by a different version of this tool', detail: `version ${JSON.stringify(s.version)}, expected 1` };
+  }
   if (s.day !== 1 && s.day !== 2) return 'it is not a party state file (day is missing or not 1 or 2)';
   if (!MODES.includes(s.mode)) return 'it is not a party state file (unknown screen mode)';
   if (!isObj(s.slots) || !Array.isArray(s.slots['1']) || !Array.isArray(s.slots['2'])) {
@@ -146,8 +153,10 @@ export function loadState(path, show) {
     return fail('bad JSON, probably cut off mid-save', err.message);
   }
 
+  // stateProblem returns a plain string, or { why, detail } when it has a value
+  // that belongs in the terminal but not on the iPad.
   const problem = stateProblem(parsed, show);
-  if (problem) return fail(problem);
+  if (problem) return typeof problem === 'string' ? fail(problem) : fail(problem.why, problem.detail);
 
   if (!Array.isArray(parsed.history)) parsed.history = [];
   return { state: parsed, recovered: false, reason: null, summary: null };
