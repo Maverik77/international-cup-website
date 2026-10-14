@@ -10,7 +10,7 @@ import { createHub, parseArgs, MAX_BODY_BYTES } from '../hub.mjs';
 import { sessionToken } from '../lib/auth.mjs';
 import { CommandError } from '../lib/state.mjs';
 
-const REAL_LOGIN = join(fileURLToPath(new URL('../public', import.meta.url)), 'login.html');
+const REAL_LOGIN = join(fileURLToPath(new URL('../private', import.meta.url)), 'login.html');
 
 function fixtureShow(dir, tweak) {
   const players = [];
@@ -36,13 +36,15 @@ async function startHub(opts = {}) {
   const publicDir = join(dir, 'public');
   mkdirSync(publicDir, { recursive: true });
   writeFileSync(join(publicDir, 'stage.html'), '<h1>stage</h1>');
-  writeFileSync(join(publicDir, 'operator.html'), '<h1>operator</h1>');
-  copyFileSync(REAL_LOGIN, join(publicDir, 'login.html')); // the real page: test 13 pins its Unlock button
+  const privateDir = join(dir, 'private');
+  mkdirSync(privateDir, { recursive: true });
+  writeFileSync(join(privateDir, 'operator.html'), '<h1>operator</h1>');
+  copyFileSync(REAL_LOGIN, join(privateDir, 'login.html')); // the real page: test 13 pins its Unlock button
   const { dir: _d, showTweak, ...rest } = opts;
   const hub = await createHub({
     showPath: fixtureShow(dir, showTweak),
     statePath: join(dir, 'state.json'),
-    cardsDir, publicDir, port: 0, enableSync: false, quiet: true,
+    cardsDir, publicDir, privateDir, port: 0, enableSync: false, quiet: true,
     // A known password, and a path in the temp dir: never write into the real party/.
     operatorPassword: 'test-password-1',
     operatorPasswordPath: join(dir, 'operator-password.txt'),
@@ -57,7 +59,7 @@ async function startHub(opts = {}) {
 import { after } from 'node:test';
 after(async () => { for (const h of hubs) { try { await h.stop(); } catch { /* already stopped */ } } });
 
-const opCookie = (password = 'test-password-1') => ({ Cookie: `icup_op=${sessionToken(password)}` });
+export const opCookie = (password = 'test-password-1') => ({ Cookie: `icup_op=${sessionToken(password)}` });
 
 const postNoAuth = (base, body, headers = { 'Content-Type': 'application/json' }) =>
   fetch(`${base}/api/command`, { method: 'POST', headers, body: typeof body === 'string' || body === undefined ? body : JSON.stringify(body) });
@@ -735,15 +737,26 @@ test('refresh: AWS errors are a 502 with a status code only, and the state is un
 
 // ---- Task 10B: the password on the operator console ----
 
-test('gate 13: GET /operator with no cookie is the login page, not the console', async () => {
-  const { base } = await startHub();
-  const res = await fetch(`${base}/operator`);
-  assert.equal(res.status, 200);
-  const text = await res.text();
-  assert.match(text, /Unlock/);
-  assert.doesNotMatch(text, /<h1>operator<\/h1>/);
-  const direct = await (await fetch(`${base}/operator.html`)).text();
-  assert.match(direct, /Unlock/, '/operator.html is not a way round the gate');
+test('gate 13: GET /operator with no cookie is the login page, not the console - under every spelling', async () => {
+  // The real directory layout, not the fixture: the point is that no URL
+  // spelling can reach the console through the static handler.
+  const realPublic = fileURLToPath(new URL('../public', import.meta.url));
+  const realPrivate = fileURLToPath(new URL('../private', import.meta.url));
+  assert.equal(existsSync(join(realPublic, 'operator.html')), false, 'the console page must not live in public/');
+  assert.equal(existsSync(join(realPublic, 'login.html')), false, 'the login page must not live in public/');
+  const { base } = await startHub({ publicDir: realPublic, privateDir: realPrivate });
+  const spellings = ['/operator', '/operator.html', '/%6Fperator.html', '/operator%2Ehtml', '/Operator.html', '/OPERATOR.HTML', '/operator.html/'];
+  for (const path of spellings) {
+    const res = await fetch(`${base}${path}`);
+    const text = await res.text();
+    assert.doesNotMatch(text, /<h1>operator<\/h1>/, `${path} must not serve the console`);
+    if (path === '/operator') {
+      assert.equal(res.status, 200);
+      assert.match(text, /Unlock/);
+    } else {
+      assert.equal(res.status, 404, `${path} is not a page at all`);
+    }
+  }
 });
 
 test('gate 14: GET /operator with the cookie is the console, not the login page', async () => {
@@ -751,7 +764,6 @@ test('gate 14: GET /operator with the cookie is the console, not the login page'
   const text = await (await fetch(`${base}/operator`, { headers: opCookie() })).text();
   assert.match(text, /<h1>operator<\/h1>/);
   assert.doesNotMatch(text, /Unlock/);
-  assert.match(await (await fetch(`${base}/operator.html`, { headers: opCookie() })).text(), /<h1>operator<\/h1>/);
 });
 
 test('gate 15: an unauthenticated command is refused and never reaches the reducer', async () => {
@@ -838,8 +850,9 @@ test('gate 21: /api/login has the same protections as /api/command', async () =>
   const { base } = await startHub();
   const plain = await login(base, 'test-password-1', { 'Content-Type': 'text/plain' });
   assert.equal(plain.status, 415);
-  const huge = await login(base, JSON.stringify({ password: 'x'.repeat(MAX_BODY_BYTES + 10) }), { 'Content-Type': 'application/json' }).catch((e) => e);
-  assert.equal(huge.status, 413);
+  // The hub closes the socket after a 413, so either the 413 or the reset is right.
+  const huge = await login(base, JSON.stringify({ password: 'x'.repeat(MAX_BODY_BYTES + 10) }), { 'Content-Type': 'application/json' }).then((r) => r.status, () => 'connection-closed');
+  assert.ok(huge === 413 || huge === 'connection-closed', `got ${huge}`);
   const foreign = await login(base, 'test-password-1', { 'Content-Type': 'application/json', Origin: 'http://evil.example' });
   assert.equal(foreign.status, 403);
   assert.equal(foreign.headers.get('set-cookie'), null);
@@ -855,7 +868,7 @@ test('gate 22: a generated password is written to the file and appears in no pub
   assert.equal(hub.operatorPasswordSource, 'generated');
   const generated = readFileSync(path, 'utf8').trim();
   assert.equal(generated, hub.operatorPassword);
-  assert.match(generated, /^[a-z]+-[a-z]+-\d{2}$/);
+  assert.match(generated, /^[a-z]+-[a-z]+-\d{3}$/);
   const bodies = [JSON.stringify(hub.whoami()), ...(await Promise.all(['/api/state', '/api/show', '/'].map(async (p) => (await fetch(`${base}${p}`)).text())))];
   for (const b of bodies) assert.ok(!b.includes(generated));
   assert.equal((await login(base, generated)).status, 200, 'and the generated password does unlock the console');

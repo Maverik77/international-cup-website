@@ -1,13 +1,14 @@
 // The gate on the operator console. The stage is public by design; this file
 // exists only to keep a stranger on the venue wifi from running the show.
 import { createHmac, randomInt, timingSafeEqual } from 'node:crypto';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, chmodSync, existsSync } from 'node:fs';
 
 export const COOKIE_NAME = 'icup_op';
 const LABEL = 'icup-operator-v1';
 
 // Short enough to read off a terminal and type on an iPad, long enough that
-// 10-tries-then-wait-a-minute makes guessing hopeless: ~24 bits.
+// 10-tries-then-wait-a-minute makes guessing hopeless: 24 x 24 x 900 =
+// 518,400 combinations, about 19 bits.
 const ADJECTIVES = ['amber', 'brave', 'clear', 'dark', 'early', 'first', 'gold', 'high',
   'iron', 'keen', 'last', 'loud', 'north', 'open', 'proud', 'quick', 'red', 'sharp',
   'swift', 'true', 'warm', 'wild', 'wise', 'young'];
@@ -18,7 +19,7 @@ const NOUNS = ['anchor', 'badger', 'cedar', 'dragon', 'eagle', 'falcon', 'grove'
 export function generatePassword(rnd = randomInt) {
   const a = ADJECTIVES[rnd(ADJECTIVES.length)];
   const n = NOUNS[rnd(NOUNS.length)];
-  return `${a}-${n}-${String(rnd(10, 100))}`;
+  return `${a}-${n}-${String(rnd(100, 1000))}`;
 }
 
 // Returns the password to use, and where it came from. Writes the file only
@@ -36,6 +37,8 @@ export function loadOperatorPassword({ path, explicit = null, generate = generat
   }
   const password = generate();
   writeFileSync(path, `${password}\n`, { mode: 0o600 });
+  // mode only applies when the file is created; a blank file already existed.
+  chmodSync(path, 0o600);
   return { password, source: 'generated' };
 }
 
@@ -79,13 +82,24 @@ export function createGate({ password, now = Date.now, maxFailures = 10, lockout
   // remote address -> { failures, until }
   const tries = new Map();
 
+  // A lockout that is still running is never evicted: it is the only brake on a
+  // short password, and a flood of fresh addresses must not be able to flush it.
   const sweep = () => {
+    // Expired lockouts. (Records still counting failures have until = 0 and
+    // must survive: only a finished lockout, failures reset to 0, is dropped.)
     for (const [ip, rec] of tries) if (rec.until <= now() && rec.failures === 0) tries.delete(ip);
     if (tries.size <= maxTracked) return;
-    // A flood of addresses must not grow this map without bound; oldest first.
-    const excess = tries.size - maxTracked;
-    let i = 0;
-    for (const ip of tries.keys()) { if (i++ >= excess) break; tries.delete(ip); }
+    // Over the cap: drop the oldest records that are not locked. If everything
+    // left is locked, the map is allowed to exceed maxTracked on purpose: a
+    // record is ~100 bytes and lives 60 seconds, and forgetting a lockout is
+    // worse than holding a few thousand of them.
+    let excess = tries.size - maxTracked;
+    for (const [ip, rec] of tries) {
+      if (excess <= 0) break;
+      if (rec.until > now()) continue;
+      tries.delete(ip);
+      excess -= 1;
+    }
   };
 
   return {

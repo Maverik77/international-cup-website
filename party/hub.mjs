@@ -66,6 +66,7 @@ export async function createHub({
   statePath = join(HERE, 'state.json'),
   cardsDir = join(HERE, 'cards'),
   publicDir = join(HERE, 'public'),
+  privateDir = join(HERE, 'private'), // pages that need the gate; the static handler never reaches here
   port = DEFAULT_PORT,
   target = 'prod',
   enableSync = true,
@@ -361,10 +362,11 @@ export async function createHub({
     }
 
     // No redirect: the QR code points at /operator and must keep working.
-    // /operator.html is the same page by another name; without this it would be
-    // a way round the gate through the static handler below.
-    if (url === '/operator' || url === '/operator.html') {
-      serveFile(req, res, join(publicDir, gate.authorized(req) ? 'operator.html' : 'login.html'));
+    // The pages live in privateDir, which the static handler below cannot reach,
+    // so no spelling of the URL (percent-encoding, case, trailing slash) can
+    // serve the console around this check.
+    if (url === '/operator') {
+      serveFile(req, res, join(privateDir, gate.authorized(req) ? 'operator.html' : 'login.html'));
       return;
     }
     if (url === '/stage') {

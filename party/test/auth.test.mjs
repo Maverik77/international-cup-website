@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, existsSync, statSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, chmodSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
@@ -37,14 +37,16 @@ test('3: a missing file is generated at 0600, and a restart gets the same passwo
 test('4: a blank file is regenerated, never booted as an empty password', () => {
   const path = join(tmp(), 'pw.txt');
   writeFileSync(path, '   \n');
+  chmodSync(path, 0o644);
   const r = loadOperatorPassword({ path });
   assert.equal(r.source, 'generated');
   assert.notEqual(r.password, '');
   assert.equal(readFileSync(path, 'utf8').trim(), r.password);
+  assert.equal(statSync(path).mode & 0o777, 0o600, 'regeneration tightens a loose file too');
 });
 
 test('5: generated passwords are typeable and varied', () => {
-  assert.match(generatePassword(), /^[a-z]+-[a-z]+-\d{2}$/);
+  assert.match(generatePassword(), /^[a-z]+-[a-z]+-\d{3}$/);
   const seen = new Set();
   for (let i = 0; i < 200; i++) seen.add(generatePassword());
   assert.ok(seen.size > 150, `only ${seen.size} distinct of 200`);
@@ -92,10 +94,22 @@ test('10: a success clears the failure count', () => {
   assert.equal(gate.attempt('1.1.1.1', 'p').ok, true, 'still not locked after 9 more');
 });
 
-test('11: a flood of distinct addresses does not break the gate', () => {
-  const gate = createGate({ password: 'p', now: () => 1 });
-  for (let i = 0; i < 5000; i++) gate.attempt(`10.0.${i >> 8}.${i & 255}`, 'nope');
-  assert.equal(gate.attempt('9.9.9.9', 'p').ok, true);
+test('11: a flood of fresh addresses cannot flush a running lockout', () => {
+  let clock = 1_000_000;
+  const gate = createGate({ password: 'p', now: () => clock, maxTracked: 2, lockoutMs: 60000 });
+  for (let i = 0; i < 10; i++) gate.attempt('1.1.1.1', 'nope');
+  for (let i = 0; i < 5; i++) gate.attempt(`2.2.2.${i}`, 'nope');
+  assert.deepEqual(gate.attempt('1.1.1.1', 'p'), { ok: false, locked: true }, 'still locked after the flood');
+  clock += 60001;
+  assert.equal(gate.attempt('1.1.1.1', 'p').ok, true, 'and unlocks once the window passes');
+});
+
+test('11b: the tracking map is bounded - unlocked records are evicted oldest first', () => {
+  const gate = createGate({ password: 'p', now: () => 1, maxTracked: 2 });
+  for (let i = 0; i < 9; i++) gate.attempt('1.1.1.1', 'nope');
+  for (let i = 0; i < 5; i++) gate.attempt(`2.2.2.${i}`, 'nope');
+  // 1.1.1.1 was evicted, so its count restarted: this is its 1st failure, not its 10th.
+  assert.equal(gate.attempt('1.1.1.1', 'nope').locked, false);
 });
 
 test('12: authorized accepts only the gate\'s own token', () => {
