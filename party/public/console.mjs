@@ -92,6 +92,7 @@ export async function loadUntilReady({ load, onReady, onFail, wait }) {
 export function createCommandClient({ fetch, onState, onLogin, now = Date.now, nextLockMs = NEXT_LOCK_MS }) {
   let nextOpenAt = 0;
   let nextSentAt = -Infinity;   // when a Next that has not been answered yet left
+  let nextToken = 0;            // which Next is the live one; only its reply may touch the lock
   let nextPending = false;
   const inFlight = () => nextPending && now() - nextSentAt < NEXT_FLIGHT_CAP_MS;
 
@@ -99,10 +100,13 @@ export function createCommandClient({ fetch, onState, onLogin, now = Date.now, n
     const isNext = command.name === 'next';
     if (isNext) {
       if (inFlight() || now() < nextOpenAt) return { kind: 'ignored' };
+      nextToken += 1;
       nextPending = true;
       nextSentAt = now();
       nextOpenAt = now() + nextLockMs;      // shut before the request leaves, so two taps cannot both go
     }
+    const mine = nextToken;      // a stale Next (answered after the cap) must not clear a newer one's lock
+    const current = () => isNext && mine === nextToken;
     try {
       let res;
       let body;
@@ -115,7 +119,7 @@ export function createCommandClient({ fetch, onState, onLogin, now = Date.now, n
         // A 401 is the login's business whatever its body looks like.
         body = res.status === 401 ? null : await res.json();
       } catch {
-        if (isNext) nextOpenAt = 0;           // it may never have arrived; let the operator try again
+        if (current()) nextOpenAt = 0;        // it may never have arrived; let the operator try again
         return { kind: 'fault', message: 'Cannot reach the show. Check the wifi, then try again.' };
       }
       if (res.status === 401) {
@@ -123,15 +127,15 @@ export function createCommandClient({ fetch, onState, onLogin, now = Date.now, n
         return { kind: 'login' };
       }
       if (!body || !body.ok) {
-        if (isNext) nextOpenAt = 0;           // refused, so nothing moved
+        if (current()) nextOpenAt = 0;        // refused, so nothing moved
         const message = (body && body.error) || 'Something went wrong.';
         return { kind: res.status >= 500 && res.status !== 502 ? 'fault' : 'note', message };
       }
-      if (isNext) nextOpenAt = now() + nextLockMs;   // count the window from when it was accepted
+      if (current()) nextOpenAt = now() + nextLockMs;   // count the window from when it was accepted
       if (body.state) onState(body.state);
       return { kind: 'ok', body };
     } finally {
-      if (isNext) nextPending = false;
+      if (current()) nextPending = false;
     }
   }
 

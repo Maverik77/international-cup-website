@@ -148,12 +148,12 @@ function slowHarness() {
   const pending = [];
   const fetch = (_u, init) => {
     sent.push(JSON.parse(init.body));
-    return new Promise((resolve) => { pending.push(() => resolve({ status: 200, json: async () => OK.body })); });
+    return new Promise((resolve) => { pending.push((r = OK) => resolve({ status: r.status, json: async () => r.body })); });
   };
   const client = createCommandClient({ fetch, now: () => nowRef.t, onState() {}, onLogin() {} });
   // Answer everything still waiting. Tests call this in a finally so no request
   // outlives its test, and one failure stays one failure.
-  return { client, sent, nowRef, release: () => { while (pending.length) pending.shift()(); } };
+  return { client, sent, nowRef, release: Object.assign(() => { while (pending.length) pending.shift()(); }, { first: (reply) => pending.shift()(reply) }) };
 }
 
 test('a Next tap after the lock window, while the first is still unanswered, sends nothing', async () => {
@@ -242,4 +242,24 @@ test('the banner never carries the terminal detail: no path, no parse error, not
     }
   }
   assert.match(recoveredBanner({ ...LEAKY, recoveredSummary: null }), /^The show started over from Day 1, match 1\. If you were/);
+});
+
+test('a late reply to a hung Next cannot reopen the lock a newer Next holds', async () => {
+  const h = slowHarness();
+  const first = h.client.send({ name: 'next' });          // hangs
+  try {
+    h.nowRef.t += NEXT_FLIGHT_CAP_MS + 1;                 // the cap frees the lock
+    const second = h.client.send({ name: 'next' });       // a deliberate second tap, also unanswered
+    assert.equal(h.sent.length, 2);
+    assert.equal(h.client.nextLocked(), true);
+    h.nowRef.t += 2000;                                   // the second Next's own window is over, its cap is not
+    h.release.first({ status: 400, body: { ok: false, error: 'late refusal' } });   // only the FIRST reply arrives, late
+    await first;
+    assert.equal(h.client.nextLocked(), true, 'the first reply must not free the second Next');
+    const third = await Promise.race([h.client.send({ name: 'next' }), new Promise((r) => setImmediate(() => r('still waiting')))]);
+    assert.deepEqual(third, { kind: 'ignored' });
+    assert.equal(h.sent.length, 2);
+    h.release();
+    await second;
+  } finally { h.release(); }
 });

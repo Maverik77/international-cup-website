@@ -2,7 +2,7 @@
 // lives there; this file only draws and listens.
 import {
   rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, NEXT_LOCK_MS,
-  matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH,
+  matchCount, NEXT_FLIGHT_CAP_MS, recoveredBanner, loadUntilReady, LOGIN_PATH,
 } from '/console.mjs';
 
 const $ = (id) => document.getElementById(id);
@@ -11,6 +11,7 @@ let wire = null;
 let noteTimer = null;
 let lockTimer = null;
 let repullTimer = null;
+let capTimer = null;
 
 const toLogin = () => location.replace(LOGIN_PATH);
 const client = createCommandClient({
@@ -37,7 +38,15 @@ function setFault(text) {
 async function send(command) {
   // Shut Next before anything is awaited: the page must not look live while a
   // request is in flight. The client's own lock is what actually decides.
-  if (command.name === 'next') $('next').disabled = true;
+  if (command.name === 'next') {
+    if (!client.nextLocked()) {
+      // If the hub never answers and nothing else repaints, the client frees
+      // Next at the cap; this brings the button back on screen at the same moment.
+      clearTimeout(capTimer);
+      capTimer = setTimeout(render, NEXT_FLIGHT_CAP_MS + 50);
+    }
+    $('next').disabled = true;
+  }
   const out = await client.send(command);
   if (out.kind === 'ok') {
     setFault('');
@@ -172,15 +181,22 @@ function render() {
   $('slideshow').textContent = wire.mode === 'slideshow' ? 'Back to live' : 'Slideshow';
 }
 
-$('reveal').onclick = () => send({ name: 'reveal' });
-$('next').onclick = () => send({ name: 'next' });
-$('undo').onclick = () => send({ name: 'undo' });
-$('day1').onclick = () => send({ name: 'setDay', day: 1 });
-$('day2').onclick = () => send({ name: 'setDay', day: 2 });
-$('jump').onclick = () => openJumper();
-$('refresh').onclick = () => send({ name: 'refreshFromAws' });
-$('slideshow').onclick = () => send({ name: 'setMode', mode: wire.mode === 'slideshow' ? 'live' : 'slideshow' });
-$('toggle-first').onclick = () => send({ name: 'setFirstSide', side: wire.slot.firstSide === 'intl' ? 'usa' : 'intl' });
+// Before the first load succeeds there is no state to act on. A tap then says so
+// instead of throwing; the fault banner is already explaining the wait.
+const ready = (fn) => () => {
+  if (!wire || !show) { setNote('Still loading the show. One moment.'); return; }
+  return fn();
+};
+
+$('reveal').onclick = ready(() => send({ name: 'reveal' }));
+$('next').onclick = ready(() => send({ name: 'next' }));
+$('undo').onclick = ready(() => send({ name: 'undo' }));
+$('day1').onclick = ready(() => send({ name: 'setDay', day: 1 }));
+$('day2').onclick = ready(() => send({ name: 'setDay', day: 2 }));
+$('jump').onclick = ready(() => openJumper());
+$('refresh').onclick = ready(() => send({ name: 'refreshFromAws' }));
+$('slideshow').onclick = ready(() => send({ name: 'setMode', mode: wire.mode === 'slideshow' ? 'live' : 'slideshow' }));
+$('toggle-first').onclick = ready(() => send({ name: 'setFirstSide', side: wire.slot.firstSide === 'intl' ? 'usa' : 'intl' }));
 $('picker-cancel').onclick = () => $('picker').close();
 $('jumper-cancel').onclick = () => $('jumper').close();
 
