@@ -119,6 +119,14 @@ test('11c: a flood cannot reset a partial failure count - evicting a nine costs 
   assert.equal(gate.attempt('1.1.1.1', 'nope').locked, true, 'its tenth failure still locks it');
 });
 
+test('11d: with the map full of heavier records, one address still accumulates to its lockout', () => {
+  const gate = createGate({ password: 'p', now: () => 1, maxTracked: 2 });
+  for (const ip of ['3.3.3.1', '3.3.3.2']) for (let i = 0; i < 3; i++) gate.attempt(ip, 'nope');
+  const results = [];
+  for (let i = 0; i < 10; i++) results.push(gate.attempt('4.4.4.4', 'nope').locked);
+  assert.deepEqual(results, [...Array(9).fill(false), true], 'the tenth guess locks it');
+});
+
 test('KEYSPACE is at least 5 million and is the product of the real word lists', () => {
   assert.ok(KEYSPACE >= 5_000_000, `keyspace is only ${KEYSPACE}`);
   // 24 adjectives x 24 nouns x 9000 four-digit numbers; shrinking a list must fail here.

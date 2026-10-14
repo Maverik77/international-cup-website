@@ -83,6 +83,9 @@ export function tokenFromCookie(cookieHeader) {
 // the LAN; against that, KEYSPACE is what makes guessing unprofitable. There is
 // deliberately no global rate limit or login queue: a bug in one on the night
 // would lock the operator out of their own show.
+// One address, or a handful, always accumulates to its lockout. An attacker with
+// roughly maxTracked real addresses, each spending real guesses, still gets that
+// many lockouts' worth of guessing; the keyspace is what makes that unprofitable.
 export function createGate({ password, now = Date.now, maxFailures = 10, lockoutMs = 60000, maxTracked = 1000 }) {
   const token = sessionToken(password);
   const tokenBuf = Buffer.from(token, 'hex');
@@ -91,10 +94,13 @@ export function createGate({ password, now = Date.now, maxFailures = 10, lockout
 
   // A lockout that is still running is never evicted: it is the only brake on a
   // short password, and a flood of fresh addresses must not be able to flush it.
-  const sweep = () => {
+  // `current` is the address whose attempt is being processed. It is never
+  // evicted: forgetting the count of the guess you are handling right now means
+  // that guess was never counted at all, and one address could guess forever.
+  const sweep = (current) => {
     // Expired lockouts. (Records still counting failures have until = 0 and
     // must survive: only a finished lockout, failures reset to 0, is dropped.)
-    for (const [ip, rec] of tries) if (rec.until <= now() && rec.failures === 0) tries.delete(ip);
+    for (const [ip, rec] of tries) if (ip !== current && rec.until <= now() && rec.failures === 0) tries.delete(ip);
     if (tries.size <= maxTracked) return;
     // Over the cap: evict the records with the fewest failures first, so that
     // forgetting a victim's nine costs an attacker nine real guesses and a flood
@@ -103,7 +109,7 @@ export function createGate({ password, now = Date.now, maxFailures = 10, lockout
     // purpose: a record is ~100 bytes and lives 60 seconds, and forgetting a
     // lockout is worse than holding a few thousand of them. (Array.sort is
     // stable, so ties go oldest first.)
-    const evictable = [...tries].filter(([, rec]) => rec.until <= now())
+    const evictable = [...tries].filter(([ip, rec]) => ip !== current && rec.until <= now())
       .sort((x, y) => x[1].failures - y[1].failures);
     for (const [ip] of evictable.slice(0, tries.size - maxTracked)) tries.delete(ip);
   };
@@ -129,7 +135,7 @@ export function createGate({ password, now = Date.now, maxFailures = 10, lockout
       rec.failures += 1;
       if (rec.failures >= maxFailures) { rec.failures = 0; rec.until = now() + lockoutMs; }
       tries.set(key, rec);
-      sweep();
+      sweep(key);
       return { ok: false, locked: rec.until > now() };
     },
   };
