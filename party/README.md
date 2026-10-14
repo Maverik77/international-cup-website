@@ -90,7 +90,11 @@ their nickname to `party/build/card-keys.json`, drop `<nickname>-4x9.mp4` and
     npm run party:preflight
 
 Start options for the night: `npm run party:start` syncs to the live website;
-add `-- --target staging` to sync to staging, or `-- --no-sync` to stay local.
+add `-- --target staging` to sync to staging, or `-- --no-sync` to stop it
+writing to the website at all. **Refresh from AWS** still reads from the website
+under `--no-sync` — it is the one thing that does — so you can pull a draw that
+was entered on the site without pushing anything back. Only a rehearsal refuses
+to read as well.
 
 ### Nothing here is deployed, and it must stay that way
 
