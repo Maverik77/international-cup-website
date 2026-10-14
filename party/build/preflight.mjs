@@ -17,7 +17,7 @@ const oneLine = (s) => String(s).replace(/\s*\n\s*/g, ' ');
 
 export async function preflightChecks({
   partyDir = PARTY, apiUrl = API_URLS.prod, fetchImpl = fetch,
-  interfaces = networkInterfaces(), hostRunner,
+  interfaces = networkInterfaces(), hostRunner, target = 'prod', probe,
 } = {}) {
   const checks = [];
   const showPath = join(partyDir, 'show.json');
@@ -33,17 +33,30 @@ export async function preflightChecks({
       show = null;
       checks.push({ name: 'show.json', ok: false, detail: 'unreadable - run: npm run party:build' });
     }
+    if (show && !Array.isArray(show.players)) {
+      show = null;
+      checks[checks.length - 1] = { name: 'show.json', ok: false, detail: 'unreadable - run: npm run party:build' };
+    }
     if (show) {
-      const problems = validateCards(show, partyDir);
-      checks.push({
-        name: 'cards',
-        ok: problems.length === 0,
-        detail: problems.length
-          ? `${problems.length} problem(s), first: ${oneLine(problems[0])} - run: npm run party:build`
-          : 'every card present and the right size',
-      });
-      const slots = show.days['1'].length + show.days['2'].length;
-      checks.push({ name: 'running order', ok: slots === 39, detail: `${show.days['1'].length} team + ${show.days['2'].length} singles` });
+      try {
+        const problems = validateCards(show, partyDir, probe ? { probe } : undefined);
+        checks.push({
+          name: 'cards',
+          ok: problems.length === 0,
+          detail: problems.length
+            ? `${problems.length} problem(s), first: ${oneLine(problems[0])} - run: npm run party:build`
+            : 'every card present and the right size',
+        });
+        const d1 = show.days?.['1'];
+        const d2 = show.days?.['2'];
+        if (Array.isArray(d1) && Array.isArray(d2)) {
+          checks.push({ name: 'running order', ok: d1.length + d2.length === 39, detail: `${d1.length} team + ${d2.length} singles` });
+        } else {
+          checks.push({ name: 'running order', ok: false, detail: 'show.json has no running order - run: npm run party:build' });
+        }
+      } catch {
+        checks.push({ name: 'show.json', ok: false, detail: 'unreadable - run: npm run party:build' });
+      }
     }
   }
 
@@ -75,8 +88,9 @@ export async function preflightChecks({
   const host = hostRunner ? localHostName(hostRunner) : localHostName();
   checks.push({
     name: 'Bonjour name',
-    ok: Boolean(host),
-    detail: host || 'scutil gave nothing; use the IP address instead',
+    // Advisory: the IP address works without it, so it must not fail the night.
+    ok: Boolean(host || lan),
+    detail: host || 'no Bonjour name (not needed) - give the iPad the IP address instead',
   });
 
   if (apiUrl) {
@@ -91,19 +105,27 @@ export async function preflightChecks({
     // the website has never heard of render as blanks. Checked against the ids
     // in show.json, which are the ones the pairings will carry.
     if (show) {
+      let incoming = null;
       try {
-        const live = await getPlayers({ apiUrl, fetchImpl });
-        const d = rosterDiff(live, toPlayerItems(show.players));
-        const bad = d.added.length + d.changed.length;
-        checks.push({
-          name: 'roster',
-          ok: bad === 0,
-          detail: bad === 0
-            ? `the website knows all ${show.players.length} players`
-            : `the website's roster does not match this show (${d.added.length} missing, ${d.changed.length} renamed) - names would show blank. Run: npm run party:push-roster -- --target prod`,
-        });
-      } catch (e) {
-        checks.push({ name: 'roster', ok: false, detail: `could not read the website's roster: ${e.message}` });
+        incoming = toPlayerItems(show.players);
+      } catch {
+        checks.push({ name: 'roster', ok: false, detail: 'show.json has a player with no name - run: npm run party:build' });
+      }
+      if (incoming) {
+        try {
+          const live = await getPlayers({ apiUrl, fetchImpl });
+          const d = rosterDiff(live, incoming);
+          const bad = d.added.length + d.changed.length;
+          checks.push({
+            name: 'roster',
+            ok: bad === 0,
+            detail: bad === 0
+              ? `the website knows all ${show.players.length} players`
+              : `the ${target} website's roster does not match this show (${d.added.length} missing, ${d.changed.length} changed) - names would show blank. Run: npm run party:push-roster -- --target ${target}`,
+          });
+        } catch (e) {
+          checks.push({ name: 'roster', ok: false, detail: `could not read the website's roster: ${e.message}` });
+        }
       }
     }
   }
@@ -121,18 +143,18 @@ export function summarise(checks) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const i = process.argv.indexOf('--target');
-  const target = i >= 0 ? process.argv[i + 1] : 'prod';
-  if (!Object.hasOwn(API_URLS, target)) {
-    console.log(`\n  "${target}" is not a target. Use --target prod or --target staging.\n`);
-    process.exit(1);
-  }
-  const checks = await preflightChecks({ apiUrl: API_URLS[target] });
+  try {
+    const i = process.argv.indexOf('--target');
+    const target = i >= 0 ? process.argv[i + 1] : 'prod';
+    if (!Object.hasOwn(API_URLS, target)) {
+      console.log(`\n  "${target}" is not a target. Use --target prod or --target staging.\n`);
+      process.exit(1);
+    }
+    console.log(`\n  Checking the ${target} website  (${API_URLS[target]})\n`);
+    const checks = await preflightChecks({ apiUrl: API_URLS[target], target });
+    for (const l of summarise(checks).map((x) => `  ${x}`)) console.log(l);
 
-  console.log('');
-  for (const l of summarise(checks).map((x) => `  ${x}`)) console.log(l);
-
-  console.log(`
+    console.log(`
   Do these by hand, here, in the venue, before the night:
 
   [ ] Open /operator on the iPad over the venue wifi. If it will not load,
@@ -143,7 +165,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   [ ] iPad: Auto-Lock to Never.
   [ ] Laptop: sleep disabled on AC power.
   [ ] Laptop: Do Not Disturb on.
-`);
+  `);
 
-  if (checks.some((c) => !c.ok)) process.exit(1);
+    if (checks.some((c) => !c.ok)) process.exit(1);
+
+  } catch {
+    console.log('\n  [!!] The pre-flight itself broke. Run it again; if it does, run: npm run party:build\n');
+    process.exit(1);
+  }
 }

@@ -93,9 +93,10 @@ One line per check, `[ok]` or `[!!]`, and a last line that says READY or NOT
 READY. It writes nothing and is safe to run at any time. It checks the build and
 cards, the operator password file (present, never shown), the console pages, a
 LAN address for the iPad, and that the website can be reached **and already
-knows all 52 players**. If that last one fails, the website's roster is last
-year's and every pairing would show a blank name. Replace it, well before the
-night:
+knows all 52 players**. If that last one fails, the website's roster does not
+match this show, whatever is in it, and pairings would show blank names. The
+first line says which website was checked (`--target staging` checks the other
+one). Replace the roster, well before the night:
 
     npm run party:push-roster -- --target prod             # dry run: reads, prints the diff, writes nothing
     npm run party:push-roster -- --target prod --confirm   # asks you to type a phrase first

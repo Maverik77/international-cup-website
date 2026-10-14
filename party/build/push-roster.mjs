@@ -31,6 +31,9 @@ export function toPlayerItems(roster) {
 }
 
 const label = (p) => `${p.firstName} ${p.lastName}`;
+// team decides which side a player appears on, so it counts as a difference.
+const same = (a, b) => label(a) === label(b) && a.team === b.team && a.teeColor === b.teeColor;
+const describe = (p, other) => (p.team === other.team ? label(p) : `${label(p)} [${p.team}]`);
 
 export function rosterDiff(existing, incoming) {
   const before = new Map(existing.map((p) => [p.id, p]));
@@ -39,8 +42,8 @@ export function rosterDiff(existing, incoming) {
   const removed = existing.filter((p) => !after.has(p.id));
   const changed = incoming.filter((p) => {
     const was = before.get(p.id);
-    return was && label(was) !== label(p);
-  }).map((p) => ({ ...p, was: label(before.get(p.id)) }));
+    return was && !same(was, p);
+  }).map((p) => ({ ...p, was: describe(before.get(p.id), p), now: describe(p, before.get(p.id)) }));
   return { added, removed, changed };
 }
 
@@ -88,7 +91,7 @@ export async function runPush({
   out(`  icup-players currently holds ${existing.length}; this would leave ${incoming.length}.\n`);
   for (const p of d.removed) out(`   - REMOVE  ${p.id.padEnd(18)} ${label(p)}`);
   for (const p of d.added) out(`   + ADD     ${p.id.padEnd(18)} ${label(p)}`);
-  for (const p of d.changed) out(`   ~ RENAME  ${p.id.padEnd(18)} ${p.was} -> ${label(p)}`);
+  for (const p of d.changed) out(`   ~ RENAME  ${p.id.padEnd(18)} ${p.was} -> ${p.now}`);
   if (!d.added.length && !d.removed.length && !d.changed.length) {
     out('   (no change)\n');
     return 0;
@@ -110,10 +113,34 @@ export async function runPush({
     return 1;
   }
 
-  await putPlayers({ apiUrl, password: getPassword({ target: args.target }), players: incoming, fetchImpl });
-  const after = await getPlayers({ apiUrl, fetchImpl });
-  out(`\n  [ok] icup-players now holds ${after.length} players.\n`);
-  return 0;
+  const AGAIN = 'Running it again is safe: it replaces the roster with the same list each time.';
+  const password = getPassword({ target: args.target });
+  try {
+    await putPlayers({ apiUrl, password, players: incoming, fetchImpl });
+  } catch (e) {
+    out(`\n  [!!] The write may not have finished: ${e.message}`);
+    out(`       Check the roster, then run this again. ${AGAIN}\n`);
+    return 1;
+  }
+
+  // The Lambda can drop a throttled slice without saying so, after it has already
+  // deleted. Count what is actually there rather than trusting the write.
+  let present;
+  try {
+    const after = await getPlayers({ apiUrl, fetchImpl });
+    const ids = new Set(after.map((p) => p.id));
+    present = incoming.filter((p) => ids.has(p.id)).length;
+  } catch (e) {
+    out(`\n  [!!] The write went through but the roster could not be read back: ${e.message}`);
+    out(`       Run the dry run to see where it stands, and this again if anyone is missing. ${AGAIN}\n`);
+    return 1;
+  }
+  if (present === incoming.length) {
+    out(`\n  [ok] all ${incoming.length} present\n`);
+    return 0;
+  }
+  out(`\n  [!!] ${present} of ${incoming.length} - run it again. ${AGAIN}\n`);
+  return 1;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

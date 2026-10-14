@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { toPlayerItems, rosterDiff, runPush } from '../build/push-roster.mjs';
 import { preflightChecks, summarise } from '../build/preflight.mjs';
 import { loadRoster } from '../build/roster.mjs';
@@ -23,7 +24,7 @@ test('player items match the live table shape', () => {
 });
 
 test('the real roster makes 52 items with unique ids', () => {
-  const items = toPlayerItems(loadRoster('contacts/player-details.json'));
+  const items = toPlayerItems(loadRoster(resolve(dirname(fileURLToPath(import.meta.url)), '../../contacts/player-details.json')));
   assert.equal(items.length, 52);
   assert.equal(new Set(items.map((i) => i.id)).size, 52);
   assert.equal(items.filter((i) => i.team === 'USA').length, 26);
@@ -90,9 +91,11 @@ const STALE = [
 // not a GET is a write.
 function recorder(players = STALE) {
   const calls = [];
+  let current = players;
   const fetchImpl = async (url, init = {}) => {
     calls.push({ url, method: init.method || 'GET', body: init.body });
-    return { ok: true, status: 200, json: async () => ({ players }) };
+    if (init.method === 'POST') current = JSON.parse(init.body).players;
+    return { ok: true, status: 200, json: async () => ({ players: current }) };
   };
   const writes = () => calls.filter((c) => c.method !== 'GET');
   return { fetchImpl, calls, writes };
@@ -131,7 +134,13 @@ test('with --confirm but a wrong phrase no write is made', async () => {
 
 test('the phrase for prod does not unlock staging, nor the reverse', async () => {
   const r = await push(['--target', 'prod', '--confirm'], { typed: 'REPLACE-ROSTER-STAGING' });
+  assert.equal(r.asked, 1, 'must have reached the prompt');
+  assert.equal(r.code, 1);
   assert.equal(r.writes().length, 0);
+  const r2 = await push(['--target', 'staging', '--confirm'], { typed: 'REPLACE-ROSTER-PROD' });
+  assert.equal(r2.asked, 1);
+  assert.equal(r2.code, 1);
+  assert.equal(r2.writes().length, 0);
 });
 
 test('with --confirm and the right phrase exactly one write is made, to the chosen target', async () => {
@@ -172,8 +181,14 @@ function scratch({ show = true, operator = 'amber-otter-1234\n', pages = true, p
   const dir = mkdtempSync(join(tmpdir(), 'preflight-'));
   if (show) {
     writeFileSync(join(dir, 'show.json'), JSON.stringify({
-      built: 'then', players: players.map((p) => ({ ...p })), days: { 1: Array(13).fill({}), 2: Array(26).fill({}) },
+      built: 'then',
+      players: players.map((p) => ({ ...p, cards: { '4x9': `cards/${p.id}-4x9.mp4`, '8x9': `cards/${p.id}-8x9.mp4` } })),
+      days: { 1: Array(13).fill({}), 2: Array(26).fill({}) },
     }));
+  }
+  if (show) {
+    mkdirSync(join(dir, 'cards'));
+    for (const p of players) for (const f of ['4x9', '8x9']) writeFileSync(join(dir, 'cards', `${p.id}-${f}.mp4`), 'x');
   }
   if (operator !== null) writeFileSync(join(dir, 'operator-password.txt'), operator);
   if (pages) {
@@ -192,6 +207,9 @@ const live = (players) => async (url) => ({
 const run = (dir, over = {}) => preflightChecks({
   partyDir: dir, apiUrl: 'https://api.example/prod', interfaces: LAN,
   hostRunner: () => ({ status: 0, stdout: 'TestMac\n' }),
+  probe: (abs) => (abs.includes('4x9')
+    ? { codec: 'h264', pixFmt: 'yuv420p', width: 480, height: 1080, duration: 8 }
+    : { codec: 'h264', pixFmt: 'yuv420p', width: 960, height: 1080, duration: 8 }),
   fetchImpl: live(toPlayerItems(SYNTH)), ...over,
 });
 const by = (checks, name) => checks.find((c) => c.name === name);
@@ -302,4 +320,145 @@ test('every check is one line, and the verdict says plainly whether the night is
     assert.ok(bad.some((l) => l.startsWith('[!!]')));
     for (const l of bad) assert.equal(l.includes('\n'), false);
   } finally { rmSync(dir, { recursive: true }); }
+});
+
+// ---- fix round 1 -----------------------------------------------------------
+
+test('the cards check really examines the cards (so READY means something)', async () => {
+  const dir = scratch();
+  try {
+    assert.equal(by(await run(dir), 'cards').ok, true);
+    // A file that is the wrong shape must fail it: proves the fixture is looked at.
+    const c = by(await run(dir, { probe: () => ({ codec: 'vp9', pixFmt: 'yuv420p', width: 1, height: 1, duration: 8 }) }), 'cards');
+    assert.equal(c.ok, false);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('a show.json with no running order is a failed check, never a thrown error', async () => {
+  const dir = scratch();
+  try {
+    writeFileSync(join(dir, 'show.json'), JSON.stringify({ players: [{ id: 'player-usa-1', team: 'usa', name: 'Bob Beta' }] }));
+    const checks = await run(dir);
+    const c = by(checks, 'running order');
+    assert.equal(c.ok, false);
+    assert.match(c.detail, /party:build/);
+    assert.match(summarise(checks).at(-1), /NOT READY/);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('a show.json that is not even a show is a failed check, never a thrown error', async () => {
+  const dir = scratch();
+  try {
+    for (const body of ['{}', '[]', 'null', '{"players":[null]}']) {
+      writeFileSync(join(dir, 'show.json'), body);
+      const checks = await run(dir);
+      assert.equal(checks.some((c) => !c.ok), true, body);
+      for (const c of checks) assert.doesNotMatch(c.detail, /undefined|TypeError|Cannot read/, body);
+    }
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('a player with no name in show.json blames show.json, not the website', async () => {
+  const dir = scratch();
+  try {
+    writeFileSync(join(dir, 'show.json'), JSON.stringify({
+      built: 'x', players: [{ id: 'player-usa-1', team: 'usa' }], days: { 1: Array(13).fill({}), 2: Array(26).fill({}) },
+    }));
+    const c = by(await run(dir), 'roster');
+    assert.equal(c.ok, false);
+    assert.match(c.detail, /show\.json/);
+    assert.doesNotMatch(c.detail, /website's roster/);
+    assert.doesNotMatch(c.detail, /Cannot read/);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('the roster advice names the table that was checked', async () => {
+  const dir = scratch();
+  try {
+    for (const target of ['staging', 'prod']) {
+      const c = by(await run(dir, { fetchImpl: live(STALE), target }), 'roster');
+      assert.match(c.detail, new RegExp(`--target ${target}\\b`));
+      assert.equal(c.detail.includes(target === 'staging' ? '--target prod' : '--target staging'), false);
+    }
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('the command line names the table in a header and follows --target', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const script = resolve(dirname(fileURLToPath(import.meta.url)), '../build/preflight.mjs');
+  const r = spawnSync(process.execPath, [script, '--target', 'nonsense'], { encoding: 'utf8' });
+  assert.equal(r.status, 1);
+  assert.match(r.stdout, /not a target/);
+  assert.equal(r.stdout.includes('at file:'), false);
+});
+
+test('no Bonjour name is advisory when there is an IP address, fatal for nothing else', async () => {
+  const dir = scratch();
+  try {
+    const c = by(await run(dir, { hostRunner: () => ({ status: 1, stdout: '' }) }), 'Bonjour name');
+    assert.equal(c.ok, true);
+    assert.match(c.detail, /IP address/);
+    assert.equal(by(await run(dir, { hostRunner: () => ({ status: 1, stdout: '' }), interfaces: {} }), 'Bonjour name').ok, false);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('the diff sees a wrong team on the right id', () => {
+  const d = rosterDiff(
+    [{ id: 'player-usa-1', team: 'International', firstName: 'Bob', lastName: 'Beta', teeColor: 'Blue' }],
+    [{ id: 'player-usa-1', team: 'USA', firstName: 'Bob', lastName: 'Beta', teeColor: 'Blue' }],
+  );
+  assert.equal(d.changed.length, 1);
+  assert.match(d.changed[0].was, /International/);
+  assert.match(d.changed[0].now, /USA/);
+});
+
+test('a push that lands completely says all present', async () => {
+  const rec = recorder(STALE);
+  const lines = [];
+  const code = await runPush({
+    argv: ['--confirm'], roster: SYNTH, ask: async () => 'REPLACE-ROSTER-STAGING',
+    getPassword: () => 'test-secret', out: (s) => lines.push(s),
+    fetchImpl: async (url, init = {}) => {
+      rec.calls.push({ method: init.method || 'GET' });
+      if (init.method === 'POST') return { ok: true, status: 200, json: async () => ({}) };
+      return { ok: true, status: 200, json: async () => ({ players: rec.calls.filter((c) => c.method === 'POST').length ? toPlayerItems(SYNTH) : STALE }) };
+    },
+  });
+  assert.equal(code, 0);
+  assert.match(lines.join('\n'), /\[ok\] all 2 present/);
+});
+
+test('a push that drops players says how many and that running again is safe, and fails', async () => {
+  const lines = [];
+  let wrote = false;
+  const code = await runPush({
+    argv: ['--confirm'], roster: SYNTH, ask: async () => 'REPLACE-ROSTER-STAGING',
+    getPassword: () => 'test-secret', out: (s) => lines.push(s),
+    fetchImpl: async (url, init = {}) => {
+      if (init.method === 'POST') { wrote = true; return { ok: true, status: 200, json: async () => ({}) }; }
+      // After the write, the table is one short: the Lambda dropped a slice.
+      return { ok: true, status: 200, json: async () => ({ players: wrote ? toPlayerItems(SYNTH).slice(0, 1) : STALE }) };
+    },
+  });
+  const text = lines.join('\n');
+  assert.equal(code, 1);
+  assert.match(text, /\[!!\] 1 of 2 - run it again/);
+  assert.match(text, /safe/);
+  assert.doesNotMatch(text, /all 2 present/);
+});
+
+test('a write that errors is not reported as "nothing was written"', async () => {
+  const lines = [];
+  const code = await runPush({
+    argv: ['--confirm'], roster: SYNTH, ask: async () => 'REPLACE-ROSTER-STAGING',
+    getPassword: () => 'test-secret', out: (s) => lines.push(s),
+    fetchImpl: async (url, init = {}) => (init.method === 'POST'
+      ? { ok: false, status: 502, json: async () => ({}) }
+      : { ok: true, status: 200, json: async () => ({ players: STALE }) }),
+  });
+  const text = lines.join('\n');
+  assert.equal(code, 1);
+  assert.match(text, /may not have finished/);
+  assert.match(text, /safe/);
+  assert.equal(text.includes('test-secret'), false);
 });
