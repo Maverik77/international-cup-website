@@ -71,6 +71,18 @@ export function panelPlan(wire, show) {
   return { fmt, panels };
 }
 
+// THE STAGE'S GATE, in one place: which of the three screens the TV is showing,
+// and, for the live screen, the plan to apply to it. stage.js does what this
+// says and decides nothing itself, so the gate can be tested without a DOM.
+// Anything that is not live or slideshow is the holding screen, which is why
+// every command that means "the show has begun" sets mode to live (lib/state.mjs).
+export function screenPlan(wire, show) {
+  const mode = wire && typeof wire === 'object' ? wire.mode : undefined;
+  if (mode === 'slideshow') return { screen: 'slideshow', plan: null };
+  if (mode === 'live') return { screen: 'live', plan: panelPlan(wire, show) };
+  return { screen: 'idle', plan: null };
+}
+
 export function panelsForMatch(match, show) {
   const m = match && typeof match === 'object' ? match : {};
   const fmt = formatFor(m.day);

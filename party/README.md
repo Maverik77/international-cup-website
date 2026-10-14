@@ -23,7 +23,9 @@ Everything below runs from the repo folder, in a terminal on the laptop.
 4. The terminal prints a QR code and a **Password** line. That line is where
    you read the password. It is also saved in `party/operator-password.txt`.
 5. On the laptop, open the **Stage** address from the terminal, full screen.
-   Click once on the page so the sound can play.
+   It shows **Tap to start**: click once on the page. The cards are silent; that
+   click is what lets the browser play video at all, so nothing shows until you
+   do it.
 6. On the iPad, point the camera at the QR code and open the link.
 7. The iPad asks for the password. Type it **once**, from the terminal. The
    iPad remembers it, and it survives a restart of the hub.
@@ -48,7 +50,7 @@ and can see the next match ahead of the reveal. Do not read the address out.
 | The iPad says the password is wrong | Read the **Password** line in the terminal again and retype it, with the hyphens and no spaces. Still wrong: press Ctrl-C in the terminal, delete `party/operator-password.txt`, run `npm run party:start`, and use the new password it prints. |
 | The iPad says **Too many wrong tries** | After 10 wrong tries that one device waits **60 seconds**. Wait a minute, then try again. You do not need to restart anything. |
 | A card will not play | It falls back to that player's flag card by itself. Carry on. |
-| A stage screen went black | It reconnects by itself. If not, reload the page. |
+| A stage screen went black | It reconnects by itself. If not, reload the page — the reload brings **Tap to start** back, so click the page once more or it stays blank. |
 | The iPad cannot reach the console at all | The venue wifi is blocking devices from each other. Put the laptop and the iPad both on the phone hotspot and restart with `npm run party:start`. |
 | The sync light says **Offline** | Ignore it. The show runs from the laptop. It catches up when the network returns. |
 | Wrong player revealed | Tap **Undo**, or pick the right player and reveal again. |

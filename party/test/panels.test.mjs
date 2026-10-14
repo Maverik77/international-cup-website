@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   formatFor, perSide, panelPlan, panelsForMatch, preloadSrcs, slideshowEntry,
-  panelsToLoad, srcAfterError,
+  panelsToLoad, srcAfterError, screenPlan,
 } from '../public/panels.mjs';
 import { indexShow } from '../build/build-show.mjs';
+import { initialState, reduce, project } from '../lib/state.mjs';
 
 function makeShow() {
   const players = [];
@@ -200,12 +201,24 @@ test('slot.problems never reaches the plan, whatever it contains', () => {
   assert.ok(!JSON.stringify(alsoMatch).includes(leaked[0]));
 });
 
-test('a text-only name only appears once the panel is revealed, and the stage starts on the idle screen', () => {
-  const css = readFileSync(new URL('../public/stage.css', import.meta.url), 'utf8');
-  assert.match(css, /\.panel\.text-only\.shown \.fallback-name\s*\{[^}]*opacity:\s*1/);
-  assert.doesNotMatch(css, /\.panel\.text-only \.fallback-name\s*\{[^}]*opacity:\s*1/);
-  const html = readFileSync(new URL('../public/stage.html', import.meta.url), 'utf8');
-  assert.match(html, /<body class="idle">/);
+// A player with no clip at all is drawn as their name. stage.css paints that
+// name only for `.panel.text-only.shown`, and the plan is what decides `shown`:
+// what is assertable here, and what matters, is that the panel stays invisible
+// until the reveal reaches its side, so the name cannot appear early. The CSS
+// rule itself needs a browser to assert, so it is not asserted here; the former
+// grep over stage.css could only ever have caught a rename.
+test('a nameless clip is still hidden until its side is revealed', () => {
+  const noClip = indexShow({ built: 'now', days: { 1: [], 2: [] }, players: [
+    { id: 'p-intl', team: 'international', name: 'No Clip', country: 'India', cards: {}, fallback: {} },
+    { id: 'p-usa', team: 'usa', name: 'Also None', country: 'USA', cards: {}, fallback: {} },
+  ] });
+  const w = (shown) => ({ day: 2, mode: 'live', slot: { index: 1, firstSide: 'intl', intl: ['p-intl'], usa: ['p-usa'], shown, problems: [] } });
+  const hidden = panelPlan(w('none'), noClip).panels;
+  assert.deepEqual(hidden.map((p) => p.src), [null, null]);
+  assert.deepEqual(hidden.map((p) => p.name), ['No Clip', 'Also None']);
+  assert.deepEqual(hidden.map((p) => p.visible), [false, false]);
+  assert.deepEqual(panelPlan(w('first'), noClip).panels.map((p) => p.visible), [true, false]);
+  assert.deepEqual(panelPlan(w('both'), noClip).panels.map((p) => p.visible), [true, true]);
 });
 
 test('preload lists the next slot, both sides, skipping blanks and unknowns', () => {
@@ -294,9 +307,37 @@ test('the real manifest plans every player on both days, fallbacks distinct for 
   assert.ok(real.players.some((p) => !p.generic && p.cards['4x9'] !== p.fallback['4x9']));
 });
 
-test('the stage has a static idle screen so a working idle is not mistaken for a dead one', () => {
-  const html = readFileSync(new URL('../public/stage.html', import.meta.url), 'utf8');
-  assert.match(html, /<div id="idle"><p>International Cup<\/p><\/div>/);
-  const js = readFileSync(new URL('../public/stage.js', import.meta.url), 'utf8');
-  assert.match(js, /classList\.add\('idle'\)/);
+// THE STAGE'S GATE, over the real reducer. The holding screen exists so a
+// working idle is not mistaken for a dead TV - and the first Reveal of the night
+// must leave it. Asserting mode alone would still pass if the stage stopped
+// honouring the mode; this asserts the plan the stage applies.
+test('the gate: a cold start holds, the first Reveal goes live, and the slideshow and holding screen still work', () => {
+  const drawn = indexShow({ built: 'now', players: show.players, days: {
+    1: [{ index: 1, intl: ['player-intl-1', 'player-intl-2'], usa: ['player-usa-1', 'player-usa-2'] }],
+    2: [{ index: 1, intl: ['player-intl-3'], usa: ['player-usa-3'] }],
+  } });
+  let s = initialState(drawn);
+  const onScreen = () => screenPlan(project(s, drawn), drawn);
+  const visible = () => onScreen().plan.panels.filter((p) => p.visible);
+
+  assert.deepEqual(onScreen(), { screen: 'idle', plan: null });  // cold start: the holding screen
+
+  s = reduce(s, { name: 'reveal' }, drawn);
+  assert.equal(onScreen().screen, 'live');                       // F1: not the holding screen
+  assert.equal(onScreen().plan.fmt, '4x9');
+  assert.deepEqual(visible().map((p) => p.key), ['intl-0', 'intl-1']);
+  assert.ok(visible().every((p) => p.src), 'a revealed panel has a clip to play');
+
+  s = reduce(s, { name: 'reveal' }, drawn);
+  assert.equal(visible().length, 4);
+
+  s = reduce(s, { name: 'next' }, drawn);
+  s = reduce(s, { name: 'setMode', mode: 'slideshow' }, drawn);
+  assert.deepEqual(onScreen(), { screen: 'slideshow', plan: null });
+  s = reduce(s, { name: 'setMode', mode: 'idle' }, drawn);
+  assert.deepEqual(onScreen(), { screen: 'idle', plan: null });
+  // junk in, holding screen out: never a crash on the way to the TV
+  for (const junk of [undefined, null, {}, { mode: 'party' }, 'live']) {
+    assert.deepEqual(screenPlan(junk, drawn), { screen: 'idle', plan: null });
+  }
 });

@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { networkInterfaces } from 'node:os';
 import { indexShow } from './build/build-show.mjs';
 import { loadState, saveState } from './lib/persist.mjs';
-import { reduce, project, CommandError } from './lib/state.mjs';
+import { reduce, project, CommandError, HISTORY_LIMIT } from './lib/state.mjs';
 import { createOutbox } from './lib/outbox.mjs';
 import { createSseHub } from './lib/sse.mjs';
 import { safeJoin, serveFile } from './lib/static.mjs';
@@ -22,6 +22,10 @@ import { API_URLS, AwsError, loadPassword, putPairings, getPairings } from './li
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_PORT = 8722;
 export const MAX_BODY_BYTES = 16 * 1024; // a command is a few dozen bytes
+// How long stop() will wait for the last push to the website before giving up.
+// Short on purpose: Ctrl-C at the end of the night must come straight back even
+// with the venue wifi dead. The push itself is abandoned, not retried.
+export const STOP_FLUSH_MS = 3000;
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -76,6 +80,7 @@ export async function createHub({
   operatorPassword = null, // tests only: there is deliberately no CLI flag (argv shows in ps)
   operatorPasswordPath = join(HERE, 'operator-password.txt'),
   syncMinDelay = 1000,
+  stopFlushMs = STOP_FLUSH_MS,
   quiet = false,
   loadPasswordImpl = loadPassword, // test seam: pins the no-password-file behaviour deterministically
   reduceImpl = reduce, // test seam: lets a test inject a programming fault
@@ -87,7 +92,15 @@ export async function createHub({
   }
   // byId is non-enumerable and does not survive JSON.parse: index exactly once,
   // here, before anything touches the show.
-  const show = indexShow(JSON.parse(readFileSync(showPath, 'utf8')));
+  // A truncated or half-written file must not reach the terminal as a parser
+  // message: this is the moment the show cannot begin, and the person reading it
+  // needs the one command that fixes it.
+  let show;
+  try {
+    show = indexShow(JSON.parse(readFileSync(showPath, 'utf8')));
+  } catch {
+    throw new Error(`${showPath} could not be read - it looks damaged or half-written. Run: npm run party:build to make it again.`);
+  }
 
   const loaded = loadState(statePath, show);
   if (loaded.recovered) {
@@ -118,7 +131,14 @@ export async function createHub({
 
   // The operator console's own password. Unrelated to the website's admin
   // password above; this one only gates this server's own console.
-  const operator = loadOperatorPassword({ path: operatorPasswordPath, explicit: operatorPassword });
+  // It invents and saves a password when there is none, so an unwritable folder
+  // stops the hub here. Name the folder; never the errno, and never a password.
+  let operator;
+  try {
+    operator = loadOperatorPassword({ path: operatorPasswordPath, explicit: operatorPassword });
+  } catch {
+    throw new Error(`The hub cannot save the console password in ${dirname(operatorPasswordPath)} - it has no permission to write there, or the disk is full. Fix that folder, then start the hub again.`);
+  }
   const gate = createGate({ password: operator.password });
 
   const outbox = createOutbox({
@@ -128,6 +148,12 @@ export async function createHub({
     push: (items) => putPairings({ apiUrl, password: secret, items, fetchImpl }),
     onStatus: (sync) => { apply({ name: 'setSync', sync }); },
   });
+
+  // A run that ended with something still unpushed (the laptop slept, the hub
+  // was killed, the network was down) must finish the job on the next start:
+  // nothing else arms the outbox until the operator issues a command, and on
+  // the morning after there may be no more commands.
+  if (state.sync.dirty) outbox.markDirty();
 
   // What the surfaces need and nothing more. hometown and school are printed
   // inside the cards' final frame (pixels); no surface reads them as data, and
@@ -152,8 +178,12 @@ export async function createHub({
   function apply(command) {
     const next = reduceImpl(state, command, show);
     if (next === state) return wireState();
+    // PROJECT BEFORE COMMITTING: a state that cannot be projected would make
+    // every later /api/state, every SSE reconnect and every command fail, and
+    // only a restart would clear it. Nothing is committed until the projection
+    // has worked, so such a command fails with the old state still live.
+    const wire = project(next, show);
     state = next;
-    const wire = wireState();
     // Pixels first; the disk write must never be in front of the screen.
     sse.broadcast('state', wire);
     persist();
@@ -191,6 +221,10 @@ export async function createHub({
       }
     }
     if (filled) {
+      // Undoable, like every other change: the operator reads "Filled N side(s)
+      // from AWS" and may well want it back. Same history the reducer keeps.
+      const { history: _drop, ...bare } = JSON.parse(JSON.stringify(state));
+      next.history = [...state.history, bare].slice(-HISTORY_LIMIT);
       next.rev = state.rev + 1;
       state = next;
       sse.broadcast('state', wireState());
@@ -343,6 +377,13 @@ export async function createHub({
     }
 
     if (url === '/events') {
+      // A HEAD never reads the stream, so attaching one would leave a client
+      // that is counted in whoami() for ever and never dropped.
+      if (method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store' });
+        res.end();
+        return;
+      }
       sse.attach(req, res);
       sse.sendTo(res, 'state', wireState());
       return;
@@ -448,6 +489,15 @@ export async function createHub({
     operatorPasswordSource: operator.source,
     get state() { return state; },
     async stop() {
+      // THE LAST PAIRING OF THE NIGHT: the 39th Next marks the state dirty and
+      // arms a retry about a second out, and outbox.stop() would cancel it - the
+      // final match would never reach the website, with the console already
+      // gone. So push first, and only then stop. Capped, because a dead venue
+      // wifi must not hold Ctrl-C: whichever comes first wins.
+      await Promise.race([
+        outbox.flushNow(),
+        new Promise((ok) => { const t = setTimeout(ok, stopFlushMs); t.unref?.(); }),
+      ]);
       outbox.stop();
       sse.closeAll();
       await new Promise((ok) => {

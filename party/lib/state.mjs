@@ -106,6 +106,12 @@ function checkIndex(slots, index, day) {
   }
 }
 
+// WHY SO MANY OF THESE SET mode = 'live': the state starts on `idle`, and the
+// stage draws its holding screen for any mode that is not live or slideshow.
+// Anything that means the show has begun must leave idle, or the console says a
+// side is revealed while the TV still shows INTERNATIONAL CUP in gold. Reveal,
+// assign and goto mean that, as next and reopen already did. Only setMode
+// (Slideshow, and whatever puts the holding screen back) chooses a mode itself.
 const HANDLERS = {
   setDay(state, cmd) {
     if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
@@ -117,9 +123,13 @@ const HANDLERS = {
 
   goto(state, cmd) {
     checkIndex(state.slots[String(state.day)], cmd.index, state.day);
-    if (cmd.index === state.current[state.day]) return NO_CHANGE;
+    // Already here AND already on screen: nothing to do. Jumping to the match
+    // you are on while the screen is idle is not a no-op: it is the operator
+    // saying "show me this one".
+    if (cmd.index === state.current[state.day] && state.mode === 'live') return NO_CHANGE;
     const next = clone(state);
     next.current[next.day] = cmd.index;
+    next.mode = 'live';
     return next;
   },
 
@@ -143,14 +153,18 @@ const HANDLERS = {
         throw new CommandError(`${player.name} plays for ${TEAM_LABEL[actual] ?? player.team}, not ${TEAM_LABEL[cmd.side]}. Pick someone from the ${TEAM_LABEL[cmd.side]} list.`);
       }
     }
-    return editCurrentSlot(state, (slot) => { slot[cmd.side] = [...cmd.players]; });
+    const next = editCurrentSlot(state, (slot) => { slot[cmd.side] = [...cmd.players]; });
+    next.mode = 'live';
+    return next;
   },
 
   reveal(state) {
     const slot = state.slots[String(state.day)][state.current[state.day]];
     // Already fully revealed: a double-tap is harmless, so do nothing at all.
     if (slot.shown === 'both') return NO_CHANGE;
-    return editCurrentSlot(state, (s) => { s.shown = s.shown === 'none' ? 'first' : 'both'; });
+    const next = editCurrentSlot(state, (s) => { s.shown = s.shown === 'none' ? 'first' : 'both'; });
+    next.mode = 'live';
+    return next;
   },
 
   next(state) {
@@ -158,7 +172,11 @@ const HANDLERS = {
     const i = state.current[state.day];
     const slots = state.slots[day];
     if (i === slots.length - 1 && slots[i].done) {
-      throw new CommandError(`Day ${state.day}: that was the last match. Use Undo, or pick another match.`);
+      // Day 1 ends with 13 of 39 matches done, so name the button that carries
+      // the night on rather than leaving the operator looking for it.
+      throw new CommandError(state.day === 1
+        ? 'Day 1: that was the last match. Tap Day 2 to carry on, or use Undo, or pick another match.'
+        : 'Day 2: that was the last match. Use Undo, or pick another match.');
     }
     const next = clone(state);
     const slot = next.slots[day][i];

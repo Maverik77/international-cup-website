@@ -127,6 +127,21 @@ test('a 500 and a lost connection are faults; a 502 is a note', async () => {
   assert.deepEqual(await h.client.send({ name: 'refreshFromAws' }), { kind: 'note', message: 'The website could not be reached.' });
 });
 
+// A SETTLED DECISION, PINNED: a Next that never reached the hub reopens the
+// lock. The operator in the pub has no way to know whether it landed, so the
+// button has to be theirs again at once; the alternative is standing there with
+// a dead button for the rest of the lock window.
+test('a Next that could not be sent leaves the button open, not locked', async () => {
+  const h = harness([new Error('wifi dropped'), OK]);
+  const out = await h.client.send({ name: 'next' });
+  assert.equal(out.kind, 'fault');
+  assert.equal(h.client.nextLocked(), false, 'the lock reopened: the Next may never have arrived');
+  assert.equal((await h.client.send({ name: 'next' })).kind, 'ok', 'and the operator can try again at once');
+  assert.equal(h.sent.filter((c) => c.name === 'next').length, 2);
+  // ...and that retry does take the lock, so the reopen is not a lost lock
+  assert.equal(h.client.nextLocked(), true);
+});
+
 test('a 401 needPassword sends the console to /operator and is not an error note', async () => {
   const h = harness([{ status: 401, body: { ok: false, needPassword: true, error: 'Enter the password.' } }]);
   const out = await h.client.send({ name: 'reveal' });

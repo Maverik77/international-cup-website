@@ -91,7 +91,33 @@ test('next on the last slot completes it and stays put; a second next is rejecte
   s = run(s, { name: 'next' });
   assert.equal(s.current['1'], 12);
   assert.equal(s.slots['1'][12].done, true);
-  rejects(s, { name: 'next' }, /^Day 1: that was the last match\. Use Undo, or pick another match\.$/);
+  // Day 1 ends 13 matches into a 39-match night, so the refusal names the Day 2
+  // button (the id is day2 in private/operator.html) rather than only Undo.
+  rejects(s, { name: 'next' }, /^Day 1: that was the last match\. Tap Day 2 to carry on, or use Undo, or pick another match\.$/);
+  let d2 = run(initialState(show), { name: 'setDay', day: 2 });
+  d2 = { ...d2, current: { ...d2.current, 2: 25 } };
+  d2 = run(d2, { name: 'next' });
+  rejects(d2, { name: 'next' }, /^Day 2: that was the last match\. Use Undo, or pick another match\.$/);
+});
+
+// F1: the whole night's first operator action used to leave the TV on the idle
+// screen while the console said the side was revealed.
+test('reveal, assign and goto all take the show out of idle', () => {
+  const cold = initialState(show);
+  assert.equal(cold.mode, 'idle');
+  assert.equal(reduce(cold, C, show).mode, 'live');
+  assert.equal(reduce(cold, U1, show).mode, 'live');
+  assert.equal(reduce(cold, { name: 'goto', index: 4 }, show).mode, 'live');
+  // Jumping to the match you are already on is only a no-op once the screen is
+  // live; from a cold start it is the operator saying "show me this one".
+  const here = reduce(cold, { name: 'goto', index: 0 }, show);
+  assert.equal(here.mode, 'live');
+  assert.equal(here.rev, cold.rev + 1);
+  assert.equal(reduce(here, { name: 'goto', index: 0 }, show), here);
+  // and the second reveal, the one that fills the other half of the screen
+  assert.equal(run(cold, C, C).mode, 'live');
+  // a deliberate idle (the holding screen between days) is still obeyed
+  assert.equal(run(cold, C, { name: 'setMode', mode: 'idle' }).mode, 'idle');
 });
 
 test('assign rejects the wrong number of players, for both days', () => {

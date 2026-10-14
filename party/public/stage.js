@@ -1,7 +1,7 @@
 // Applies the plan from panels.mjs to the DOM. The decisions live there and are
 // tested; this file only does what the plan says.
 import {
-  panelPlan, panelsForMatch, preloadSrcs, slideshowEntry, panelsToLoad, srcAfterError,
+  screenPlan, panelsForMatch, preloadSrcs, slideshowEntry, panelsToLoad, srcAfterError,
 } from '/panels.mjs';
 
 const layers = { a: document.getElementById('layer-a'), b: document.getElementById('layer-b') };
@@ -127,9 +127,9 @@ function showLayer(key) {
   layers[other(key)].classList.remove('live');
 }
 
-function renderLive() {
+function renderLive(plan) {
   clearSlideTimer();
-  applyPlan(layers[live], panelPlan(wire, show));
+  applyPlan(layers[live], plan);
   showLayer(live);
   applyPreload();
 }
@@ -158,7 +158,9 @@ function renderSlideshow() {
 
 function render(prev) {
   if (!show || !wire) return;
-  if (wire.mode === 'slideshow') {
+  // panels.mjs owns the gate: this only carries out what it says.
+  const { screen, plan } = screenPlan(wire, show);
+  if (screen === 'slideshow') {
     const pos = (wire.slideshow && wire.slideshow.position) || 0;
     const prevPos = prev && prev.slideshow ? prev.slideshow.position : undefined;
     if (!prev || prev.mode !== 'slideshow' || pos !== prevPos || !slideTimer) {
@@ -167,8 +169,8 @@ function render(prev) {
     } else if (slideEntry) {
       applyPlan(layers[live], panelsForMatch(slideEntry, show));   // start anything now due; reloads nothing
     }
-  } else if (wire.mode === 'live') {
-    renderLive();
+  } else if (screen === 'live') {
+    renderLive(plan);
   } else {
     renderIdle();
   }

@@ -2,13 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { request } from 'node:http';
 import { connect } from 'node:net';
-import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync, symlinkSync, copyFileSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync, symlinkSync, copyFileSync, chmodSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { createHub, parseArgs, MAX_BODY_BYTES } from '../hub.mjs';
+import { createHub, parseArgs, MAX_BODY_BYTES, STOP_FLUSH_MS } from '../hub.mjs';
 import { sessionToken } from '../lib/auth.mjs';
-import { CommandError } from '../lib/state.mjs';
+import { CommandError, reduce } from '../lib/state.mjs';
 
 const REAL_LOGIN = join(fileURLToPath(new URL('../private', import.meta.url)), 'login.html');
 
@@ -734,6 +734,175 @@ test('refresh: AWS errors are a 502 with a status code only, and the state is un
   const r3 = await refresh(notJson.base);
   assert.equal(r3.status, 502);
   assert.equal((await (await fetch(`${notJson.base}/api/state`)).json()).rev, 0);
+});
+
+// F4: Refresh from AWS is as undoable as everything else.
+test('refresh can be undone: one Undo puts the slots back, and rev advances both ways', async () => {
+  const h = await refreshHub(realisticPayload());
+  const before = JSON.parse(JSON.stringify(h.hub.state));   // nothing is on disk until the first change
+  assert.deepEqual(before.slots['1'][0].usa, ['', '']);
+  const filled = await (await refresh(h.base)).json();
+  assert.equal(filled.filled, 39);
+  assert.equal(filled.state.rev, before.rev + 1);
+  assert.deepEqual(h.fullState().slots['1'][0].usa, ['player-usa-1', 'player-usa-2']);
+
+  const undone = await (await post(h.base, { name: 'undo' })).json();
+  assert.equal(undone.ok, true);
+  assert.equal(undone.state.rev, before.rev + 2, 'undo advances rev too');
+  const after = h.fullState();
+  assert.deepEqual(after.slots['1'][0].usa, ['', ''], 'the slot the website filled is empty again');
+  assert.deepEqual(after.slots['2'][25].usa, [''], 'and so is day 2');
+  assert.deepEqual(after.slots['1'][0].intl, before.slots['1'][0].intl, 'the drawn sides are as they were');
+  assert.equal(after.history.length, before.history.length, 'the refresh entry was consumed, not stacked');
+  // and nothing else was disturbed: the next refresh can fill it again
+  assert.equal((await (await refresh(h.base)).json()).filled, 39);
+});
+
+// F5: a state the hub cannot project must never be committed, or every later
+// /api/state, every SSE reconnect and every command fails until a restart.
+test('a command whose result cannot be projected fails cleanly, and the show carries on', async () => {
+  const { hub, base, port } = await startHub({
+    // Only setFirstSide is sabotaged, so everything else is the real reducer.
+    reduceImpl: (state, cmd, show) => (cmd.name === 'setFirstSide' ? { ...state, slots: null } : reduce(state, cmd, show)),
+  });
+  await post(base, { name: 'reveal' });
+  const good = await (await fetch(`${base}/api/state`)).json();
+
+  const bad = await post(base, { name: 'setFirstSide', side: 'usa' });
+  assert.equal(bad.status, 500);
+  assert.match((await bad.json()).error, /internal fault/);
+
+  // the old state is still the live one, and still projectable
+  const still = await (await fetch(`${base}/api/state`)).json();
+  assert.deepEqual(still, good);
+  assert.equal(hub.state.slots['1'].length, 13, 'the bad state was never committed');
+
+  // the stage's own reconnect still works
+  const client = sseClient(port);
+  assert.ok(await until(() => client.frames.length >= 1), '/events still serves a snapshot');
+  assert.equal(client.frames[0].data.rev, good.rev);
+  client.kill();
+
+  // and the next real command is accepted
+  const ok = await post(base, { name: 'reveal' });
+  assert.equal(ok.status, 200);
+  assert.equal((await ok.json()).state.slot.shown, 'both');
+});
+
+// F2: the night ends with the 39th Next and then Ctrl-C.
+test('the last pairing is pushed during stop(), not cancelled by it', async () => {
+  let stopping = false;
+  const when = [];
+  const pushed = [];
+  const fetchImpl = async (url, init) => {
+    when.push(stopping ? 'during stop()' : 'before stop()');
+    pushed.push({ url, body: JSON.parse(init.body) });
+    return { ok: true, status: 200, json: async () => ({ success: true }) };
+  };
+  // A minute of retry delay: the armed timer cannot be what pushes this.
+  const { hub, base, dir } = await startHub({
+    enableSync: true, target: 'staging', fetchImpl, password: 'pw', syncMinDelay: 60000,
+  });
+  await post(base, { name: 'next' });
+  await wait(50);
+  assert.deepEqual(when, [], 'nothing has gone to the website yet');
+  assert.equal(JSON.parse(readFileSync(join(dir, 'state.json'), 'utf8')).sync.dirty, true);
+
+  stopping = true;
+  await hub.stop();
+  assert.deepEqual(when, ['during stop()']);
+  assert.equal(pushed.length, 1);
+  assert.match(pushed[0].url, /\/pairings$/);
+  assert.equal(pushed[0].body.pairings.length, 39);
+  assert.equal(pushed[0].body.pairings.find((p) => p.day === 1 && p.match_number === 1).revealStep, 2, 'the match that was just finished');
+  // and the push was recorded before the hub closed, so a restart will not redo it
+  const onDisk = JSON.parse(readFileSync(join(dir, 'state.json'), 'utf8'));
+  assert.equal(onDisk.sync.dirty, false);
+  assert.ok(onDisk.sync.lastPushed);
+});
+
+test('a hub booted on a state that was never pushed finishes the job, with no command at all', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hub-dirty-'));
+  const first = await startHub({ dir });                    // sync off: this leaves work behind
+  await post(first.base, { name: 'next' });
+  await first.hub.stop();
+  assert.equal(JSON.parse(readFileSync(join(dir, 'state.json'), 'utf8')).sync.dirty, true);
+
+  const pushed = [];
+  const fetchImpl = async (_url, init) => {
+    pushed.push(JSON.parse(init.body));
+    return { ok: true, status: 200, json: async () => ({ success: true }) };
+  };
+  const { base } = await startHub({ dir, enableSync: true, target: 'staging', fetchImpl, password: 'pw', syncMinDelay: 1 });
+  assert.ok(await until(() => pushed.length >= 1), 'the restart pushed what the last run left unpushed');
+  assert.equal(pushed[0].pairings.length, 39);
+  assert.ok(await until(async () => (await (await fetch(`${base}/api/state`)).json()).sync.dirty === false));
+});
+
+test('a dead network cannot hold Ctrl-C: stop() gives up on the push and closes', async () => {
+  const fetchImpl = () => new Promise(() => {});           // the venue wifi, gone
+  const { hub, base } = await startHub({
+    enableSync: true, target: 'staging', fetchImpl, password: 'pw', syncMinDelay: 1, stopFlushMs: 200,
+  });
+  await post(base, { name: 'next' });
+  await wait(60);                                          // the push is away and hanging
+  const started = Date.now();
+  await hub.stop();
+  const took = Date.now() - started;
+  assert.ok(took < 2000, `stop() took ${took}ms`);
+  await assert.rejects(() => fetch(`${base}/api/state`), 'and the hub really is closed');
+  assert.ok(STOP_FLUSH_MS <= 3000, `the real cap is ${STOP_FLUSH_MS}ms: Ctrl-C has to come back`);
+});
+
+// F3: the two boot failures a person reads in the terminal when the show cannot start.
+test('a damaged show.json is a sentence with the command that fixes it, not a parser message', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hub-bad-show-'));
+  const showPath = join(dir, 'show.json');
+  writeFileSync(showPath, '{"built":"now","players":[{"id":"player-intl-1"}');   // truncated mid-write
+  await assert.rejects(
+    () => createHub({ showPath, statePath: join(dir, 'state.json'), port: 0, enableSync: false, quiet: true, operatorPassword: 'x', operatorPasswordPath: join(dir, 'op.txt') }),
+    (e) => {
+      assert.match(e.message, /npm run party:build/);
+      assert.doesNotMatch(e.message, /Unexpected token|in JSON at position|SyntaxError|EACCES|ENOENT|\n\s+at /);
+      assert.ok(e.message.length < 200, e.message);
+      return true;
+    },
+  );
+});
+
+test('a folder the hub cannot write the password into names the folder, not an errno', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hub-ro-'));
+  const locked = join(dir, 'locked');
+  mkdirSync(locked);
+  chmodSync(locked, 0o500);                                 // readable, not writable
+  try {
+    await assert.rejects(
+      () => createHub({
+        showPath: fixtureShow(dir), statePath: join(dir, 'state.json'), port: 0, enableSync: false, quiet: true,
+        operatorPassword: null, operatorPasswordPath: join(locked, 'operator-password.txt'),
+      }),
+      (e) => {
+        assert.ok(e.message.includes(locked), e.message);
+        assert.match(e.message, /cannot save the console password/);
+        assert.doesNotMatch(e.message, /EACCES|EPERM|ENOSPC|errno|\n\s+at /);
+        assert.doesNotMatch(e.message, /[a-z]+-[a-z]+-\d{4}/, 'and never the password it was trying to save');
+        return true;
+      },
+    );
+  } finally {
+    chmodSync(locked, 0o700);
+  }
+});
+
+// F9: a HEAD is not a stage.
+test('HEAD /events answers without attaching a client that would never be read', async () => {
+  const { hub, base } = await startHub();
+  const res = await fetch(`${base}/events`, { method: 'HEAD' });
+  assert.equal(res.status, 200);
+  assert.equal(await res.text(), '');
+  assert.equal(hub.whoami().clients, 0, 'a HEAD is counted as nobody');
+  await fetch(`${base}/events`, { method: 'HEAD' });
+  assert.equal(hub.whoami().clients, 0);
 });
 
 // ---- Task 10B: the password on the operator console ----

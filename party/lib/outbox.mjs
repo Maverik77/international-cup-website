@@ -25,9 +25,12 @@ export function createOutbox({
 
   const backoff = () => Math.min(maxDelay, minDelay * 2 ** failures);
 
-  // LIVE PROTECTION, NOT REDUNDANT: the timer path has no flushNow() wrapper, so
-  // this guard is what stops a throwing onStatus listener from becoming an
-  // unhandled rejection (Node exits on those). Do not remove it.
+  // LIVE PROTECTION, NOT REDUNDANT: this guard is what keeps the outbox pushing.
+  // report() is called from run(), one line before arm(); a throwing onStatus
+  // listener would skip that arm() and the outbox would stop retrying for the
+  // rest of the night, in silence. (It is NOT what prevents an unhandled
+  // rejection - arm()'s .catch already absorbs the chain; measured.) Do not
+  // remove it, and see the outbox test that pins the retry.
   const report = (status) => {
     try { onStatus(status); } catch { /* a bad listener must not reach the reveal */ }
   };

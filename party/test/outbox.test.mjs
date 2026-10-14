@@ -457,6 +457,27 @@ test('a throwing onStatus on the timer path is not an unhandled rejection', asyn
   }
 });
 
+// WHAT THE report() GUARD ACTUALLY BUYS (F6/F7): report() is called one line
+// before arm(), so a throwing onStatus without it would skip the retry and the
+// outbox would stop pushing for the rest of the night, in silence. (It is not
+// what prevents an unhandled rejection - the test above pins that separately.)
+test('a throwing onStatus does not stop the outbox retrying', async () => {
+  const clock = fakeClock();
+  const pushes = [];
+  const outbox = createOutbox({
+    getState: () => initialState(show),
+    push: async () => { pushes.push(1); if (pushes.length === 1) throw new Error('website down'); },
+    onStatus: () => { throw new Error('the console handed us a listener that throws'); },
+    schedule: clock.schedule, cancel: clock.cancel, minDelay: 1000, pushTimeout: 30, timers: keepAliveTimers,
+  });
+  outbox.markDirty();
+  await clock.run();                                  // the push fails; onStatus throws on the way out
+  assert.equal(pushes.length, 1);
+  assert.deepEqual(clock.pending(), [2000], 'the retry is still armed');
+  await clock.run();                                  // and it really fires
+  assert.equal(pushes.length, 2);
+});
+
 test('stop clears the push timeout, abandons the hung push promptly, and says nothing afterwards', async () => {
   const h = harness({ pushImpl: () => new Promise(() => {}), pushTimeout: 1500 });
   h.change({ name: 'reveal' });
