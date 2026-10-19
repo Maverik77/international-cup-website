@@ -212,7 +212,10 @@
         "photo": "pics/players/chrissy-crouse.jpg"
       },
       {
-        "name": "John Daley"
+        "name": "John Daley",
+        "hometown": "Chicago, IL",
+        "school": "Western Illinois & DePaul University",
+        "photo": "pics/players/john-daley.jpg"
       },
       {
         "name": "Victor Esposito"
@@ -271,7 +274,8 @@
       },
       {
         "name": "Tom Murphy",
-        "hometown": "Atlanta, GA"
+        "hometown": "Atlanta, GA",
+        "photo": "pics/players/tom-murphy.jpg"
       },
       {
         "name": "Greg Parda"
