@@ -81,7 +81,8 @@
       },
       {
         "name": "Jun Bae",
-        "country": "Korea"
+        "country": "Korea",
+        "photo": "pics/players/jun-bae.jpg"
       },
       {
         "name": "Yun Sang Bae",
@@ -110,7 +111,8 @@
       },
       {
         "name": "Rhys Gully",
-        "country": "Australia"
+        "country": "Australia",
+        "photo": "pics/players/rhys-gully.jpg"
       },
       {
         "name": "Phillip Jewell",
@@ -133,7 +135,8 @@
       },
       {
         "name": "Jonathan Doan",
-        "country": "Canada"
+        "country": "Canada",
+        "photo": "pics/players/jonathan-doan.jpg"
       },
       {
         "name": "Soban Ansari",
