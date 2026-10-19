@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13",
+  "updated": "2026-10-18",
   "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
@@ -21,7 +21,8 @@
         "name": "Anil Katarki",
         "country": "India",
         "hometown": "Belagavi",
-        "school": "George Washington University"
+        "school": "George Washington University",
+        "photo": "pics/players/anil-katarki.jpg"
       },
       {
         "name": "Chakshush Kumar",
@@ -50,15 +51,23 @@
       },
       {
         "name": "Mohammed Ashraf",
-        "country": "England"
+        "country": "England",
+        "hometown": "Blackburn, Lancashire, England",
+        "school": "University of Greenwich, London",
+        "photo": "pics/players/mohammed-ashraf.jpg"
       },
       {
         "name": "Ben Hedges",
-        "country": "England"
+        "country": "England",
+        "hometown": "Royal Wootton Bassett, England",
+        "photo": "pics/players/ben-hedges.jpg"
       },
       {
         "name": "Tim Pearce",
-        "country": "England"
+        "country": "England",
+        "hometown": "Banbury, Oxfordshire, England",
+        "school": "Stowe School",
+        "photo": "pics/players/tim-pearce.jpg"
       },
       {
         "name": "Daren Wickham",
@@ -82,15 +91,22 @@
       },
       {
         "name": "Joung Barnes",
-        "country": "Korea"
+        "country": "Korea",
+        "hometown": "Pohang",
+        "photo": "pics/players/joung-barnes.jpg"
       },
       {
         "name": "Michael Kim",
-        "country": "Korea"
+        "country": "Korea",
+        "hometown": "Seoul",
+        "school": "College of William and Mary",
+        "photo": "pics/players/michael-kim.jpg"
       },
       {
         "name": "Jim Lee",
-        "country": "Korea"
+        "country": "Korea",
+        "hometown": "Seoul, South Korea",
+        "photo": "pics/players/jim-lee.jpg"
       },
       {
         "name": "Rhys Gully",
@@ -111,7 +127,9 @@
       {
         "name": "Erik Wagner",
         "country": "Germany",
-        "photo": "pics/players/erik-wagner.jpg"
+        "photo": "pics/players/erik-wagner.jpg",
+        "hometown": "Waldweiler, Germany",
+        "school": "Technical University of Kaiserslautern"
       },
       {
         "name": "Jonathan Doan",
@@ -127,7 +145,8 @@
       {
         "name": "Robbie Neilson",
         "country": "Scotland",
-        "hometown": "Wishaw"
+        "hometown": "Wishaw",
+        "photo": "pics/players/robbie-neilson.jpg"
       },
       {
         "name": "Alba Phillips",
@@ -138,14 +157,18 @@
       },
       {
         "name": "Uttam Bharwani",
-        "country": "Tanzania"
+        "country": "Tanzania",
+        "hometown": "Dar-es-Salaam, Tanzania",
+        "school": "University of Maryland",
+        "photo": "pics/players/uttam-bharwani.jpg"
       }
     ],
     "usa": [
       {
         "name": "John Altman",
         "hometown": "Washington, DC",
-        "school": "Virginia Tech"
+        "school": "Virginia Tech",
+        "photo": "pics/players/john-altman.jpg"
       },
       {
         "name": "Frank Ambrose",
@@ -155,19 +178,27 @@
       },
       {
         "name": "Keith Barnes",
+        "hometown": "Springfield, VA",
+        "school": "Ohio State University",
         "photo": "pics/players/keith-barnes.jpg"
       },
       {
-        "name": "Jeff Barnette"
+        "name": "Jeff Barnette",
+        "hometown": "Clifton Forge, VA",
+        "school": "Radford University",
+        "photo": "pics/players/jeff-barnette.jpg"
       },
       {
         "name": "Jay Collins"
       },
       {
-        "name": "Scott Covino"
+        "name": "Scott Covino",
+        "hometown": "Houston, Texas",
+        "school": "American University",
+        "photo": "pics/players/scott-covino.jpg"
       },
       {
-        "name": "Chris Crouse"
+        "name": "Mike Ziegler"
       },
       {
         "name": "Chrissy Crouse",
@@ -181,10 +212,15 @@
         "name": "Victor Esposito"
       },
       {
-        "name": "Mitch Freedman"
+        "name": "Mitch Freedman",
+        "hometown": "Baltimore, MD",
+        "school": "Vanderbilt University"
       },
       {
-        "name": "Jeff Galkin"
+        "name": "Jeff Galkin",
+        "hometown": "Ashburn, VA",
+        "school": "Radford University",
+        "photo": "pics/players/jeff-galkin.jpg"
       },
       {
         "name": "Jim Gillie"
@@ -197,6 +233,8 @@
       },
       {
         "name": "Dave Kohlasch",
+        "hometown": "Rye, NY",
+        "school": "UNLV",
         "photo": "pics/players/dave-kohlasch.jpg"
       },
       {
@@ -207,7 +245,8 @@
       },
       {
         "name": "Jeff Kritsberg",
-        "hometown": "Syracuse, NY"
+        "hometown": "Syracuse, NY",
+        "photo": "pics/players/jeff-kritsberg.jpg"
       },
       {
         "name": "Kyle Lenihan"
@@ -225,13 +264,17 @@
         "photo": "pics/players/jeff-miller.jpg"
       },
       {
-        "name": "Tom Murphy"
+        "name": "Tom Murphy",
+        "hometown": "Atlanta, GA"
       },
       {
         "name": "Greg Parda"
       },
       {
-        "name": "Anthony Rizzo"
+        "name": "Anthony Rizzo",
+        "hometown": "St. Petersburg, Florida",
+        "school": "Georgia Southern University",
+        "photo": "pics/players/anthony-rizzo.jpg"
       },
       {
         "name": "Jay Vosburgh",
