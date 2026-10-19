@@ -126,14 +126,21 @@ const HANDLERS = {
     return next;
   },
 
+  // `day` is optional and defaults to the day in play. It exists so that jumping
+  // to the other day is ONE command and therefore one Undo: setDay followed by
+  // goto would take two taps to reverse, and on the night the operator reaching
+  // for Undo is already behind.
   goto(state, cmd) {
-    checkIndex(state.slots[String(state.day)], cmd.index, state.day);
+    const day = cmd.day === undefined ? state.day : cmd.day;
+    if (day !== 1 && day !== 2) throw new CommandError('The day must be 1 or 2.');
+    checkIndex(state.slots[String(day)], cmd.index, day);
     // Already here AND already on screen: nothing to do. Jumping to the match
     // you are on while the screen is idle is not a no-op: it is the operator
     // saying "show me this one".
-    if (cmd.index === state.current[state.day] && state.mode === 'live') return NO_CHANGE;
+    if (day === state.day && cmd.index === state.current[state.day] && state.mode === 'live') return NO_CHANGE;
     const next = clone(state);
-    next.current[next.day] = cmd.index;
+    next.day = day;
+    next.current[day] = cmd.index;
     next.mode = 'live';
     return next;
   },

@@ -9,7 +9,12 @@
 <body class="idle">
   <div id="layer-a" class="layer live"></div>
   <div id="layer-b" class="layer"></div>
+  <div id="match-title"><span class="day"></span><span class="num"></span></div>
   <div id="idle"><p>International Cup</p></div>
+  <div id="draw-list"><h2>The draw so far</h2><div class="rows"></div></div>
+  <!-- A screen set to "Player films": two elements, so the next film is already
+       decoded when the one on screen ends and the cut is a fade, not a gap. -->
+  <div id="films" aria-hidden="true"><video class="film"></video><video class="film"></video></div>
   <div id="preload" aria-hidden="true"></div>
   <div id="cover"><p>Tap to start</p></div>
   <script type="module" src="/stage.js"></script>

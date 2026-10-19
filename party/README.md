@@ -43,6 +43,55 @@ do not press Ctrl-C again. It then prints whether the push got through; if it
 did not, the show is saved on the laptop and the next `npm run party:start`
 finishes sending it.
 
+### More than one screen
+
+Every screen shows the same thing unless you say otherwise. To add a second one,
+open the stage address on that device with a name on the end:
+
+    http://<the stage address>/stage?screen=bar
+
+It appears in **Screens…** on the console as soon as it is opened. From there each
+screen can be set to:
+
+| | |
+| --- | --- |
+| **Mirror the show** | The default. Exactly what the main screen shows. |
+| **Slideshow** | Cycles the matches already revealed, whatever the main screen is doing. |
+| **Player films** | The thirty-second film of every player, one after another and then round again. |
+| **Draw so far** | The whole draw to date, as text, for people reading rather than watching. |
+| **Title card** | The gold title, and nothing else. |
+
+**Player films** is the one for before the pairings are announced: put the main
+screen on it while people arrive, and put it back on **Mirror the show** when
+you are ready to start. It runs for about twenty minutes and then begins
+again, it has no sound, and it is not part of the show — the draw behind it is
+exactly where you left it, and a screen still on the films misses nothing but
+the pictures. Going back to the films later picks up where it left off rather
+than starting over. One player has given no hometown, so there is no film
+flying into his town and he is not in the loop.
+
+**Jump to a film…**, under each screen's buttons, starts that screen at one
+particular player — somebody has just walked in, or asked. Type a few letters
+of the name, tap it, and that screen cuts to their film and carries on down the
+list from there. It works whatever the screen was doing: picking a film is also
+how a screen is put on the films, so it is one tap, not two. Tapping the film
+already playing starts it again from the top. The dialog remembers what you
+last asked for under the buttons; where the loop has got to since is on the
+television, not in the console.
+
+**Put every screen back on the show** does what it says, in one tap — that is the
+button to reach for before the finale. The console's own button reads
+**Screens… (1 off the show)** whenever a screen has wandered, so you can see it
+without opening the dialog.
+
+Each screen still needs its own **Tap to start** click, and screens are never
+frame-aligned: a reveal can land a fraction of a second apart on two devices.
+Screen settings are not part of the saved show, so restarting the hub brings
+every screen back to mirroring.
+
+If the second TV is fed by an HDMI splitter from the laptop, none of this applies
+— that is one screen, already in step.
+
 ### The stage is open to everyone on the wifi
 
 The password protects the **console** only. The stage page is open on purpose
@@ -62,8 +111,9 @@ and can see the next match ahead of the reveal. Do not read the address out.
 | The iPad cannot reach the console at all | The venue wifi is blocking devices from each other. Put the laptop and the iPad both on the phone hotspot and restart with `npm run party:start`. |
 | The sync light says **Offline** | Ignore it. The show runs from the laptop. It catches up when the network returns. |
 | Wrong player revealed | Tap **Undo**, or pick the right player and reveal again. |
+| A player you want is not in the list | They are already drawn into another match on this day, so the list hides them. Tap **Show N already picked** at the top to see everyone, with a note saying which match each one is in. |
 | **Refresh from AWS** pulled in a draw you did not want | Tap **Undo**: it puts the slots back **and** clears those pairings on the website. Then pick the players yourself and reveal as normal. |
-| A match announced out of order | **Jump to…** and pick it. |
+| A match announced out of order | **Jump to…** and pick it. It lists **both days**, with whoever is already drawn under each match, and opens where you are. |
 
 If the venue network will not carry it, the order of fallbacks is: phone
 hotspot, then a network hosted by the laptop, then the laptop alone. The
@@ -95,6 +145,28 @@ you can open its Operator address on the iPad and practise on the same gate.
 `party:build` only makes what is missing. To give someone a bespoke card, add
 their nickname to `party/build/card-keys.json`, drop `<nickname>-4x9.mp4` and
 `<nickname>-8x9.mp4` into `party/cards/`, and rebuild.
+
+### Where the moving photos come from
+
+The bespoke cards do not hold a still: the player's photo moves. Each one is a
+Veo clip generated from their photograph, then cropped into the card. The raw
+clips and the exact stills that produced them live in `party/veo/`, named
+`<nickname>-veo.mp4` and `<nickname>-source.jpg`, so a card can be rebuilt or
+re-cut without paying to generate the clip again. That directory is gitignored,
+like `party/cards/`.
+
+To make a new one, use the `veo-video` skill:
+
+    python3 ~/.claude/skills/veo-video/veo_generate.py \
+      --image party/veo/<nickname>-source.jpg \
+      --out   party/veo/<nickname>-veo.mp4 --aspect 9:16
+
+The skill documents the Gemini API call, the intermittent audio filter (retry;
+filtered attempts are not charged) and the cost per clip.
+
+The 16:9 long-form videos are a different thing again: a zoom from the globe to
+the player's hometown, built from satellite imagery with vector overlays and
+composited text. That is not Veo and not made here.
 
 ### The day before, in the venue
 
@@ -133,28 +205,30 @@ appear on the website. It is gitignored, along with `party/state*.json`,
 
 Decided deliberately, not overlooked. Each was weighed and left as it is.
 
-- **Between matches the TV is black.** After Next, and before the first Reveal
-  of the next match, the stage is a live screen with nothing revealed on it. It
-  looks the same as a dead TV. Deciding what *should* be there — the match
-  number, the event name, the previous card held — is a judgement to make while
-  watching a rehearsal, so it was left alone rather than guessed at. The gold
-  title does hold until the first Reveal of the night.
 - **A reopened match stays fully revealed.** Jump to… a finished match and
   Reveal reads "Both revealed", because reopening does not reset it. Resetting
   it would blank the TV for someone who jumped back merely to look. To replay
   the two-step reveal, re-pick a player — that works and the clip plays again.
 - **Undo after Refresh clears those pairings on the website too.** Consistent
   with every other Undo pushing what it reverted, but it touches public data.
-- **The slideshow position lives in each stage**, so two stage screens would
-  drift apart. There is one stage.
+- **The slideshow position lives in each stage**, so two screens both set to
+  Slideshow cycle independently and drift apart. Intentional: they are separate
+  screens for separate parts of the room, and nothing reads worse than two
+  screens showing the same slideshow a beat apart.
+- **Screens are never frame-aligned.** Each device decodes its own clips, so the
+  same reveal can land a fraction of a second apart. Sync puts screens back on
+  the same *content*, not on the same *frame*; frame-accurate sync over venue
+  wifi is not something that can be promised.
 - **Ctrl-C can take about three seconds**, because it is pushing the last
   pairing. It says so while it waits. It never hangs; a dead network is capped.
 - **`stop()` flushes whether or not anything is outstanding**, so each shutdown
   pushes the same snapshot once more and bumps the revision. Harmless: the push
   is an idempotent whole-snapshot overwrite.
-- **Nothing tests `stage.js`, `stage.html` or `stage.css` directly.** There is no
-  DOM harness, by design — the stage's decisions live in `public/panels.mjs`,
-  which is tested hard. What that leaves unpinned is three lines of dispatch in
-  `stage.js` and some markup. If a DOM harness ever arrives, pin those first.
+- **Nothing tests `stage.js`, `operator.js` or the stylesheets directly.** There
+  is no DOM harness, by design — the decisions live in `public/panels.mjs` and
+  `public/console.mjs`, which are tested hard, and the hub's own endpoints are
+  tested over HTTP. What that leaves unpinned is the drawing: the match number's
+  size and travel, the glyphs on the panel seams, and the two dialogs. Those were
+  checked by eye in a browser. If a DOM harness ever arrives, pin them first.
 - **The SIGINT wiring has no test seam**, so the shutdown *wording* is tested as
   a pure function while the handler that calls it is not.

@@ -9,12 +9,35 @@ html, body {
 
 .layer {
   position: absolute; inset: 0;
-  display: flex;
   opacity: 0;
   transition: opacity 600ms ease-in-out;
   pointer-events: none;
 }
 .layer.live { opacity: 1; }
+
+/* The panels are the row; the glyphs float over it in their own box, so
+   rebuilding one never disturbs the other. */
+.panels { position: absolute; inset: 0; display: flex; }
+.joins { position: absolute; inset: 0; pointer-events: none; }
+
+/* A glyph sits on the seam between two panels, vertically centred. The shadow is
+   what keeps it readable where it lands over a face rather than over black. */
+.join {
+  position: absolute; top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 1.4vw rgba(0, 0, 0, .95), 0 0 .5vw rgba(0, 0, 0, .9);
+  opacity: 0;
+  transition: opacity 320ms ease-in;
+  white-space: nowrap;
+}
+.join.shown { opacity: 1; }
+/* The partner mark joins two names; VS divides two sides, so it carries the
+   event gold and the weight. */
+.join.partner { font-size: 2.6vw; }
+.join.vs { font-size: 3.4vw; letter-spacing: .08em; color: #FEB619; }
 
 /* International is always the left half: the DOM order is the plan order. */
 .panel {
@@ -50,6 +73,66 @@ html, body {
 
 #preload { position: absolute; width: 0; height: 0; overflow: hidden; }
 
+/* The match number. It arrives full-screen in the centre - that is the screen
+   between Next and the first Reveal - and the same element then travels to the
+   top on the first reveal, so the eye keeps hold of it. */
+#match-title {
+  position: absolute;
+  left: 50%;
+  z-index: 5;
+  text-align: center;
+  color: #FEB619;
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  text-shadow: 0 0 1.6vw rgba(0, 0, 0, .95), 0 0 .6vw rgba(0, 0, 0, .9);
+  opacity: 0;
+  pointer-events: none;
+  /* Both the type and the screen are sized in vw, so a line that wraps here
+     wraps on the television too. It must never wrap. */
+  white-space: nowrap;
+  /* docked */
+  top: 3.5vh;
+  transform: translate(-50%, 0);
+  font-size: 1.7vw;
+  transition: opacity 400ms ease, top 650ms cubic-bezier(.4, 0, .2, 1),
+              transform 650ms cubic-bezier(.4, 0, .2, 1),
+              font-size 650ms cubic-bezier(.4, 0, .2, 1);
+}
+#match-title.on { opacity: 1; }
+/* Gold on a dark card reads; gold on the white of a flag does not, and on day 2
+   the number lands squarely on one. A soft pool of shade travels with the text,
+   which is invisible over black and saves it over anything else. */
+#match-title::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%; height: 300%;
+  background: radial-gradient(ellipse at center,
+    rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .62) 45%, rgba(0, 0, 0, 0) 72%);
+  z-index: -1;
+}
+#match-title.big {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6vw;
+  /* Wide tracking is what the small docked line needs to read; at full size it
+     is what pushes "Match 1 of 13" off the screen. */
+  letter-spacing: .1em;
+}
+/* The day rides above the number at half its size, and goes with it. */
+#match-title .day {
+  display: block;
+  font-size: .46em;
+  letter-spacing: .42em;
+  opacity: .75;
+  margin-bottom: .55em;
+}
+#match-title .day:empty { display: none; }
+
 /* Idle: something static and plain, so "nothing is on yet" is never mistaken for a dead screen. */
 #idle {
   position: absolute; inset: 0;
@@ -61,6 +144,69 @@ html, body {
   letter-spacing: .3em; text-transform: uppercase; color: #FEB619;
 }
 body.idle #idle { display: grid; }
+
+/* A screen set to `list`: the draw so far, read rather than watched, so this is
+   the one screen on which small dense type is the right answer. */
+#draw-list {
+  position: absolute; inset: 0;
+  display: none;
+  padding: 4vh 4vw;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  overflow: hidden;
+}
+body.list #draw-list { display: block; }
+#draw-list h2 {
+  margin: 0 0 2.4vh;
+  font-size: 2.2vw; font-weight: 400;
+  letter-spacing: .3em; text-transform: uppercase; color: #FEB619;
+  text-align: center;
+}
+/* Two columns only once one would run off the bottom; the plan decides which. */
+#draw-list .rows[data-columns="2"] { column-count: 2; column-gap: 4vw; }
+#draw-list h3 {
+  margin: 1.6vh 0 .8vh;
+  font-size: 1.15vw; font-weight: 700;
+  letter-spacing: .24em; text-transform: uppercase; color: #FEB619;
+  break-after: avoid;
+}
+#draw-list h3:first-child { margin-top: 0; }
+#draw-list .row {
+  display: flex; gap: 1vw; align-items: baseline;
+  font-size: 1.25vw; line-height: 1.75;
+  break-inside: avoid;
+}
+#draw-list .row .n {
+  flex: 0 0 2.2vw; text-align: right;
+  color: #8b929b; font-variant-numeric: tabular-nums;
+}
+#draw-list .row .who { flex: 1 1 auto; min-width: 0; }
+/* Never a black screen: an empty draw says it is empty. */
+#draw-list .empty {
+  margin-top: 6vh; text-align: center;
+  font-size: 1.6vw; letter-spacing: .2em; text-transform: uppercase; color: #8b929b;
+}
+
+/* A screen set to `films`: the long-form films, one after another, for the hour
+   before the pairings are announced. `contain`, not `cover`: a film carries
+   captions near its edges, so a screen that is not 16:9 gets bars rather than
+   losing the town's name off the side. */
+#films {
+  position: absolute; inset: 0;
+  display: none;
+  background: #000;
+}
+body.films #films { display: block; }
+#films video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  background: #000;
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+}
+#films video.live { opacity: 1; }
 
 #cover {
   position: absolute; inset: 0;

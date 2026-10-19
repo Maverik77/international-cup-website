@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -331,6 +331,27 @@ test('the cards check really examines the cards (so READY means something)', asy
     // A file that is the wrong shape must fail it: proves the fixture is looked at.
     const c = by(await run(dir, { probe: () => ({ codec: 'vp9', pixFmt: 'yuv420p', width: 1, height: 1, duration: 8 }) }), 'cards');
     assert.equal(c.ok, false);
+  } finally { rmSync(dir, { recursive: true }); }
+});
+
+test('the films check counts the films, and says so when there are none', async () => {
+  const dir = scratch();
+  try {
+    // The synthetic show has no films at all. That is worth saying out loud, and
+    // it is not a failure: the draw runs perfectly well without a single film.
+    const none = by(await run(dir), 'player films');
+    assert.equal(none.ok, true);
+    assert.match(none.detail, /^none - a screen set to Player films/);
+
+    const show = JSON.parse(readFileSync(join(dir, 'show.json'), 'utf8'));
+    show.players[0].film = `cards/${show.players[0].id}-16x9-web.mp4`;
+    writeFileSync(join(dir, 'show.json'), JSON.stringify(show));
+    writeFileSync(join(dir, 'cards', `${show.players[0].id}-16x9-web.mp4`), 'x');
+    const one = by(await run(dir, { probe: (a) => (a.includes('16x9')
+      ? { codec: 'h264', pixFmt: 'yuv420p', width: 1920, height: 1080, duration: 29.3 }
+      : { codec: 'h264', pixFmt: 'yuv420p', width: a.includes('4x9') ? 480 : 960, height: 1080, duration: 8 }) }), 'player films');
+    assert.equal(one.ok, true);
+    assert.match(one.detail, /^1 films/);
   } finally { rmSync(dir, { recursive: true }); }
 });
 

@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   formatFor, perSide, panelPlan, panelsForMatch, preloadSrcs, slideshowEntry,
-  panelsToLoad, srcAfterError, screenPlan,
+  panelsToLoad, srcAfterError, screenPlan, matchTitle, joinsFor, DAY_MATCHES,
+  screenNameFrom, roleOf, drawList, filmList, filmCueOf, SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS,
 } from '../public/panels.mjs';
-import { indexShow } from '../build/build-show.mjs';
+import { indexShow, DAY1_MATCHES, DAY2_MATCHES } from '../build/build-show.mjs';
 import { initialState, reduce, project } from '../lib/state.mjs';
 
 function makeShow() {
@@ -345,4 +346,318 @@ test('the gate: a cold start holds, the first Reveal goes live, and the slidesho
   for (const junk of [undefined, null, {}, { mode: 'party' }, 'live']) {
     assert.deepEqual(screenPlan(junk, drawn), { screen: 'idle', plan: null });
   }
+});
+
+// --- the match number and the glyphs between the panels ----------------------
+
+const glyphs = (plan) => plan.joins.map((j) => `${j.glyph}${j.visible ? '' : '?'}`).join(' ');
+
+// panels.mjs is served to the browser, so it cannot import the build's constants
+// and keeps its own copy. If the field size ever changes, this is what notices.
+test('the stage counts the same number of matches the build makes', () => {
+  assert.equal(DAY_MATCHES[1], DAY1_MATCHES);
+  assert.equal(DAY_MATCHES[2], DAY2_MATCHES);
+});
+
+test('before anything is revealed the number owns the screen, and nothing else is on it', () => {
+  const plan = panelPlan(withSlot({ index: 7, shown: 'none' }), show);
+  assert.deepEqual(plan.match, { day: 'Day 1', match: 'Match 7 of 13', big: true });
+  assert.equal(plan.panels.some((p) => p.visible), false, 'no card may be up yet');
+  assert.equal(plan.joins.some((j) => j.visible), false, 'no glyph may be up yet');
+});
+
+test('the first reveal docks the number and lights only that side\'s partner mark', () => {
+  const plan = panelPlan(withSlot({ index: 7, shown: 'first', firstSide: 'intl' }), show);
+  assert.equal(plan.match.big, false);
+  assert.equal(plan.match.match, 'Match 7 of 13');
+  assert.equal(glyphs(plan), '+ VS? +?');
+
+  // ...and the same when USA goes first: the mark belongs to the side, not the half.
+  const usaFirst = panelPlan(withSlot({ shown: 'first', firstSide: 'usa' }), show);
+  assert.equal(glyphs(usaFirst), '+? VS? +');
+});
+
+test('the second reveal brings up VS, and VS waits for it', () => {
+  assert.equal(glyphs(panelPlan(withSlot({ shown: 'both' }), show)), '+ VS +');
+  const vs = panelPlan(withSlot({ shown: 'both' }), show).joins[1];
+  assert.deepEqual(vs, { at: 1, glyph: 'VS', kind: 'vs', side: null, visible: true });
+});
+
+test('a glyph sits on the seam between two panels', () => {
+  const day1 = panelPlan(withSlot({ shown: 'both' }), show);
+  assert.deepEqual(day1.joins.map((j) => j.at), [0, 1, 2]);
+  assert.deepEqual(day1.joins.map((j) => j.kind), ['partner', 'vs', 'partner']);
+  assert.deepEqual(day1.joins.map((j) => j.side), ['intl', null, 'usa']);
+  // at+1 over the panel count is the fraction across: quarters on day 1, half on day 2.
+  assert.deepEqual(day1.joins.map((j) => (j.at + 1) / day1.panels.length), [0.25, 0.5, 0.75]);
+  const day2 = panelPlan(wire({ day: 2, slot: { index: 4, firstSide: 'intl', intl: ['player-intl-1'], usa: ['player-usa-1'], shown: 'both', problems: [] } }), show);
+  assert.deepEqual(day2.joins.map((j) => (j.at + 1) / day2.panels.length), [0.5]);
+});
+
+test('day 2 is one VS and no partner mark, and counts to 26', () => {
+  const plan = panelPlan(wire({ day: 2, slot: { index: 26, firstSide: 'usa', intl: ['player-intl-1'], usa: ['player-usa-1'], shown: 'first', problems: [] } }), show);
+  assert.equal(plan.panels.length, 2);
+  assert.deepEqual(plan.joins.map((j) => j.glyph), ['VS']);
+  assert.equal(glyphs(plan), 'VS?');
+  assert.deepEqual(plan.match, { day: 'Day 2', match: 'Match 26 of 26', big: false });
+  // A single player has no partner, so a "first revealed" day 2 side lights nothing.
+  assert.equal(panelPlan(wire({ day: 2, slot: { index: 1, firstSide: 'usa', intl: ['player-intl-1'], usa: ['player-usa-1'], shown: 'both', problems: [] } }), show).joins[0].visible, true);
+});
+
+test('a number the stage cannot make sense of prints nothing, never "Match undefined"', () => {
+  for (const [day, index] of [[undefined, undefined], [3, 1], [1, 0], [1, -4], [1, 1.5], [1, '2'], [null, null], [1, undefined]]) {
+    const t = matchTitle(day, index, 'none');
+    assert.equal(typeof t.day, 'string');
+    assert.equal(typeof t.match, 'string');
+    assert.ok(!/undefined|null|NaN/.test(`${t.day} ${t.match}`), JSON.stringify([day, index, t]));
+  }
+  // A day outside the show still numbers the match; it just cannot say how many.
+  assert.equal(matchTitle(3, 4, 'none').match, 'Match 4');
+  assert.equal(matchTitle(3, 4, 'none').day, 'Day 3');
+  assert.doesNotThrow(() => joinsFor(undefined, null));
+  assert.doesNotThrow(() => joinsFor(1, 'nope'));
+  assert.equal(joinsFor(1, 'nope').every((j) => j.visible === false), true);
+  for (const slot of [{ shown: 'both' }, {}, null, 'x', undefined]) {
+    assert.equal(panelPlan(wire({ slot }), show).joins.length, 3);
+  }
+});
+
+test('a slideshow frame carries its own number, docked, with every glyph up', () => {
+  const plan = panelsForMatch({ day: 1, index: 9, intl: ['player-intl-1', 'player-intl-2'], usa: ['player-usa-1', 'player-usa-2'] }, show);
+  assert.deepEqual(plan.match, { day: 'Day 1', match: 'Match 9 of 13', big: false });
+  assert.equal(glyphs(plan), '+ VS +');
+  assert.equal(panelsForMatch({ day: 2, index: 3, intl: ['player-intl-1'], usa: ['player-usa-1'] }, show).match.match, 'Match 3 of 26');
+  assert.doesNotThrow(() => panelsForMatch(null, show));
+  assert.equal(panelsForMatch(null, show).match.match, '');
+});
+
+// Over the real reducer, because the whole point is what the room sees between
+// one match and the next. Asserting on a flag would still pass if the number
+// never reached the plan the stage applies.
+test('Next puts the number alone on screen, and the reveal brings it down to a corner', () => {
+  const drawn = indexShow({ built: 'now', players: show.players, days: {
+    1: [{ index: 1, intl: ['player-intl-1', 'player-intl-2'], usa: ['player-usa-1', 'player-usa-2'] },
+      { index: 2, intl: ['player-intl-3', 'player-intl-4'], usa: ['player-usa-3', 'player-usa-4'] }],
+    2: [{ index: 1, intl: ['player-intl-5'], usa: ['player-usa-5'] }],
+  } });
+  let s = initialState(drawn);
+  const screen = () => screenPlan(project(s, drawn), drawn);
+
+  s = reduce(s, { name: 'reveal' }, drawn);
+  s = reduce(s, { name: 'reveal' }, drawn);
+  assert.equal(screen().plan.match.big, false);
+  assert.equal(glyphs(screen().plan), '+ VS +');
+
+  s = reduce(s, { name: 'next' }, drawn);
+  const between = screen();
+  assert.equal(between.screen, 'live', 'the holding screen would say the show has not started');
+  assert.deepEqual(between.plan.match, { day: 'Day 1', match: 'Match 2 of 13', big: true });
+  assert.equal(between.plan.panels.some((p) => p.visible), false);
+  assert.equal(glyphs(between.plan), '+? VS? +?', 'nothing is given away while the number is up');
+
+  s = reduce(s, { name: 'reveal' }, drawn);
+  assert.equal(screen().plan.match.big, false, 'the number must get out of the way of the card');
+  assert.equal(screen().plan.match.match, 'Match 2 of 13');
+  assert.equal(glyphs(screen().plan), '+ VS? +?');
+
+  s = reduce(s, { name: 'setDay', day: 2 }, drawn);
+  s = reduce(s, { name: 'goto', index: 0 }, drawn);
+  assert.deepEqual(screen().plan.match, { day: 'Day 2', match: 'Match 1 of 26', big: true });
+});
+
+// --- screens: one show, several televisions ----------------------------------
+
+const withScreens = (over, screens) => wire({ ...over, screens });
+
+test('a screen with no role, no entry, or a role nobody recognises mirrors the show', () => {
+  const live = wire({ mode: 'live' });
+  for (const w of [live, { ...live, screens: {} }, { ...live, screens: { main: 'nonsense' } },
+    { ...live, screens: null }, { ...live, screens: 'x' }, { ...live, screens: { other: 'hold' } }]) {
+    assert.equal(screenPlan(w, show, 'main').screen, 'live', JSON.stringify(w.screens));
+    assert.equal(roleOf(w, 'main'), 'mirror');
+  }
+  // An unknown screen asking is still a screen: it mirrors rather than going dark.
+  assert.equal(screenPlan({ ...live, screens: { bar: 'hold' } }, show, 'nobody').screen, 'live');
+});
+
+test('a role overrides the show, and mirror follows it', () => {
+  const live = wire({ mode: 'live' });
+  assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'hold' }), show, 'bar').screen, 'idle');
+  assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'slideshow' }), show, 'bar').screen, 'slideshow');
+  assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'list' }), show, 'bar').screen, 'list');
+  assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'films' }), show, 'bar').screen, 'films');
+  assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'mirror' }), show, 'bar').screen, 'live');
+  // The show going idle does not reach a screen that is not mirroring.
+  assert.equal(screenPlan(withScreens({ mode: 'idle' }, { bar: 'slideshow' }), show, 'bar').screen, 'slideshow');
+  assert.equal(screenPlan(withScreens({ mode: 'idle' }, { bar: 'mirror' }), show, 'bar').screen, 'idle');
+  // Two screens, one frame: each reads its own line and they disagree on purpose.
+  const both = withScreens({ mode: 'live' }, { main: 'mirror', bar: 'list' });
+  assert.equal(screenPlan(both, show, 'main').screen, 'live');
+  assert.equal(screenPlan(both, show, 'bar').screen, 'list');
+  assert.equal(screenPlan(live, show).screen, screenPlan(live, show, DEFAULT_SCREEN).screen);
+});
+
+test('a screen name is short, lowercase and harmless, or it is the main screen', () => {
+  assert.equal(screenNameFrom('bar'), 'bar');
+  assert.equal(screenNameFrom('  BAR  '), 'bar');
+  assert.equal(screenNameFrom('back-room-2'), 'back-room-2');
+  assert.equal(screenNameFrom(2), '2', 'a numbered screen is a reasonable thing to want');
+  for (const bad of ['', null, undefined, 'bar room', '../../etc', '<script>', 'a'.repeat(17),
+    '-leading', 'x'.repeat(200), {}, '__proto__', 'bar/../main', 'BÄR']) {
+    assert.equal(screenNameFrom(bad), DEFAULT_SCREEN, JSON.stringify(bad));
+  }
+  // "constructor" is letters and so a legal name; what matters is that it does
+  // not read a role off Object's prototype. Same for anything else inherited.
+  assert.equal(screenNameFrom('constructor'), 'constructor');
+  assert.equal(roleOf({ screens: {} }, 'constructor'), 'mirror');
+  assert.equal(roleOf({ screens: { main: 'hold' } }, 'tostring'), 'mirror');
+  assert.equal(roleOf({ screens: { constructor: 'hold' } }, 'constructor'), 'hold',
+    'a screen really called that still works');
+  assert.ok(MAX_SCREENS >= 2 && Number.isInteger(MAX_SCREENS));
+  assert.deepEqual(SCREEN_ROLES, ['mirror', 'slideshow', 'films', 'list', 'hold']);
+});
+
+// --- player films ------------------------------------------------------------
+
+const filmShow = () => indexShow({
+  built: 'now',
+  days: { 1: [], 2: [] },
+  players: [
+    { id: 'a', name: 'A', film: 'cards/a-16x9-web.mp4' },
+    { id: 'b', name: 'B', film: null },
+    { id: 'c', name: 'C' },
+    { id: 'd', name: 'D', film: 'cards/d-16x9-web.mp4' },
+  ],
+});
+
+test('the films are the players who have one, in roster order, and nothing else', () => {
+  const plan = filmList(filmShow());
+  assert.deepEqual(plan.films, [
+    { playerId: 'a', name: 'A', src: 'cards/a-16x9-web.mp4' },
+    { playerId: 'd', name: 'D', src: 'cards/d-16x9-web.mp4' },
+  ]);
+  // The films come from the show, not the wire: a screen playing them is not
+  // moved by the reveal, the match or the slideshow's position.
+  const planFor = (w) => screenPlan(w, filmShow(), 'bar');
+  const films = (w) => planFor(w).plan.films.map((f) => f.src);
+  const w = (over) => withScreens(over, { bar: 'films' });
+  assert.deepEqual(films(w({ mode: 'live' })), films(w({ mode: 'idle' })));
+  assert.deepEqual(films(w({ mode: 'slideshow' })), films(w({ mode: 'live' })));
+  assert.equal(planFor(w({ mode: 'idle' })).screen, 'films', 'an idle show does not stop the films');
+
+  // Nobody with a film is an empty list, not a crash: the stage holds the title card.
+  assert.deepEqual(filmList(indexShow({ built: 'now', days: {}, players: [{ id: 'x', name: 'X' }] })).films, []);
+  for (const junk of [null, undefined, 'x', 42, {}, { players: 'no' }, { players: [null, 7, {}] }]) {
+    assert.doesNotThrow(() => filmList(junk), JSON.stringify(junk));
+    assert.deepEqual(filmList(junk).films, [], JSON.stringify(junk));
+  }
+  // A film path that is not a usable string is no film at all, never "/undefined".
+  const odd = filmList({ players: [{ id: 'a', name: 'A', film: '' }, { id: 'b', name: 'B', film: 7 }] });
+  assert.deepEqual(odd.films, []);
+  // Nobody asked for a film, so there is nowhere for the stage to jump to.
+  assert.equal(filmList(filmShow()).cue, null);
+});
+
+test('the loop plays the planned order, and never loses a film to it', () => {
+  const show = indexShow({
+    built: 'now',
+    days: { 1: [], 2: [] },
+    players: [
+      { id: 'a', name: 'A', film: 'cards/a-16x9-web.mp4' },
+      { id: 'b', name: 'B', film: 'cards/b-16x9-web.mp4' },
+      { id: 'c', name: 'C', film: 'cards/c-16x9-web.mp4' },
+    ],
+    filmOrder: ['c', 'a', 'b'],
+  });
+  assert.deepEqual(filmList(show).films.map((f) => f.playerId), ['c', 'a', 'b']);
+  // The cue is a position in the PLAYED order, not in the roster.
+  assert.equal(filmList(show, { playerId: 'a', seq: 1 }).cue.index, 1);
+
+  // An order that forgets somebody appends them rather than dropping them off
+  // the television; one that names a stranger, or the same player twice, ignores it.
+  const odd = (filmOrder) => filmList(indexShow({
+    built: 'now', days: {}, filmOrder,
+    players: [
+      { id: 'a', name: 'A', film: 'cards/a-16x9-web.mp4' },
+      { id: 'b', name: 'B', film: 'cards/b-16x9-web.mp4' },
+    ],
+  })).films.map((f) => f.playerId);
+  assert.deepEqual(odd(['b']), ['b', 'a'], 'a forgotten film still plays');
+  assert.deepEqual(odd(['b', 'nobody', 'a']), ['b', 'a']);
+  assert.deepEqual(odd(['a', 'a', 'b']), ['a', 'b'], 'no film plays twice a lap');
+  assert.deepEqual(odd([]), ['a', 'b']);
+  // Junk where the order should be is roster order, never an exception.
+  for (const junk of ['x', 7, {}, null, [null, 7, {}]]) {
+    assert.doesNotThrow(() => odd(junk), JSON.stringify(junk));
+    assert.deepEqual(odd(junk), ['a', 'b'], JSON.stringify(junk));
+  }
+});
+
+test('Jump to a film names a position in the list, and only this screen', () => {
+  const w = () => withScreens({ mode: 'live' }, { bar: 'films', main: 'films' });
+  const cued = (cues) => ({ ...w(), filmCues: cues });
+
+  // D is the second film, because B and C have none: the cue is a position in
+  // the films, not a position in the roster.
+  const plan = screenPlan(cued({ bar: { playerId: 'd', seq: 3 } }), filmShow(), 'bar').plan;
+  assert.deepEqual(plan.cue, { index: 1, seq: 3, playerId: 'd', name: 'D' });
+  assert.equal(plan.films[plan.cue.index].src, 'cards/d-16x9-web.mp4');
+
+  // One frame, two screens: a cue reaches the screen it names and no other.
+  const one = cued({ bar: { playerId: 'd', seq: 3 } });
+  assert.equal(screenPlan(one, filmShow(), 'main').plan.cue, null);
+
+  // The number is what makes a jump an event. It travels untouched, so the
+  // stage can tell a new cue from the same one arriving in the next frame.
+  for (const seq of [1, 2, 99]) {
+    assert.equal(screenPlan(cued({ bar: { playerId: 'a', seq } }), filmShow(), 'bar').plan.cue.seq, seq);
+  }
+
+  // A cue the show cannot honour - no such player, a player with no film - is
+  // no cue, never an exception and never an index the stage would play blind.
+  for (const cue of [{ playerId: 'b', seq: 1 }, { playerId: 'c', seq: 1 }, { playerId: 'nobody', seq: 1 },
+    { playerId: 'd', seq: 0 }, { playerId: 'd', seq: 1.5 }, { playerId: 'd' }, { playerId: '', seq: 1 },
+    { playerId: 7, seq: 1 }, { seq: 1 }, {}, null, 'd', 7, []]) {
+    const got = screenPlan(cued({ bar: cue }), filmShow(), 'bar');
+    assert.equal(got.screen, 'films', JSON.stringify(cue));
+    assert.equal(got.plan.cue, null, JSON.stringify(cue));
+    assert.equal(got.plan.films.length, 2, JSON.stringify(cue));
+  }
+  // And a wire carrying no cues at all, or nonsense where they should be.
+  for (const junk of [undefined, null, 'x', 7, [], { bar: undefined }, { __proto__: { bar: { playerId: 'd', seq: 1 } } }]) {
+    assert.doesNotThrow(() => filmCueOf({ filmCues: junk }, 'bar'), JSON.stringify(junk));
+    assert.equal(filmCueOf({ filmCues: junk }, 'bar'), null, JSON.stringify(junk));
+  }
+  assert.equal(filmCueOf(null, 'bar'), null);
+  assert.deepEqual(filmCueOf({ filmCues: { bar: { playerId: 'd', seq: 2, junk: 'x' } } }, 'bar'), { playerId: 'd', seq: 2 });
+  // A cue is read for the screen asking, by the same name rules as a role.
+  assert.deepEqual(filmCueOf({ filmCues: { main: { playerId: 'a', seq: 1 } } }, 'BAD NAME'), { playerId: 'a', seq: 1 });
+});
+
+test('the draw list holds the matches revealed so far, and says so when there are none', () => {
+  const completed = [
+    { day: 1, index: 1, intl: ['player-intl-1', 'player-intl-2'], usa: ['player-usa-1', 'player-usa-2'] },
+    { day: 2, index: 4, intl: ['player-intl-3'], usa: ['player-usa-3'] },
+  ];
+  const plan = drawList(wire({ completed }), show);
+  assert.deepEqual(plan.rows.map((r) => r.label), ['1', '4']);
+  assert.deepEqual(plan.rows.map((r) => r.day), [1, 2]);
+  assert.deepEqual(plan.rows.map((r) => r.intl), ['I1 + I2', 'I3']);
+  assert.deepEqual(plan.rows.map((r) => r.usa), ['U1 + U2', 'U3']);
+  assert.equal(plan.columns, 1);
+
+  // One column until it would run off the bottom of a television.
+  const many = Array.from({ length: 11 }, (_, i) => ({ day: 1, index: i + 1, intl: ['player-intl-1'], usa: ['player-usa-1'] }));
+  assert.equal(drawList(wire({ completed: many }), show).columns, 2);
+  assert.equal(drawList(wire({ completed: many.slice(0, 10) }), show).columns, 1);
+
+  // Nothing drawn, and junk in the list: an empty plan, never a throw.
+  assert.deepEqual(drawList(wire({ completed: [] }), show).rows, []);
+  for (const junk of [null, undefined, 'x', { completed: 'no' }]) {
+    assert.doesNotThrow(() => drawList(junk, show));
+    assert.deepEqual(drawList(junk, show).rows, []);
+  }
+  // A match whose players the show does not know is left out, not printed as ids.
+  const ghosts = drawList(wire({ completed: [{ day: 1, index: 1, intl: ['ghost'], usa: ['nobody'] }] }), show);
+  assert.deepEqual(ghosts.rows, []);
 });

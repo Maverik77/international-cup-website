@@ -14,6 +14,12 @@ import { loadState, saveState } from './lib/persist.mjs';
 import { reduce, project, CommandError, HISTORY_LIMIT } from './lib/state.mjs';
 import { createOutbox } from './lib/outbox.mjs';
 import { createSseHub } from './lib/sse.mjs';
+// Pure, no DOM, no node builtins: the stage and the hub share one definition of
+// what a screen name and a screen role are, rather than each keeping its own.
+import { SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS, screenNameFrom, filmList } from './public/panels.mjs';
+// Only for the sentence a refused role gets back: the console owns what each
+// role is called, and the hub must not keep a second list of its own to drift.
+import { screenRoleChoices } from './public/console.mjs';
 import { safeJoin, serveFile } from './lib/static.mjs';
 import { pickLanAddress, localHostName, operatorUrls, qrLines, qrSvg } from './lib/net.mjs';
 import { loadOperatorPassword, createGate, setCookieHeader } from './lib/auth.mjs';
@@ -164,7 +170,57 @@ export async function createHub({
     players: show.players.map(({ hometown: _h, school: _s, ...rest }) => rest),
   };
 
-  const wireState = () => project(state, show);
+  // Which screen is doing what. Deliberately NOT part of the saved show: a role
+  // is about the room right now, not about the draw, so it is not undoable, it
+  // never marks the show dirty, and a hub that restarts mid-evening brings every
+  // television back mirroring - which is what you want after a crash, rather
+  // than one screen stuck on a slideshow nobody remembers setting.
+  const screens = new Map([[DEFAULT_SCREEN, 'mirror']]);
+
+  // Jump to a film…: which film each screen was last asked to start at. A cue
+  // is an event, not a setting, so it carries a number that only ever goes up -
+  // the stage honours each cue once and then leaves the loop alone. Same rules
+  // as a role: not saved, not undoable, gone on a restart.
+  const filmCues = new Map();
+  let cueSeq = 0;
+
+  // A screen announces itself by connecting. Returns true when that was the
+  // first time, so the console can be told a new screen exists.
+  function noteScreen(raw) {
+    const name = screenNameFrom(raw);
+    if (screens.has(name)) return false;
+    if (screens.size >= MAX_SCREENS) return false;   // see MAX_SCREENS in panels.mjs
+    screens.set(name, 'mirror');
+    return true;
+  }
+
+  // Every client gets the same frame and reads its own line out of it, so the
+  // fan-out stays one serialisation and one write per client.
+  // `built` is the show's own timestamp, on every frame. A surface fetches
+  // /api/show once, at boot, and then lives on state frames - so a hub restarted
+  // with a rebuilt show would leave every open console and television showing
+  // the roster from before. This is how they notice and fetch it again.
+  const withScreens = (wire) => ({
+    ...wire,
+    built: typeof show.built === 'string' ? show.built : '',
+    screens: Object.fromEntries(screens),
+    filmCues: Object.fromEntries(filmCues),
+  });
+  const wireState = () => withScreens(project(state, show));
+  // Every slot of both days, for the console's picker and its Jump list: who is
+  // already drawn, and where. The arrays are copied for the sake of anyone who
+  // later calls this in-process; over HTTP the JSON boundary already copies, so
+  // no test pins the copying and none should pretend to.
+  const boardState = () => ({
+    day: state.day,
+    current: { 1: state.current[1], 2: state.current[2] },
+    days: Object.fromEntries(['1', '2'].map((d) => [d, state.slots[d].map((slot) => ({
+      index: slot.index,
+      intl: [...slot.intl],
+      usa: [...slot.usa],
+      done: slot.done,
+    }))])),
+  });
 
   function persist() {
     try {
@@ -182,7 +238,7 @@ export async function createHub({
     // every later /api/state, every SSE reconnect and every command fail, and
     // only a restart would clear it. Nothing is committed until the projection
     // has worked, so such a command fails with the old state still live.
-    const wire = project(next, show);
+    const wire = withScreens(project(next, show));
     state = next;
     // Pixels first; the disk write must never be in front of the screen.
     sse.broadcast('state', wire);
@@ -339,6 +395,46 @@ export async function createHub({
         sendJson(res, 200, { ok: true, filled, state: wireState() });
         return;
       }
+      // Screen roles are not show state: no history, no undo, no outbox. They go
+      // out to everyone because every screen reads its own line from one frame.
+      if (command && typeof command === 'object'
+        && (command.name === 'setScreen' || command.name === 'syncScreens' || command.name === 'playFilm')) {
+        if (command.name === 'syncScreens') {
+          for (const name of screens.keys()) screens.set(name, 'mirror');
+          // Back on the show means back on the show: a film nobody is watching
+          // any more is not something a screen opened later should start at.
+          filmCues.clear();
+        } else if (command.name === 'playFilm') {
+          // One tap, one film: a screen told to play a particular film is put on
+          // the films whatever it was doing, because an operator who picked a
+          // name wants to see it rather than to be told the screen is mirroring.
+          const name = screenNameFrom(command.screen);
+          if (!screens.has(name)) {
+            throw new CommandError(`There is no screen called "${name}" yet. Open it on that device first, then set it here.`);
+          }
+          const { films } = filmList(show);
+          const wanted = films.find((f) => f.playerId === command.playerId);
+          if (!wanted) {
+            throw new CommandError('There is no film for that player.');
+          }
+          cueSeq += 1;
+          filmCues.set(name, { playerId: wanted.playerId, seq: cueSeq });
+          screens.set(name, 'films');
+        } else {
+          const name = screenNameFrom(command.screen);
+          if (!screens.has(name)) {
+            throw new CommandError(`There is no screen called "${name}" yet. Open it on that device first, then set it here.`);
+          }
+          if (!SCREEN_ROLES.includes(command.role)) {
+            throw new CommandError(`That is not a screen setting. Pick ${screenRoleChoices()}.`);
+          }
+          screens.set(name, command.role);
+        }
+        const wire = wireState();
+        sse.broadcast('state', wire);
+        sendJson(res, 200, { ok: true, state: wire });
+        return;
+      }
       const wire = apply(command);
       sendJson(res, 200, { ok: true, state: wire });
     } catch (e) {
@@ -384,11 +480,29 @@ export async function createHub({
         res.end();
         return;
       }
+      // The screen names itself here, so the console can list it. A name that
+      // has connected is remembered even once it disconnects: a television that
+      // goes to sleep must not drop off the console's Screens list.
+      const query = (req.url || '').split('?')[1] || '';
+      const fresh = noteScreen(new URLSearchParams(query).get('screen'));
       sse.attach(req, res);
       sse.sendTo(res, 'state', wireState());
+      // Only when the name is new: a reconnecting screen must not cause a storm.
+      if (fresh) sse.broadcast('state', wireState());
       return;
     }
     if (url === '/api/state') { sendJson(res, 200, wireState()); return; }
+    // GATED, AND IT MUST STAY GATED. /events and /api/state are public because
+    // the stage needs them, and they carry only the match in play and a peek at
+    // the next. This carries every pairing of the night. On the public stream it
+    // would hand anyone on the venue wifi the whole draw before the first reveal,
+    // which is the one thing the evening exists to prevent. The console fetches
+    // it when the operator opens a dialog, not on every reveal.
+    if (url === '/api/board') {
+      if (!gate.authorized(req)) { denyUnsigned(res); return; }
+      sendJson(res, 200, boardState());
+      return;
+    }
     if (url === '/api/show') { sendJson(res, 200, publicShow); return; }
     if (url === '/api/whoami') {
       if (!gate.authorized(req)) { denyUnsigned(res); return; }

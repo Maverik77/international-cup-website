@@ -21,6 +21,12 @@ export const EXPECTED_SIZE = { '4x9': [480, 1080], '8x9': [960, 1080] };
 export const PIX_FMTS = ['yuv420p', 'yuvj420p'];
 export const MIN_SECONDS = 3;
 export const MAX_SECONDS = 30;
+// The long-form films are a different animal from the cards: 1920x1080, half a
+// minute, and optional - a player with no hometown has nowhere to fly to, so
+// there is no film and a screen showing them leaves that player out.
+export const FILM_SIZE = [1920, 1080];
+export const FILM_MIN_SECONDS = 20;
+export const FILM_MAX_SECONDS = 40;
 
 export class BuildError extends Error {}
 
@@ -35,6 +41,20 @@ export function indexShow(show) {
 // Decide every player's filenames. A player with a bespoke card keeps its
 // nickname-based name; everyone else gets a flag card named by id. Every player
 // also gets a flag card as `fallback`, so a broken bespoke clip has somewhere to go.
+// The film the stage plays, or null. The `-web` variant on purpose: it is the
+// same picture at ~4 Mbps, and a loop of the masters is a gigabyte over venue
+// wifi. Having no film at all is legitimate, so that returns null rather than
+// throwing. A file that is there but empty is a different thing - a half-finished
+// encode - and is named anyway, so the validator below refuses it rather than
+// letting a black half-minute reach a television.
+function filmFor(key, cardsDir) {
+  if (!key) return null;
+  const name = `${key}-16x9-web.mp4`;
+  const abs = join(cardsDir, name);
+  if (!existsSync(abs)) return null;
+  return `cards/${name}`;
+}
+
 export function planCards(players, cardsDir, cardKeys = CARD_KEYS) {
   const byName = new Map(players.map((p) => [p.name, p]));
   for (const name of Object.keys(cardKeys)) {
@@ -48,7 +68,8 @@ export function planCards(players, cardsDir, cardKeys = CARD_KEYS) {
   return players.map((p) => {
     const key = cardKeys[p.name];
     const fallback = { '4x9': `cards/${p.id}-4x9.mp4`, '8x9': `cards/${p.id}-8x9.mp4` };
-    if (!key) return { ...p, generic: true, cards: { ...fallback }, fallback };
+    const film = filmFor(key, cardsDir);
+    if (!key) return { ...p, generic: true, cards: { ...fallback }, fallback, film };
     const cards = { '4x9': `cards/${key}-4x9.mp4`, '8x9': `cards/${key}-8x9.mp4` };
     const absent = FORMATS.filter((f) => !existsSync(join(cardsDir, `${key}-${f}.mp4`)));
     if (absent.length) {
@@ -58,7 +79,7 @@ export function planCards(players, cardsDir, cardKeys = CARD_KEYS) {
         `Add the file or remove the entry.`,
       );
     }
-    return { ...p, generic: false, cards, fallback };
+    return { ...p, generic: false, cards, fallback, film };
   });
 }
 
@@ -88,42 +109,149 @@ export function validateCards(show, root, { probe = ffprobeCard } = {}) {
   const problems = [];
   const seen = new Set();
   let unavailable = false;
+  // One file, against what that kind of file is supposed to be. Cards and films
+  // differ in size and length and in nothing else, so they share the checker
+  // rather than each growing their own copy of it.
+  const check = (p, rel, want) => {
+    if (seen.has(rel)) return;
+    seen.add(rel);
+    const abs = join(root, rel);
+    if (!existsSync(abs)) { problems.push(`${p.name}: missing ${rel}`); return; }
+    if (statSync(abs).size === 0) { problems.push(`${p.name}: zero-length ${rel}`); return; }
+    if (unavailable) return;
+    let info;
+    try {
+      info = probe(abs);
+    } catch (e) {
+      if (e instanceof ProbeUnavailable) {
+        unavailable = true;
+        problems.push(`cannot validate cards: ${e.message}. Install ffmpeg (which includes ffprobe); ` +
+          `files that exist have NOT been checked for playability`);
+      } else {
+        problems.push(`${p.name}: unreadable ${rel} (${e.message})`);
+      }
+      return;
+    }
+    if (info.codec !== 'h264' || !PIX_FMTS.includes(info.pixFmt)) {
+      problems.push(`${p.name}: ${rel} is ${info.codec},${info.pixFmt}; the browser needs h264 with yuv420p or yuvj420p`);
+    } else if (info.width !== want.width || info.height !== want.height) {
+      problems.push(`${p.name}: ${rel} is ${info.width}x${info.height}, expected ${want.width}x${want.height}`);
+    } else if (!Number.isFinite(info.duration) || info.duration < want.min || info.duration > want.max) {
+      problems.push(`${p.name}: ${rel} has implausible duration ${info.duration}s ` +
+        `(expected ${want.min}-${want.max}s)`);
+    }
+  };
   for (const p of show.players) {
     for (const fmt of FORMATS) {
+      const [width, height] = EXPECTED_SIZE[fmt];
       const paths = [p.cards && p.cards[fmt], p.fallback && p.fallback[fmt]].filter(Boolean);
-      for (const rel of paths) {
-        if (seen.has(rel)) continue;
-        seen.add(rel);
-        const abs = join(root, rel);
-        if (!existsSync(abs)) { problems.push(`${p.name}: missing ${rel}`); continue; }
-        if (statSync(abs).size === 0) { problems.push(`${p.name}: zero-length ${rel}`); continue; }
-        if (unavailable) continue;
-        let info;
-        try {
-          info = probe(abs);
-        } catch (e) {
-          if (e instanceof ProbeUnavailable) {
-            unavailable = true;
-            problems.push(`cannot validate cards: ${e.message}. Install ffmpeg (which includes ffprobe); ` +
-              `files that exist have NOT been checked for playability`);
-          } else {
-            problems.push(`${p.name}: unreadable ${rel} (${e.message})`);
-          }
-          continue;
-        }
-        const [w, h] = EXPECTED_SIZE[fmt];
-        if (info.codec !== 'h264' || !PIX_FMTS.includes(info.pixFmt)) {
-          problems.push(`${p.name}: ${rel} is ${info.codec},${info.pixFmt}; the browser needs h264 with yuv420p or yuvj420p`);
-        } else if (info.width !== w || info.height !== h) {
-          problems.push(`${p.name}: ${rel} is ${info.width}x${info.height}, expected ${w}x${h}`);
-        } else if (!Number.isFinite(info.duration) || info.duration < MIN_SECONDS || info.duration > MAX_SECONDS) {
-          problems.push(`${p.name}: ${rel} has implausible duration ${info.duration}s ` +
-            `(expected ${MIN_SECONDS}-${MAX_SECONDS}s)`);
-        }
-      }
+      for (const rel of paths) check(p, rel, { width, height, min: MIN_SECONDS, max: MAX_SECONDS });
+    }
+    // A film is optional, so there is nothing to check when there is none. One
+    // that IS named must play: it goes on a television for half a minute.
+    if (typeof p.film === 'string' && p.film !== '') {
+      check(p, p.film, {
+        width: FILM_SIZE[0], height: FILM_SIZE[1], min: FILM_MIN_SECONDS, max: FILM_MAX_SECONDS,
+      });
     }
   }
   return problems;
+}
+
+// --- the films loop's running order ---------------------------------------
+//
+// Erik's three rules, 18 October: alternate US and International, never two
+// Internationals of the same country in a row, never two US players of the same
+// state in a row. The loop WRAPS - it plays round again - so every rule is
+// checked on the circle, not on the line.
+//
+// 23 Internationals and 17 US players cannot alternate perfectly: 17 US films
+// cut the circle into 17 arcs, so six arcs have to carry two Internationals.
+// Those six pairs are the only place two of one side touch, and the spreading
+// below is what keeps them different countries.
+//
+// It is computed here, at build time, for the same reason the cards are: the
+// stage should carry out a plan, not work one out. show.json carries the result
+// as `filmOrder`, a list of player ids.
+
+const stateOf = (p) => {
+  const home = typeof p.hometown === 'string' ? p.hometown.trim() : '';
+  return home ? home.split(',').pop().trim() : '\u2014';
+};
+
+// Round half to even, so an exactly-halfway position does not drift the whole
+// arrangement when a player's state or country changes.
+function roundHalf(x) {
+  const r = Math.round(x);
+  return Math.abs(x % 1) === 0.5 && r % 2 !== 0 ? r - 1 : r;
+}
+
+// Even spacing per group, then local repair. Spacing rather than dealing them
+// out in turn: a country with six players belongs at six evenly spaced points,
+// so India is not every other film for the first half and absent from the rest.
+function spread(items, keyOf) {
+  const n = items.length;
+  if (n < 2) return [...items];
+  const groups = new Map();
+  for (const p of items) {
+    const k = keyOf(p);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(p);
+  }
+  // Biggest group first: its spacing is the one that must survive rounding.
+  const bySize = [...groups.entries()].sort((a, b) => b[1].length - a[1].length
+    || String(a[0]).localeCompare(String(b[0])));
+  const placed = [];
+  for (const [key, members] of bySize) {
+    members.forEach((p, i) => placed.push({ at: ((i + 0.5) * n) / members.length, key, p }));
+  }
+  placed.sort((a, b) => a.at - b.at);          // stable, so ties keep biggest-group-first
+  let seq = placed.map((x) => x.p);
+  const clashes = (list) => list
+    .map((_, i) => i)
+    .filter((i) => keyOf(list[i]) === keyOf(list[(i + 1) % list.length]));
+  // Swap a clashing neighbour forward to the first position that fixes it and
+  // breaks nothing else. Bounded: a pass that cannot improve anything stops.
+  for (let guard = 0; guard < n * n; guard++) {
+    const bad = clashes(seq);
+    if (bad.length === 0) break;
+    const i = bad[0];
+    const target = (i + 1) % n;
+    let moved = false;
+    for (let j = 0; j < n; j++) {
+      if (j === i || j === target) continue;
+      const trial = [...seq];
+      [trial[target], trial[j]] = [trial[j], trial[target]];
+      if (clashes(trial).length === 0) { seq = trial; moved = true; break; }
+    }
+    if (!moved) break;                          // no single swap fixes it; leave it to the caller
+  }
+  return seq;
+}
+
+// The ids of every film, in the order the loop should play them. Never throws:
+// a show with no films, or one side empty, is a real answer and returns what it
+// can rather than stopping a build over the order of a slideshow.
+export function filmLoopOrder(players) {
+  const list = Array.isArray(players) ? players.filter((p) => p && typeof p.film === 'string' && p.film !== '') : [];
+  const intl = spread(list.filter((p) => p.team === 'international'), (p) => p.country || '\u2014');
+  const usa = spread(list.filter((p) => p.team !== 'international'), stateOf);
+  if (usa.length === 0 || intl.length === 0) return [...intl, ...usa].map((p) => p.id);
+
+  const gaps = usa.length;
+  const base = Math.floor(intl.length / gaps);
+  const extra = intl.length % gaps;
+  const take = new Array(gaps).fill(base);
+  for (let i = 0; i < extra; i++) take[roundHalf((i * gaps) / extra) % gaps] += 1;
+
+  const out = [];
+  let at = 0;
+  for (let g = 0; g < gaps; g++) {
+    out.push(usa[g]);
+    for (let k = 0; k < take[g] && at < intl.length; k++) out.push(intl[at++]);
+  }
+  while (at < intl.length) out.push(intl[at++]);   // cannot happen, but never drop a film
+  return out.map((p) => p.id);
 }
 
 function buildDays(players, runningOrder) {
@@ -195,7 +323,12 @@ export async function buildShow({
   const players = planCards(loadRoster(detailsPath), cardsDir, cardKeys);
   const runningOrder = existsSync(runningOrderPath)
     ? JSON.parse(readFileSync(runningOrderPath, 'utf8')) : null;
-  const show = indexShow({ built: new Date().toISOString(), players, days: buildDays(players, runningOrder) });
+  const show = indexShow({
+    built: new Date().toISOString(),
+    players,
+    days: buildDays(players, runningOrder),
+    filmOrder: filmLoopOrder(players),
+  });
   if (manifestOnly) return show;
 
   mkdirSync(cardsDir, { recursive: true });
@@ -230,8 +363,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     const show = await buildShow({ onProgress: (m) => console.log(m) });
     const generic = show.players.filter((p) => p.generic).length;
+    const films = show.players.filter((p) => p.film).length;
     console.log(`\nparty/show.json: ${show.players.length} players ` +
       `(${show.players.length - generic} bespoke, ${generic} flag cards), ` +
+      `${films} long-form films, ` +
       `${show.days[1].length} team matches, ${show.days[2].length} singles.`);
     console.log('Reminder: show.json is gitignored. It carries details for people who said no to the website.');
   } catch (e) {

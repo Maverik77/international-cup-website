@@ -7,8 +7,106 @@
 
 export const SIDES = ['intl', 'usa'];
 
+// --- screens ----------------------------------------------------------------
+// A screen names itself in its own URL: /stage is "main", /stage?screen=bar is
+// "bar". The hub imports this file too, so both ends agree on what a name and a
+// role are without either guessing.
+//
+//   mirror     whatever the show says - the default, and what every screen was
+//              before there was more than one
+//   slideshow  cycles the matches already revealed, whatever the show is doing
+//   films      every player's long-form film, back to back and round again
+//   list       the draw so far as text, for people not watching the reveal
+//   hold       the gold title card
+export const SCREEN_ROLES = ['mirror', 'slideshow', 'films', 'list', 'hold'];
+export const DEFAULT_SCREEN = 'main';
+// /events is public, because the stage has to reach it. That means anyone on the
+// venue wifi can invent a screen name; this cap is what stops the console's
+// Screens list being filled with junk by someone being funny.
+export const MAX_SCREENS = 12;
+
+// Short, lowercase and printable: a name ends up on a button in the console, and
+// anything else becomes "main" rather than being rejected - a screen with a
+// daft name must still show the show.
+export function screenNameFrom(raw) {
+  const name = String(raw == null ? '' : raw).trim().toLowerCase();
+  return /^[a-z0-9][a-z0-9-]{0,15}$/.test(name) ? name : DEFAULT_SCREEN;
+}
+
+// An unknown screen, an unknown role and a wire with no screens at all all mean
+// mirror. Nothing a stranger can type makes a television stop showing the show.
+// The whitelist is what makes that true, including for a name like "constructor":
+// the hasOwn below is belt and braces and removing it changes no behaviour, so do
+// not read it as the thing doing the work.
+export function roleOf(wire, name) {
+  const screens = wire && wire.screens && typeof wire.screens === 'object' ? wire.screens : null;
+  const key = screenNameFrom(name);
+  const role = screens && Object.hasOwn(screens, key) ? screens[key] : null;
+  return SCREEN_ROLES.includes(role) ? role : 'mirror';
+}
+
+// Which film the operator last asked THIS screen to jump to, or null. Same rules
+// as roleOf, and for the same reason: anything the wire does not carry properly
+// is no cue at all, which leaves the loop running rather than stopping it.
+//
+// `seq` is what makes a jump an event rather than a setting. The stage honours a
+// cue once and remembers the number, so the same cue arriving again in the next
+// forty state frames - every reveal sends one - does not restart the film, and
+// coming back from Mirror the show still picks up where the loop was.
+export function filmCueOf(wire, name) {
+  const cues = wire && wire.filmCues && typeof wire.filmCues === 'object' ? wire.filmCues : null;
+  const key = screenNameFrom(name);
+  const cue = cues && Object.hasOwn(cues, key) ? cues[key] : null;
+  if (!cue || typeof cue !== 'object') return null;
+  const playerId = typeof cue.playerId === 'string' ? cue.playerId : '';
+  const seq = Number.isInteger(cue.seq) && cue.seq > 0 ? cue.seq : 0;
+  return playerId === '' || seq === 0 ? null : { playerId, seq };
+}
+
 export function formatFor(day) { return day === 1 ? '4x9' : '8x9'; }
 export function perSide(day) { return day === 1 ? 2 : 1; }
+
+// How many matches each day holds. Both days restart at 1, so the number alone
+// is ambiguous across the night: the day travels with it.
+export const DAY_MATCHES = { 1: 13, 2: 26 };
+
+// The match number, and whether it owns the whole screen. `big` is true for
+// exactly the condition that used to be a black television: the stage is live
+// on a match and nothing in it has been revealed yet. The first reveal docks it.
+// Never throws: a day or index the stage cannot make sense of yields empty text,
+// which renders as no title rather than as "Match undefined".
+export function matchTitle(day, index, shown) {
+  const total = Object.hasOwn(DAY_MATCHES, day) ? DAY_MATCHES[day] : null;
+  const n = Number.isInteger(index) && index > 0 ? index : null;
+  return {
+    day: Number.isInteger(day) ? `Day ${day}` : '',
+    match: n === null ? '' : (total ? `Match ${n} of ${total}` : `Match ${n}`),
+    big: shown !== 'first' && shown !== 'both',
+  };
+}
+
+// The glyphs that sit in the gaps between panels. `at` is the gap index: gap g
+// lies between panel g and panel g+1, so the stage puts it at (g+1)/panels of
+// the width and needs no knowledge of the format.
+//
+// WHEN EACH APPEARS: a partner "+" belongs to its own side and arrives with that
+// side's reveal. "VS" waits for the second side, because a VS hung between a card
+// and a black half reads as a broken screen rather than as suspense.
+export function joinsFor(day, slot) {
+  const n = perSide(day);
+  const s = slot && typeof slot === 'object' ? slot : {};
+  const lit = (side) => s.shown === 'both' || (s.shown === 'first' && side === s.firstSide);
+  const joins = [];
+  for (let g = 0; g < 2 * n - 1; g++) {
+    if (g === n - 1) {
+      joins.push({ at: g, glyph: 'VS', kind: 'vs', side: null, visible: s.shown === 'both' });
+    } else {
+      const side = g < n - 1 ? 'intl' : 'usa';
+      joins.push({ at: g, glyph: '+', kind: 'partner', side, visible: lit(side) });
+    }
+  }
+  return joins;
+}
 
 // The browser's copy of the show arrives as JSON, so it has no `byId` until
 // stage.js builds one; the tests use build-show's indexed show. Accept either.
@@ -68,7 +166,7 @@ export function panelPlan(wire, show) {
       panels.push(makePanel(show, fmt, side, pos, list[pos], revealed));
     }
   }
-  return { fmt, panels };
+  return { fmt, panels, match: matchTitle(day, slot.index, slot.shown), joins: joinsFor(day, slot) };
 }
 
 // THE STAGE'S GATE, in one place: which of the three screens the TV is showing,
@@ -77,11 +175,97 @@ export function panelPlan(wire, show) {
 // Anything that is not live or slideshow is the holding screen, which is why
 // every command that puts something on the screen sets mode to live, and why
 // `assign`, which puts nothing there yet, deliberately does not (lib/state.mjs).
-export function screenPlan(wire, show) {
+// `name` is which screen is asking. It defaults to the only screen there used
+// to be, so a caller that does not care gets exactly the old behaviour.
+export function screenPlan(wire, show, name = DEFAULT_SCREEN) {
+  const role = roleOf(wire, name);
+  if (role === 'hold') return { screen: 'idle', plan: null };
+  if (role === 'slideshow') return { screen: 'slideshow', plan: null };
+  if (role === 'films') return { screen: 'films', plan: filmList(show, filmCueOf(wire, name)) };
+  if (role === 'list') return { screen: 'list', plan: drawList(wire, show) };
   const mode = wire && typeof wire === 'object' ? wire.mode : undefined;
   if (mode === 'slideshow') return { screen: 'slideshow', plan: null };
   if (mode === 'live') return { screen: 'live', plan: panelPlan(wire, show) };
   return { screen: 'idle', plan: null };
+}
+
+// The long-form films, in roster order: the thirty-second film each player got,
+// one after another and then round again. This is the hour before the pairings
+// are announced, so it reads the SHOW and not the wire - no match, no reveal, no
+// position - and a screen playing them is unaffected by anything the operator
+// does until the role changes.
+//
+// A player with no film is simply absent (one gave no hometown, so there is
+// nowhere to fly to). An empty list is a real answer, and the stage holds the
+// title card rather than going black.
+//
+// `cue` is the operator's Jump to a film…, turned from a player into a position
+// in THIS list: the stage knows nothing about who is in the show. A cue naming
+// somebody with no film, or nobody at all, resolves to null and the loop simply
+// carries on - a jump that cannot be made must not stop the films.
+export function filmList(show, cue = null) {
+  const players = show && typeof show === 'object' && Array.isArray(show.players) ? show.players : [];
+  const films = [];
+  for (const p of players) {
+    if (!p || typeof p !== 'object') continue;
+    if (typeof p.film !== 'string' || p.film === '') continue;
+    films.push({
+      playerId: typeof p.id === 'string' ? p.id : '',
+      name: typeof p.name === 'string' ? p.name : '',
+      src: p.film,
+    });
+  }
+  // The loop's running order, planned at build time (build-show.mjs): the sides
+  // alternate, no two Internationals of one country and no two US players of one
+  // state touch, and it holds where the loop goes round again. Roster order is
+  // the fallback, so a show built before this existed still plays - and anyone
+  // the order forgets is appended rather than dropped off the television.
+  const order = show && Array.isArray(show.filmOrder) ? show.filmOrder : null;
+  if (order) {
+    const byId = new Map(films.map((f) => [f.playerId, f]));
+    const sorted = [];
+    for (const id of order) {
+      const f = typeof id === 'string' ? byId.get(id) : undefined;
+      if (f && !sorted.includes(f)) sorted.push(f);
+    }
+    for (const f of films) if (!sorted.includes(f)) sorted.push(f);
+    films.length = 0;
+    films.push(...sorted);
+  }
+  let at = null;
+  if (cue && typeof cue === 'object' && typeof cue.playerId === 'string' && Number.isInteger(cue.seq)) {
+    const index = films.findIndex((f) => f.playerId === cue.playerId);
+    if (index !== -1) at = { index, seq: cue.seq, playerId: cue.playerId, name: films[index].name };
+  }
+  return { films, cue: at };
+}
+
+// The draw so far, as text. A screen set to `list` shows this: every match
+// already revealed, in the order they were revealed, so someone at the bar can
+// read the whole draw without watching for it. Two columns once a single one
+// would run off the bottom of a television.
+export function drawList(wire, show) {
+  const done = wire && Array.isArray(wire.completed) ? wire.completed : [];
+  const names = (list) => (Array.isArray(list) ? list : [])
+    .map((id) => lookup(show, id))
+    .filter(Boolean)
+    .map((p) => (typeof p.name === 'string' ? p.name : ''))
+    .filter((n) => n !== '');
+  const rows = [];
+  for (const m of done) {
+    if (!m || typeof m !== 'object') continue;
+    const intl = names(m.intl);
+    const usa = names(m.usa);
+    if (intl.length === 0 && usa.length === 0) continue;
+    rows.push({
+      key: `${m.day}-${m.index}`,
+      day: m.day,
+      label: `${m.index}`,
+      intl: intl.join(' + '),
+      usa: usa.join(' + '),
+    });
+  }
+  return { rows, columns: rows.length > 10 ? 2 : 1 };
 }
 
 export function panelsForMatch(match, show) {
@@ -95,7 +279,9 @@ export function panelsForMatch(match, show) {
       panels.push(makePanel(show, fmt, side, pos, list[pos], true));
     }
   }
-  return { fmt, panels };
+  // A completed match is shown whole, so every glyph is lit and the number is docked.
+  const shown = { shown: 'both', firstSide: 'intl' };
+  return { fmt, panels, match: matchTitle(m.day, m.index, 'both'), joins: joinsFor(m.day, shown) };
 }
 
 export function preloadSrcs(wire, show) {

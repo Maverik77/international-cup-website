@@ -559,3 +559,46 @@ test('goto to the current slot and setDay to the current day are silent no-ops',
   rejects(s, { name: 'goto', index: 99 }, /There is no match/);
   rejects(s, { name: 'setDay', day: 3 }, /The day must be/);
 });
+
+// goto carries an optional day so that jumping across days is ONE command, and
+// therefore one Undo. Without it the console would send setDay then goto, and
+// the operator reaching for Undo mid-show would have to tap it twice.
+test('goto crosses days in one command, and one undo brings it back', () => {
+  const start = run(initialState(show), { name: 'goto', index: 4 });
+  assert.equal(start.day, 1);
+
+  const over = run(start, { name: 'goto', day: 2, index: 11 });
+  assert.equal(over.day, 2);
+  assert.equal(over.current[2], 11);
+  assert.equal(over.current[1], 4, 'the day it left is still where it was');
+  assert.equal(over.mode, 'live');
+
+  const back = run(over, { name: 'undo' });
+  assert.equal(back.day, 1);
+  assert.equal(back.current[1], 4);
+});
+
+test('an absent day means the day in play, and the no-op rule is per day', () => {
+  const here = run(initialState(show), { name: 'goto', index: 3 });
+  // Same day, same index, already live: nothing to do, the same object comes back.
+  assert.equal(reduce(here, { name: 'goto', index: 3 }, show), here);
+  assert.equal(reduce(here, { name: 'goto', day: 1, index: 3 }, show), here);
+  // The SAME index on the OTHER day is a different match, so it must move.
+  const other = reduce(here, { name: 'goto', day: 2, index: 3 }, show);
+  assert.notEqual(other, here);
+  assert.equal(other.day, 2);
+  // Idle is never a no-op: it means "put this one on the screen".
+  const idle = reduce(here, { name: 'setMode', mode: 'idle' }, show);
+  assert.equal(reduce(idle, { name: 'goto', index: 3 }, show).mode, 'live');
+});
+
+test('the index is checked against the day being jumped to, not the day in play', () => {
+  const s = initialState(show);
+  // Day 1 holds 13 matches, day 2 holds 26: index 20 exists on one and not the other.
+  assert.equal(run(s, { name: 'goto', day: 2, index: 20 }).current[2], 20);
+  rejects(s, { name: 'goto', day: 1, index: 20 }, /no match 21 on Day 1/i);
+  rejects(s, { name: 'goto', day: 2, index: 26 }, /no match 27 on Day 2/i);
+  for (const day of [0, 3, '2', null, 1.5]) {
+    rejects(s, { name: 'goto', day, index: 0 }, /day must be 1 or 2/i);
+  }
+});

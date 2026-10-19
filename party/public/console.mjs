@@ -1,5 +1,8 @@
 // The console's decisions, kept free of the DOM so the tests can reach them.
 // operator.js applies them to the page; the same split as panels.mjs / stage.js.
+// Relative, not '/panels.mjs': the same specifier has to resolve in the browser
+// and under node --test, and only a relative one does both.
+import { SCREEN_ROLES, DEFAULT_SCREEN, filmList, filmCueOf } from './panels.mjs';
 const TEAM_OF = { intl: 'international', usa: 'usa' };
 const COUNT = { 1: 13, 2: 26 };
 
@@ -24,6 +27,92 @@ export function nameOf(show, id) {
   if (!id) return '';
   const p = find(show, id);
   return p ? p.name : id;
+}
+
+// --- who is already drawn, and where ----------------------------------------
+//
+// The board comes from the hub's gated /api/board: every slot of both days. It
+// never rides on /events, which the public stage reads - that would hand anyone
+// on the venue wifi the whole draw before the first reveal.
+//
+// A player plays once a DAY, not once a night: each day uses all 26 a side, so a
+// night-wide rule would hide the entire roster the moment Day 1 finished.
+export function takenOnDay(board, day) {
+  const where = new Map();
+  const matches = board && board.days && typeof board.days === 'object' ? board.days[String(day)] : null;
+  if (!Array.isArray(matches)) return where;
+  for (const m of matches) {
+    if (!m || typeof m !== 'object') continue;
+    const ids = [...(Array.isArray(m.intl) ? m.intl : []), ...(Array.isArray(m.usa) ? m.usa : [])];
+    for (const id of ids) {
+      // First writer wins: a player wrongly in two matches reads as the earlier
+      // one, and the problems line is what tells the operator about the clash.
+      if (typeof id === 'string' && id !== '' && !where.has(id)) where.set(id, m.index);
+    }
+  }
+  return where;
+}
+
+// The picker's list. `holding` is whoever already sits in the slot being edited:
+// they stay on the list however it is filtered, because otherwise replacing a
+// player would mean emptying the slot first. `hidden` counts what the picked
+// rule took out, so the toggle can say how many are behind it.
+export function pickerRows(show, { side, board, day, holding = '', current, showPicked = false, query = '' } = {}) {
+  const taken = takenOnDay(board, day);
+  const q = String(query == null ? '' : query).trim().toLowerCase();
+  const rows = [];
+  let hidden = 0;
+  for (const p of rosterFor(show, side)) {
+    if (q && !p.name.toLowerCase().includes(q)) continue;
+    const at = taken.get(p.id);
+    const picked = at !== undefined && p.id !== holding;
+    if (picked && !showPicked) { hidden += 1; continue; }
+    rows.push({
+      id: p.id,
+      name: p.name,
+      picked,
+      holding: p.id === holding,
+      where: picked ? (at === current ? 'already in this match' : `already in match ${at}`) : '',
+    });
+  }
+  return { rows, hidden };
+}
+
+// "Ashvini Anjutgi + Vijay Davuluri vs John Altman + Frank Ambrose", or '' when
+// nothing has been drawn yet. Full names on purpose: this roster has two Baes,
+// two Vosburghs and a Chris and a Chrissy Crouse, so a surname names nobody.
+export function matchNames(show, match) {
+  const side = (list) => (Array.isArray(list) ? list : [])
+    .filter((id) => typeof id === 'string' && id !== '')
+    .map((id) => nameOf(show, id));
+  const intl = side(match && match.intl);
+  const usa = side(match && match.usa);
+  if (intl.length === 0 && usa.length === 0) return '';
+  const join = (xs) => (xs.length ? xs.join(' + ') : '—');
+  return `${join(intl)} vs ${join(usa)}`;
+}
+
+// Jump to… both days at once, each match carrying whoever is already in it.
+// `index` counts from 0 because the commands do; `label` counts from 1 because
+// the operator does.
+export function jumpSections(show, board) {
+  const b = board && typeof board === 'object' ? board : {};
+  return ['1', '2'].map((d) => {
+    const day = Number(d);
+    const matches = b.days && Array.isArray(b.days[d]) ? b.days[d] : [];
+    return {
+      day,
+      title: `Day ${day}`,
+      rows: matches.map((m, i) => ({
+        day,
+        index: i,
+        label: `Match ${m && Number.isInteger(m.index) ? m.index : i + 1}`,
+        names: matchNames(show, m),
+        done: Boolean(m && m.done),
+        current: b.day === day && Boolean(b.current) && b.current[d] === i,
+      })),
+    };
+  });
 }
 
 const clock = (iso) => new Date(iso).toTimeString().slice(0, 8);
@@ -140,4 +229,91 @@ export function createCommandClient({ fetch, onState, onLogin, now = Date.now, n
   }
 
   return { send, nextLocked: () => inFlight() || now() < nextOpenAt };
+}
+
+// --- screens -----------------------------------------------------------------
+
+// What each role is called on a button. Keyed by SCREEN_ROLES, so a role added
+// in panels.mjs without a label here fails the console's own test rather than
+// reaching the night as a blank button.
+export const SCREEN_ROLE_LABELS = {
+  mirror: 'Mirror the show',
+  slideshow: 'Slideshow',
+  films: 'Player films',
+  list: 'Draw so far',
+  hold: 'Title card',
+};
+
+export const SCREEN_ROLE_HINTS = {
+  mirror: 'Shows exactly what the main screen shows.',
+  slideshow: 'Cycles the matches already revealed.',
+  films: 'Every player film, one after another, round and round.',
+  list: 'The whole draw so far, as text.',
+  hold: 'The gold title card, and nothing else.',
+};
+
+// "Mirror the show, Slideshow, Player films, Draw so far or Title card" - the
+// choices, written out, for the hub to put in its refusal. Built from the labels
+// so a role added in panels.mjs cannot drift out of the sentence the operator reads.
+export function screenRoleChoices() {
+  const labels = SCREEN_ROLES.map((role) => SCREEN_ROLE_LABELS[role]).filter(Boolean);
+  if (labels.length <= 1) return labels.join('');
+  return `${labels.slice(0, -1).join(', ')} or ${labels[labels.length - 1]}`;
+}
+
+// One row per screen that has connected. Main first, then by name, so the list
+// never reorders itself under the operator's finger as screens come and go.
+export function screenRows(wire) {
+  const screens = wire && wire.screens && typeof wire.screens === 'object' ? wire.screens : {};
+  const names = Object.keys(screens);
+  names.sort((a, b) => {
+    if (a === DEFAULT_SCREEN) return -1;
+    if (b === DEFAULT_SCREEN) return 1;
+    return a.localeCompare(b);
+  });
+  return names.map((name) => ({
+    name,
+    role: SCREEN_ROLES.includes(screens[name]) ? screens[name] : 'mirror',
+    label: name === DEFAULT_SCREEN ? 'Main screen' : name,
+    roles: SCREEN_ROLES.map((role) => ({ role, label: SCREEN_ROLE_LABELS[role], hint: SCREEN_ROLE_HINTS[role] })),
+    // The film this screen was last sent to, so the dialog can say so. The hub
+    // does not know where the loop has got to since - only where it was sent -
+    // which is why this says "jumped to" and not "now playing".
+    cue: filmCueOf(wire, name),
+  }));
+}
+
+// Jump to a film…: every player who has one, by side and then by surname. The
+// loop's own order is roster order, which is grouped by country and no use for
+// finding a person on a list of thirty-nine. `cued` is whoever this screen was
+// last sent to, so the operator can see what they last picked.
+//
+// A side with nobody left after the filter is dropped rather than left as a
+// heading with nothing under it; both sides empty is a real answer, and the
+// dialog says so.
+export function filmSections(show, { query = '', cued = '' } = {}) {
+  const q = String(query == null ? '' : query).trim().toLowerCase();
+  const withFilm = new Set(filmList(show).films.map((f) => f.playerId));
+  return [['intl', 'International'], ['usa', 'USA']].map(([side, title]) => ({
+    side,
+    title,
+    rows: rosterFor(show, side)
+      .filter((p) => withFilm.has(p.id))
+      .filter((p) => !q || p.name.toLowerCase().includes(q))
+      .map((p) => ({ playerId: p.id, name: p.name, cued: p.id === cued })),
+  })).filter((section) => section.rows.length > 0);
+}
+
+// Whether Sync would change anything, so the button can say so rather than
+// looking broken when it is pressed and nothing moves.
+export function screensInSync(wire) {
+  return screenRows(wire).every((row) => row.role === 'mirror');
+}
+
+// What the Screens button says on the main console. A screen that has wandered
+// off the show is worth noticing without opening the dialog.
+export function screensLabel(wire) {
+  const rows = screenRows(wire);
+  const off = rows.filter((row) => row.role !== 'mirror').length;
+  return off === 0 ? 'Screens…' : `Screens… (${off} off the show)`;
 }

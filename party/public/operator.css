@@ -97,6 +97,61 @@ dialog li button {
 }
 dialog li button .meta { color: var(--dim); font-size: .85rem; }
 
+/* Screens: one block per television, its roles as a row of buttons with the
+   current one lit, so what each screen is doing is readable at a glance. */
+#screens-list { margin-bottom: 12px; }
+.screen-row { margin-bottom: 16px; }
+.screen-row h4 {
+  margin: 0 0 8px;
+  color: var(--dim); font-size: .85rem; text-transform: uppercase; letter-spacing: .12em;
+}
+.screen-roles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.screen-role { min-height: 48px; }
+/* An odd number of roles leaves the last one alone on its row: let it take the
+   whole width rather than sit as a half-button beside a gap. */
+.screen-roles > .screen-role:last-child:nth-child(odd) { grid-column: 1 / -1; }
+/* Jump to a film…: under the roles, because it is about one of them. Full width
+   so it is not mistaken for a sixth role. */
+.screen-film { width: 100%; margin-top: 8px; min-height: 44px; }
+.screen-cue { margin: 6px 0 0; color: var(--dim); font-size: .85rem; }
+/* The role a screen is on: lit, and disabled because tapping it changes nothing. */
+.screen-role.is-on {
+  background: var(--gold); color: #11151b; font-weight: 700; opacity: 1;
+  border-color: var(--gold);
+}
+#screens-sync { width: 100%; margin-bottom: 16px; }
+#screens-sync:disabled { opacity: .55; }
+.hint { color: var(--dim); font-size: .85rem; line-height: 1.5; margin: 0 0 12px; }
+.hint code { background: #11151b; border-radius: 4px; padding: 1px 5px; }
+
+/* The picker's toggle sits with the search box, not with the list, so it does
+   not scroll away from the names it is talking about. */
+#picker-toggle { margin: 0 0 12px; min-height: 44px; }
+
+/* Jump to… is both days at once: one scroll for the lot, headings that stay put
+   so a long Day 2 never loses its label. The films list is the same shape, two
+   sides instead of two days. */
+#jumper-list, #films-list { max-height: 56vh; overflow: auto; margin-bottom: 12px; }
+#jumper-list ul, #films-list ul { max-height: none; overflow: visible; margin: 0 0 8px; }
+#films-filter {
+  width: 100%; min-height: 52px; margin-bottom: 12px; padding: 0 12px;
+  background: #11151b; border: 1px solid var(--line); border-radius: 10px;
+  color: var(--ink); font: inherit;
+}
+.jump-day h4 {
+  position: sticky; top: 0; z-index: 1;
+  margin: 0 0 8px; padding: 6px 0;
+  background: var(--panel);
+  color: var(--dim); font-size: .85rem; text-transform: uppercase; letter-spacing: .12em;
+}
+/* A match with names needs two lines; one without stays a single row. */
+dialog li button.jump { display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 8px 12px; }
+.jump-label { font-weight: 700; }
+.jump-names { line-height: 1.3; }
+dialog li button.jump.is-here { border-color: var(--gold); }
+/* The film this screen was last sent to, marked the way the match you are on is. */
+dialog li button.film.is-cued { border-color: var(--gold); }
+
 @media (max-width: 560px) {
   .sides { grid-template-columns: 1fr; }
   .actions.secondary { grid-template-columns: 1fr 1fr; }
@@ -108,4 +163,4 @@ dialog li button .meta { color: var(--dim); font-size: .85rem; }
 .note { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; color: var(--dim); font-size: .95rem; }
 [hidden] { display: none !important; }
 
-#picker-filter { user-select: text; -webkit-user-select: text; }
+#picker-filter, #films-filter { user-select: text; -webkit-user-select: text; }

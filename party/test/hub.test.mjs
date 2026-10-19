@@ -6,6 +6,8 @@ import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, readdi
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
+import { MAX_SCREENS, SCREEN_ROLES } from "../public/panels.mjs";
+import { SCREEN_ROLE_LABELS } from '../public/console.mjs';
 import { createHub, parseArgs, MAX_BODY_BYTES, STOP_FLUSH_MS, shutdownLines } from '../hub.mjs';
 import { sessionToken } from '../lib/auth.mjs';
 import { CommandError, reduce } from '../lib/state.mjs';
@@ -1066,4 +1068,305 @@ test('gate 22: a generated password is written to the file and appears in no pub
   const bodies = [JSON.stringify(hub.whoami()), ...(await Promise.all(['/api/state', '/api/show', '/'].map(async (p) => (await fetch(`${base}${p}`)).text())))];
   for (const b of bodies) assert.ok(!b.includes(generated));
   assert.equal((await login(base, generated)).status, 200, 'and the generated password does unlock the console');
+});
+
+// --- /api/board --------------------------------------------------------------
+// It carries every pairing of the night. /events and /api/state are public
+// because the stage reads them, so this one must not be, or anyone on the venue
+// wifi has the whole draw before the first reveal.
+test('the board is gated, and the public endpoints never carry another match', async () => {
+  const { base } = await startHub();
+  await post(base, { name: 'assign', side: 'usa', players: ['player-usa-11', 'player-usa-12'] });
+  await post(base, { name: 'goto', day: 2, index: 7 });
+  await post(base, { name: 'assign', side: 'usa', players: ['player-usa-9'] });
+  await post(base, { name: 'goto', day: 1, index: 0 });
+
+  const denied = await fetch(`${base}/api/board`);
+  assert.equal(denied.status, 401);
+  assert.equal((await denied.json()).needPassword, true);
+  for (const cookie of [{}, { Cookie: 'icup_op=wrong' }, { Cookie: 'icup_opx=test-password-1' }]) {
+    assert.equal((await fetch(`${base}/api/board`, { headers: cookie })).status, 401);
+  }
+
+  // The day 2 draw exists, and the public state does not mention it. (index 7 is
+  // the command's count-from-0, so it is match 8.)
+  const board = await (await fetch(`${base}/api/board`, { headers: opCookie() })).json();
+  assert.deepEqual(board.days['2'][7].usa, ['player-usa-9']);
+  assert.equal(board.days['2'][7].index, 8);
+  assert.deepEqual(board.days['1'][0].usa, ['player-usa-11', 'player-usa-12']);
+  assert.equal(board.days['1'].length, 13);
+  assert.equal(board.days['2'].length, 26);
+  assert.equal(board.day, 1);
+  assert.equal(board.current['2'], 7);
+  // /api/show carries the roster, so every id is in it by design; /api/state is
+  // the one that must not say who has been DRAWN anywhere but here and next.
+  const publicState = await (await fetch(`${base}/api/state`)).text();
+  assert.doesNotMatch(publicState, /player-usa-9"/, '/api/state leaks the day 2 draw');
+  assert.match(publicState, /player-usa-11/, 'it does carry the match in play');
+});
+
+// The console fetches the board when a dialog opens, so a stale one would hide
+// a player who has just been drawn - or offer one who has.
+test('the board is read fresh: every command shows up in the next read', async () => {
+  const { base } = await startHub();
+  const board = async () => (await (await fetch(`${base}/api/board`, { headers: opCookie() })).json());
+  assert.deepEqual((await board()).days['1'][0].usa, ['', '']);
+
+  await post(base, { name: 'assign', side: 'usa', players: ['player-usa-3', 'player-usa-4'] });
+  assert.deepEqual((await board()).days['1'][0].usa, ['player-usa-3', 'player-usa-4']);
+
+  await post(base, { name: 'next' });
+  const afterNext = await board();
+  assert.equal(afterNext.days['1'][0].done, true);
+  assert.equal(afterNext.current['1'], 1, 'it says where the operator now is');
+
+  await post(base, { name: 'undo' });
+  const afterUndo = await board();
+  assert.equal(afterUndo.days['1'][0].done, false);
+  assert.equal(afterUndo.current['1'], 0);
+});
+
+test('one command jumps across days, so one Undo comes back', async () => {
+  const { base } = await startHub();
+  const state = async () => (await (await fetch(`${base}/api/state`)).json());
+  assert.equal((await state()).day, 1);
+
+  const jumped = await (await post(base, { name: 'goto', day: 2, index: 5 })).json();
+  assert.equal(jumped.ok, true);
+  assert.equal(jumped.state.day, 2);
+  assert.equal(jumped.state.slot.index, 6);
+  assert.equal(jumped.state.mode, 'live');
+
+  const back = await (await post(base, { name: 'undo' })).json();
+  assert.equal(back.state.day, 1, 'a single Undo is enough');
+  assert.equal(back.state.slot.index, 1);
+
+  // A day that is not 1 or 2, and an index off the end of the day asked for.
+  for (const cmd of [{ name: 'goto', day: 3, index: 0 }, { name: 'goto', day: 2, index: 26 }]) {
+    const bad = await post(base, cmd);
+    assert.equal(bad.status, 400, JSON.stringify(cmd));
+  }
+  // Day 1 has 13 matches and day 2 has 26: index 20 is only valid on day 2.
+  assert.equal((await post(base, { name: 'goto', day: 1, index: 20 })).status, 400);
+  assert.equal((await post(base, { name: 'goto', day: 2, index: 20 })).status, 200);
+});
+
+// --- screens -----------------------------------------------------------------
+
+const es = async (base, screen) => {
+  // Opens an event stream the way a stage does, reads the first frame, and leaves.
+  const ctrl = new AbortController();
+  const url = screen === undefined ? `${base}/events` : `${base}/events?screen=${encodeURIComponent(screen)}`;
+  const res = await fetch(url, { signal: ctrl.signal });
+  const reader = res.body.getReader();
+  await reader.read();
+  ctrl.abort();
+  return res;
+};
+
+test('a stage names itself when it connects, and the console can then set it', async () => {
+  const { base } = await startHub();
+  const wire = async () => (await (await fetch(`${base}/api/state`)).json());
+
+  // Before anything connects there is one screen: the one there has always been.
+  assert.deepEqual((await wire()).screens, { main: 'mirror' });
+
+  await es(base, 'bar');
+  assert.deepEqual((await wire()).screens, { main: 'mirror', bar: 'mirror' });
+
+  const set = await (await post(base, { name: 'setScreen', screen: 'bar', role: 'list' })).json();
+  assert.equal(set.ok, true);
+  assert.deepEqual(set.state.screens, { main: 'mirror', bar: 'list' });
+  assert.deepEqual((await wire()).screens, { main: 'mirror', bar: 'list' });
+
+  // A screen that never connected cannot be set: it would sit in the console for
+  // ever with nothing behind it.
+  const ghost = await post(base, { name: 'setScreen', screen: 'nowhere', role: 'hold' });
+  assert.equal(ghost.status, 400);
+  assert.match((await ghost.json()).error, /no screen called "nowhere"/);
+  // Nor can a role the stage does not understand.
+  const disco = await post(base, { name: 'setScreen', screen: 'bar', role: 'disco' });
+  assert.equal(disco.status, 400);
+  // The refusal lists the buttons the operator is looking at, every one of them.
+  const said = (await disco.json()).error;
+  for (const role of SCREEN_ROLES) assert.ok(said.includes(SCREEN_ROLE_LABELS[role]), `${role}: ${said}`);
+  assert.equal((await post(base, { name: 'setScreen', screen: 'bar', role: '__proto__' })).status, 400);
+
+  // Player films: the films loop is a screen role like the others.
+  const films = await (await post(base, { name: 'setScreen', screen: 'bar', role: 'films' })).json();
+  assert.equal(films.ok, true);
+  assert.deepEqual(films.state.screens, { main: 'mirror', bar: 'films' });
+});
+
+// Jump to a film: the console names a player, the hub turns that into a cue for
+// one screen and puts that screen on the films in the same breath.
+const withFilms = (show) => {
+  for (const p of show.players) {
+    if (p.id === 'player-intl-1' || p.id === 'player-usa-1') p.film = `cards/${p.id}-16x9-web.mp4`;
+  }
+};
+
+test('Jump to a film cues one screen and puts it on the films', async () => {
+  const { base } = await startHub({ showTweak: withFilms });
+  const wire = async () => (await (await fetch(`${base}/api/state`)).json());
+  await es(base, 'bar');
+
+  // Before anything is asked for there are no cues at all.
+  assert.deepEqual((await wire()).filmCues, {});
+
+  const first = await (await post(base, { name: 'playFilm', screen: 'bar', playerId: 'player-usa-1' })).json();
+  assert.equal(first.ok, true);
+  assert.equal(first.state.screens.bar, 'films', 'choosing a film is also how a screen is put on the films');
+  assert.deepEqual(first.state.filmCues, { bar: { playerId: 'player-usa-1', seq: 1 } });
+  assert.deepEqual((await wire()).filmCues, { bar: { playerId: 'player-usa-1', seq: 1 } });
+
+  // The number only ever goes up, which is what lets the stage tell a new jump
+  // from the same one arriving again in the next state frame.
+  const again = await (await post(base, { name: 'playFilm', screen: 'bar', playerId: 'player-usa-1' })).json();
+  assert.deepEqual(again.state.filmCues, { bar: { playerId: 'player-usa-1', seq: 2 } });
+  const other = await (await post(base, { name: 'playFilm', screen: 'main', playerId: 'player-intl-1' })).json();
+  assert.deepEqual(other.state.filmCues, {
+    bar: { playerId: 'player-usa-1', seq: 2 },
+    main: { playerId: 'player-intl-1', seq: 3 },
+  });
+
+  // A screen that never connected, and a player with no film, are both refused
+  // in words rather than quietly leaving a television on something else.
+  const ghost = await post(base, { name: 'playFilm', screen: 'nowhere', playerId: 'player-usa-1' });
+  assert.equal(ghost.status, 400);
+  assert.match((await ghost.json()).error, /no screen called "nowhere"/);
+  for (const playerId of ['player-intl-2', 'nobody', '', null, 7, {}, '__proto__']) {
+    const no = await post(base, { name: 'playFilm', screen: 'bar', playerId });
+    assert.equal(no.status, 400, JSON.stringify(playerId));
+    assert.match((await no.json()).error, /no film for that player/i, JSON.stringify(playerId));
+  }
+  // And none of that moved what was already cued.
+  assert.deepEqual((await wire()).filmCues.bar, { playerId: 'player-usa-1', seq: 2 });
+
+  // A cue is no more show state than a role is: no history, no undo.
+  await post(base, { name: 'goto', index: 1 });
+  await post(base, { name: 'playFilm', screen: 'bar', playerId: 'player-intl-1' });
+  const undone = await (await post(base, { name: 'undo' })).json();
+  assert.equal(undone.state.slot.index, 1, 'Undo reversed the jump, not the film');
+  assert.equal(undone.state.filmCues.bar.playerId, 'player-intl-1', 'and the cue is still where it was');
+});
+
+test('a show with no films has no film to jump to', async () => {
+  const { base } = await startHub();
+  await es(base, 'bar');
+  const no = await post(base, { name: 'playFilm', screen: 'bar', playerId: 'player-intl-1' });
+  assert.equal(no.status, 400);
+  assert.equal((await (await fetch(`${base}/api/state`)).json()).screens.bar, 'mirror',
+    'a refused jump leaves the screen alone');
+});
+
+// A surface fetches the roster once and then lives on state frames. If the show
+// is rebuilt and the hub restarted - which happens every time a player's photo
+// arrives - an open console would otherwise keep yesterday's players for the
+// rest of the night, looking perfectly healthy while doing it.
+test('every frame carries the show it was built from, so a surface can tell it is stale', async () => {
+  const { base, dir } = await startHub();
+  const show = JSON.parse(readFileSync(join(dir, 'show.json'), 'utf8'));
+  const wire = await (await fetch(`${base}/api/state`)).json();
+  assert.equal(wire.built, show.built, 'the state frame names the build');
+
+  // And on a command's reply and over the stream, not only on a poll.
+  const after = await (await post(base, { name: 'goto', index: 1 })).json();
+  assert.equal(after.state.built, show.built);
+  await es(base, 'bar');
+  const roles = await (await post(base, { name: 'setScreen', screen: 'bar', role: 'films' })).json();
+  assert.equal(roles.state.built, show.built, 'screen frames carry it too');
+
+  // A hub restarted on a REBUILT show hands out the new stamp, which is the
+  // whole point: the number changing is what tells a surface to fetch again.
+  const second = await startHub({ dir, showTweak: (s) => { s.built = 'rebuilt-later'; } });
+  assert.equal((await (await fetch(`${second.base}/api/state`)).json()).built, 'rebuilt-later');
+});
+
+test('Sync puts every screen back on the show in one command', async () => {
+  const { base } = await startHub();
+  await es(base, 'bar');
+  await es(base, 'back-room');
+  await post(base, { name: 'setScreen', screen: 'bar', role: 'slideshow' });
+  await post(base, { name: 'setScreen', screen: 'back-room', role: 'hold' });
+  await post(base, { name: 'setScreen', screen: 'main', role: 'list' });
+
+  const synced = await (await post(base, { name: 'syncScreens' })).json();
+  assert.deepEqual(synced.state.screens, { main: 'mirror', bar: 'mirror', 'back-room': 'mirror' });
+});
+
+// Back on the show means back on the show: a screen opened later must not start
+// at a film somebody asked for an hour ago.
+test('Sync forgets which film each screen was sent to', async () => {
+  const { base } = await startHub({ showTweak: withFilms });
+  await es(base, 'bar');
+  await post(base, { name: 'playFilm', screen: 'bar', playerId: 'player-usa-1' });
+  const synced = await (await post(base, { name: 'syncScreens' })).json();
+  assert.deepEqual(synced.state.filmCues, {});
+  assert.equal(synced.state.screens.bar, 'mirror');
+});
+
+// A role is about the room, not about the draw. If it reached the saved show it
+// would be undoable and would push to the website, both of which are wrong.
+test('a screen role is never saved, never undoable and never pushed', async () => {
+  const pushes = [];
+  const fetchImpl = async (url, init) => { pushes.push(String(url)); return { ok: true, status: 200, json: async () => ({}) }; };
+  const { base, dir } = await startHub({ enableSync: true, target: 'staging', fetchImpl, password: 'test-password', syncMinDelay: 1 });
+  await es(base, 'bar');
+
+  // The state file is written by the first command, not at boot: give it one.
+  await post(base, { name: 'goto', index: 1 });
+  await new Promise((r) => setTimeout(r, 60));
+  const before = readFileSync(join(dir, 'state.json'), 'utf8');
+  const sent = pushes.length;
+  await post(base, { name: 'setScreen', screen: 'bar', role: 'list' });
+  await post(base, { name: 'syncScreens' });
+  await new Promise((r) => setTimeout(r, 60));
+
+  assert.equal(readFileSync(join(dir, 'state.json'), 'utf8'), before, 'the saved show did not move');
+  assert.equal(pushes.length, sent, 'nothing was pushed to the website');
+  assert.doesNotMatch(before, /screens/, 'roles are not in the saved show at all');
+  assert.doesNotMatch(before, /filmCues/, 'nor is the film a screen was sent to');
+
+  // And a single Undo reaches past both screen commands to the jump, because
+  // neither of them put anything in the history.
+  const undone = await (await post(base, { name: 'undo' })).json();
+  assert.equal(undone.state.slot.index, 1, 'Undo reversed the jump, not a screen change');
+});
+
+test('a hub that restarts brings every screen back on the show', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hub-'));
+  const first = await startHub({ dir });
+  await es(first.base, 'bar');
+  await post(first.base, { name: 'setScreen', screen: 'bar', role: 'hold' });
+  await post(first.base, { name: 'goto', index: 4 });
+  await first.hub.stop();
+
+  const again = await startHub({ dir });
+  const wire = await (await fetch(`${again.base}/api/state`)).json();
+  assert.equal(wire.slot.index, 5, 'the show carried on from where it was');
+  assert.deepEqual(wire.screens, { main: 'mirror' }, 'and every screen is back on it');
+  assert.deepEqual(wire.filmCues, {}, 'with no film anybody was sent to');
+});
+
+test('a stranger on the wifi cannot fill the console with screens', async () => {
+  const { base } = await startHub();
+  for (let i = 0; i < 30; i++) await es(base, `junk-${i}`);
+  const wire = await (await fetch(`${base}/api/state`)).json();
+  const count = Object.keys(wire.screens).length;
+  assert.ok(count <= MAX_SCREENS, `${count} screens is past the cap of ${MAX_SCREENS}`);
+  assert.equal(wire.screens.main, 'mirror', 'and the main screen is never crowded out');
+  // Setting a role is gated, whatever names got in.
+  assert.equal((await fetch(`${base}/api/command`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: 'setScreen', screen: 'junk-0', role: 'hold' }),
+  })).status, 401);
+});
+
+test('a stage with no name, or a daft one, is the main screen', async () => {
+  const { base } = await startHub();
+  await es(base);                    // /events with no query at all: today's stage
+  await es(base, 'bar room');        // a space is not a name
+  await es(base, '');
+  assert.deepEqual((await (await fetch(`${base}/api/state`)).json()).screens, { main: 'mirror' });
 });

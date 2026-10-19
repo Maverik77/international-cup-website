@@ -4,7 +4,8 @@ process.env.TZ = 'UTC';
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS } from '../public/console.mjs';
+import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS, takenOnDay, pickerRows, matchNames, jumpSections, screenRows, screensInSync, screensLabel, SCREEN_ROLE_LABELS, SCREEN_ROLE_HINTS, screenRoleChoices, filmSections } from '../public/console.mjs';
+import { SCREEN_ROLES } from '../public/panels.mjs';
 import { indexShow } from '../build/build-show.mjs';
 
 const players = [
@@ -277,4 +278,214 @@ test('a late reply to a hung Next cannot reopen the lock a newer Next holds', as
     h.release();
     await second;
   } finally { h.release(); }
+});
+
+// --- the picker, and the Jump list over both days ----------------------------
+
+// Four players a side is enough to say everything: one drawn elsewhere on this
+// day, one drawn on the other day, one in the slot being edited, one free.
+const big = indexShow({ built: 'now', days: { 1: [], 2: [] }, players: [
+  { id: 'i1', team: 'international', name: 'Ashvini Anjutgi' },
+  { id: 'i2', team: 'international', name: 'Vijay Davuluri' },
+  { id: 'i3', team: 'international', name: 'Jun Bae' },
+  { id: 'i4', team: 'international', name: 'Yun Sang Bae' },
+  { id: 'u1', team: 'usa', name: 'John Altman' },
+  { id: 'u2', team: 'usa', name: 'Frank Ambrose' },
+] });
+
+const board = {
+  day: 1,
+  current: { 1: 0, 2: 0 },
+  days: {
+    1: [{ index: 1, intl: ['i1', ''], usa: ['u1', ''], done: false },
+      { index: 2, intl: ['i2', 'i3'], usa: ['', ''], done: true }],
+    2: [{ index: 1, intl: ['i4'], usa: [''], done: false },
+      { index: 2, intl: [''], usa: [''], done: false }],
+  },
+};
+
+const names = (r) => r.rows.map((x) => x.name);
+
+test('a player drawn anywhere on this day is off the list, and the toggle counts them', () => {
+  const hidden = pickerRows(big, { side: 'intl', board, day: 1, current: 1 });
+  assert.deepEqual(names(hidden), ['Yun Sang Bae'], 'only the one not drawn on day 1');
+  assert.equal(hidden.hidden, 3);
+
+  const shown = pickerRows(big, { side: 'intl', board, day: 1, current: 1, showPicked: true });
+  assert.deepEqual(names(shown), ['Ashvini Anjutgi', 'Jun Bae', 'Yun Sang Bae', 'Vijay Davuluri']);
+  assert.equal(shown.hidden, 0, 'nothing is hidden once they are shown');
+  assert.deepEqual(shown.rows.map((x) => x.where),
+    ['already in this match', 'already in match 2', '', 'already in match 2']);
+});
+
+// Each day draws all 26 a side, so a night-wide rule empties the list on day 2.
+test('being drawn on the other day does not take a player off this day', () => {
+  assert.ok(names(pickerRows(big, { side: 'intl', board, day: 2 })).includes('Ashvini Anjutgi'),
+    'day 1 holds i1, but we are picking for day 2');
+  assert.deepEqual(takenOnDay(board, 1), new Map([['i1', 1], ['u1', 1], ['i2', 2], ['i3', 2]]));
+  assert.deepEqual(takenOnDay(board, 2), new Map([['i4', 1]]));
+});
+
+test('whoever is in the slot being edited stays on the list, so they can be replaced', () => {
+  const r = pickerRows(big, { side: 'intl', board, day: 1, current: 1, holding: 'i1' });
+  assert.ok(names(r).includes('Ashvini Anjutgi'), 'the slot\'s own player is never hidden');
+  assert.equal(r.rows.find((x) => x.id === 'i1').holding, true);
+  assert.equal(r.rows.find((x) => x.id === 'i1').picked, false);
+  assert.equal(r.hidden, 2, 'the other two drawn players are still hidden');
+});
+
+test('the search box and the picked rule both apply, in that order', () => {
+  assert.deepEqual(names(pickerRows(big, { side: 'intl', board, day: 1, query: 'bae', showPicked: true })),
+    ['Jun Bae', 'Yun Sang Bae']);
+  assert.deepEqual(names(pickerRows(big, { side: 'intl', board, day: 1, query: 'bae' })), ['Yun Sang Bae']);
+  assert.equal(pickerRows(big, { side: 'intl', board, day: 1, query: 'bae' }).hidden, 1,
+    'the count is of what this search hid, not of the whole roster');
+  assert.deepEqual(names(pickerRows(big, { side: 'intl', board, day: 1, query: 'zzz', showPicked: true })), []);
+});
+
+test('with no board nothing is hidden, so a console that cannot fetch one still picks', () => {
+  for (const b of [null, undefined, {}, { days: null }, { days: { 1: 'nope' } }, 'x']) {
+    const r = pickerRows(big, { side: 'intl', board: b, day: 1 });
+    assert.equal(r.rows.length, 4, JSON.stringify(b));
+    assert.equal(r.hidden, 0);
+  }
+  assert.deepEqual(takenOnDay(null, 1), new Map());
+  assert.deepEqual(takenOnDay({ days: { 1: [null, 'x', { intl: 'no', usa: 7 }] } }, 1), new Map());
+});
+
+test('the Jump list reads out who is already in each match, on both days', () => {
+  const [d1, d2] = jumpSections(big, board);
+  assert.equal(d1.title, 'Day 1');
+  assert.equal(d2.title, 'Day 2');
+  assert.deepEqual(d1.rows.map((r) => r.label), ['Match 1', 'Match 2']);
+  assert.deepEqual(d1.rows.map((r) => r.names), [
+    'Ashvini Anjutgi vs John Altman',
+    'Vijay Davuluri + Jun Bae vs —',
+  ]);
+  assert.deepEqual(d2.rows.map((r) => r.names), ['Yun Sang Bae vs —', '']);
+  // index is what the command takes (from 0); label is what the operator reads.
+  assert.deepEqual(d1.rows.map((r) => r.index), [0, 1]);
+  assert.deepEqual(d1.rows.map((r) => r.day), [1, 1]);
+  assert.deepEqual(d2.rows.map((r) => r.day), [2, 2]);
+  assert.deepEqual(d1.rows.map((r) => r.done), [false, true]);
+  // Exactly one row is where the operator is standing, and it is on the day in play.
+  const here = [...d1.rows, ...d2.rows].filter((r) => r.current);
+  assert.deepEqual(here, [d1.rows[0]]);
+});
+
+test('a match nobody is drawn into reads as empty, not as a row of dashes', () => {
+  assert.equal(matchNames(big, { intl: ['', ''], usa: ['', ''] }), '');
+  assert.equal(matchNames(big, {}), '');
+  assert.equal(matchNames(big, null), '');
+  assert.equal(matchNames(big, { intl: ['i1'], usa: [] }), 'Ashvini Anjutgi vs —');
+  // Full names: this roster has two Baes, so a surname names nobody.
+  assert.equal(matchNames(big, { intl: ['i3', 'i4'], usa: ['u1', 'u2'] }),
+    'Jun Bae + Yun Sang Bae vs John Altman + Frank Ambrose');
+});
+
+test('a board the console cannot make sense of still opens the Jump list', () => {
+  for (const b of [null, undefined, {}, { days: {} }, 'x', { days: { 1: null, 2: null } }]) {
+    const s = jumpSections(big, b);
+    assert.equal(s.length, 2, JSON.stringify(b));
+    assert.deepEqual(s.map((x) => x.title), ['Day 1', 'Day 2']);
+    assert.deepEqual(s.map((x) => x.rows.length), [0, 0]);
+  }
+  // A match with no index of its own is still numbered by where it sits.
+  assert.equal(jumpSections(big, { days: { 1: [{}] } })[0].rows[0].label, 'Match 1');
+});
+
+// --- the Screens dialog ------------------------------------------------------
+
+test('every role the stage understands has words on a button', () => {
+  for (const role of SCREEN_ROLES) {
+    assert.equal(typeof SCREEN_ROLE_LABELS[role], 'string', role);
+    assert.ok(SCREEN_ROLE_LABELS[role].length > 0, role);
+    assert.ok(SCREEN_ROLE_HINTS[role].length > 0, role);
+  }
+  // And nothing is labelled that the stage would not accept.
+  assert.deepEqual(Object.keys(SCREEN_ROLE_LABELS).sort(), [...SCREEN_ROLES].sort());
+});
+
+test('the refusal the hub sends back names every role, in the order of the buttons', () => {
+  const sentence = screenRoleChoices();
+  for (const role of SCREEN_ROLES) assert.ok(sentence.includes(SCREEN_ROLE_LABELS[role]), role);
+  assert.equal(sentence, 'Mirror the show, Slideshow, Player films, Draw so far or Title card');
+  assert.equal(sentence.includes(','), SCREEN_ROLES.length > 2);
+});
+
+test('the main screen is listed first, the rest by name', () => {
+  const rows = screenRows({ screens: { zed: 'hold', bar: 'slideshow', main: 'mirror', alpha: 'list' } });
+  assert.deepEqual(rows.map((r) => r.name), ['main', 'alpha', 'bar', 'zed']);
+  assert.deepEqual(rows.map((r) => r.label), ['Main screen', 'alpha', 'bar', 'zed']);
+  assert.deepEqual(rows.map((r) => r.role), ['mirror', 'list', 'slideshow', 'hold']);
+  // Every row offers every role, so the dialog never depends on what is set now.
+  assert.deepEqual(rows[0].roles.map((r) => r.role), SCREEN_ROLES);
+});
+
+test('a role the console does not recognise reads as mirror rather than a blank button', () => {
+  const rows = screenRows({ screens: { main: 'nonsense', bar: null } });
+  assert.deepEqual(rows.map((r) => r.role), ['mirror', 'mirror']);
+  for (const junk of [null, undefined, {}, { screens: null }, { screens: 'x' }, 'x']) {
+    assert.deepEqual(screenRows(junk), [], JSON.stringify(junk));
+    assert.equal(screensInSync(junk), true, 'nothing listed is nothing out of step');
+    assert.equal(screensLabel(junk), 'Screens…');
+  }
+});
+
+test('the console says when a screen has wandered off the show', () => {
+  assert.equal(screensInSync({ screens: { main: 'mirror', bar: 'mirror' } }), true);
+  assert.equal(screensLabel({ screens: { main: 'mirror', bar: 'mirror' } }), 'Screens…');
+  assert.equal(screensInSync({ screens: { main: 'mirror', bar: 'slideshow' } }), false);
+  assert.equal(screensLabel({ screens: { main: 'mirror', bar: 'slideshow' } }), 'Screens… (1 off the show)');
+  assert.equal(screensLabel({ screens: { main: 'hold', bar: 'list', c: 'mirror' } }), 'Screens… (2 off the show)');
+});
+
+// --- Jump to a film ----------------------------------------------------------
+
+// Films hang off the same four players, so the list can be checked against a
+// known order. Anjutgi and Altman have one; Phillips and Ambrose do not.
+const filmShow = indexShow({
+  built: 'now',
+  days: { 1: [], 2: [] },
+  players: players.map((p) => (p.id === 'player-intl-1' || p.id === 'player-usa-1'
+    ? { ...p, film: `cards/${p.id}-16x9-web.mp4` }
+    : p)),
+});
+
+test('the film list is the players who have one, by side and then by surname', () => {
+  const sections = filmSections(filmShow);
+  assert.deepEqual(sections.map((s) => s.title), ['International', 'USA']);
+  assert.deepEqual(sections[0].rows.map((r) => r.name), ['Ashvini Anjutgi']);
+  assert.deepEqual(sections[1].rows.map((r) => r.name), ['John Altman']);
+  // A player with no film is not on the list at all: there is nothing to play.
+  const all = sections.flatMap((s) => s.rows.map((r) => r.playerId));
+  assert.deepEqual(all, ['player-intl-1', 'player-usa-1']);
+
+  // Surname order, not roster order: two films on one side prove which it is.
+  const two = indexShow({
+    built: 'now',
+    days: { 1: [], 2: [] },
+    players: players.map((p) => (p.team === 'international' ? { ...p, film: `cards/${p.id}.mp4` } : p)),
+  });
+  assert.deepEqual(filmSections(two)[0].rows.map((r) => r.name), ['Ashvini Anjutgi', 'Alba Phillips']);
+});
+
+test('the film list says which one this screen was last sent to', () => {
+  const cued = filmSections(filmShow, { cued: 'player-usa-1' });
+  assert.deepEqual(cued.flatMap((s) => s.rows.filter((r) => r.cued).map((r) => r.name)), ['John Altman']);
+  // Nobody cued, or somebody with no film cued, marks nothing rather than throwing.
+  for (const who of ['', undefined, 'player-intl-2', 'nobody']) {
+    const rows = filmSections(filmShow, { cued: who }).flatMap((s) => s.rows);
+    assert.equal(rows.filter((r) => r.cued).length, 0, JSON.stringify(who));
+  }
+});
+
+test('the film list filters by name, and an empty side is dropped rather than left blank', () => {
+  assert.deepEqual(filmSections(filmShow, { query: 'altman' }).map((s) => s.title), ['USA']);
+  assert.deepEqual(filmSections(filmShow, { query: 'ASH' }).map((s) => s.title), ['International']);
+  // No match at all is an empty list - the dialog says so, rather than two headings.
+  assert.deepEqual(filmSections(filmShow, { query: 'zzz' }), []);
+  // A show with no films is the same shape: nothing to offer, and no crash.
+  assert.deepEqual(filmSections(show), []);
+  assert.deepEqual(filmSections(plain), []);
 });

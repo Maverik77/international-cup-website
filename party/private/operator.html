@@ -45,20 +45,40 @@
   <button id="jump" class="btn">Jump to…</button>
   <button id="slideshow" class="btn">Slideshow</button>
   <button id="refresh" class="btn">Refresh from AWS</button>
+  <button id="screens" class="btn">Screens…</button>
   <button id="undo" class="btn btn-danger">Undo</button>
 </nav>
 
 <dialog id="picker">
   <h3 id="picker-title">Pick a player</h3>
   <input id="picker-filter" type="search" placeholder="Type a name" autocomplete="off">
+  <button id="picker-toggle" class="btn btn-quiet" type="button">Show picked</button>
   <ul id="picker-list"></ul>
   <button id="picker-cancel" class="btn">Cancel</button>
 </dialog>
 
+<dialog id="screens-dialog">
+  <h3>Screens</h3>
+  <button id="screens-sync" class="btn btn-primary">Put every screen back on the show</button>
+  <div id="screens-list"></div>
+  <p class="hint">A screen appears here once it has been opened on that device. For a second
+    screen, open the stage address with <code>?screen=bar</code> on the end.</p>
+  <button id="screens-cancel" class="btn">Close</button>
+</dialog>
+
 <dialog id="jumper">
   <h3>Jump to match</h3>
-  <ul id="jumper-list"></ul>
+  <div id="jumper-list"></div>
   <button id="jumper-cancel" class="btn">Cancel</button>
+</dialog>
+
+<dialog id="films-dialog">
+  <h3 id="films-title">Jump to a film</h3>
+  <input id="films-filter" type="search" placeholder="Type a name" autocomplete="off">
+  <div id="films-list"></div>
+  <p id="films-empty" class="hint" hidden>No film for that name.</p>
+  <p class="hint">The screen plays on from there, in order, and round again.</p>
+  <button id="films-cancel" class="btn">Cancel</button>
 </dialog>
 
 <script type="module" src="/operator.js"></script>

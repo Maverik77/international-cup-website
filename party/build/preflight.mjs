@@ -47,6 +47,18 @@ export async function preflightChecks({
             ? `${problems.length} problem(s), first: ${oneLine(problems[0])} - run: npm run party:build`
             : 'every card present and the right size',
         });
+        // The films themselves are checked by validateCards above, with the cards.
+        // This line only counts them, and never fails: the draw does not need a
+        // single film, so having none is worth saying and is not a reason to call
+        // the night off.
+        const films = show.players.filter((p) => typeof p.film === 'string' && p.film !== '');
+        checks.push({
+          name: 'player films',
+          ok: true,
+          detail: films.length
+            ? `${films.length} films, about ${Math.round((films.length * 30) / 60)} minutes a loop`
+            : 'none - a screen set to Player films would hold the title card instead',
+        });
         const d1 = show.days?.['1'];
         const d2 = show.days?.['2'];
         if (Array.isArray(d1) && Array.isArray(d2)) {

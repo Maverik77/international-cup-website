@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
-  validateCards, indexShow, planCards, buildShow, BuildError, ProbeUnavailable,
+  validateCards, indexShow, planCards, buildShow, BuildError, ProbeUnavailable, filmLoopOrder,
 } from '../build/build-show.mjs';
 import CARD_KEYS from '../build/card-keys.json' with { type: 'json' };
 
@@ -26,11 +26,79 @@ const players = (n = 3) => Array.from({ length: n }, (_, i) =>
   ({ id: `player-intl-${i + 1}`, team: 'international', name: `P${i + 1}`, country: 'England', hometown: '', school: '' }));
 const okProbe = (abs) => ({ codec: 'h264', pixFmt: 'yuv420p', width: abs.includes('4x9') ? 480 : 960, height: 1080, duration: 9 });
 
-test('the card-key map has 25 entries and keeps phil and phillip apart', () => {
-  assert.equal(Object.keys(CARD_KEYS).length, 25);
+test('every player in the show has a film, or no card key at all, or no hometown yet', () => {
+  const show = JSON.parse(readFileSync(new URL('../show.json', import.meta.url), 'utf8'));
+  const keyed = show.players.filter((p) => !p.generic);
+  const noFilm = keyed.filter((p) => !p.film).map((p) => p.name);
+  assert.equal(keyed.length, 44);
+  // Suresh Saribala, Jun Bae and Jonathan Doan have given no hometown, so for
+  // them there is nowhere to fly to. Everyone else with a card has a film.
+  assert.equal(noFilm.length, 3, `without a film: ${noFilm.join(', ')}`);
+  for (const p of keyed) {
+    if (!p.film) continue;
+    assert.match(p.film, /^cards\/[a-z]+-16x9-web\.mp4$/);
+    assert.ok(existsSync(new URL(`../${p.film}`, import.meta.url)), p.film);
+  }
+});
+
+test("the films loop alternates the sides and repeats no country or state, round the loop", () => {
+  const show = JSON.parse(readFileSync(new URL('../show.json', import.meta.url), 'utf8'));
+  const films = show.players.filter((p) => p.film);
+  const by = new Map(show.players.map((p) => [p.id, p]));
+  assert.equal(show.filmOrder.length, films.length, 'every film is in the order, once');
+  assert.equal(new Set(show.filmOrder).size, films.length);
+  const seq = show.filmOrder.map((id) => by.get(id));
+  const state = (p) => (p.hometown ? p.hometown.split(',').pop().trim() : '-');
+  const n = seq.length;
+  for (let i = 0; i < n; i++) {
+    const a = seq[i];
+    const b = seq[(i + 1) % n];           // % n: the loop plays round again
+    assert.ok(a.team === 'international' || b.team === 'international',
+      `${a.name} and ${b.name} are both US films, back to back`);
+    if (a.team === 'international' && b.team === 'international') {
+      assert.notEqual(a.country, b.country, `${a.name} then ${b.name}, both ${a.country}`);
+    }
+  }
+  // Erik's rule for the US side is about consecutive US FILMS, which an
+  // International sits between: ...Rizzo, someone, Kritsberg... is two New York
+  // films either side of one gap unless the states are checked in their own
+  // sequence. Same for the Internationals' countries.
+  for (const [side, key] of [['international', (p) => p.country], ['usa', state]]) {
+    const sub = seq.filter((p) => (side === 'international'
+      ? p.team === 'international' : p.team !== 'international'));
+    for (let i = 0; i < sub.length; i++) {
+      const a = sub[i];
+      const b = sub[(i + 1) % sub.length];
+      assert.notEqual(key(a), key(b), `${side}: ${a.name} then ${b.name}, both ${key(a)}`);
+    }
+  }
+});
+
+test('the order is the same every build, and survives a show with nothing to order', () => {
+  const show = JSON.parse(readFileSync(new URL('../show.json', import.meta.url), 'utf8'));
+  assert.deepEqual(filmLoopOrder(show.players), show.filmOrder, 'rebuilding does not reshuffle the night');
+  // Never throws, never drops anyone: the order of a slideshow must not fail a build.
+  for (const junk of [null, undefined, 'x', 7, {}, [null, 7, {}], [{ id: 'a' }]]) {
+    assert.doesNotThrow(() => filmLoopOrder(junk), JSON.stringify(junk));
+    assert.deepEqual(filmLoopOrder(junk), [], JSON.stringify(junk));
+  }
+  // One side empty is a real answer: the films still all play.
+  const only = [
+    { id: 'a', team: 'international', country: 'India', film: 'f' },
+    { id: 'b', team: 'international', country: 'Korea', film: 'f' },
+  ];
+  assert.deepEqual([...filmLoopOrder(only)].sort(), ['a', 'b']);
+});
+
+test('the card-key map has 44 entries and keeps phil and phillip apart', () => {
+  assert.equal(Object.keys(CARD_KEYS).length, 44);
   assert.equal(CARD_KEYS['Philip Woodisse'], 'phil');
   assert.equal(CARD_KEYS['Phillip Jewell'], 'phillip');
-  assert.equal(new Set(Object.values(CARD_KEYS)).size, 25, 'no two players share a card');
+  // Two Baes, and they are not the same man: Yun Sang Bae has a film, Jun Bae
+  // has no hometown and so has none.
+  assert.equal(CARD_KEYS['Yun Sang Bae'], 'yun');
+  assert.equal(CARD_KEYS['Jun Bae'], 'jun');
+  assert.equal(new Set(Object.values(CARD_KEYS)).size, 44, 'no two players share a card');
 });
 
 test('every player gets both formats; keyed players with files are bespoke', () => {
@@ -45,6 +113,51 @@ test('every player gets both formats; keyed players with files are bespoke', () 
   assert.equal(two.fallback['4x9'], 'cards/player-intl-2-4x9.mp4');
   assert.equal(plan[0].generic, true);
   assert.deepEqual(plan[0].fallback, plan[0].cards);
+});
+
+test('a player with a film carries it; one without carries null, not a broken path', () => {
+  const f = fixture({ bespoke: { 'Player England 1': 'one', 'Player England 2': 'two' } });
+  // one has a film, two does not, three has no card at all.
+  writeFileSync(join(f.cardsDir, 'one-16x9-web.mp4'), 'film');
+  const plan = planCards(players(3).map((p, i) => ({ ...p, name: `Player England ${i + 1}` })),
+    f.cardsDir, { 'Player England 1': 'one', 'Player England 2': 'two' });
+  assert.equal(plan[0].film, 'cards/one-16x9-web.mp4');
+  assert.equal(plan[1].film, null, 'no file, so no film - not cards/two-16x9-web.mp4');
+  assert.equal(plan[2].film, null, 'a flag-card player has no film either');
+  // The master is NOT what the stage plays: 38 of those is a gigabyte over venue wifi.
+  writeFileSync(join(f.cardsDir, 'two-16x9.mp4'), 'master only');
+  assert.equal(planCards(players(2).map((p, i) => ({ ...p, name: `Player England ${i + 1}` })),
+    f.cardsDir, { 'Player England 2': 'two' })[1].film, null);
+});
+
+test('a film is validated as a film: 1920x1080 and half a minute', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'show-'));
+  mkdirSync(join(dir, 'cards'));
+  for (const n of ['a-4x9', 'a-8x9', 'a-16x9-web']) writeFileSync(join(dir, 'cards', `${n}.mp4`), 'bytes');
+  const cards = { '4x9': 'cards/a-4x9.mp4', '8x9': 'cards/a-8x9.mp4' };
+  const show = indexShow({ built: 'now', days: {}, players: [{
+    id: 'p1', name: 'A', cards, fallback: cards, film: 'cards/a-16x9-web.mp4',
+  }] });
+  const film = { codec: 'h264', pixFmt: 'yuv420p', width: 1920, height: 1080, duration: 29.3 };
+  const probe = (abs) => (abs.includes('16x9') ? film : okProbe(abs));
+  assert.deepEqual(validateCards(show, dir, { probe }), []);
+
+  // A card's size is not a film's size, and a film's half-minute is not a card's.
+  const wrong = validateCards(show, dir, { probe: (a) => (a.includes('16x9') ? { ...film, width: 960 } : okProbe(a)) });
+  assert.equal(wrong.length, 1);
+  assert.ok(wrong[0].includes('a-16x9-web.mp4') && wrong[0].includes('expected 1920x1080'));
+  const brief = validateCards(show, dir, { probe: (a) => (a.includes('16x9') ? { ...film, duration: 9 } : okProbe(a)) });
+  assert.equal(brief.length, 1);
+  assert.ok(brief[0].includes('implausible duration') && brief[0].includes('20-40s'));
+  // 4:4:4 is what the films came out of the pipeline as, and what Safari will not decode.
+  const odd = validateCards(show, dir, { probe: (a) => (a.includes('16x9') ? { ...film, pixFmt: 'yuvj444p' } : okProbe(a)) });
+  assert.equal(odd.length, 1);
+  assert.ok(odd[0].includes('h264,yuvj444p'));
+  // A film named but empty is a half-finished encode, and is refused.
+  writeFileSync(join(dir, 'cards', 'a-16x9-web.mp4'), '');
+  const empty = validateCards(show, dir, { probe });
+  assert.equal(empty.length, 1);
+  assert.ok(empty[0].includes('zero-length') && empty[0].includes('a-16x9-web.mp4'));
 });
 
 test('a card key naming nobody is a build error', () => {
