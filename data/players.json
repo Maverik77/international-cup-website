@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18",
+  "updated": "2026-10-19",
   "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
@@ -47,7 +47,9 @@
       {
         "name": "Suresh Saribala",
         "country": "India",
-        "photo": "pics/players/suresh-saribala.jpg"
+        "photo": "pics/players/suresh-saribala.jpg",
+        "hometown": "Hyderabad, India",
+        "school": "Jawaharlal Nehru Technological University"
       },
       {
         "name": "Mohammed Ashraf",

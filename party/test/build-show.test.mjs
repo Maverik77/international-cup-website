@@ -31,9 +31,9 @@ test('every player in the show has a film, or no card key at all, or no hometown
   const keyed = show.players.filter((p) => !p.generic);
   const noFilm = keyed.filter((p) => !p.film).map((p) => p.name);
   assert.equal(keyed.length, 44);
-  // Suresh Saribala, Jun Bae and Jonathan Doan have given no hometown, so for
-  // them there is nowhere to fly to. Everyone else with a card has a film.
-  assert.equal(noFilm.length, 3, `without a film: ${noFilm.join(', ')}`);
+  // Jun Bae and Jonathan Doan have given no hometown, so for them there is
+  // nowhere to fly to. Everyone else with a card has a film.
+  assert.equal(noFilm.length, 2, `without a film: ${noFilm.join(', ')}`);
   for (const p of keyed) {
     if (!p.film) continue;
     assert.match(p.film, /^cards\/[a-z]+-16x9-web\.mp4$/);
