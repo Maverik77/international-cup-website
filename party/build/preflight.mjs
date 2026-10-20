@@ -183,7 +183,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       that is client isolation: switch both devices to the phone hotspot.
       It looks nothing like a network fault - both devices show full bars
       and working internet and still cannot see each other.
-  [ ] Plug the laptop into the TV and run /stage full screen. Click it once.
+  [ ] Plug the laptop into the TV and open /stage. Click it once: that starts
+      the show AND takes it truly full screen, with no menu bar and no tabs.
+      Afterwards, press f, or move the mouse and use the button top right.
   [ ] iPad: Auto-Lock to Never.
   [ ] Laptop: sleep disabled on AC power.
   [ ] Laptop: Do Not Disturb on.

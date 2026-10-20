@@ -16,6 +16,15 @@
        decoded when the one on screen ends and the cut is a fade, not a gap. -->
   <div id="films" aria-hidden="true"><video class="film"></video><video class="film"></video></div>
   <div id="preload" aria-hidden="true"></div>
+  <!-- Real full screen, not a maximised window: a window that merely fills the
+       television still has a menu bar and a tab strip on it. Hidden until a
+       pointer moves, so the room never sees a button on the screen. -->
+  <button id="fs" type="button" aria-label="Full screen" aria-pressed="false" title="Full screen (f)">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <g class="enter"><path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6"/></g>
+      <g class="exit"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6"/></g>
+    </svg>
+  </button>
   <div id="cover"><p>Tap to start</p></div>
   <script type="module" src="/stage.js"></script>
 </body>

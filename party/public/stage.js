@@ -423,12 +423,81 @@ function render(prev) {
   }
 }
 
+// --- full screen -----------------------------------------------------------
+// A browser window that merely fills the television still has a menu bar and a
+// tab strip on it, and both end up on the wall. This is the real thing, the
+// Fullscreen API, which browsers only grant inside a user gesture - so it hangs
+// off the one click the operator already makes, and off a button and the f key
+// for every time after that.
+//
+// Every call here is allowed to fail silently. A refused full screen must never
+// stop the show from starting.
+const fsBtn = document.getElementById('fs');
+const fsOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+function goFullscreen() {
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (!req) return;
+  try {
+    const r = req.call(el);
+    if (r && typeof r.catch === 'function') r.catch(() => {});
+  } catch (e) { /* refused, and that is survivable */ }
+}
+
+function leaveFullscreen() {
+  const ex = document.exitFullscreen || document.webkitExitFullscreen;
+  if (!ex) return;
+  try {
+    const r = ex.call(document);
+    if (r && typeof r.catch === 'function') r.catch(() => {});
+  } catch (e) { /* already out */ }
+}
+
+const toggleFullscreen = () => (fsOn() ? leaveFullscreen() : goFullscreen());
+
+// Escape and the browser's own controls leave full screen without telling us,
+// so the button reads the browser rather than remembering what it last did.
+function markFullscreen() {
+  const on = fsOn();
+  document.body.classList.toggle('fs', on);
+  fsBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  fsBtn.setAttribute('aria-label', on ? 'Leave full screen' : 'Full screen');
+  fsBtn.title = on ? 'Leave full screen (f)' : 'Full screen (f)';
+}
+document.addEventListener('fullscreenchange', markFullscreen);
+document.addEventListener('webkitfullscreenchange', markFullscreen);
+markFullscreen();
+
+fsBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleFullscreen(); });
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'f' && e.key !== 'F') return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;   // leave the browser's own shortcuts alone
+  e.preventDefault();
+  toggleFullscreen();
+});
+
+// Reveal the button only while a pointer is actually moving, and take the
+// cursor away again when it stops.
+let pointerIdle = null;
+function pointerMoved() {
+  document.body.classList.add('pointing');
+  clearTimeout(pointerIdle);
+  pointerIdle = setTimeout(() => document.body.classList.remove('pointing'), 2500);
+}
+document.addEventListener('mousemove', pointerMoved);
+document.addEventListener('touchstart', pointerMoved, { passive: true });
+
 // One click at setup, then never again. The click is also the user activation that
-// lets play() run; anything revealed before it is started here, not lost.
+// lets play() run; anything revealed before it is started here, not lost. It is
+// the same gesture that grants full screen, so the one tap does both.
 cover.addEventListener('click', () => {
   primed = true;
   cover.classList.add('gone');
+  document.body.classList.add('started');
   try { render(wire); } catch (e) { report(e); }
+  goFullscreen();
 });
 
 // The show was rebuilt and the hub restarted: fetch it again rather than play
