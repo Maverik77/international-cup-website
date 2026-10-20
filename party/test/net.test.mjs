@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { pickLanAddress, localHostName, operatorUrls, qrLines, qrSvg } from '../lib/net.mjs';
+import { pickLanAddress, localHostName, operatorUrls, qrLines, qrSvg, pickTailnetAddress } from '../lib/net.mjs';
 
 const REAL = {
   lo0: [{ family: 'IPv4', address: '127.0.0.1', internal: true }],
@@ -87,4 +87,41 @@ test('renders an SVG for the landing page', () => {
   const svg = qrSvg('http://10.0.0.241:8722/operator', 6);
   assert.match(svg, /^<svg /);
   assert.match(svg, /<\/svg>/);
+});
+
+// --- the Tailscale fallback ------------------------------------------------
+// The spare key for a venue whose wifi isolates its clients. It must be found
+// when it is there, and must never be confused with the LAN address.
+
+test('finds the tailnet address on a utun interface', () => {
+  assert.deepEqual(pickTailnetAddress({
+    ...REAL,
+    utun8: [{ family: 'IPv4', address: '100.123.144.36', internal: false }],
+  }), { iface: 'utun8', address: '100.123.144.36' });
+});
+
+test('no Tailscale means no tailnet address, not a guess', () => {
+  assert.equal(pickTailnetAddress(REAL), null);
+});
+
+test('the LAN address is never reported as the tailnet one, or the reverse', () => {
+  const both = { ...REAL, utun8: [{ family: 'IPv4', address: '100.123.144.36', internal: false }] };
+  assert.equal(pickLanAddress(both).address, '10.0.0.241');
+  assert.equal(pickTailnetAddress(both).address, '100.123.144.36');
+});
+
+// 100.0.0.0/8 is ordinary public space; only 100.64.0.0/10 is the carrier-grade
+// NAT range Tailscale allocates from. A VPN on utun handing out 100.5.x would
+// otherwise be printed on the card as the fallback and fail in the room.
+test('only 100.64.0.0/10 counts, not the whole of 100/8', () => {
+  const at = (addr) => pickTailnetAddress({ utun4: [{ family: 'IPv4', address: addr, internal: false }] });
+  assert.equal(at('100.5.1.1'), null);
+  assert.equal(at('100.63.255.255'), null);
+  assert.equal(at('100.128.0.1'), null);
+  assert.equal(at('100.64.0.1').address, '100.64.0.1');
+  assert.equal(at('100.127.255.254').address, '100.127.255.254');
+});
+
+test('a tunnel that is not utun is not mistaken for Tailscale', () => {
+  assert.equal(pickTailnetAddress({ ppp0: [{ family: 'IPv4', address: '100.100.1.1', internal: false }] }), null);
 });

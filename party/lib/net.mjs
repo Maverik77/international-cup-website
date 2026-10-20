@@ -23,6 +23,29 @@ export function pickLanAddress(interfaces = networkInterfaces()) {
   return { iface: candidates[0].iface, address: candidates[0].address };
 }
 
+// The Tailscale fallback, for a venue whose wifi isolates its clients so the
+// iPad cannot see the laptop at all. Tailscale hands every device an address in
+// 100.64.0.0/10 on a utun interface, and that address is stable across networks
+// and reboots - which is the whole point, since the LAN address is not.
+//
+// Deliberately NOT part of pickLanAddress: utun is in VIRTUAL and stays there.
+// The QR code and the banner must keep pointing at the LAN address, because
+// that is the path the night is meant to run on. This is the spare key, and it
+// is reported separately so it reads as one.
+export function pickTailnetAddress(interfaces = networkInterfaces()) {
+  for (const [iface, addrs] of Object.entries(interfaces || {})) {
+    if (!/^utun/.test(iface)) continue;
+    for (const a of addrs || []) {
+      if ((a.family !== 'IPv4' && a.family !== 4) || a.internal) continue;
+      // 100.64.0.0/10 is the carrier-grade NAT range Tailscale allocates from:
+      // second octet 64..127, and nothing else on the machine uses it.
+      const m = /^100\.(\d+)\./.exec(a.address);
+      if (m && Number(m[1]) >= 64 && Number(m[1]) <= 127) return { iface, address: a.address };
+    }
+  }
+  return null;
+}
+
 // os.hostname() is "MacBookPro" here and does not resolve over mDNS.
 // The Bonjour name macOS actually advertises is scutil's LocalHostName.
 export function localHostName(runner = spawnSync) {

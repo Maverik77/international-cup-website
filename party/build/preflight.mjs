@@ -8,7 +8,11 @@ import { networkInterfaces } from 'node:os';
 import { indexShow, validateCards } from './build-show.mjs';
 import { toPlayerItems, rosterDiff } from './push-roster.mjs';
 import { API_URLS, getPairings, getPlayers } from '../lib/aws.mjs';
-import { pickLanAddress, localHostName } from '../lib/net.mjs';
+import { pickLanAddress, localHostName, pickTailnetAddress } from '../lib/net.mjs';
+// Only for DEFAULT_PORT, so the fallback URL printed here cannot drift from the
+// one the hub actually listens on. hub.mjs only starts a server when it is the
+// process entry point, so importing it here is inert.
+import { DEFAULT_PORT } from '../hub.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PARTY = resolve(HERE, '..');
@@ -105,6 +109,17 @@ export async function preflightChecks({
     detail: host || 'no Bonjour name (not needed) - give the iPad the IP address instead',
   });
 
+  const tailnet = pickTailnetAddress(interfaces);
+  checks.push({
+    name: 'tailnet address',
+    // Advisory, like the Bonjour name: this is the spare key for a wifi that
+    // isolates its clients, not the path the night runs on. Never fail for it.
+    ok: true,
+    detail: tailnet
+      ? `${tailnet.address} - iPad fallback: http://${tailnet.address}:${DEFAULT_PORT}/operator`
+      : 'Tailscale is not up - the isolated-wifi fallback is NOT armed (see party/RESUME.md)',
+  });
+
   if (apiUrl) {
     try {
       const pairings = await getPairings({ apiUrl, fetchImpl });
@@ -180,9 +195,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   Do these by hand, here, in the venue, before the night:
 
   [ ] Open /operator on the iPad over the venue wifi. If it will not load,
-      that is client isolation: switch both devices to the phone hotspot.
-      It looks nothing like a network fault - both devices show full bars
-      and working internet and still cannot see each other.
+      that is client isolation. It looks nothing like a network fault - both
+      devices show full bars and working internet and still cannot see each
+      other. Two spare keys, in this order:
+        1. Tailscale. Turn the VPN on on BOTH devices, then open the tailnet
+           address printed above on the iPad. Needs internet on both.
+        2. Phone hotspot, both devices. The one that works with no internet
+           at all.
   [ ] Plug the laptop into the TV and open /stage. Click it once: that starts
       the show AND takes it truly full screen, with no menu bar and no tabs.
       Afterwards, press f, or move the mouse and use the button top right.
