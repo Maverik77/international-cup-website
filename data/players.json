@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19",
+  "updated": "2026-10-21",
   "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
@@ -139,6 +139,8 @@
       {
         "name": "Jonathan Doan",
         "country": "Canada",
+        "hometown": "Toronto, Ontario, Canada",
+        "school": "Colorado State University & Oxford Said School of Business",
         "photo": "pics/players/jonathan-doan.jpg"
       },
       {
@@ -204,7 +206,10 @@
         "photo": "pics/players/scott-covino.jpg"
       },
       {
-        "name": "Mike Ziegler"
+        "name": "Mike Ziegler",
+        "hometown": "Cincinnati, OH",
+        "school": "University of Cincinnati",
+        "photo": "pics/players/mike-ziegler.jpg"
       },
       {
         "name": "Chrissy Crouse",
@@ -278,7 +283,8 @@
         "photo": "pics/players/tom-murphy.jpg"
       },
       {
-        "name": "Greg Parda"
+        "name": "Greg Parda",
+        "hometown": "Boston, MA"
       },
       {
         "name": "Anthony Rizzo",
