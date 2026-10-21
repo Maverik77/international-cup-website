@@ -274,7 +274,7 @@
                     <div class="schedule-content">
                         <h3>Day 1: Team Matches</h3>
                         <p>Three team matches featuring Best Ball, Alternate Shot, and Shamble formats, followed by the Day 1 After Party</p>
-                        <span class="schedule-time">Tee times posted closer to the event</span>
+                        <span class="schedule-time">Tee times between 11:00 AM and 1:00 PM</span>
                     </div>
                 </div>
                 <div class="schedule-item">
@@ -285,14 +285,14 @@
                     <div class="schedule-content">
                         <h3>Day 2: Singles Matches</h3>
                         <p>Twenty-six individual matchplay battles to determine the International Cup champion, capped off with the championship celebration</p>
-                        <span class="schedule-time">Tee times posted closer to the event</span>
+                        <span class="schedule-time">Tee times between 11:00 AM and 1:00 PM</span>
                         <button class="btn btn-secondary" onclick="toggleDay2TeeTimes()" style="margin-top: 1rem;">View Tee Times</button>
                         
                         <!-- Day 2 Tee Times Section -->
                         <div id="day2-tee-times-section" class="tee-times-container" style="display: none;">
                             <div class="tee-times-header">
                                 <h4>🏌️ Day 2 Tee Sheet - Singles Matches</h4>
-                                <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Norman Course • 26 Singles Matchplay Battles</p>
+                                <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Norman Course • 26 Singles Matchplay Battles • 11:00 AM - 1:00 PM</p>
                             </div>
                             <div class="tee-times-grid" id="day2-tee-times-grid">
                                 <div style="text-align: center; padding: 2rem; color: #999;">
@@ -304,7 +304,7 @@
                 </div>
             </div>
             <div class="schedule-note">
-                <p><em>Tee times will be announced closer to the tournament date.</em></p>
+                <p><em>Every group goes out between 11:00 AM and 1:00 PM on both days. The exact tee times are announced on Thursday night, once the draw is done at the Pairings Party.</em></p>
             </div>
         </div>
     </section>
@@ -956,7 +956,7 @@
                     document.getElementById('day2-tee-times-grid').innerHTML = `
                         <div style="text-align: center; padding: 2rem; color: #999;">
                             <p>Pairings not yet posted for Day 2.</p>
-                            <p style="font-size: 0.9rem;">Tee times will appear here once the pairings are set closer to the event.</p>
+                            <p style="font-size: 0.9rem;">Tee times will appear here once the draw is done on Thursday night. Every group goes out between 11:00 AM and 1:00 PM.</p>
                         </div>
                     `;
                     return;
@@ -964,7 +964,9 @@
 
                 // Group matches into tee times (2 matches = 4 players per group)
                 const teeTimeGroups = [];
-                const startHour = 10;
+                // Every group goes out between 11:00 AM and 1:00 PM: thirteen
+                // groups at ten-minute intervals from 11:00 end exactly on 1:00.
+                const startHour = 11;
                 const startMinute = 0;
                 const intervalMinutes = 10;
                 
