@@ -594,6 +594,20 @@ section {
     margin-top: 0.5rem;
 }
 
+/* The gap goes between adjacent pills rather than after every one: at mobile
+   width the item is a centred column, and a trailing margin would lean the
+   whole row off centre. */
+.schedule-time + .schedule-time {
+    margin-left: 0.25rem;
+}
+
+/* The course sits beside the tee-time pill, in the darker half of the same
+   gradient the date chip uses, so the two read as a pair and not a repeat. */
+.schedule-time--course {
+    background: #f5f3ff;
+    color: #764ba2;
+}
+
 .schedule-note {
     max-width: 600px;
     margin: 3rem auto 0;
