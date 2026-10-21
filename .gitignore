@@ -127,6 +127,11 @@ contacts/
 party/cards/
 party/veo/
 
+# The slideshow of past tournaments, built by party/build/build-photos.mjs from
+# folders that are not in this repository. Other people's faces at private
+# parties: they stay on the laptop, and nobody consented to a public repo.
+party/photos/
+
 # Party show manifest and live state - built from contacts/, must never be published
 # Patterns, not exact names: atomic writes leave <name>.tmp and corrupt state is
 # moved aside to <name>.corrupt-<timestamp>; each holds the same private data.

@@ -75,6 +75,7 @@ export async function createHub({
   showPath = join(HERE, 'show.json'),
   statePath = join(HERE, 'state.json'),
   cardsDir = join(HERE, 'cards'),
+  photosDir = join(HERE, 'photos'),
   publicDir = join(HERE, 'public'),
   privateDir = join(HERE, 'private'), // pages that need the gate; the static handler never reaches here
   port = DEFAULT_PORT,
@@ -531,8 +532,19 @@ export async function createHub({
       return;
     }
 
-    const root = url.startsWith('/cards/') ? cardsDir : publicDir;
-    const rel = url.startsWith('/cards/') ? url.slice('/cards'.length) : url;
+    // Three roots, one handler. The photographs sit outside publicDir for the
+    // same reason the cards do: they are build artefacts of a folder that is
+    // not in the repository, and they are far too big to live beside the
+    // source. safeJoin is what stops /photos/../../contacts reaching anything.
+    let root = publicDir;
+    let rel = url;
+    if (url.startsWith('/cards/')) {
+      root = cardsDir;
+      rel = url.slice('/cards'.length);
+    } else if (url.startsWith('/photos/')) {
+      root = photosDir;
+      rel = url.slice('/photos'.length);
+    }
     const abs = safeJoin(root, rel);
     if (!abs) {
       res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });

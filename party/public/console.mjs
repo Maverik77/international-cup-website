@@ -240,6 +240,7 @@ export const SCREEN_ROLE_LABELS = {
   mirror: 'Mirror the show',
   slideshow: 'Slideshow',
   films: 'Player films',
+  photos: 'Photos of years gone by',
   list: 'Draw so far',
   hold: 'Title card',
 };
@@ -248,6 +249,7 @@ export const SCREEN_ROLE_HINTS = {
   mirror: 'Shows exactly what the main screen shows.',
   slideshow: 'Cycles the matches already revealed.',
   films: 'Every player film, one after another, round and round.',
+  photos: 'Photographs from 2021 to 2025, one after another.',
   list: 'The whole draw so far, as text.',
   hold: 'The gold title card, and nothing else.',
 };

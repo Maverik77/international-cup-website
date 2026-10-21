@@ -361,6 +361,10 @@ function render() {
   $('day1').disabled = wire.day === 1;
   $('day2').disabled = wire.day === 2;
   $('slideshow').textContent = wire.mode === 'slideshow' ? 'Back to live' : 'Slideshow';
+  // Both of these are a toggle back to the show, so whichever one is on says
+  // so and the other keeps its own name - two buttons reading "Back to live"
+  // at once would be a choice where there is only one way out.
+  $('photos').textContent = wire.mode === 'photos' ? 'Back to live' : 'Photos';
   $('screens').textContent = screensLabel(wire);
 }
 
@@ -379,6 +383,7 @@ $('day2').onclick = ready(() => send({ name: 'setDay', day: 2 }));
 $('jump').onclick = ready(() => guard(openJumper()));
 $('refresh').onclick = ready(() => send({ name: 'refreshFromAws' }));
 $('slideshow').onclick = ready(() => send({ name: 'setMode', mode: wire.mode === 'slideshow' ? 'live' : 'slideshow' }));
+$('photos').onclick = ready(() => send({ name: 'setMode', mode: wire.mode === 'photos' ? 'live' : 'photos' }));
 $('toggle-first').onclick = ready(() => send({ name: 'setFirstSide', side: wire.slot.firstSide === 'intl' ? 'usa' : 'intl' }));
 $('screens').onclick = ready(() => openScreens());
 $('screens-cancel').onclick = () => $('screens-dialog').close();

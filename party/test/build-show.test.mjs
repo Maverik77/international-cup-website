@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
-  validateCards, indexShow, planCards, buildShow, BuildError, ProbeUnavailable, filmLoopOrder,
+  validateCards, indexShow, planCards, buildShow, BuildError, ProbeUnavailable, filmLoopOrder, loadPhotos,
 } from '../build/build-show.mjs';
 import CARD_KEYS from '../build/card-keys.json' with { type: 'json' };
 
@@ -374,3 +374,65 @@ test('cardsDir must be called cards', async () => {
   const f = fixture();
   await assert.rejects(buildShow({ ...f, cardsDir: f.dir, manifestOnly: true }), BuildError);
 });
+
+// --- the slideshow of years gone by ------------------------------------------
+
+test('no photo manifest means no photographs, and never an error', () => {
+  // The ordinary case for most of the year: build-photos.mjs has not been run,
+  // so party/photos/ does not exist. A build must not care.
+  const dir = mkdtempSync(join(tmpdir(), 'photos-'));
+  assert.deepEqual(loadPhotos(join(dir, 'nothing', 'manifest.json')), []);
+  assert.deepEqual(loadPhotos(undefined), []);
+  assert.deepEqual(loadPhotos(''), []);
+});
+
+test('a manifest that is broken or the wrong shape costs the photographs, not the build', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'photos-'));
+  const write = (text) => {
+    const p = join(dir, 'manifest.json');
+    writeFileSync(p, text);
+    return p;
+  };
+  // Half-written (the build ran while build-photos was still going), and every
+  // shape that is valid JSON but not a manifest.
+  assert.deepEqual(loadPhotos(write('{"photos": [{"src"')), []);
+  assert.deepEqual(loadPhotos(write('null')), []);
+  assert.deepEqual(loadPhotos(write('[]')), []);
+  assert.deepEqual(loadPhotos(write('{"photos": "lots"}')), []);
+  assert.deepEqual(loadPhotos(write('{}')), []);
+});
+
+test('the manifest keeps its order and drops rows that would show as a gap', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'photos-'));
+  const p = join(dir, 'manifest.json');
+  writeFileSync(p, JSON.stringify({
+    built: 'now',
+    photos: [
+      { key: 'a|1|2', src: 'photos/2021-0001.jpg', year: '2021', w: 1920, h: 1080 },
+      { src: '', year: '2021' },
+      null,
+      { year: '2022' },
+      { key: 'b|1|2', src: 'photos/2025-0002.jpg', year: '2025', w: 1440, h: 1920 },
+    ],
+  }));
+  // Only what a screen needs: the build's own bookkeeping (key, w, h) is not
+  // carried into the show, which every surface on the venue wifi can read.
+  assert.deepEqual(loadPhotos(p), [
+    { src: 'photos/2021-0001.jpg', year: '2021' },
+    { src: 'photos/2025-0002.jpg', year: '2025' },
+  ]);
+});
+
+test('a built show carries the photographs it was given', async () => {
+  const { detailsPath, cardsDir, cardKeys } = fixture();
+  const dir = mkdtempSync(join(tmpdir(), 'photos-'));
+  const photosPath = join(dir, 'manifest.json');
+  writeFileSync(photosPath, JSON.stringify({ photos: [{ src: 'photos/2023-0001.jpg', year: '2023' }] }));
+  const show = await buildShow({ detailsPath, cardsDir, cardKeys, photosPath, manifestOnly: true });
+  assert.deepEqual(show.photos, [{ src: 'photos/2023-0001.jpg', year: '2023' }]);
+  // And a show built with no photographs still has the key, as an empty list,
+  // so no surface has to tell "none" apart from "this show predates photos".
+  const none = await buildShow({ detailsPath, cardsDir, cardKeys, photosPath: join(dir, 'gone.json'), manifestOnly: true });
+  assert.deepEqual(none.photos, []);
+});
+

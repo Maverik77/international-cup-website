@@ -58,6 +58,7 @@ screen can be set to:
 | **Mirror the show** | The default. Exactly what the main screen shows. |
 | **Slideshow** | Cycles the matches already revealed, whatever the main screen is doing. |
 | **Player films** | The thirty-second film of every player, one after another and then round again. |
+| **Photos of years gone by** | Photographs from the tournaments of 2021 to 2025, one after another. |
 | **Draw so far** | The whole draw to date, as text, for people reading rather than watching. |
 | **Title card** | The gold title, and nothing else. |
 
@@ -69,6 +70,30 @@ exactly where you left it, and a screen still on the films misses nothing but
 the pictures. Going back to the films later picks up where it left off rather
 than starting over. One player has given no hometown, so there is no film
 flying into his town and he is not in the loop.
+
+**Photos** is the other one for the hour before the pairings, and it is on the
+console's own row of buttons as well as in **Screens…** — tap **Photos** and
+every mirroring screen goes to the photographs; tap **Back to live** and they
+return to the draw, exactly where it was. Each picture holds for seven seconds,
+the years are mixed rather than played album by album, and the year is in the
+corner because that is the thing the room always asks. A portrait photograph
+taken on a phone is shown whole, with a blurred blow-up of itself filling the
+sides instead of black bars.
+
+Nothing is loaded to begin with. To put the photographs on the laptop, export
+the albums from Google Photos, unzip them anywhere, and run:
+
+    node party/build/build-photos.mjs <the folder you unzipped into>
+    npm run party:build
+
+The first command converts and shrinks everything (it handles HEIC straight off
+an iPhone) into `party/photos/`; the second is what puts them in the show. Run
+them again after adding more — anything already done is skipped, so it takes
+seconds. A photograph deleted from the source folder leaves the show and the
+disk on the next run, which is how somebody is taken out if they ask. Until
+any of that happens, a screen set to Photos says *No photographs loaded* rather
+than going black. The photographs never leave the laptop: `party/photos/` is
+gitignored and is not one of the folders the website deploy copies.
 
 **Jump to a film…**, under each screen's buttons, starts that screen at one
 particular player — somebody has just walked in, or asked. Type a few letters

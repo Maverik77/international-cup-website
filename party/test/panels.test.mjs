@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   formatFor, perSide, panelPlan, panelsForMatch, preloadSrcs, slideshowEntry,
   panelsToLoad, srcAfterError, screenPlan, matchTitle, joinsFor, DAY_MATCHES,
-  screenNameFrom, roleOf, drawList, filmList, filmCueOf, SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS,
+  screenNameFrom, roleOf, drawList, filmList, photoList, filmCueOf, SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS,
 } from '../public/panels.mjs';
 import { indexShow, DAY1_MATCHES, DAY2_MATCHES } from '../build/build-show.mjs';
 import { initialState, reduce, project } from '../lib/state.mjs';
@@ -486,6 +486,7 @@ test('a role overrides the show, and mirror follows it', () => {
   assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'slideshow' }), show, 'bar').screen, 'slideshow');
   assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'list' }), show, 'bar').screen, 'list');
   assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'films' }), show, 'bar').screen, 'films');
+  assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'photos' }), show, 'bar').screen, 'photos');
   assert.equal(screenPlan(withScreens({ mode: 'live' }, { bar: 'mirror' }), show, 'bar').screen, 'live');
   // The show going idle does not reach a screen that is not mirroring.
   assert.equal(screenPlan(withScreens({ mode: 'idle' }, { bar: 'slideshow' }), show, 'bar').screen, 'slideshow');
@@ -514,7 +515,79 @@ test('a screen name is short, lowercase and harmless, or it is the main screen',
   assert.equal(roleOf({ screens: { constructor: 'hold' } }, 'constructor'), 'hold',
     'a screen really called that still works');
   assert.ok(MAX_SCREENS >= 2 && Number.isInteger(MAX_SCREENS));
-  assert.deepEqual(SCREEN_ROLES, ['mirror', 'slideshow', 'films', 'list', 'hold']);
+  assert.deepEqual(SCREEN_ROLES, ['mirror', 'slideshow', 'films', 'photos', 'list', 'hold']);
+});
+
+// --- photographs of years gone by --------------------------------------------
+
+const photoShow = (photos) => indexShow({ built: 'now', days: { 1: [], 2: [] }, players: [], photos });
+
+test('the photo list is what the manifest carried, in its order', () => {
+  const { photos } = photoList(photoShow([
+    { src: 'photos/2021-0001.jpg', year: '2021' },
+    { src: 'photos/2024-0002.jpg', year: '2024' },
+  ]));
+  assert.deepEqual(photos, [
+    { src: 'photos/2021-0001.jpg', year: '2021' },
+    { src: 'photos/2024-0002.jpg', year: '2024' },
+  ]);
+});
+
+test('a show with no photographs is an answer, not a fault', () => {
+  // Every one of these is a show nobody has put photographs on, and each must
+  // come back as an empty list rather than throwing: a screen set to Photos
+  // the week before anyone exports an album still has to render something.
+  for (const bad of [undefined, null, 'photos', 42, {}, []]) {
+    const plan = photoList(bad === undefined ? photoShow(undefined) : { photos: bad });
+    assert.deepEqual(plan.photos, [], JSON.stringify(bad));
+  }
+  assert.deepEqual(photoList(undefined).photos, []);
+  assert.deepEqual(photoList(null).photos, []);
+});
+
+test('a photograph with no usable src is dropped rather than shown as a gap', () => {
+  const { photos } = photoList(photoShow([
+    { src: 'photos/ok.jpg', year: '2022' },
+    { src: '', year: '2022' },
+    { year: '2022' },
+    null,
+    'photos/not-an-object.jpg',
+    { src: 'photos/no-year.jpg' },
+  ]));
+  assert.deepEqual(photos, [
+    { src: 'photos/ok.jpg', year: '2022' },
+    { src: 'photos/no-year.jpg', year: '' },
+  ]);
+});
+
+test('photos is reachable as a mode and as a role, and the role wins', () => {
+  const photos = [{ src: 'photos/2021-0001.jpg', year: '2021' }];
+  const show2 = photoShow(photos);
+  // As a mode: every mirroring screen follows the show onto the photographs.
+  const asMode = screenPlan({ mode: 'photos' }, show2, 'main');
+  assert.equal(asMode.screen, 'photos');
+  assert.deepEqual(asMode.plan.photos, photos);
+  // As a role: one screen on the photographs while the draw carries on live.
+  const asRole = screenPlan({ mode: 'live', screens: { bar: 'photos' } }, show2, 'bar');
+  assert.equal(asRole.screen, 'photos');
+  // A role always beats the mode, the same as every other role does.
+  assert.equal(screenPlan({ mode: 'photos', screens: { bar: 'hold' } }, show2, 'bar').screen, 'idle');
+  assert.equal(screenPlan({ mode: 'photos', screens: { bar: 'films' } }, show2, 'bar').screen, 'films');
+  // And the mode does not drag a screen that is minding its own business.
+  assert.equal(screenPlan({ mode: 'photos', screens: { bar: 'list' } }, show2, 'bar').screen, 'list');
+});
+
+test('the photographs are not disturbed by anything happening in the draw', () => {
+  // The whole point of reading the SHOW rather than the wire: a reveal, a new
+  // match and a change of day all arrive while a screen is on the photographs,
+  // and the plan it gets back must be byte-for-byte what it had before.
+  const photos = [{ src: 'photos/a.jpg', year: '2021' }, { src: 'photos/b.jpg', year: '2025' }];
+  const show2 = photoShow(photos);
+  const first = screenPlan({ mode: 'photos' }, show2, 'main');
+  for (const over of [{ mode: 'photos', day: 2 }, { mode: 'photos', completed: [{ intl: ['x'], usa: ['y'] }] },
+    { mode: 'photos', slot: { shown: 'both', firstSide: 'usa' } }]) {
+    assert.deepEqual(screenPlan(over, show2, 'main').plan, first.plan, JSON.stringify(over));
+  }
 });
 
 // --- player films ------------------------------------------------------------

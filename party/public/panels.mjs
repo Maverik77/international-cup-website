@@ -16,9 +16,10 @@ export const SIDES = ['intl', 'usa'];
 //              before there was more than one
 //   slideshow  cycles the matches already revealed, whatever the show is doing
 //   films      every player's long-form film, back to back and round again
+//   photos     photographs from the tournaments gone by, one after another
 //   list       the draw so far as text, for people not watching the reveal
 //   hold       the gold title card
-export const SCREEN_ROLES = ['mirror', 'slideshow', 'films', 'list', 'hold'];
+export const SCREEN_ROLES = ['mirror', 'slideshow', 'films', 'photos', 'list', 'hold'];
 export const DEFAULT_SCREEN = 'main';
 // /events is public, because the stage has to reach it. That means anyone on the
 // venue wifi can invent a screen name; this cap is what stops the console's
@@ -182,9 +183,11 @@ export function screenPlan(wire, show, name = DEFAULT_SCREEN) {
   if (role === 'hold') return { screen: 'idle', plan: null };
   if (role === 'slideshow') return { screen: 'slideshow', plan: null };
   if (role === 'films') return { screen: 'films', plan: filmList(show, filmCueOf(wire, name)) };
+  if (role === 'photos') return { screen: 'photos', plan: photoList(show) };
   if (role === 'list') return { screen: 'list', plan: drawList(wire, show) };
   const mode = wire && typeof wire === 'object' ? wire.mode : undefined;
   if (mode === 'slideshow') return { screen: 'slideshow', plan: null };
+  if (mode === 'photos') return { screen: 'photos', plan: photoList(show) };
   if (mode === 'live') return { screen: 'live', plan: panelPlan(wire, show) };
   return { screen: 'idle', plan: null };
 }
@@ -238,6 +241,25 @@ export function filmList(show, cue = null) {
     if (index !== -1) at = { index, seq: cue.seq, playerId: cue.playerId, name: films[index].name };
   }
   return { films, cue: at };
+}
+
+// The photographs from tournaments gone by, in the order build-photos.mjs mixed
+// them - the years interleave, so the room sees a history rather than one album
+// at a time. Read from the SHOW, like the films: nothing the operator does to
+// the draw touches a screen that is showing photographs.
+//
+// An empty list is the ordinary answer when nobody has put any photographs on
+// the laptop, and it must stay an answer rather than an error. The stage holds
+// the title card, the same as it does for a show with no films.
+export function photoList(show) {
+  const rows = show && typeof show === 'object' && Array.isArray(show.photos) ? show.photos : [];
+  const photos = [];
+  for (const row of rows) {
+    if (!row || typeof row !== 'object') continue;
+    if (typeof row.src !== 'string' || row.src === '') continue;
+    photos.push({ src: row.src, year: typeof row.year === 'string' ? row.year : '' });
+  }
+  return { photos };
 }
 
 // The draw so far, as text. A screen set to `list` shows this: every match

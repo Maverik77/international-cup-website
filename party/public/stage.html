@@ -15,6 +15,16 @@
   <!-- A screen set to "Player films": two elements, so the next film is already
        decoded when the one on screen ends and the cut is a fade, not a gap. -->
   <div id="films" aria-hidden="true"><video class="film"></video><video class="film"></video></div>
+  <!-- A screen set to "Photos": two frames, so the next photograph has decoded
+       before the one on screen starts to go. Each frame holds the picture
+       twice - once blown up and blurred to fill the television behind it, once
+       whole and untouched in front - because half of these came off a phone
+       held upright, and a portrait photograph on a 16:9 screen is otherwise
+       more black than picture. -->
+  <div id="photos" aria-hidden="true">
+    <div class="shot"><div class="back"></div><img alt=""><span class="year"></span></div>
+    <div class="shot"><div class="back"></div><img alt=""><span class="year"></span></div>
+  </div>
   <div id="preload" aria-hidden="true"></div>
   <!-- Real full screen, not a maximised window: a window that merely fills the
        television still has a menu bar and a tab strip on it. Hidden until a

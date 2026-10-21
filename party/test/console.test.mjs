@@ -409,7 +409,7 @@ test('every role the stage understands has words on a button', () => {
 test('the refusal the hub sends back names every role, in the order of the buttons', () => {
   const sentence = screenRoleChoices();
   for (const role of SCREEN_ROLES) assert.ok(sentence.includes(SCREEN_ROLE_LABELS[role]), role);
-  assert.equal(sentence, 'Mirror the show, Slideshow, Player films, Draw so far or Title card');
+  assert.equal(sentence, 'Mirror the show, Slideshow, Player films, Photos of years gone by, Draw so far or Title card');
   assert.equal(sentence.includes(','), SCREEN_ROLES.length > 2);
 });
 

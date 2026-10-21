@@ -63,6 +63,18 @@ export async function preflightChecks({
             ? `${films.length} films, about ${Math.round((films.length * 30) / 60)} minutes a loop`
             : 'none - a screen set to Player films would hold the title card instead',
         });
+        // Counted, never failed, for the same reason the films are: a party
+        // with no photographs of years gone by is a perfectly good party, and
+        // a screen set to Photos says so on its own.
+        const photos = Array.isArray(show.photos) ? show.photos : [];
+        const years = [...new Set(photos.map((p) => p && p.year).filter(Boolean))].sort();
+        checks.push({
+          name: 'photos',
+          ok: true,
+          detail: photos.length
+            ? `${photos.length} photographs${years.length ? ` from ${years.join(', ')}` : ''}, about ${Math.round((photos.length * 7) / 60)} minutes a loop`
+            : 'none - a screen set to Photos would say so. Add some: node party/build/build-photos.mjs <folder>',
+        });
         const d1 = show.days?.['1'];
         const d2 = show.days?.['2'];
         if (Array.isArray(d1) && Array.isArray(d2)) {

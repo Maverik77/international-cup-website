@@ -300,6 +300,33 @@ function buildDays(players, runningOrder) {
   return { 1: day1, 2: day2 };
 }
 
+
+// The slideshow of past years, built separately by build-photos.mjs because it
+// reads a folder that is not in this repository and may not exist at all. No
+// photographs is the ordinary case for most of the year, so it is an empty list
+// and never an error: a show with no photographs simply has nothing to put on a
+// screen set to Photos, exactly as a show with no films has nothing for Films.
+export function loadPhotos(manifestPath) {
+  if (!manifestPath || !existsSync(manifestPath)) return [];
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  } catch {
+    return [];              // a half-written manifest must not stop the build
+  }
+  const rows = parsed && Array.isArray(parsed.photos) ? parsed.photos : [];
+  const out = [];
+  for (const row of rows) {
+    if (!row || typeof row !== 'object') continue;
+    if (typeof row.src !== 'string' || row.src === '') continue;
+    out.push({
+      src: row.src,
+      year: typeof row.year === 'string' ? row.year : '',
+    });
+  }
+  return out;
+}
+
 // cardsDir must be a directory named `cards`; the show records paths as 'cards/<file>'.
 // manifestOnly builds and returns the Show without generating, validating or writing anything.
 // buildCard and probe are injectable for tests.
@@ -310,6 +337,7 @@ export async function buildShow({
   runningOrderPath = join(PARTY, 'running-order.json'),
   onProgress = () => {},
   outPath = join(PARTY, 'show.json'),
+  photosPath = join(PARTY, 'photos/manifest.json'),
   manifestOnly = false,
   buildCard = buildGenericCard,
   probe = ffprobeCard,
@@ -328,6 +356,7 @@ export async function buildShow({
     players,
     days: buildDays(players, runningOrder),
     filmOrder: filmLoopOrder(players),
+    photos: loadPhotos(photosPath),
   });
   if (manifestOnly) return show;
 

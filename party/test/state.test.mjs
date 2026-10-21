@@ -269,8 +269,20 @@ test('setMode accepts the three modes; slideshow restarts at 0', () => {
 });
 
 test('setMode rejects an unknown mode', () => {
-  rejects(initialState(show), { name: 'setMode', mode: 'party' }, /idle, live or slideshow/);
+  rejects(initialState(show), { name: 'setMode', mode: 'party' }, /idle, live, slideshow or photos/);
   rejects(initialState(show), { name: 'setMode' }, /screen mode must be/);
+});
+
+test('photos is a mode, and it carries no position of its own', () => {
+  const s = run(initialState(show), { name: 'setMode', mode: 'photos' });
+  assert.equal(s.mode, 'photos');
+  // Deliberately unlike slideshow: a screen showing photographs keeps its own
+  // place in the loop, so there is nothing here to save, undo or migrate into
+  // a state file written before the mode existed.
+  assert.equal(s.photos, undefined);
+  assert.deepEqual(s.slideshow, initialState(show).slideshow);
+  // And it is a toggle, not a trapdoor.
+  assert.equal(run(s, { name: 'setMode', mode: 'live' }).mode, 'live');
 });
 
 test('slideshowGoto sets the position and rejects nonsense', () => {

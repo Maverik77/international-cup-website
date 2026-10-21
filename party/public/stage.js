@@ -15,6 +15,8 @@ const cover = document.getElementById('cover');
 const drawList = document.getElementById('draw-list');
 const drawRows = drawList.querySelector('.rows');
 const filmEls = [...document.getElementById('films').querySelectorAll('video')];
+const photoBox = document.getElementById('photos');
+const photoEls = [...photoBox.querySelectorAll('.shot')];
 const title = document.getElementById('match-title');
 const titleDay = title.querySelector('.day');
 const titleNum = title.querySelector('.num');
@@ -31,6 +33,13 @@ let filmIndex = 0;         // which of them is on screen
 let filmShowing = -1;      // which of the two elements it is in; -1 = none yet
 let filmSkip = null;
 let filmCueSeen = 0;       // the last Jump to a film… this screen has carried out
+let photoTimer = null;
+let photoSrcs = [];        // the photographs this screen is showing, in order
+let photoIndex = 0;        // which of them is on screen
+let photoShowing = -1;     // which of the two frames it is in; -1 = none yet
+let photoKey = '';         // the list we last built the frames from
+let photoSkip = null;
+let photoNone = null;      // the "nothing to show" notice, made once if ever needed
 
 const other = (k) => (k === 'a' ? 'b' : 'a');
 const report = (e) => { try { console.error('[stage]', e); } catch { /* nothing to do */ } };
@@ -191,6 +200,7 @@ function showLayer(key) {
 }
 
 function renderLive(plan) {
+  stopPhotos();
   clearSlideTimer();
   stopFilms();
   document.body.classList.remove('list');
@@ -201,6 +211,7 @@ function renderLive(plan) {
 }
 
 function renderIdle() {
+  stopPhotos();
   clearSlideTimer();
   stopFilms();
   applyTitle(null);
@@ -213,6 +224,7 @@ function renderIdle() {
 // A screen set to `list`: the draw so far, as text. An empty draw says so rather
 // than going black, for the same reason the holding screen exists.
 function renderList(plan) {
+  stopPhotos();
   clearSlideTimer();
   stopFilms();
   applyTitle(null);
@@ -307,6 +319,7 @@ function playFilm(i) {
 
 function renderFilms(plan) {
   clearSlideTimer();
+  stopPhotos();
   applyTitle(null);
   document.body.classList.remove('idle');
   document.body.classList.remove('list');
@@ -380,9 +393,145 @@ for (const el of filmEls) {
   });
 }
 
+// --- photographs of years gone by --------------------------------------------
+// A screen set to `photos` shows the tournaments gone by, one picture at a time
+// and then round again. Driven by its OWN clock, not by state frames, for the
+// same reason the films are driven by their own `ended` events: the draw
+// carries on behind this screen, and a reveal arriving half way through a
+// photograph must not jump it.
+
+const PHOTO_DWELL_MS = 7000;
+
+function clearPhotoTimer() {
+  if (photoTimer) { clearTimeout(photoTimer); photoTimer = null; }
+}
+
+// The picture goes in twice: once as a background, blown up and blurred to fill
+// a 16:9 television behind a photograph taken upright, and once whole in front.
+// Both come off the same file, so the second costs no fetch.
+function loadPhoto(shot, photo) {
+  const img = shot.querySelector('img');
+  if (img.dataset.rel === photo.src) return;   // already the one we want: leave it decoded
+  img.dataset.rel = photo.src;
+  img.src = `/${photo.src}`;
+  shot.querySelector('.back').style.backgroundImage = `url("/${encodeURI(photo.src)}")`;
+  shot.querySelector('.year').textContent = photo.year || '';
+}
+
+// Step over a picture that will not load. Through a timer, not a call, so a run
+// of broken files paces itself instead of recursing through the whole album.
+function skipPhoto() {
+  if (photoSkip) return;
+  photoSkip = setTimeout(() => {
+    photoSkip = null;
+    if (!document.body.classList.contains('photos')) return;
+    try { showPhoto(photoIndex + 1); } catch (e) { report(e); }
+  }, 400);
+}
+
+// Put photograph `i` on the screen, in whichever frame is not already showing -
+// the one that has been quietly decoding it since the last change - and set the
+// one after it loading in the frame that just came off.
+function showPhoto(i) {
+  const n = photoSrcs.length;
+  if (n === 0) return;
+  photoIndex = ((i % n) + n) % n;
+  const which = photoShowing === 0 ? 1 : 0;
+  const shot = photoEls[which];
+  const off = photoShowing === -1 ? null : photoEls[photoShowing];
+  loadPhoto(shot, photoSrcs[photoIndex]);
+  // Taking `live` off and putting it back is what restarts the slow drift: the
+  // animation hangs off `.shot.live img`, so it begins again each time a frame
+  // comes round rather than carrying on from where it left off.
+  shot.classList.add('live');
+  if (off && off !== shot) off.classList.remove('live');
+  photoShowing = which;
+  if (n > 1) loadPhoto(photoEls[which === 0 ? 1 : 0], photoSrcs[(photoIndex + 1) % n]);
+  clearPhotoTimer();
+  photoTimer = setTimeout(() => {
+    photoTimer = null;
+    try { showPhoto(photoIndex + 1); } catch (e) { report(e); }
+  }, PHOTO_DWELL_MS);
+}
+
+// Nobody has put any photographs on the laptop. Say so: a black television
+// looks broken, and an operator who pressed Photos deserves to know why
+// nothing happened. Same reason the holding screen exists.
+function renderNoPhotos() {
+  clearPhotoTimer();
+  photoShowing = -1;
+  photoKey = '';
+  photoSrcs = [];
+  for (const shot of photoEls) shot.classList.remove('live');
+  if (!photoNone) {
+    photoNone = document.createElement('div');
+    photoNone.className = 'none';
+    photoNone.textContent = 'No photographs loaded';
+  }
+  if (!photoNone.isConnected) photoBox.append(photoNone);
+  document.body.classList.add('photos');
+}
+
+function renderPhotos(plan) {
+  clearSlideTimer();
+  stopFilms();
+  applyTitle(null);
+  document.body.classList.remove('idle');
+  document.body.classList.remove('list');
+  layers.a.classList.remove('live');
+  layers.b.classList.remove('live');
+  const list = Array.isArray(plan && plan.photos) ? plan.photos : [];
+  if (list.length === 0) { renderNoPhotos(); return; }
+  if (photoNone && photoNone.isConnected) photoNone.remove();
+  document.body.classList.add('photos');
+  const key = list.map((p) => p.src).join('|');
+  if (key !== photoKey) {
+    photoKey = key;
+    photoSrcs = list;
+    photoShowing = -1;
+    for (const shot of photoEls) {
+      shot.classList.remove('live');
+      const img = shot.querySelector('img');
+      delete img.dataset.rel;
+      img.removeAttribute('src');
+    }
+    showPhoto(0);
+    return;
+  }
+  // Already running, so the clock is left alone - restarting it here is what
+  // would cut a photograph short on every state frame. The classes are not:
+  // leaving the photographs and coming back goes through stopPhotos(), which
+  // takes `live` off both frames, so say which one is on screen every time.
+  if (photoShowing === -1 || !photoTimer) { showPhoto(photoIndex); return; }
+  const shot = photoEls[photoShowing];
+  shot.classList.add('live');
+  for (const other of photoEls) if (other !== shot) other.classList.remove('live');
+}
+
+// Off the photographs: stop the clock, but keep the sources decoded. Coming
+// back should pick up where it was rather than starting the album again.
+function stopPhotos() {
+  if (photoSkip) { clearTimeout(photoSkip); photoSkip = null; }
+  clearPhotoTimer();
+  if (!document.body.classList.contains('photos') && photoShowing === -1) return;
+  document.body.classList.remove('photos');
+  for (const shot of photoEls) shot.classList.remove('live');
+}
+
+for (const shot of photoEls) {
+  const img = shot.querySelector('img');
+  img.addEventListener('error', () => {
+    if (!document.body.classList.contains('photos')) return;
+    if (!img.getAttribute('src') || photoEls[photoShowing] !== shot) return;
+    report(`photograph will not load: ${img.dataset.rel}`);
+    skipPhoto();
+  });
+}
+
 function renderSlideshow() {
   clearSlideTimer();
   stopFilms();
+  stopPhotos();
   document.body.classList.remove('list');
   slideEntry = slideshowEntry({ completed: wire.completed, slideshow: { position: slidePosition } });
   if (!slideEntry) { renderIdle(); return; }
@@ -407,6 +556,8 @@ function render(prev) {
     renderList(plan);
   } else if (screen === 'films') {
     renderFilms(plan);
+  } else if (screen === 'photos') {
+    renderPhotos(plan);
   } else if (screen === 'slideshow') {
     const pos = (wire.slideshow && wire.slideshow.position) || 0;
     const prevPos = prev && prev.slideshow ? prev.slideshow.position : undefined;

@@ -10,7 +10,7 @@ import fs from 'node:fs';
 import { dirname } from 'node:path';
 import { initialState, sideSize } from './state.mjs';
 
-const MODES = ['idle', 'live', 'slideshow'];
+const MODES = ['idle', 'live', 'slideshow', 'photos'];
 const SHOWN = ['none', 'first', 'both'];
 const SIDES = ['intl', 'usa'];
 // Errors that mean "this platform/filesystem cannot fsync a directory".

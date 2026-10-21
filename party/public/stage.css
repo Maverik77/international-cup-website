@@ -208,6 +208,72 @@ body.films #films { display: block; }
 }
 #films video.live { opacity: 1; }
 
+/* A screen set to `photos`: the tournaments gone by, one picture at a time.
+   `contain` for the picture itself - these are photographs of people, and a
+   `cover` crop takes somebody's head off - with a blown-up, blurred copy of
+   the same picture behind it so a portrait shot fills the television instead
+   of sitting in two black bars. The slow drift is deliberately small: on a
+   screen this size anything livelier reads as a wobble. */
+#photos {
+  position: absolute; inset: 0;
+  display: none;
+  background: #000;
+}
+body.photos #photos { display: block; }
+
+#photos .shot {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease-in-out;
+}
+#photos .shot.live { opacity: 1; }
+
+#photos .back {
+  position: absolute; inset: 0;
+  background-position: center;
+  background-size: cover;
+  filter: blur(42px) brightness(.45) saturate(.8);
+  /* The blur samples past the edges and would otherwise show a pale rim. */
+  transform: scale(1.18);
+}
+
+#photos img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+#photos .shot.live img { animation: photo-drift 9s ease-out both; }
+
+@keyframes photo-drift {
+  from { transform: scale(1); }
+  to   { transform: scale(1.045); }
+}
+
+/* The year, small and out of the way. It is the one caption worth having: the
+   room spends the whole slideshow asking which year a photograph is from. */
+#photos .year {
+  position: absolute; right: 2.4vw; bottom: 2vw;
+  font: 600 1.5vw/1 -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  letter-spacing: .22em; color: #FEB619;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .9);
+}
+
+/* Nothing to show. Says so, rather than leaving a black screen that reads as a
+   broken television - the same reason the holding screen exists. */
+#photos .none {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font: 400 2.2vw/1.5 -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  letter-spacing: .18em; text-transform: uppercase; color: #FEB619;
+  text-align: center;
+}
+
+/* A photograph drifting under a motion-sensitive eye is not worth the trouble. */
+@media (prefers-reduced-motion: reduce) {
+  #photos .shot.live img { animation: none; }
+  #photos .shot { transition-duration: 1ms; }
+}
+
 #cover {
   position: absolute; inset: 0;
   display: grid; place-items: center;

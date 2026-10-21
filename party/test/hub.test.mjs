@@ -35,6 +35,9 @@ async function startHub(opts = {}) {
   const cardsDir = join(dir, 'cards');
   mkdirSync(cardsDir, { recursive: true });
   writeFileSync(join(cardsDir, 'i1-4x9.mp4'), Buffer.from('videobytes'));
+  const photosDir = join(dir, 'photos');
+  mkdirSync(photosDir, { recursive: true });
+  writeFileSync(join(photosDir, '2021-0001.jpg'), Buffer.from('jpegbytes'));
   const publicDir = join(dir, 'public');
   mkdirSync(publicDir, { recursive: true });
   writeFileSync(join(publicDir, 'stage.html'), '<h1>stage</h1>');
@@ -46,7 +49,7 @@ async function startHub(opts = {}) {
   const hub = await createHub({
     showPath: fixtureShow(dir, showTweak),
     statePath: join(dir, 'state.json'),
-    cardsDir, publicDir, privateDir, port: 0, enableSync: false, quiet: true,
+    cardsDir, photosDir, publicDir, privateDir, port: 0, enableSync: false, quiet: true,
     // A known password, and a path in the temp dir: never write into the real party/.
     operatorPassword: 'test-password-1',
     operatorPasswordPath: join(dir, 'operator-password.txt'),
@@ -153,6 +156,17 @@ test('serves cards with range support', async () => {
   assert.equal(res.headers.get('content-range'), 'bytes 0-4/10');
   assert.equal(await res.text(), 'video');
   assert.equal((await fetch(`${base}/cards/nope.mp4`)).status, 404);
+});
+
+test('serves the photographs, from their own root', async () => {
+  const { base } = await startHub();
+  const res = await fetch(`${base}/photos/2021-0001.jpg`);
+  assert.equal(res.status, 200);
+  assert.equal(await res.text(), 'jpegbytes');
+  assert.equal((await fetch(`${base}/photos/nope.jpg`)).status, 404);
+  // The photographs are a third root, not a folder inside public: a name that
+  // exists under public must not be reachable by asking for it under /photos.
+  assert.equal((await fetch(`${base}/photos/stage.html`)).status, 404);
 });
 
 test('a command changes the state and persists it', async () => {
@@ -543,7 +557,8 @@ test('path traversal through the hub never reaches files outside the served dire
     s.on('close', () => ok(d));
     setTimeout(() => { s.destroy(); ok(d); }, 300);
   });
-  for (const p of ['/cards/../private.txt', '/cards/%2e%2e/show.json', '/cards/..%2fshow.json', '/%2e%2e/show.json', '/../show.json', '/cards/%252e%252e/private.txt', '/cards/link.mp4']) {
+  for (const p of ['/cards/../private.txt', '/cards/%2e%2e/show.json', '/cards/..%2fshow.json', '/%2e%2e/show.json', '/../show.json', '/cards/%252e%252e/private.txt', '/cards/link.mp4',
+    '/photos/../private.txt', '/photos/%2e%2e/show.json', '/photos/..%2fshow.json']) {
     const text = await rawGet(p);
     assert.doesNotMatch(text, /PRIVATE-DATA|"players"/, `leaked through ${p}`);
     assert.doesNotMatch(text, /^HTTP\/1\.1 200/, p);

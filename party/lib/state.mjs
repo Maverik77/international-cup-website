@@ -9,7 +9,11 @@ export class CommandError extends Error {
 
 export const HISTORY_LIMIT = 50;
 const SIDES = ['intl', 'usa'];
-const MODES = ['idle', 'live', 'slideshow'];
+// `photos` deliberately carries no position of its own, unlike `slideshow`.
+// A screen showing photographs owns its own place in the loop, the way a
+// screen showing films does, so nothing here has to be saved, undone or
+// migrated into a state file written before the mode existed.
+const MODES = ['idle', 'live', 'slideshow', 'photos'];
 const TEAM_OF = { intl: 'international', usa: 'usa' };
 const TEAM_LABEL = { intl: 'International', usa: 'USA' };
 const SIDE_OF_TEAM = { international: 'intl', usa: 'usa' };
@@ -212,7 +216,7 @@ const HANDLERS = {
 
   setMode(state, cmd) {
     if (!MODES.includes(cmd.mode)) {
-      throw new CommandError('The screen mode must be idle, live or slideshow.');
+      throw new CommandError('The screen mode must be idle, live, slideshow or photos.');
     }
     const next = clone(state);
     next.mode = cmd.mode;
