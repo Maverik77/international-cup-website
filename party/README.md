@@ -95,6 +95,20 @@ any of that happens, a screen set to Photos says *No photographs loaded* rather
 than going black. The photographs never leave the laptop: `party/photos/` is
 gitignored and is not one of the folders the website deploy copies.
 
+**Two screens never show the same thing at the same moment.** Put a second
+television on **Player films** and it starts half way down the list rather than
+at the top; a third starts two thirds of the way down. The same goes for
+**Photos**. Nothing to set — it happens on its own, and with one screen nothing
+changes, so the main television still starts where it always did.
+
+Screens are spread by what they are SHOWING, not by what they are set to, so a
+screen set to Photos and a mirroring screen following the show into Photos are
+spread apart from each other too. A screen already playing never jumps: the
+spacing is worked out once, when that screen starts its loop, so opening a new
+screen in the bar leaves the televisions in the room alone. That does mean a
+screen opened late sits wherever the arithmetic puts it rather than exactly
+opposite its neighbours — still a different film, which is the point.
+
 **Jump to a film…**, under each screen's buttons, starts that screen at one
 particular player — somebody has just walked in, or asked. Type a few letters
 of the name, tap it, and that screen cuts to their film and carries on down the

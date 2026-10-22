@@ -179,17 +179,65 @@ export function panelPlan(wire, show) {
 // `name` is which screen is asking. It defaults to the only screen there used
 // to be, so a caller that does not care gets exactly the old behaviour.
 export function screenPlan(wire, show, name = DEFAULT_SCREEN) {
+  const screen = screenKind(wire, name);
+  if (screen === 'films') return { screen, plan: filmList(show, filmCueOf(wire, name)) };
+  if (screen === 'photos') return { screen, plan: photoList(show) };
+  if (screen === 'list') return { screen, plan: drawList(wire, show) };
+  if (screen === 'live') return { screen, plan: panelPlan(wire, show) };
+  return { screen, plan: null };          // idle and slideshow carry no plan
+}
+
+// WHICH screen a television is on, without building the plan that goes with it.
+// screenPlan is the same decision plus the work; this is split out because
+// startOffset below has to ask it of every screen at once, and building a draw
+// list or a film list for each of them to throw away would be silly.
+export function screenKind(wire, name = DEFAULT_SCREEN) {
   const role = roleOf(wire, name);
-  if (role === 'hold') return { screen: 'idle', plan: null };
-  if (role === 'slideshow') return { screen: 'slideshow', plan: null };
-  if (role === 'films') return { screen: 'films', plan: filmList(show, filmCueOf(wire, name)) };
-  if (role === 'photos') return { screen: 'photos', plan: photoList(show) };
-  if (role === 'list') return { screen: 'list', plan: drawList(wire, show) };
+  if (role === 'hold') return 'idle';
+  if (role === 'slideshow') return 'slideshow';
+  if (role === 'films') return 'films';
+  if (role === 'photos') return 'photos';
+  if (role === 'list') return 'list';
   const mode = wire && typeof wire === 'object' ? wire.mode : undefined;
-  if (mode === 'slideshow') return { screen: 'slideshow', plan: null };
-  if (mode === 'photos') return { screen: 'photos', plan: photoList(show) };
-  if (mode === 'live') return { screen: 'live', plan: panelPlan(wire, show) };
-  return { screen: 'idle', plan: null };
+  if (mode === 'slideshow') return 'slideshow';
+  if (mode === 'photos') return 'photos';
+  if (mode === 'live') return 'live';
+  return 'idle';
+}
+
+// Where this screen should START in a loop of `n`, so that two televisions
+// showing the same thing are not showing the SAME ONE at the same moment.
+// Screens on the same kind of screen are spread evenly through the loop: two
+// get the top and the middle, three get the thirds, and so on.
+//
+// Grouped by what each screen is actually SHOWING, not by its role, because a
+// screen set to Photos and a mirroring screen following a show in photos mode
+// are both playing the same loop and must still be spread apart.
+//
+// The main screen sorts first and so always draws offset 0. That keeps the one
+// television most people are watching starting where it always did, and makes
+// this invisible until a second screen exists.
+//
+// Applied ONCE, when a screen starts its loop - never on a later frame. A
+// television already playing must not jump because somebody opened another
+// screen in the bar, and two screens that started apart stay apart on their
+// own: same film lengths, same dwell.
+export function startOffset(wire, name, n) {
+  if (!Number.isInteger(n) || n <= 1) return 0;
+  const screens = wire && wire.screens && typeof wire.screens === 'object' ? wire.screens : null;
+  if (!screens) return 0;
+  const me = screenNameFrom(name);
+  const kind = screenKind(wire, me);
+  const peers = Object.keys(screens)
+    .filter((k) => screenKind(wire, k) === kind)
+    .sort((a, b) => {
+      if (a === DEFAULT_SCREEN) return -1;
+      if (b === DEFAULT_SCREEN) return 1;
+      return a.localeCompare(b);
+    });
+  const at = peers.indexOf(me);
+  if (at <= 0 || peers.length <= 1) return 0;
+  return Math.round((at * n) / peers.length) % n;
 }
 
 // The long-form films, in roster order: the thirty-second film each player got,

@@ -5,6 +5,7 @@ import {
   formatFor, perSide, panelPlan, panelsForMatch, preloadSrcs, slideshowEntry,
   panelsToLoad, srcAfterError, screenPlan, matchTitle, joinsFor, DAY_MATCHES,
   screenNameFrom, roleOf, drawList, filmList, photoList, filmCueOf, SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS,
+  screenKind, startOffset,
 } from '../public/panels.mjs';
 import { indexShow, DAY1_MATCHES, DAY2_MATCHES } from '../build/build-show.mjs';
 import { initialState, reduce, project } from '../lib/state.mjs';
@@ -516,6 +517,78 @@ test('a screen name is short, lowercase and harmless, or it is the main screen',
     'a screen really called that still works');
   assert.ok(MAX_SCREENS >= 2 && Number.isInteger(MAX_SCREENS));
   assert.deepEqual(SCREEN_ROLES, ['mirror', 'slideshow', 'films', 'photos', 'list', 'hold']);
+});
+
+// --- two screens must not show the same thing at the same moment -------------
+
+const films = (names) => ({ mode: 'live', screens: Object.fromEntries(names.map((n) => [n, 'films'])) });
+
+test('one screen starts at the top, as it always did', () => {
+  assert.equal(startOffset(films(['main']), 'main', 47), 0);
+  assert.equal(startOffset({ mode: 'live' }, 'main', 47), 0, 'no screens at all');
+  assert.equal(startOffset(null, 'main', 47), 0);
+});
+
+test('screens showing the same thing are spread evenly through the loop', () => {
+  const two = films(['main', 'bar']);
+  assert.equal(startOffset(two, 'main', 47), 0);
+  assert.equal(startOffset(two, 'bar', 47), 24);
+  const three = films(['main', 'bar', 'deck']);
+  assert.deepEqual(['main', 'bar', 'deck'].map((n) => startOffset(three, n, 48)), [0, 16, 32]);
+  const four = films(['main', 'bar', 'deck', 'hall']);
+  assert.deepEqual(['main', 'bar', 'deck', 'hall'].map((n) => startOffset(four, n, 48)), [0, 12, 24, 36]);
+});
+
+test('the main screen always draws nought, whatever the other screens are called', () => {
+  // 'bar' sorts before 'main' alphabetically. The main screen is the one the
+  // room is watching and it must keep starting where it always started.
+  for (const names of [['main', 'bar'], ['main', 'aaa'], ['main', 'aaa', 'bbb']]) {
+    assert.equal(startOffset(films(names), 'main', 47), 0, names.join(','));
+  }
+});
+
+test('only screens showing the SAME thing count towards the spread', () => {
+  const mixed = { mode: 'live', screens: { main: 'films', bar: 'list', deck: 'films', hall: 'hold' } };
+  assert.equal(startOffset(mixed, 'main', 47), 0);
+  assert.equal(startOffset(mixed, 'deck', 47), 24, 'two film screens, not four');
+});
+
+test('mirroring screens following the show into photos are spread too', () => {
+  // The grouping is by what a screen SHOWS, not by its role: in photos mode
+  // every mirroring screen is playing the same loop and must still be split.
+  const w = { mode: 'photos', screens: { main: 'mirror', bar: 'mirror' } };
+  assert.equal(screenKind(w, 'main'), 'photos');
+  assert.equal(startOffset(w, 'main', 120), 0);
+  assert.equal(startOffset(w, 'bar', 120), 60);
+  // A screen with an explicit photos role joins the same group as a mirroring
+  // one, because both are on the photographs.
+  const w2 = { mode: 'photos', screens: { main: 'mirror', bar: 'photos' } };
+  assert.equal(startOffset(w2, 'bar', 120), 60);
+});
+
+test('a loop of one, an empty loop, and nonsense all start at nought', () => {
+  const two = films(['main', 'bar']);
+  for (const n of [1, 0, -5, 1.5, '24', null, undefined, NaN]) {
+    assert.equal(startOffset(two, 'bar', n), 0, JSON.stringify(n));
+  }
+});
+
+test('a screen nobody has opened starts at the top rather than throwing', () => {
+  const two = films(['main', 'bar']);
+  assert.equal(startOffset(two, 'nobody', 47), 0);
+  assert.equal(startOffset(two, '../../etc', 47), 0, 'a daft name is the main screen, which is offset 0');
+});
+
+test('screenKind agrees with screenPlan on every screen it is asked about', () => {
+  // screenKind exists only so startOffset can ask cheaply. If the two ever
+  // disagree, screens would be grouped by one rule and rendered by another.
+  const show2 = indexShow({ built: 'now', days: { 1: [], 2: [] }, players: [], photos: [{ src: 'a.jpg', year: '2021' }] });
+  for (const mode of ['idle', 'live', 'slideshow', 'photos']) {
+    for (const role of [...SCREEN_ROLES, 'nonsense', undefined]) {
+      const w = { mode, screens: { main: role }, completed: [], slot: {} };
+      assert.equal(screenKind(w, 'main'), screenPlan(w, show2, 'main').screen, `${mode}/${role}`);
+    }
+  }
 });
 
 // --- photographs of years gone by --------------------------------------------

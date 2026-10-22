@@ -1,7 +1,7 @@
 // Applies the plan from panels.mjs to the DOM. The decisions live there and are
 // tested; this file only does what the plan says.
 import {
-  screenPlan, panelsForMatch, preloadSrcs, slideshowEntry, panelsToLoad, srcAfterError,
+  screenPlan, panelsForMatch, preloadSrcs, slideshowEntry, panelsToLoad, srcAfterError, startOffset,
   screenNameFrom,
 } from '/panels.mjs';
 
@@ -339,7 +339,11 @@ function renderFilms(plan) {
     filmSrcs = srcs;
     filmShowing = -1;
     for (const el of filmEls) { el.classList.remove('live'); delete el.dataset.rel; el.removeAttribute('src'); }
-    playFilm(cue ? cue.index : 0);
+    // Not film 0: where THIS screen starts, so a second television is not
+    // playing the same film at the same moment. Read once, here, at the start
+    // of the loop - never on a later frame, or opening a screen in the bar
+    // would make the main screen jump.
+    playFilm(cue ? cue.index : startOffset(wire, MY_SCREEN, srcs.length));
     return;
   }
   // The operator asked for this one now: start it, even if it is the film
@@ -495,7 +499,7 @@ function renderPhotos(plan) {
       delete img.dataset.rel;
       img.removeAttribute('src');
     }
-    showPhoto(0);
+    showPhoto(startOffset(wire, MY_SCREEN, list.length));
     return;
   }
   // Already running, so the clock is left alone - restarting it here is what
