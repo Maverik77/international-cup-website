@@ -30,7 +30,7 @@ test('every player in the show has a film, or no card key at all, or no hometown
   const show = JSON.parse(readFileSync(new URL('../show.json', import.meta.url), 'utf8'));
   const keyed = show.players.filter((p) => !p.generic);
   const noFilm = keyed.filter((p) => !p.film).map((p) => p.name);
-  assert.equal(keyed.length, 46);
+  assert.equal(keyed.length, 48);
   // Jun Bae has given no hometown, so for him there is nowhere to fly to.
   // Everyone else with a card has a film.
   assert.equal(noFilm.length, 1, `without a film: ${noFilm.join(', ')}`);
@@ -90,15 +90,15 @@ test('the order is the same every build, and survives a show with nothing to ord
   assert.deepEqual([...filmLoopOrder(only)].sort(), ['a', 'b']);
 });
 
-test('the card-key map has 46 entries and keeps phil and phillip apart', () => {
-  assert.equal(Object.keys(CARD_KEYS).length, 46);
+test('the card-key map has 48 entries and keeps phil and phillip apart', () => {
+  assert.equal(Object.keys(CARD_KEYS).length, 48);
   assert.equal(CARD_KEYS['Philip Woodisse'], 'phil');
   assert.equal(CARD_KEYS['Phillip Jewell'], 'phillip');
   // Two Baes, and they are not the same man: Yun Sang Bae has a film, Jun Bae
   // has no hometown and so has none.
   assert.equal(CARD_KEYS['Yun Sang Bae'], 'yun');
   assert.equal(CARD_KEYS['Jun Bae'], 'jun');
-  assert.equal(new Set(Object.values(CARD_KEYS)).size, 46, 'no two players share a card');
+  assert.equal(new Set(Object.values(CARD_KEYS)).size, 48, 'no two players share a card');
 });
 
 test('every player gets both formats; keyed players with files are bespoke', () => {
