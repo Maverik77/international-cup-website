@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21",
+  "updated": "2026-10-22",
   "note": "Public roster. Profile details appear only for players who agreed to appear on the website. Players who declined, or who we have not heard from, are listed by name alone. Full record lives outside this repo; see contacts/.",
   "teams": {
     "international": [
@@ -237,7 +237,10 @@
         "photo": "pics/players/jeff-galkin.jpg"
       },
       {
-        "name": "Jim Gillie"
+        "name": "Jim Gillie",
+        "hometown": "Vienna, VA",
+        "school": "Florida Southern College",
+        "photo": "pics/players/jim-gillie.jpg"
       },
       {
         "name": "Seth Holladay",
@@ -284,7 +287,8 @@
       },
       {
         "name": "Greg Parda",
-        "hometown": "Boston, MA"
+        "hometown": "Boston, MA",
+        "photo": "pics/players/greg-parda.jpg"
       },
       {
         "name": "Anthony Rizzo",
