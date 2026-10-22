@@ -39,6 +39,7 @@ let photoIndex = 0;        // which of them is on screen
 let photoShowing = -1;     // which of the two frames it is in; -1 = none yet
 let photoKey = '';         // the list we last built the frames from
 let photoSkip = null;
+let photoPreload = null;   // decoding the next photograph, once the fade is over
 let photoNone = null;      // the "nothing to show" notice, made once if ever needed
 
 const other = (k) => (k === 'a' ? 'b' : 'a');
@@ -405,6 +406,9 @@ for (const el of filmEls) {
 // photograph must not jump it.
 
 const PHOTO_DWELL_MS = 7000;
+// Must match the `transition` on #photos .shot in stage.css. The outgoing frame
+// is still on screen for this long after it loses `live`.
+const PHOTO_FADE_MS = 900;
 
 function clearPhotoTimer() {
   if (photoTimer) { clearTimeout(photoTimer); photoTimer = null; }
@@ -450,7 +454,25 @@ function showPhoto(i) {
   shot.classList.add('live');
   if (off && off !== shot) off.classList.remove('live');
   photoShowing = which;
-  if (n > 1) loadPhoto(photoEls[which === 0 ? 1 : 0], photoSrcs[(photoIndex + 1) % n]);
+  // Get the one after this decoded in advance - but NOT yet. The only frame
+  // free to load into is the one that just lost `live`, and it is still on the
+  // screen, at nearly full opacity, for the whole 900ms cross-fade. Loading
+  // into it now swaps the outgoing picture for a completely different one
+  // mid-fade: the viewer sees the photograph after next flash past for under a
+  // second, then the real next one. Wait for the fade to finish; that still
+  // leaves six seconds of the dwell to decode in.
+  if (photoPreload) { clearTimeout(photoPreload); photoPreload = null; }
+  if (n > 1) {
+    const spare = photoEls[which === 0 ? 1 : 0];
+    const next = photoSrcs[(photoIndex + 1) % n];
+    photoPreload = setTimeout(() => {
+      photoPreload = null;
+      // Gone off the photographs, or moved on again, while we waited.
+      if (!document.body.classList.contains('photos')) return;
+      if (photoEls[photoShowing] === spare) return;
+      loadPhoto(spare, next);
+    }, PHOTO_FADE_MS + 100);
+  }
   clearPhotoTimer();
   photoTimer = setTimeout(() => {
     photoTimer = null;
@@ -463,6 +485,7 @@ function showPhoto(i) {
 // nothing happened. Same reason the holding screen exists.
 function renderNoPhotos() {
   clearPhotoTimer();
+  if (photoPreload) { clearTimeout(photoPreload); photoPreload = null; }
   photoShowing = -1;
   photoKey = '';
   photoSrcs = [];
@@ -516,6 +539,7 @@ function renderPhotos(plan) {
 // back should pick up where it was rather than starting the album again.
 function stopPhotos() {
   if (photoSkip) { clearTimeout(photoSkip); photoSkip = null; }
+  if (photoPreload) { clearTimeout(photoPreload); photoPreload = null; }
   clearPhotoTimer();
   if (!document.body.classList.contains('photos') && photoShowing === -1) return;
   document.body.classList.remove('photos');
