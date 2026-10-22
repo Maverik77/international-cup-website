@@ -170,6 +170,41 @@ export function panelPlan(wire, show) {
   return { fmt, panels, match: matchTitle(day, slot.index, slot.shown), joins: joinsFor(day, slot) };
 }
 
+// --- the title card ----------------------------------------------------------
+
+// What the screen says when there is nothing to show yet. The same words
+// whether the night has not begun or the hat has not reached this match: both
+// are the room waiting on a draw, and one sentence is one thing to read.
+export const WAITING_LINE = 'Drawing is about to start';
+export const TITLE_LINE = 'International Cup';
+export const TITLE_YEAR = '2026';
+
+// The row of flags on the title card. The hub works out which countries are on
+// the roster and in what order; this only refuses what it cannot draw, because
+// a show with a malformed flags list must still put its title up.
+export function flagRow(show) {
+  const rows = show && typeof show === 'object' && Array.isArray(show.flags) ? show.flags : [];
+  const out = [];
+  const seen = new Set();
+  for (const row of rows) {
+    if (!row || typeof row !== 'object') continue;
+    if (typeof row.src !== 'string' || row.src === '') continue;
+    if (seen.has(row.src)) continue;
+    seen.add(row.src);
+    out.push({ src: row.src, country: typeof row.country === 'string' ? row.country : '' });
+  }
+  return out;
+}
+
+// Nobody has been drawn into this match yet. A match that IS drawn but not yet
+// revealed is a different thing entirely - that one is black on purpose, and the
+// reveal is the whole point - so this asks who is in the match, never who is
+// visible.
+export function nobodyDrawn(plan) {
+  if (!plan || !Array.isArray(plan.panels) || plan.panels.length === 0) return false;
+  return plan.panels.every((p) => !p || !p.playerId);
+}
+
 // THE STAGE'S GATE, in one place: which of the three screens the TV is showing,
 // and, for the live screen, the plan to apply to it. stage.js does what this
 // says and decides nothing itself, so the gate can be tested without a DOM.

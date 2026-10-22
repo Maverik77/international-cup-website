@@ -5,7 +5,7 @@ import {
   formatFor, perSide, panelPlan, panelsForMatch, preloadSrcs, slideshowEntry,
   panelsToLoad, srcAfterError, screenPlan, matchTitle, joinsFor, DAY_MATCHES,
   screenNameFrom, roleOf, drawList, filmList, photoList, filmCueOf, SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS,
-  screenKind, startOffset,
+  screenKind, startOffset, flagRow, nobodyDrawn, WAITING_LINE, TITLE_LINE, TITLE_YEAR,
 } from '../public/panels.mjs';
 import { indexShow, DAY1_MATCHES, DAY2_MATCHES } from '../build/build-show.mjs';
 import { initialState, reduce, project } from '../lib/state.mjs';
@@ -806,4 +806,66 @@ test('the draw list holds the matches revealed so far, and says so when there ar
   // A match whose players the show does not know is left out, not printed as ids.
   const ghosts = drawList(wire({ completed: [{ day: 1, index: 1, intl: ['ghost'], usa: ['nobody'] }] }), show);
   assert.deepEqual(ghosts.rows, []);
+});
+
+// --- the title card ----------------------------------------------------------
+
+test('the title card names the event and the year', () => {
+  assert.equal(TITLE_LINE, 'International Cup');
+  assert.equal(TITLE_YEAR, '2026');
+  assert.equal(WAITING_LINE, 'Drawing is about to start');
+});
+
+test('the flag row is whatever the hub listed, in the order it listed it', () => {
+  const flags = [
+    { country: 'Australia', src: 'flags/au.png' },
+    { country: 'India', src: 'flags/in.png' },
+    { country: 'USA', src: 'flags/us.png' },
+  ];
+  assert.deepEqual(flagRow({ flags }), flags);
+});
+
+test('a flags list the stage cannot draw costs the flags, never the title', () => {
+  // The title card is the screen the room looks at longest. Nothing about a
+  // malformed list may stop it going up.
+  for (const bad of [null, undefined, {}, 'x', { flags: null }, { flags: 'no' }, { flags: {} }]) {
+    assert.deepEqual(flagRow(bad), [], JSON.stringify(bad));
+  }
+  assert.deepEqual(flagRow({ flags: [null, 7, {}, { src: '' }, { src: 42 }] }), []);
+  // A country missing is a caption missing, not a flag dropped.
+  assert.deepEqual(flagRow({ flags: [{ src: 'flags/in.png' }] }), [{ src: 'flags/in.png', country: '' }]);
+  // The same flag twice would be a duplicate in a row of pictures.
+  assert.deepEqual(flagRow({ flags: [{ src: 'flags/in.png' }, { src: 'flags/in.png' }] }),
+    [{ src: 'flags/in.png', country: '' }]);
+});
+
+test('a match nobody has been drawn into is told apart from one not yet revealed', () => {
+  const empty = panelPlan(wire({ slot: { index: 4, firstSide: 'intl', intl: ['', ''], usa: ['', ''], shown: 'none', problems: [] } }), show);
+  assert.equal(nobodyDrawn(empty), true);
+
+  // Drawn and hidden is NOT waiting: that screen is black on purpose and the
+  // reveal is the whole point of the evening.
+  const drawnHidden = panelPlan(wire(), show);
+  assert.equal(drawnHidden.panels.every((p) => !p.visible), true, 'nothing is visible yet');
+  assert.equal(nobodyDrawn(drawnHidden), false);
+
+  // One side drawn and the other still in the hat is also not waiting.
+  const half = panelPlan(wire({ slot: { index: 4, firstSide: 'intl', intl: ['player-intl-1', 'player-intl-2'], usa: ['', ''], shown: 'none', problems: [] } }), show);
+  assert.equal(nobodyDrawn(half), false);
+
+  // An id the show does not know leaves no player in the panel, so that match
+  // really has nobody in it as far as the screen is concerned.
+  const ghost = panelPlan(wire({ slot: { index: 4, firstSide: 'intl', intl: ['nobody', ''], usa: ['', ''], shown: 'none', problems: [] } }), show);
+  assert.equal(nobodyDrawn(ghost), true);
+});
+
+test('nothing to look at at all is not the same as waiting on a draw', () => {
+  // No panels means no plan - a slideshow or a film screen - and those have
+  // their own screens to show. Only a live match with empty hands waits.
+  assert.equal(nobodyDrawn(null), false);
+  assert.equal(nobodyDrawn(undefined), false);
+  assert.equal(nobodyDrawn({}), false);
+  assert.equal(nobodyDrawn({ panels: [] }), false);
+  assert.equal(nobodyDrawn({ panels: 'no' }), false);
+  assert.equal(nobodyDrawn({ panels: [null, undefined] }), true);
 });

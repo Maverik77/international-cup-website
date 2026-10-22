@@ -10,6 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { networkInterfaces } from 'node:os';
 import { indexShow } from './build/build-show.mjs';
+import { FLAG_CODES } from './build/fetch-flags.mjs';
 import { loadState, saveState } from './lib/persist.mjs';
 import { reduce, project, CommandError, HISTORY_LIMIT } from './lib/state.mjs';
 import { createOutbox } from './lib/outbox.mjs';
@@ -28,6 +29,26 @@ import { API_URLS, AwsError, loadPassword, putPairings, getPairings } from './li
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_PORT = 8722;
 export const MAX_BODY_BYTES = 16 * 1024; // a command is a few dozen bytes
+
+// The title card's row of flags: every country on the roster, once each,
+// International first and then the hosts. A country with no flag code is left
+// out rather than thrown over - a missing flag is a gap in a row of pictures,
+// and refusing to start the hub over one would be the wrong trade on the night.
+export function flagRowFor(players, codes = FLAG_CODES) {
+  const seen = new Map();
+  for (const p of Array.isArray(players) ? players : []) {
+    if (!p || typeof p !== 'object') continue;
+    const country = typeof p.country === 'string' ? p.country.trim() : '';
+    if (country === '' || seen.has(country)) continue;
+    if (!Object.hasOwn(codes, country)) continue;
+    const code = codes[country];
+    if (typeof code !== 'string' || code === '') continue;
+    seen.set(country, { country, src: `flags/${code}.png`, usa: p.team === 'usa' });
+  }
+  return [...seen.values()]
+    .sort((a, b) => (a.usa === b.usa ? a.country.localeCompare(b.country) : (a.usa ? 1 : -1)))
+    .map(({ country, src }) => ({ country, src }));
+}
 // How long stop() will wait for the last push to the website before giving up.
 // Short on purpose: Ctrl-C at the end of the night must come straight back even
 // with the venue wifi dead. The push itself is abandoned, not retried.
@@ -76,6 +97,7 @@ export async function createHub({
   statePath = join(HERE, 'state.json'),
   cardsDir = join(HERE, 'cards'),
   photosDir = join(HERE, 'photos'),
+  flagsDir = join(HERE, 'assets', 'flags'),
   publicDir = join(HERE, 'public'),
   privateDir = join(HERE, 'private'), // pages that need the gate; the static handler never reaches here
   port = DEFAULT_PORT,
@@ -169,6 +191,11 @@ export async function createHub({
   const publicShow = {
     ...show,
     players: show.players.map(({ hometown: _h, school: _s, ...rest }) => rest),
+    // The title card's row of flags: every country on the roster, once each.
+    // Built here rather than into show.json so a flag can be added without
+    // rebuilding the show - and so the stage never has to know what a flagcdn
+    // code is.
+    flags: flagRowFor(show.players),
   };
 
   // Which screen is doing what. Deliberately NOT part of the saved show: a role
@@ -537,10 +564,11 @@ export async function createHub({
       return;
     }
 
-    // Three roots, one handler. The photographs sit outside publicDir for the
-    // same reason the cards do: they are build artefacts of a folder that is
-    // not in the repository, and they are far too big to live beside the
-    // source. safeJoin is what stops /photos/../../contacts reaching anything.
+    // Four roots, one handler. The cards and the photographs sit outside
+    // publicDir because they are build artefacts of folders that are not in the
+    // repository and are far too big to live beside the source; the flags are
+    // in the repository but under assets/, where the build reaches them.
+    // safeJoin is what stops /photos/../../contacts reaching anything.
     let root = publicDir;
     let rel = url;
     if (url.startsWith('/cards/')) {
@@ -549,6 +577,9 @@ export async function createHub({
     } else if (url.startsWith('/photos/')) {
       root = photosDir;
       rel = url.slice('/photos'.length);
+    } else if (url.startsWith('/flags/')) {
+      root = flagsDir;
+      rel = url.slice('/flags'.length);
     }
     const abs = safeJoin(root, rel);
     if (!abs) {

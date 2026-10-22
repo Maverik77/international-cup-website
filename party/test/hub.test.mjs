@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { MAX_SCREENS, SCREEN_ROLES } from "../public/panels.mjs";
 import { SCREEN_ROLE_LABELS } from '../public/console.mjs';
-import { createHub, parseArgs, MAX_BODY_BYTES, STOP_FLUSH_MS, shutdownLines } from '../hub.mjs';
+import { createHub, parseArgs, MAX_BODY_BYTES, STOP_FLUSH_MS, shutdownLines, flagRowFor } from '../hub.mjs';
 import { sessionToken } from '../lib/auth.mjs';
 import { CommandError, reduce } from '../lib/state.mjs';
 
@@ -558,7 +558,8 @@ test('path traversal through the hub never reaches files outside the served dire
     setTimeout(() => { s.destroy(); ok(d); }, 300);
   });
   for (const p of ['/cards/../private.txt', '/cards/%2e%2e/show.json', '/cards/..%2fshow.json', '/%2e%2e/show.json', '/../show.json', '/cards/%252e%252e/private.txt', '/cards/link.mp4',
-    '/photos/../private.txt', '/photos/%2e%2e/show.json', '/photos/..%2fshow.json']) {
+    '/photos/../private.txt', '/photos/%2e%2e/show.json', '/photos/..%2fshow.json',
+    '/flags/../private.txt', '/flags/%2e%2e/show.json', '/flags/..%2fshow.json']) {
     const text = await rawGet(p);
     assert.doesNotMatch(text, /PRIVATE-DATA|"players"/, `leaked through ${p}`);
     assert.doesNotMatch(text, /^HTTP\/1\.1 200/, p);
@@ -1083,6 +1084,61 @@ test('gate 22: a generated password is written to the file and appears in no pub
   const bodies = [JSON.stringify(hub.whoami()), ...(await Promise.all(['/api/state', '/api/show', '/'].map(async (p) => (await fetch(`${base}${p}`)).text())))];
   for (const b of bodies) assert.ok(!b.includes(generated));
   assert.equal((await login(base, generated)).status, 200, 'and the generated password does unlock the console');
+});
+
+// --- the title card's flags --------------------------------------------------
+
+test('the show lists one flag per country, International first and the hosts last', () => {
+  const row = flagRowFor([
+    { country: 'USA', team: 'usa' },
+    { country: 'India', team: 'international' },
+    { country: 'England', team: 'international' },
+    { country: 'USA', team: 'usa' },
+    { country: 'India', team: 'international' },
+  ]);
+  assert.deepEqual(row, [
+    { country: 'England', src: 'flags/gb-eng.png' },
+    { country: 'India', src: 'flags/in.png' },
+    { country: 'USA', src: 'flags/us.png' },
+  ]);
+});
+
+test('a country with no flag is a gap in a row of pictures, not a hub that will not start', () => {
+  const row = flagRowFor([
+    { country: 'India', team: 'international' },
+    { country: 'Atlantis', team: 'international' },
+    { country: '', team: 'international' },
+    { country: '   ', team: 'international' },
+    { team: 'international' },
+    null,
+    'nope',
+    { country: 'USA', team: 'usa' },
+  ]);
+  assert.deepEqual(row.map((f) => f.country), ['India', 'USA']);
+  assert.deepEqual(flagRowFor(null), []);
+  assert.deepEqual(flagRowFor('x'), []);
+  // A code map that has been got at cannot put a path of its own in the page.
+  assert.deepEqual(flagRowFor([{ country: 'X', team: 'usa' }], { X: '' }), []);
+  assert.deepEqual(flagRowFor([{ country: 'X', team: 'usa' }], { X: 7 }), []);
+  assert.deepEqual(flagRowFor([{ country: 'constructor', team: 'usa' }], {}), []);
+});
+
+test('the stage can fetch the flags it is told about, and cannot fetch anything else', async () => {
+  const { base } = await startHub();
+  const show = await (await fetch(`${base}/api/show`)).json();
+  assert.ok(Array.isArray(show.flags) && show.flags.length > 0, 'the show carries a flag row');
+  for (const f of show.flags) {
+    const res = await fetch(`${base}/${f.src}`);
+    assert.equal(res.status, 200, f.src);
+    assert.match(res.headers.get('content-type') || '', /image\/png/, f.src);
+  }
+  // A flag that is not there is a gap, not a server error. (Climbing out of the
+  // folder is covered by the raw-socket traversal test, which is the only way to
+  // send a path with .. still in it - fetch tidies it up before it leaves.)
+  assert.equal((await fetch(`${base}/flags/nope.png`)).status, 404);
+  // And the public show still says nothing about where anybody lives.
+  const text = JSON.stringify(show);
+  assert.doesNotMatch(text, /hometown/);
 });
 
 // --- /api/board --------------------------------------------------------------

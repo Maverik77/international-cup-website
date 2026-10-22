@@ -2,7 +2,7 @@
 // tested; this file only does what the plan says.
 import {
   screenPlan, panelsForMatch, preloadSrcs, slideshowEntry, panelsToLoad, srcAfterError, startOffset,
-  screenNameFrom,
+  screenNameFrom, flagRow, nobodyDrawn, WAITING_LINE, TITLE_LINE, TITLE_YEAR,
 } from '/panels.mjs';
 
 // Which screen this is: /stage is "main", /stage?screen=bar is "bar". Read once,
@@ -201,6 +201,10 @@ function showLayer(key) {
 }
 
 function renderLive(plan) {
+  // Nobody drawn into this match yet: the room is waiting on the hat, not on a
+  // reveal, so it gets the title card and its line rather than a black screen.
+  // A match that IS drawn but unrevealed stays black - that is the reveal.
+  if (nobodyDrawn(plan)) { renderIdle(); return; }
   stopPhotos();
   clearSlideTimer();
   stopFilms();
@@ -209,6 +213,28 @@ function renderLive(plan) {
   applyTitle(plan.match);
   showLayer(live);
   applyPreload();
+}
+
+// The title card is painted once, from the show, and then left alone: it is the
+// screen the room looks at longest and the one nothing must ever flicker on.
+// Called again when the show is rebuilt, because the roster - and so the row of
+// flags - can change under an open stage.
+function paintTitleCard() {
+  const card = document.querySelector('#idle .card');
+  if (!card) return;
+  card.querySelector('.words').textContent = TITLE_LINE;
+  card.querySelector('.year').textContent = TITLE_YEAR;
+  card.querySelector('.waiting').textContent = WAITING_LINE;
+  const flags = flagRow(show);
+  card.querySelector('.flags').replaceChildren(...flags.map((f) => {
+    const img = document.createElement('img');
+    img.alt = '';
+    img.src = `/${f.src}`;
+    // A flag that will not load leaves a gap, never a broken-image glyph on a
+    // television: the row is decoration and the title card has to stand without it.
+    img.onerror = () => img.remove();
+    return img;
+  }));
 }
 
 function renderIdle() {
@@ -692,6 +718,7 @@ function noticeShowRebuilt(frame) {
     .then((fresh) => {
       if (!fresh || !Array.isArray(fresh.players)) return;
       show = fresh;
+      paintTitleCard();
       render(null);          // null: treat it as a fresh render, not a diff
     })
     .catch(() => { /* the next frame tries again */ })
@@ -744,6 +771,7 @@ function pollState() {
 
 async function boot() {
   show = await loadShow();
+  paintTitleCard();
   // The hub sends a full snapshot on every (re)connect, and EventSource reconnects by itself.
   // The name goes with the connection so the hub can list this screen.
   const events = new EventSource(`/events?screen=${encodeURIComponent(MY_SCREEN)}`);

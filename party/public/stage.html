@@ -10,7 +10,16 @@
   <div id="layer-a" class="layer live"></div>
   <div id="layer-b" class="layer"></div>
   <div id="match-title"><span class="day"></span><span class="num"></span></div>
-  <div id="idle"><p>International Cup</p></div>
+  <!-- The title card. Shown before the night begins, on a screen set to hold,
+       and whenever the match in play has nobody drawn into it yet - the room is
+       waiting on the hat then, and black is indistinguishable from broken. -->
+  <div id="idle">
+    <div class="card">
+      <p class="title"><span class="words"></span> <span class="year"></span></p>
+      <div class="flags" aria-hidden="true"></div>
+      <p class="waiting"></p>
+    </div>
+  </div>
   <div id="draw-list"><h2>The draw so far</h2><div class="rows"></div></div>
   <!-- A screen set to "Player films": two elements, so the next film is already
        decoded when the one on screen ends and the cut is a fade, not a gap. -->
