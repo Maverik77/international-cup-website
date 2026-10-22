@@ -199,7 +199,7 @@ export function fixSections(show, wire, board) {
     {
       key: 'draw',
       title: 'Put the draw back',
-      hint: 'Forgets who was drawn and takes the names off the website. Day 1\u2019s International pairings come back from the running order, not blank.',
+      hint: 'Empties both sides and takes the names off the website \u2014 the International pairings go too, so putting a whole day back means drawing it again from nothing. One Undo brings it all back.',
       rows: [
         {
           key: 'draw-last',
@@ -306,6 +306,57 @@ export function fixSections(show, wire, board) {
     },
   ];
 }
+
+// --- revealing both sides without a thumb on the button ----------------------
+//
+// A reveal is a two-beat thing: one side, a pause the room fills with noise,
+// then the other. Tapped by hand the pause is however long the operator's
+// attention takes, which on the night is sometimes a second and sometimes
+// fifteen. Reveal all sides puts the first side up now and the second after a
+// set gap, and the Reveal button brings the second one forward if the room is
+// ready sooner.
+
+export const REVEAL_GAPS = [2, 3, 4, 5, 6, 8, 10];
+export const REVEAL_GAP_DEFAULT = 4;
+
+// The pace is remembered on the operator's own device and deliberately NOT in
+// the show's state: that file is written to disk and read back after a restart,
+// and the night before the party is the wrong time to teach it a new field.
+// Anything unrecognised - a cleared browser, a hand-edited value, a number that
+// is no longer offered - falls back to the default rather than to nothing.
+export function revealGapFrom(stored) {
+  const n = Number(stored);
+  return REVEAL_GAPS.includes(n) ? n : REVEAL_GAP_DEFAULT;
+}
+
+// How many sides are still behind the curtain on the match in play.
+export function sidesLeft(wire) {
+  const shown = wire && wire.slot ? wire.slot.shown : 'none';
+  if (shown === 'both') return 0;
+  if (shown === 'first') return 1;
+  return 2;
+}
+
+// The Reveal button. `waiting` is the whole seconds left on a paced reveal, so
+// the operator can see one is coming AND that tapping brings it forward - a
+// countdown with no way to skip it would be the worst of both.
+export function revealLabel(wire, waiting = 0) {
+  const left = sidesLeft(wire);
+  if (left === 0) return 'Both revealed';
+  const name = left === 2 ? 'Reveal first side' : 'Reveal second side';
+  return waiting > 0 ? `${name} now · ${waiting}` : name;
+}
+
+// The paced button. With one side left it does exactly what Reveal does, and
+// says so rather than claiming to reveal sides that are already up.
+export function revealAllLabel(wire, waiting = 0) {
+  if (waiting > 0) return 'Revealing…';
+  const left = sidesLeft(wire);
+  if (left === 0) return 'Both revealed';
+  return left === 1 ? 'Reveal the last side' : 'Reveal all sides';
+}
+
+export const canRevealAll = (wire) => sidesLeft(wire) > 0;
 
 const clock = (iso) => new Date(iso).toTimeString().slice(0, 8);
 

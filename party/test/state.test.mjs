@@ -636,14 +636,26 @@ function midNight() {
   return s;
 }
 
-const fresh1 = (i) => initialState(show).slots['1'][i];
+// What a reset leaves behind: both sides empty, the International pairings the
+// running order put there included.
+const blank = (day, number) => ({
+  index: number,
+  firstSide: 'intl',
+  intl: Array.from({ length: day === 1 ? 2 : 1 }, () => ''),
+  usa: Array.from({ length: day === 1 ? 2 : 1 }, () => ''),
+  shown: 'none',
+  done: false,
+});
+const blankDay = (day) => Array.from({ length: day === 1 ? 13 : 26 }, (_, i) => blank(day, i + 1));
+const fresh1 = (i) => blank(1, i + 1);
 
-test('a reset puts a match back as the show was built, running order and all', () => {
+test('a reset empties a match, the International side with the rest', () => {
   const s = run(midNight(), { name: 'resetDraw', scope: 'match', day: 1, index: 0 });
   assert.deepEqual(s.slots['1'][0], fresh1(0));
-  // Not emptied: Day 1's International pairings come from the running order and
-  // a reset must not throw those away with the drawn USA names.
-  assert.deepEqual(s.slots['1'][0].intl, ['player-intl-1', 'player-intl-2']);
+  // BOTH sides, not only the one drawn on the night. A match whose contents are
+  // wrong can be wrong about either side, and the running order reappearing by
+  // itself would quietly undo an override nobody asked it to undo.
+  assert.deepEqual(s.slots['1'][0].intl, ['', '']);
   assert.deepEqual(s.slots['1'][0].usa, ['', '']);
   assert.equal(s.slots['1'][0].shown, 'none');
   assert.equal(s.slots['1'][0].done, false);
@@ -653,7 +665,7 @@ test('a reset puts a match back as the show was built, running order and all', (
 
 test('reset all starts the night again: both days, back to day 1 match 1, title card', () => {
   const s = run(midNight(), { name: 'resetDraw', scope: 'all' });
-  assert.deepEqual(s.slots, initialState(show).slots);
+  assert.deepEqual(s.slots, { 1: blankDay(1), 2: blankDay(2) });
   assert.equal(s.day, 1);
   assert.equal(s.current['1'], 0);
   assert.equal(s.current['2'], 0);
@@ -664,7 +676,7 @@ test('reset all starts the night again: both days, back to day 1 match 1, title 
 test('reset one day leaves the other day alone', () => {
   const before = midNight();
   const s = run(before, { name: 'resetDraw', scope: 'day', day: 1 });
-  assert.deepEqual(s.slots['1'], initialState(show).slots['1']);
+  assert.deepEqual(s.slots['1'], blankDay(1));
   assert.deepEqual(s.slots['2'], before.slots['2']);
   assert.equal(s.current['1'], 0);
   // Day 2 is untouched, so the operator's place in it must not move.
@@ -678,7 +690,7 @@ test('resetting the day NOT in play does not drag the console off the match in p
   assert.equal(s.day, 1);
   assert.equal(s.current['1'], before.current['1']);
   assert.equal(s.mode, before.mode);    // still live: nothing on screen changed
-  assert.deepEqual(s.slots['2'], initialState(show).slots['2']);
+  assert.deepEqual(s.slots['2'], blankDay(2));
 });
 
 test('reset from a match onwards runs Day 1 into Day 2, as the evening does', () => {
@@ -686,7 +698,7 @@ test('reset from a match onwards runs Day 1 into Day 2, as the evening does', ()
   const s = run(before, { name: 'resetDraw', scope: 'from', day: 1, index: 1 });
   assert.deepEqual(s.slots['1'][0], before.slots['1'][0], 'match 1 is before the cut');
   for (let i = 1; i < 13; i++) assert.deepEqual(s.slots['1'][i], fresh1(i));
-  assert.deepEqual(s.slots['2'], initialState(show).slots['2'], 'the whole of Day 2 comes after');
+  assert.deepEqual(s.slots['2'], blankDay(2), 'the whole of Day 2 comes after');
   assert.equal(s.current['1'], 1);
   assert.equal(s.current['2'], 0);
   assert.deepEqual(project(s, show).completed.map((c) => c.index), [1]);
@@ -703,7 +715,7 @@ test('reset from a match the operator has not reached leaves them where they are
 test('reset last finds the latest match the night reached, and stands the operator on it', () => {
   // Day 2 match 1 is the latest thing that happened in midNight().
   let s = run(midNight(), { name: 'resetDraw', scope: 'last' });
-  assert.deepEqual(s.slots['2'][0], initialState(show).slots['2'][0]);
+  assert.deepEqual(s.slots['2'][0], blank(2, 1));
   assert.equal(s.current['2'], 0);
   assert.deepEqual(s.slots['1'][2], midNight().slots['1'][2], 'Day 1 is untouched');
   // Now the latest is Day 1 match 3, half revealed. Again, and it goes back.
@@ -714,6 +726,20 @@ test('reset last finds the latest match the night reached, and stands the operat
   s = run(s, { name: 'resetDraw', scope: 'last' });
   assert.deepEqual(s.slots['1'][1], fresh1(1));
   assert.equal(s.current['1'], 1);
+});
+
+test('a match already put back is behind the night, so reset last walks on past it', () => {
+  // The emptied match must not read as the latest thing that happened, or
+  // tapping "put the last match back" twice would put the same one back twice.
+  let s = midNight();
+  s = run(s, { name: 'resetDraw', scope: 'match', day: 2, index: 0 });
+  s = run(s, { name: 'resetDraw', scope: 'last' });
+  assert.deepEqual(s.slots['1'][2], fresh1(2), 'it walked back to Day 1 match 3');
+  assert.equal(s.current['1'], 2);
+  // All the way back to the start, one match at a time, and then it stops.
+  s = run(s, { name: 'resetDraw', scope: 'last' }, { name: 'resetDraw', scope: 'last' });
+  assert.deepEqual(s.slots['1'].slice(0, 3), [fresh1(0), fresh1(1), fresh1(2)]);
+  rejects(s, { name: 'resetDraw', scope: 'last' }, /nothing has been drawn/i);
 });
 
 test('reset last on a night that has not started says so rather than resetting match 1', () => {

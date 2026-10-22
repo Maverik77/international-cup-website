@@ -75,6 +75,17 @@ header {
 .btn[disabled] { opacity: .35; }
 
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+/* Reveal all sides, and how long it waits between them. The pace is shown
+   rather than hidden behind a long press: the operator sets it once at the top
+   of the night, in a dark room, and must never have to guess what it is on. */
+.pace-pane { margin-bottom: 12px; }
+.pace-go { width: 100%; min-height: 64px; }
+.pace { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.pace-label { color: var(--dim); font-size: .85rem; white-space: nowrap; }
+.pace-chips { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.pace-chip { min-height: 42px; padding: 0 2px; font-size: .9rem; font-weight: 400; color: var(--dim); }
+.pace-chip.is-on { border-color: var(--gold); color: var(--ink); font-weight: 700; }
 .actions.secondary { grid-template-columns: repeat(3, 1fr); }
 
 dialog {
@@ -179,6 +190,9 @@ dialog li button.film.is-cued { border-color: var(--gold); }
 @media (max-width: 560px) {
   .sides { grid-template-columns: 1fr; }
   .actions.secondary { grid-template-columns: 1fr 1fr; }
+  /* Seven chips in a phone's width would be too narrow to hit. */
+  .pace { flex-direction: column; align-items: stretch; gap: 6px; }
+  .pace-chips { grid-template-columns: repeat(4, 1fr); }
 }
 
 .banner { border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: .95rem; }

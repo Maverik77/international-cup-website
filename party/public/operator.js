@@ -5,6 +5,7 @@ import {
   matchCount, NEXT_FLIGHT_CAP_MS, recoveredBanner, loadUntilReady, LOGIN_PATH,
   pickerRows, jumpSections, screenRows, screensInSync, screensLabel, filmSections,
   fixSections,
+  REVEAL_GAPS, revealGapFrom, sidesLeft, revealLabel, revealAllLabel, canRevealAll,
 } from '/console.mjs';
 
 const $ = (id) => document.getElementById(id);
@@ -38,7 +39,47 @@ function setFault(text) {
   $('fault').textContent = text || '';
 }
 
-async function send(command) {
+// --- Reveal all sides --------------------------------------------------------
+//
+// The first side now, the second after the gap. The timer lives in the console
+// and nowhere else: the show's state is written to disk and read back on a
+// restart, and a half-finished reveal is not a thing to find in a file. If this
+// device goes away mid-pause nothing happens, which is the right way for it to
+// fail - the operator taps Reveal and the night carries on.
+const GAP_KEY = 'icup.revealGap';
+// localStorage can throw outright in a private window, so the default stands if
+// it does rather than the console refusing to boot over a preference.
+function storedGap() {
+  try { return revealGapFrom(localStorage.getItem(GAP_KEY)); } catch { return revealGapFrom(null); }
+}
+let gapSeconds = storedGap();
+
+let revealTimer = null;      // the pending second side
+let revealTick = null;       // repaints the countdown on the Reveal button
+let revealDueAt = 0;
+let revealForMatch = '';     // which match it belongs to, so it cannot fire on another
+
+const matchKey = () => (wire && wire.slot ? `${wire.day}-${wire.slot.index}` : '');
+const waitingSeconds = () => (revealDueAt ? Math.max(1, Math.ceil((revealDueAt - Date.now()) / 1000)) : 0);
+
+function stopPacing() {
+  const wasPending = revealDueAt !== 0;
+  clearTimeout(revealTimer); revealTimer = null;
+  clearInterval(revealTick); revealTick = null;
+  revealDueAt = 0; revealForMatch = '';
+  // The countdown is on a button; take it off straight away rather than leaving
+  // it counting down to something that is no longer going to happen. A command
+  // that then fails never repaints, which is exactly when this matters.
+  if (wasPending) render();
+}
+
+// `pacing` marks the one command the pending reveal sends itself. Every other
+// command cancels the pause - Next, a jump, a mode change, Undo, anything from
+// the Fix dialog - because a reveal left armed would land on whatever match the
+// operator had moved to by then. It is also what makes Reveal skip ahead: the
+// operator taps it, the pause is dropped, and the side goes up now.
+async function send(command, pacing = false) {
+  if (!pacing) stopPacing();
   // Shut Next before anything is awaited: the page must not look live while a
   // request is in flight. The client's own lock is what actually decides.
   if (command.name === 'next') {
@@ -66,6 +107,47 @@ async function send(command) {
     lockTimer = setTimeout(render, NEXT_LOCK_MS + 50);
   }
   return out;
+}
+
+function paintCountdown() {
+  $('reveal').textContent = revealLabel(wire, waitingSeconds());
+}
+
+async function revealAll() {
+  // Shut it before anything is awaited, so a second tap inside the round trip
+  // cannot start a second pause. render() has the last word either way.
+  $('reveal-all').disabled = true;
+  const mine = matchKey();
+  const out = await send({ name: 'reveal' });
+  if (out.kind !== 'ok') { render(); return; }
+  if (sidesLeft(wire) !== 1) { render(); return; }   // that was the last side
+  const gap = gapSeconds * 1000;
+  revealForMatch = mine;
+  revealDueAt = Date.now() + gap;
+  revealTimer = setTimeout(async () => {
+    const due = revealForMatch;
+    stopPacing();
+    // The operator may have moved on, or revealed it by hand, in the meantime.
+    if (matchKey() !== due || sidesLeft(wire) !== 1) { render(); return; }
+    await send({ name: 'reveal' }, true);
+  }, gap);
+  revealTick = setInterval(paintCountdown, 250);
+  render();
+}
+
+function renderPace() {
+  $('pace-chips').replaceChildren(...REVEAL_GAPS.map((s) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `btn pace-chip${s === gapSeconds ? ' is-on' : ''}`;
+    b.textContent = `${s}s`;
+    b.onclick = () => {
+      gapSeconds = revealGapFrom(s);
+      try { localStorage.setItem(GAP_KEY, String(gapSeconds)); } catch { /* it just will not be remembered */ }
+      renderPace();
+    };
+    return b;
+  }));
 }
 
 function perSide() { return wire.day === 1 ? 2 : 1; }
@@ -555,9 +637,13 @@ function render() {
     ? nextIds.map((id) => nameOf(show, id)).join(' · ')
     : 'Last match of the day';
 
-  $('reveal').textContent = wire.slot.shown === 'none' ? 'Reveal first side'
-    : wire.slot.shown === 'first' ? 'Reveal second side' : 'Both revealed';
-  $('reveal').disabled = wire.slot.shown === 'both';
+  const waiting = waitingSeconds();
+  $('reveal').textContent = revealLabel(wire, waiting);
+  $('reveal').disabled = sidesLeft(wire) === 0;
+  $('reveal-all').textContent = revealAllLabel(wire, waiting);
+  // Shut while a pause is running: it is already doing what it says. Reveal is
+  // the one that brings the second side forward.
+  $('reveal-all').disabled = !canRevealAll(wire) || waiting > 0;
   $('next').disabled = client.nextLocked();
   $('day1').disabled = wire.day === 1;
   $('day2').disabled = wire.day === 2;
@@ -577,6 +663,7 @@ const ready = (fn) => () => {
 };
 
 $('reveal').onclick = ready(() => send({ name: 'reveal' }));
+$('reveal-all').onclick = ready(() => revealAll());
 $('next').onclick = ready(() => send({ name: 'next' }));
 $('undo').onclick = ready(() => send({ name: 'undo' }));
 $('day1').onclick = ready(() => send({ name: 'setDay', day: 1 }));
@@ -659,6 +746,7 @@ async function boot() {
     wait: () => new Promise((r) => setTimeout(r, 3000)),
   });
   render();
+  renderPace();
   checkRecovered();
 
   const events = new EventSource('/events');

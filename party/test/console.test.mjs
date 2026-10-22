@@ -4,7 +4,7 @@ process.env.TZ = 'UTC';
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS, takenOnDay, pickerRows, matchNames, jumpSections, screenRows, screensInSync, screensLabel, SCREEN_ROLE_LABELS, SCREEN_ROLE_HINTS, screenRoleChoices, filmSections, fixSections, lastReached, announcedCount, matchLabel } from '../public/console.mjs';
+import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS, takenOnDay, pickerRows, matchNames, jumpSections, screenRows, screensInSync, screensLabel, SCREEN_ROLE_LABELS, SCREEN_ROLE_HINTS, screenRoleChoices, filmSections, fixSections, lastReached, announcedCount, matchLabel, REVEAL_GAPS, REVEAL_GAP_DEFAULT, revealGapFrom, sidesLeft, revealLabel, revealAllLabel, canRevealAll } from '../public/console.mjs';
 import { SCREEN_ROLES } from '../public/panels.mjs';
 import { indexShow } from '../build/build-show.mjs';
 
@@ -654,4 +654,62 @@ test('the match list tells the Fix dialog which matches have been announced', ()
   const rows = jumpSections(big, fullBoard({ '1-2': { shown: 'first' }, '1-4': { done: true } })).find((s) => s.day === 1).rows;
   assert.deepEqual(rows.filter((r) => r.announced).map((r) => r.label), ['Match 2', 'Match 4']);
   assert.equal(rows[0].announced, false);
+});
+
+// --- Reveal all sides --------------------------------------------------------
+
+const shownAs = (shown) => ({ day: 1, slot: { index: 1, shown } });
+
+test('how many sides are still behind the curtain', () => {
+  assert.equal(sidesLeft(shownAs('none')), 2);
+  assert.equal(sidesLeft(shownAs('first')), 1);
+  assert.equal(sidesLeft(shownAs('both')), 0);
+  // Before the first frame arrives there is no slot, and nothing may throw.
+  assert.equal(sidesLeft(null), 2);
+  assert.equal(sidesLeft({}), 2);
+  assert.equal(sidesLeft({ slot: {} }), 2);
+});
+
+test('the Reveal button says which side, and that a paced one can be brought forward', () => {
+  assert.equal(revealLabel(shownAs('none')), 'Reveal first side');
+  assert.equal(revealLabel(shownAs('first')), 'Reveal second side');
+  assert.equal(revealLabel(shownAs('both')), 'Both revealed');
+  // Counting down: the operator has to be able to see both that one is coming
+  // and that tapping brings it forward, or a countdown is just a wait.
+  assert.equal(revealLabel(shownAs('first'), 3), 'Reveal second side now · 3');
+  assert.equal(revealLabel(shownAs('first'), 1), 'Reveal second side now · 1');
+  // Nothing left to reveal never counts down, whatever it is handed.
+  assert.equal(revealLabel(shownAs('both'), 3), 'Both revealed');
+});
+
+test('Reveal all sides says what it will actually do', () => {
+  assert.equal(revealAllLabel(shownAs('none')), 'Reveal all sides');
+  // With one side left it does exactly what Reveal does, and says so rather
+  // than offering to reveal sides that are already up.
+  assert.equal(revealAllLabel(shownAs('first')), 'Reveal the last side');
+  assert.equal(revealAllLabel(shownAs('both')), 'Both revealed');
+  assert.equal(revealAllLabel(shownAs('none'), 4), 'Revealing…');
+  assert.equal(revealAllLabel(shownAs('first'), 2), 'Revealing…');
+});
+
+test('Reveal all sides is offered whenever anything is still hidden', () => {
+  assert.equal(canRevealAll(shownAs('none')), true);
+  assert.equal(canRevealAll(shownAs('first')), true);
+  assert.equal(canRevealAll(shownAs('both')), false);
+});
+
+test('the pace falls back to four seconds rather than to nothing', () => {
+  assert.equal(REVEAL_GAP_DEFAULT, 4);
+  assert.ok(REVEAL_GAPS.includes(REVEAL_GAP_DEFAULT));
+  for (const s of REVEAL_GAPS) assert.equal(revealGapFrom(String(s)), s, `${s}s is offered`);
+  assert.equal(revealGapFrom(4), 4);
+  // A cleared browser, a hand-edited value, a pace that is no longer offered,
+  // or a number that would mean no pause at all.
+  for (const bad of [null, undefined, '', 'soon', '0', 0, '7', 7, '-4', '4.5', 'NaN', '1e9', [], {}]) {
+    assert.equal(revealGapFrom(bad), REVEAL_GAP_DEFAULT, JSON.stringify(bad));
+  }
+  // Every pace on offer is long enough for a room to react and short enough
+  // that nobody reaches for the button, and they only go up.
+  assert.deepEqual([...REVEAL_GAPS].sort((a, b) => a - b), REVEAL_GAPS);
+  assert.ok(REVEAL_GAPS.every((s) => Number.isInteger(s) && s >= 2 && s <= 10));
 });

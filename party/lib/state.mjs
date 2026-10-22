@@ -150,13 +150,19 @@ function nightOrder(state) {
 
 // Whether the night has got to this match yet. Day 1's International pairings
 // arrive pre-filled from the running order, so this is not "is there anybody in
-// it" - there always is - but "is it still exactly as the show was built".
+// it" - there always is - but "is it still as the show was built".
+//
+// A side the operator has EMPTIED is the one case that does not count: that is
+// a match already put back, which is behind the night rather than ahead of it.
+// Without this, resetting a match would make it the last match reached and
+// "put the last match back" would never walk backwards past it.
 function touched(slot, fresh) {
   if (slot.shown !== 'none' || slot.done) return true;
   if (slot.firstSide !== fresh.firstSide) return true;
   for (const side of SIDES) {
     const now = slot[side] || [];
     const was = fresh[side] || [];
+    if (!now.some(Boolean)) continue;
     if (now.length !== was.length || now.some((id, i) => id !== was[i])) return true;
   }
   return false;
@@ -330,14 +336,26 @@ const HANDLERS = {
   // match called too early - and one command doing both would make the cheap
   // mistake as frightening to correct as the expensive one.
 
-  // Puts matches back exactly as the show was built: the running order's
-  // International pairings, no USA names, nothing revealed, International
-  // first. Not "empty" - empty would throw away the running order too.
+  // Empties matches: BOTH sides, nothing revealed, International first. The
+  // International pairings go with the rest on purpose - putting the running
+  // order back instead would mean a match the operator had overridden quietly
+  // reverting to a pairing nobody asked for, and a reset is for when the
+  // contents of a match are wrong, whichever side is wrong about them. One Undo
+  // brings the whole lot back, which is the way back for a reset gone too far.
   resetDraw(state, cmd, show) {
     const targets = matchesIn(state, cmd, show);
-    const fresh = initialState(show);
     const next = clone(state);
-    for (const m of targets) next.slots[String(m.day)][m.at] = clone(fresh.slots[String(m.day)][m.at]);
+    for (const m of targets) {
+      const n = sideSize(m.day);
+      next.slots[String(m.day)][m.at] = {
+        index: next.slots[String(m.day)][m.at].index,
+        firstSide: 'intl',
+        intl: Array.from({ length: n }, () => ''),
+        usa: Array.from({ length: n }, () => ''),
+        shown: 'none',
+        done: false,
+      };
+    }
 
     // Where the operator is left standing. Their place moves back to the start
     // of the reset only if the reset swallowed it: putting Day 2 back while Day

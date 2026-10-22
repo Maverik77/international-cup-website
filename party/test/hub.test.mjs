@@ -1175,7 +1175,7 @@ test('a reset goes over the wire and comes back with one Undo', async () => {
   assert.deepEqual(reset.state.completed, []);
   const after = await board();
   assert.deepEqual(after.days['1'][0].usa, ['', '']);
-  assert.deepEqual(after.days['1'][0].intl, ['player-intl-1', 'player-intl-2'], 'the running order is not thrown away');
+  assert.deepEqual(after.days['1'][0].intl, ['', ''], 'the International side is emptied too');
   assert.equal(after.days['1'][0].done, false);
 
   const back = await (await post(base, { name: 'undo' })).json();
