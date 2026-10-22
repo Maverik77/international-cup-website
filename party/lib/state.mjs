@@ -94,9 +94,22 @@ export function slotProblems(slot, day, allSlots, show) {
   }
 }
 
-function editCurrentSlot(state, mutate) {
+// The match a command acts on: the one in play unless the command names
+// another. Naming one is how a drawing is corrected without putting it on the
+// screen - jumping there first would show the room the very match the operator
+// is quietly fixing.
+function whichSlot(state, cmd) {
+  if (cmd.day === undefined && cmd.index === undefined) {
+    return { day: state.day, at: state.current[state.day] };
+  }
+  checkDay(cmd.day);
+  checkIndex(state.slots[String(cmd.day)], cmd.index, cmd.day);
+  return { day: cmd.day, at: cmd.index };
+}
+
+function editSlot(state, at, mutate) {
   const next = clone(state);
-  mutate(next.slots[String(next.day)][next.current[next.day]]);
+  mutate(next.slots[String(at.day)][at.at]);
   return next;
 }
 
@@ -104,10 +117,86 @@ function checkSide(side) {
   if (!SIDES.includes(side)) throw new CommandError('Pick International or USA for that side.');
 }
 
+function checkDay(day) {
+  if (day !== 1 && day !== 2) throw new CommandError('The day must be 1 or 2.');
+}
+
 function checkIndex(slots, index, day) {
   if (!Number.isInteger(index) || index < 0 || index >= slots.length) {
     throw new CommandError(`There is no match ${Number.isInteger(index) ? index + 1 : JSON.stringify(index)} on Day ${day}. Pick a match from 1 to ${slots.length}.`);
   }
+}
+
+// --- stretches of the night --------------------------------------------------
+//
+// `undo` steps back one tap, which is the right tool for a mis-tap and the
+// wrong one for a stretch of the night that has to be run again: Day 1 is
+// thirteen matches and therefore dozens of taps, more than HISTORY_LIMIT holds.
+// resetDraw and setAnnounced take a SCOPE instead, and are one undo each
+// however many matches they touch.
+const DAYS = [1, 2];
+const SCOPES = ['all', 'day', 'from', 'match', 'current', 'last'];
+
+// Every match, in the order the night plays them: Day 1's thirteen and then Day
+// 2's twenty-six. `at` counts from 0 because the commands do, while the match
+// number the operator reads counts from 1.
+function nightOrder(state) {
+  const out = [];
+  for (const day of DAYS) {
+    for (let at = 0; at < state.slots[String(day)].length; at++) out.push({ day, at });
+  }
+  return out;
+}
+
+// Whether the night has got to this match yet. Day 1's International pairings
+// arrive pre-filled from the running order, so this is not "is there anybody in
+// it" - there always is - but "is it still exactly as the show was built".
+function touched(slot, fresh) {
+  if (slot.shown !== 'none' || slot.done) return true;
+  if (slot.firstSide !== fresh.firstSide) return true;
+  for (const side of SIDES) {
+    const now = slot[side] || [];
+    const was = fresh[side] || [];
+    if (now.length !== was.length || now.some((id, i) => id !== was[i])) return true;
+  }
+  return false;
+}
+
+// Which matches a scope names:
+//   all      every match of both days
+//   day      every match of cmd.day
+//   from     cmd.day/cmd.index and everything after it, Day 1 running on into Day 2
+//   match    exactly cmd.day/cmd.index
+//   current  the match in play
+//   last     the latest match the night has actually reached
+//
+// `from` crosses from one day into the other on purpose: "everything from here
+// onwards" is the evening's own order, and a Day 1 match has the whole of Day 2
+// after it.
+function matchesIn(state, cmd, show) {
+  if (!SCOPES.includes(cmd.scope)) {
+    const said = typeof cmd.scope === 'string' ? cmd.scope : JSON.stringify(cmd.scope);
+    throw new CommandError(`${said} is not a stretch of the night. Reload the console and try again.`);
+  }
+  const order = nightOrder(state);
+  if (cmd.scope === 'all') return order;
+  if (cmd.scope === 'current') return [{ day: state.day, at: state.current[state.day] }];
+  if (cmd.scope === 'day') {
+    checkDay(cmd.day);
+    return order.filter((m) => m.day === cmd.day);
+  }
+  if (cmd.scope === 'match' || cmd.scope === 'from') {
+    checkDay(cmd.day);
+    checkIndex(state.slots[String(cmd.day)], cmd.index, cmd.day);
+    if (cmd.scope === 'match') return [{ day: cmd.day, at: cmd.index }];
+    return order.slice(order.findIndex((m) => m.day === cmd.day && m.at === cmd.index));
+  }
+  const fresh = initialState(show).slots;
+  for (let i = order.length - 1; i >= 0; i--) {
+    const m = order[i];
+    if (touched(state.slots[String(m.day)][m.at], fresh[String(m.day)][m.at])) return [m];
+  }
+  throw new CommandError('Nothing has been drawn or announced yet, so there is no last match to put back.');
 }
 
 // WHY SOME OF THESE SET mode = 'live': the state starts on `idle`, and the stage
@@ -123,7 +212,7 @@ function checkIndex(slots, index, day) {
 // rather than nothing. Only setMode chooses a mode outright.
 const HANDLERS = {
   setDay(state, cmd) {
-    if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
+    checkDay(cmd.day);
     if (cmd.day === state.day) return NO_CHANGE;
     const next = clone(state);
     next.day = cmd.day;
@@ -136,7 +225,7 @@ const HANDLERS = {
   // for Undo is already behind.
   goto(state, cmd) {
     const day = cmd.day === undefined ? state.day : cmd.day;
-    if (day !== 1 && day !== 2) throw new CommandError('The day must be 1 or 2.');
+    checkDay(day);
     checkIndex(state.slots[String(day)], cmd.index, day);
     // Already here AND already on screen: nothing to do. Jumping to the match
     // you are on while the screen is idle is not a no-op: it is the operator
@@ -151,14 +240,15 @@ const HANDLERS = {
 
   setFirstSide(state, cmd) {
     checkSide(cmd.side);
-    return editCurrentSlot(state, (slot) => { slot.firstSide = cmd.side; });
+    return editSlot(state, whichSlot(state, cmd), (slot) => { slot.firstSide = cmd.side; });
   },
 
   assign(state, cmd, show) {
     checkSide(cmd.side);
-    const want = sideSize(state.day);
+    const at = whichSlot(state, cmd);
+    const want = sideSize(at.day);
     if (!Array.isArray(cmd.players) || cmd.players.length !== want) {
-      throw new CommandError(`Day ${state.day} matches take ${want} player${want === 1 ? '' : 's'} a side, not ${Array.isArray(cmd.players) ? cmd.players.length : 'none'}. Pick again.`);
+      throw new CommandError(`Day ${at.day} matches take ${want} player${want === 1 ? '' : 's'} a side, not ${Array.isArray(cmd.players) ? cmd.players.length : 'none'}. Pick again.`);
     }
     for (const id of cmd.players) {
       if (id === '') continue; // empty slot: still to be drawn
@@ -170,14 +260,14 @@ const HANDLERS = {
       }
     }
     // No mode change on purpose: see the note above HANDLERS.
-    return editCurrentSlot(state, (slot) => { slot[cmd.side] = [...cmd.players]; });
+    return editSlot(state, at, (slot) => { slot[cmd.side] = [...cmd.players]; });
   },
 
   reveal(state) {
     const slot = state.slots[String(state.day)][state.current[state.day]];
     // Already fully revealed: a double-tap is harmless, so do nothing at all.
     if (slot.shown === 'both') return NO_CHANGE;
-    const next = editCurrentSlot(state, (s) => { s.shown = s.shown === 'none' ? 'first' : 'both'; });
+    const next = editSlot(state, { day: state.day, at: state.current[state.day] }, (s) => { s.shown = s.shown === 'none' ? 'first' : 'both'; });
     next.mode = 'live';
     return next;
   },
@@ -203,7 +293,7 @@ const HANDLERS = {
   },
 
   reopen(state, cmd) {
-    if (cmd.day !== 1 && cmd.day !== 2) throw new CommandError('The day must be 1 or 2.');
+    checkDay(cmd.day);
     const day = String(cmd.day);
     checkIndex(state.slots[day], cmd.index, cmd.day);
     const next = clone(state);
@@ -230,6 +320,64 @@ const HANDLERS = {
     }
     const next = clone(state);
     next.slideshow.position = cmd.position;
+    return next;
+  },
+
+  // THESE TWO ARE DELIBERATELY SEPARATE and must stay so. `resetDraw` throws
+  // away who was drawn; `setAnnounced` keeps every name and only decides
+  // whether the room and the website may read them. On the night those are
+  // different mistakes carrying different costs - a mis-drawn match against a
+  // match called too early - and one command doing both would make the cheap
+  // mistake as frightening to correct as the expensive one.
+
+  // Puts matches back exactly as the show was built: the running order's
+  // International pairings, no USA names, nothing revealed, International
+  // first. Not "empty" - empty would throw away the running order too.
+  resetDraw(state, cmd, show) {
+    const targets = matchesIn(state, cmd, show);
+    const fresh = initialState(show);
+    const next = clone(state);
+    for (const m of targets) next.slots[String(m.day)][m.at] = clone(fresh.slots[String(m.day)][m.at]);
+
+    // Where the operator is left standing. Their place moves back to the start
+    // of the reset only if the reset swallowed it: putting Day 2 back while Day
+    // 1 is being drawn must not drag the console off the match in play.
+    for (const day of DAYS) {
+      const first = targets.find((m) => m.day === day);
+      if (first && state.current[day] >= first.at) next.current[day] = first.at;
+    }
+    if (cmd.scope === 'all') next.day = 1;
+
+    // The match in play has just lost its names, so the stage goes back to the
+    // title card. Leaving it live would hold an empty panel in front of the
+    // room, and empty is indistinguishable from broken - the same reason the
+    // holding screen carries the event name rather than nothing.
+    if (targets.some((m) => m.day === state.day && m.at === state.current[state.day])) next.mode = 'idle';
+    return next;
+  },
+
+  // Who is drawn is untouched; only whether it has been said out loud.
+  setAnnounced(state, cmd, show) {
+    if (typeof cmd.announced !== 'boolean') {
+      throw new CommandError('The console did not say whether those matches are announced. Reload the console and try again.');
+    }
+    const targets = matchesIn(state, cmd, show);
+    const next = clone(state);
+    for (const m of targets) {
+      const slot = next.slots[String(m.day)][m.at];
+      // Both fields, together: `shown` is what the website publishes (see
+      // pairings.mjs) and `done` is what the draw-so-far screen lists. A match
+      // called back has to leave both, or the room reads it off a television
+      // after being told to forget it.
+      slot.shown = cmd.announced ? 'both' : 'none';
+      slot.done = cmd.announced;
+    }
+    // Announcing the match in play puts names on the screen, so it must leave
+    // idle - see the note above HANDLERS. Calling one back must NOT: the panel
+    // stays up and draws the curtain over the names again, which is the point.
+    if (cmd.announced && targets.some((m) => m.day === state.day && m.at === state.current[state.day])) {
+      next.mode = 'live';
+    }
     return next;
   },
 };

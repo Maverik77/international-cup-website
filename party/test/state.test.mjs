@@ -614,3 +614,256 @@ test('the index is checked against the day being jumped to, not the day in play'
     rejects(s, { name: 'goto', day, index: 0 }, /day must be 1 or 2/i);
   }
 });
+
+// --- putting the draw back ---------------------------------------------------
+//
+// Two commands, kept apart on purpose: resetDraw throws away who was drawn,
+// setAnnounced keeps every name and only takes it back off the website.
+
+// A night part-way through: Day 1 matches 1 and 2 drawn, revealed and done,
+// match 3 drawn and half revealed, Day 2 match 1 drawn and done.
+function midNight() {
+  let s = initialState(show);
+  s = run(s,
+    { name: 'assign', side: 'usa', players: ['player-usa-1', 'player-usa-2'] },
+    { name: 'next' },
+    { name: 'assign', side: 'usa', players: ['player-usa-3', 'player-usa-4'] },
+    { name: 'next' },
+    { name: 'assign', side: 'usa', players: ['player-usa-5', 'player-usa-6'] },
+    { name: 'reveal' },
+    { name: 'assign', side: 'usa', players: ['player-usa-7'], day: 2, index: 0 },
+    { name: 'setAnnounced', scope: 'match', day: 2, index: 0, announced: true });
+  return s;
+}
+
+const fresh1 = (i) => initialState(show).slots['1'][i];
+
+test('a reset puts a match back as the show was built, running order and all', () => {
+  const s = run(midNight(), { name: 'resetDraw', scope: 'match', day: 1, index: 0 });
+  assert.deepEqual(s.slots['1'][0], fresh1(0));
+  // Not emptied: Day 1's International pairings come from the running order and
+  // a reset must not throw those away with the drawn USA names.
+  assert.deepEqual(s.slots['1'][0].intl, ['player-intl-1', 'player-intl-2']);
+  assert.deepEqual(s.slots['1'][0].usa, ['', '']);
+  assert.equal(s.slots['1'][0].shown, 'none');
+  assert.equal(s.slots['1'][0].done, false);
+  // and nothing else moved
+  assert.deepEqual(s.slots['1'][1], midNight().slots['1'][1]);
+});
+
+test('reset all starts the night again: both days, back to day 1 match 1, title card', () => {
+  const s = run(midNight(), { name: 'resetDraw', scope: 'all' });
+  assert.deepEqual(s.slots, initialState(show).slots);
+  assert.equal(s.day, 1);
+  assert.equal(s.current['1'], 0);
+  assert.equal(s.current['2'], 0);
+  assert.equal(s.mode, 'idle');
+  assert.deepEqual(project(s, show).completed, []);
+});
+
+test('reset one day leaves the other day alone', () => {
+  const before = midNight();
+  const s = run(before, { name: 'resetDraw', scope: 'day', day: 1 });
+  assert.deepEqual(s.slots['1'], initialState(show).slots['1']);
+  assert.deepEqual(s.slots['2'], before.slots['2']);
+  assert.equal(s.current['1'], 0);
+  // Day 2 is untouched, so the operator's place in it must not move.
+  assert.equal(s.current['2'], before.current['2']);
+  assert.deepEqual(project(s, show).completed.map((c) => c.day), [2]);
+});
+
+test('resetting the day NOT in play does not drag the console off the match in play', () => {
+  const before = midNight();            // on day 1, match 3
+  const s = run(before, { name: 'resetDraw', scope: 'day', day: 2 });
+  assert.equal(s.day, 1);
+  assert.equal(s.current['1'], before.current['1']);
+  assert.equal(s.mode, before.mode);    // still live: nothing on screen changed
+  assert.deepEqual(s.slots['2'], initialState(show).slots['2']);
+});
+
+test('reset from a match onwards runs Day 1 into Day 2, as the evening does', () => {
+  const before = midNight();
+  const s = run(before, { name: 'resetDraw', scope: 'from', day: 1, index: 1 });
+  assert.deepEqual(s.slots['1'][0], before.slots['1'][0], 'match 1 is before the cut');
+  for (let i = 1; i < 13; i++) assert.deepEqual(s.slots['1'][i], fresh1(i));
+  assert.deepEqual(s.slots['2'], initialState(show).slots['2'], 'the whole of Day 2 comes after');
+  assert.equal(s.current['1'], 1);
+  assert.equal(s.current['2'], 0);
+  assert.deepEqual(project(s, show).completed.map((c) => c.index), [1]);
+});
+
+test('reset from a match the operator has not reached leaves them where they are', () => {
+  const before = midNight();            // on day 1 match 3, so current['1'] is 2
+  const s = run(before, { name: 'resetDraw', scope: 'from', day: 1, index: 8 });
+  assert.equal(s.current['1'], 2);
+  assert.equal(s.mode, before.mode);
+  assert.deepEqual(s.slots['1'][2], before.slots['1'][2]);
+});
+
+test('reset last finds the latest match the night reached, and stands the operator on it', () => {
+  // Day 2 match 1 is the latest thing that happened in midNight().
+  let s = run(midNight(), { name: 'resetDraw', scope: 'last' });
+  assert.deepEqual(s.slots['2'][0], initialState(show).slots['2'][0]);
+  assert.equal(s.current['2'], 0);
+  assert.deepEqual(s.slots['1'][2], midNight().slots['1'][2], 'Day 1 is untouched');
+  // Now the latest is Day 1 match 3, half revealed. Again, and it goes back.
+  s = run(s, { name: 'resetDraw', scope: 'last' });
+  assert.deepEqual(s.slots['1'][2], fresh1(2));
+  assert.equal(s.current['1'], 2);
+  // And again: match 2, which was done.
+  s = run(s, { name: 'resetDraw', scope: 'last' });
+  assert.deepEqual(s.slots['1'][1], fresh1(1));
+  assert.equal(s.current['1'], 1);
+});
+
+test('reset last on a night that has not started says so rather than resetting match 1', () => {
+  rejects(initialState(show), { name: 'resetDraw', scope: 'last' }, /nothing has been drawn/i);
+});
+
+test('reset last notices a match whose only change is an overridden running order', () => {
+  // Nothing revealed and no USA names, so "is anything in it" would say no.
+  const s = run(initialState(show),
+    { name: 'assign', side: 'intl', players: ['player-intl-5', 'player-intl-6'], day: 1, index: 0 });
+  const back = run(s, { name: 'resetDraw', scope: 'last' });
+  assert.deepEqual(back.slots['1'][0], fresh1(0));
+});
+
+test('reset last notices a match whose only change is which side reveals first', () => {
+  const s = run(initialState(show), { name: 'setFirstSide', side: 'usa' });
+  const back = run(s, { name: 'resetDraw', scope: 'last' });
+  assert.equal(back.slots['1'][0].firstSide, 'intl');
+});
+
+test('resetting the match in play takes the stage back to the title card', () => {
+  const live = run(midNight(), { name: 'goto', index: 2 });
+  assert.equal(live.mode, 'live');
+  assert.equal(run(live, { name: 'resetDraw', scope: 'current' }).mode, 'idle');
+  assert.equal(run(live, { name: 'resetDraw', scope: 'match', day: 1, index: 2 }).mode, 'idle');
+  // A match that is not on screen does not touch the mode.
+  assert.equal(run(live, { name: 'resetDraw', scope: 'match', day: 1, index: 7 }).mode, 'live');
+});
+
+test('a reset is one undo however many matches it swallowed', () => {
+  const before = midNight();
+  const s = run(before, { name: 'resetDraw', scope: 'all' });
+  const back = run(s, { name: 'undo' });
+  assert.deepEqual(back.slots, before.slots);
+  assert.equal(back.day, before.day);
+  assert.equal(back.current['1'], before.current['1']);
+  assert.equal(back.mode, before.mode);
+});
+
+test('a reset scope the console does not know is refused, not guessed at', () => {
+  rejects(midNight(), { name: 'resetDraw', scope: 'everything' }, /stretch of the night/);
+  rejects(midNight(), { name: 'resetDraw' }, /stretch of the night/);
+  rejects(midNight(), { name: 'resetDraw', scope: 'day', day: 3 }, /day must be 1 or 2/);
+  rejects(midNight(), { name: 'resetDraw', scope: 'match', day: 1, index: 13 }, /no match 14 on Day 1/);
+  rejects(midNight(), { name: 'resetDraw', scope: 'from', day: 2, index: -1 }, /Pick a match from 1 to 26/);
+});
+
+// --- announced, or not -------------------------------------------------------
+
+test('calling a match back hides the names without forgetting who was drawn', () => {
+  const before = midNight();
+  const s = run(before, { name: 'setAnnounced', scope: 'match', day: 1, index: 0, announced: false });
+  assert.deepEqual(s.slots['1'][0].usa, ['player-usa-1', 'player-usa-2'], 'still drawn');
+  assert.equal(s.slots['1'][0].shown, 'none');
+  // Both fields: `shown` is what the website publishes and `done` is what the
+  // draw-so-far screen lists, so a called-back match has to leave both.
+  assert.equal(s.slots['1'][0].done, false);
+  assert.deepEqual(project(s, show).completed.map((c) => `${c.day}-${c.index}`), ['1-2', '2-1']);
+});
+
+test('calling every match back empties the draw so far and the website, and keeps every name', () => {
+  const before = midNight();
+  const s = run(before, { name: 'setAnnounced', scope: 'all', announced: false });
+  assert.deepEqual(project(s, show).completed, []);
+  for (const d of ['1', '2']) {
+    for (const slot of s.slots[d]) {
+      assert.equal(slot.shown, 'none');
+      assert.equal(slot.done, false);
+    }
+  }
+  assert.deepEqual(s.slots['1'][0].usa, before.slots['1'][0].usa);
+  assert.deepEqual(s.slots['2'][0].usa, before.slots['2'][0].usa);
+  // Nobody moved: calling the names back is not starting the night again.
+  assert.equal(s.day, before.day);
+  assert.equal(s.current['1'], before.current['1']);
+});
+
+test('calling the match in play back leaves the panel up and draws the curtain', () => {
+  const live = run(midNight(), { name: 'goto', index: 2 });
+  const s = run(live, { name: 'setAnnounced', scope: 'current', announced: false });
+  assert.equal(s.mode, 'live', 'the panel stays up: hiding the names is the point');
+  assert.equal(s.slots['1'][2].shown, 'none');
+  assert.equal(project(s, show).slot.shown, 'none');
+});
+
+test('calling back one day leaves the other day announced', () => {
+  const s = run(midNight(), { name: 'setAnnounced', scope: 'day', day: 1, announced: false });
+  assert.deepEqual(project(s, show).completed.map((c) => c.day), [2]);
+});
+
+test('calling back from a match onwards keeps everything before it', () => {
+  const s = run(midNight(), { name: 'setAnnounced', scope: 'from', day: 1, index: 1, announced: false });
+  assert.deepEqual(project(s, show).completed.map((c) => `${c.day}-${c.index}`), ['1-1']);
+  assert.equal(s.slots['1'][0].shown, 'both');
+});
+
+test('announcing a match that is on screen leaves the title card behind', () => {
+  let s = initialState(show);
+  assert.equal(s.mode, 'idle');
+  s = run(s, { name: 'setAnnounced', scope: 'current', announced: true });
+  assert.equal(s.mode, 'live');
+  assert.equal(s.slots['1'][0].shown, 'both');
+  assert.equal(s.slots['1'][0].done, true);
+  // Announcing a match the room is not looking at does not light the screen up.
+  const quiet = run(initialState(show), { name: 'setAnnounced', scope: 'match', day: 2, index: 5, announced: true });
+  assert.equal(quiet.mode, 'idle');
+});
+
+test('setAnnounced without saying which way is refused', () => {
+  rejects(midNight(), { name: 'setAnnounced', scope: 'all' }, /whether those matches are announced/);
+  rejects(midNight(), { name: 'setAnnounced', scope: 'all', announced: 'no' }, /whether those matches are announced/);
+  rejects(midNight(), { name: 'setAnnounced', scope: 'nonsense', announced: false }, /stretch of the night/);
+});
+
+// --- overriding one match without showing the room --------------------------
+
+test('assign can name another match, and nothing moves to it', () => {
+  const before = midNight();
+  const s = run(before, { name: 'assign', side: 'usa', players: ['player-usa-9', 'player-usa-10'], day: 1, index: 6 });
+  assert.deepEqual(s.slots['1'][6].usa, ['player-usa-9', 'player-usa-10']);
+  assert.equal(s.day, before.day);
+  assert.equal(s.current['1'], before.current['1']);
+  assert.equal(s.mode, before.mode);
+  assert.deepEqual(s.slots['1'][2], before.slots['1'][2], 'the match in play is untouched');
+});
+
+test('a named Day 2 match takes one player a side even while Day 1 is in play', () => {
+  const s = run(midNight(), { name: 'assign', side: 'usa', players: ['player-usa-20'], day: 2, index: 4 });
+  assert.deepEqual(s.slots['2'][4].usa, ['player-usa-20']);
+  rejects(midNight(), { name: 'assign', side: 'usa', players: ['player-usa-20', 'player-usa-21'], day: 2, index: 4 },
+    /Day 2 matches take 1 player a side/);
+  // And the other way round: the day in play is not what decides it.
+  rejects(midNight(), { name: 'assign', side: 'usa', players: ['player-usa-20'], day: 1, index: 4 },
+    /Day 1 matches take 2 players a side/);
+});
+
+test('a named match still checks the roster and the side', () => {
+  rejects(midNight(), { name: 'assign', side: 'usa', players: ['player-intl-9', 'player-usa-10'], day: 1, index: 6 },
+    /plays for International, not USA/);
+  rejects(midNight(), { name: 'assign', side: 'usa', players: ['nobody', 'player-usa-10'], day: 1, index: 6 },
+    /not on the roster/);
+  rejects(midNight(), { name: 'assign', side: 'usa', players: ['player-usa-9', 'player-usa-10'], day: 3, index: 0 },
+    /day must be 1 or 2/);
+  rejects(midNight(), { name: 'assign', side: 'usa', players: ['player-usa-9', 'player-usa-10'], day: 1, index: 99 },
+    /no match 100 on Day 1/);
+});
+
+test('setFirstSide can name another match too', () => {
+  const before = midNight();
+  const s = run(before, { name: 'setFirstSide', side: 'usa', day: 2, index: 3 });
+  assert.equal(s.slots['2'][3].firstSide, 'usa');
+  assert.equal(s.slots['1'][2].firstSide, before.slots['1'][2].firstSide);
+});

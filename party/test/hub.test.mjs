@@ -1141,6 +1141,99 @@ test('the board is read fresh: every command shows up in the next read', async (
   assert.equal(afterUndo.current['1'], 0);
 });
 
+// --- Fix…: the ways back that Undo cannot reach ------------------------------
+
+test('the board says whether each match has been announced, which the Fix dialog needs', async () => {
+  const { base } = await startHub();
+  const board = async () => (await (await fetch(`${base}/api/board`, { headers: opCookie() })).json());
+  assert.equal((await board()).days['1'][0].shown, 'none');
+  assert.equal((await board()).days['1'][0].firstSide, 'intl');
+
+  // Revealed but not tapped past: `done` alone would call this unannounced, and
+  // the dialog would offer no way to take the names back off.
+  await post(base, { name: 'reveal' });
+  assert.equal((await board()).days['1'][0].shown, 'first');
+  assert.equal((await board()).days['1'][0].done, false);
+
+  await post(base, { name: 'setFirstSide', side: 'usa' });
+  assert.equal((await board()).days['1'][0].firstSide, 'usa');
+});
+
+test('a reset goes over the wire and comes back with one Undo', async () => {
+  const { base } = await startHub();
+  const board = async () => (await (await fetch(`${base}/api/board`, { headers: opCookie() })).json());
+  await post(base, { name: 'assign', side: 'usa', players: ['player-usa-1', 'player-usa-2'] });
+  await post(base, { name: 'next' });
+  await post(base, { name: 'assign', side: 'usa', players: ['player-usa-3', 'player-usa-4'] });
+  await post(base, { name: 'reveal' });
+
+  const reset = await (await post(base, { name: 'resetDraw', scope: 'all' })).json();
+  assert.equal(reset.ok, true);
+  assert.equal(reset.state.day, 1);
+  assert.equal(reset.state.slot.index, 1);
+  assert.equal(reset.state.mode, 'idle', 'the stage goes back to the title card');
+  assert.deepEqual(reset.state.completed, []);
+  const after = await board();
+  assert.deepEqual(after.days['1'][0].usa, ['', '']);
+  assert.deepEqual(after.days['1'][0].intl, ['player-intl-1', 'player-intl-2'], 'the running order is not thrown away');
+  assert.equal(after.days['1'][0].done, false);
+
+  const back = await (await post(base, { name: 'undo' })).json();
+  assert.equal(back.state.slot.index, 2, 'one Undo puts the whole night back');
+  assert.deepEqual((await board()).days['1'][0].usa, ['player-usa-1', 'player-usa-2']);
+});
+
+test('taking the names back off keeps who was drawn', async () => {
+  const { base } = await startHub();
+  const board = async () => (await (await fetch(`${base}/api/board`, { headers: opCookie() })).json());
+  await post(base, { name: 'assign', side: 'usa', players: ['player-usa-1', 'player-usa-2'] });
+  await post(base, { name: 'next' });
+
+  const called = await (await post(base, { name: 'setAnnounced', scope: 'all', announced: false })).json();
+  assert.equal(called.ok, true);
+  assert.deepEqual(called.state.completed, [], 'the draw-so-far screen empties');
+  const after = await board();
+  assert.deepEqual(after.days['1'][0].usa, ['player-usa-1', 'player-usa-2'], 'and every name is still there');
+  assert.equal(after.days['1'][0].shown, 'none');
+  assert.equal(after.days['1'][0].done, false);
+});
+
+test('a match can be corrected without the show moving to it', async () => {
+  const { base } = await startHub();
+  const board = async () => (await (await fetch(`${base}/api/board`, { headers: opCookie() })).json());
+  const fixed = await (await post(base, {
+    name: 'assign', side: 'usa', players: ['player-usa-9', 'player-usa-10'], day: 1, index: 6,
+  })).json();
+  assert.equal(fixed.ok, true);
+  assert.equal(fixed.state.day, 1);
+  assert.equal(fixed.state.slot.index, 1, 'the operator has not been dragged to match 7');
+  assert.equal(fixed.state.mode, 'idle', 'and nothing has been put in front of the room');
+  assert.deepEqual((await board()).days['1'][6].usa, ['player-usa-9', 'player-usa-10']);
+  // The public state still says nothing about match 7.
+  assert.doesNotMatch(await (await fetch(`${base}/api/state`)).text(), /player-usa-9/);
+});
+
+test('a reset the hub does not understand is a note, not a crash', async () => {
+  const { base } = await startHub();
+  for (const cmd of [
+    { name: 'resetDraw', scope: 'everything' },
+    { name: 'resetDraw' },
+    { name: 'resetDraw', scope: 'day', day: 9 },
+    { name: 'resetDraw', scope: 'last' },
+    { name: 'setAnnounced', scope: 'all' },
+  ]) {
+    const res = await post(base, cmd);
+    assert.equal(res.status, 400, JSON.stringify(cmd));
+    const body = await res.json();
+    assert.equal(body.ok, false);
+    assert.match(body.error, /[.]$/, JSON.stringify(cmd));
+  }
+  // and the show is exactly where it was
+  const state = await (await fetch(`${base}/api/state`)).json();
+  assert.equal(state.slot.index, 1);
+  assert.equal(state.rev, 0);
+});
+
 test('one command jumps across days, so one Undo comes back', async () => {
   const { base } = await startHub();
   const state = async () => (await (await fetch(`${base}/api/state`)).json());

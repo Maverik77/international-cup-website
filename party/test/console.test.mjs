@@ -4,7 +4,7 @@ process.env.TZ = 'UTC';
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS, takenOnDay, pickerRows, matchNames, jumpSections, screenRows, screensInSync, screensLabel, SCREEN_ROLE_LABELS, SCREEN_ROLE_HINTS, screenRoleChoices, filmSections } from '../public/console.mjs';
+import { rosterFor, nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, matchCount, recoveredBanner, loadUntilReady, LOGIN_PATH, NEXT_FLIGHT_CAP_MS, takenOnDay, pickerRows, matchNames, jumpSections, screenRows, screensInSync, screensLabel, SCREEN_ROLE_LABELS, SCREEN_ROLE_HINTS, screenRoleChoices, filmSections, fixSections, lastReached, announcedCount, matchLabel } from '../public/console.mjs';
 import { SCREEN_ROLES } from '../public/panels.mjs';
 import { indexShow } from '../build/build-show.mjs';
 
@@ -488,4 +488,170 @@ test('the film list filters by name, and an empty side is dropped rather than le
   // A show with no films is the same shape: nothing to offer, and no crash.
   assert.deepEqual(filmSections(show), []);
   assert.deepEqual(filmSections(plain), []);
+});
+
+// --- Fix…: the ways back that Undo cannot reach ------------------------------
+
+// A full-size night, so the labels can be checked against the real counts.
+function fullBoard(over = {}) {
+  const days = {
+    1: Array.from({ length: 13 }, (_, i) => ({ index: i + 1, intl: ['i1', 'i2'], usa: ['', ''], done: false, shown: 'none' })),
+    2: Array.from({ length: 26 }, (_, i) => ({ index: i + 1, intl: ['i4'], usa: [''], done: false, shown: 'none' })),
+  };
+  for (const [key, patch] of Object.entries(over)) {
+    const [d, n] = key.split('-');
+    Object.assign(days[d][Number(n) - 1], patch);
+  }
+  return { day: 1, current: { 1: 0, 2: 0 }, days };
+}
+const wireOn = (day, index, shown = 'none') => ({ day, slot: { index, shown, intl: [], usa: [] } });
+const rowsOf = (sections) => sections.flatMap((s) => s.rows);
+const rowBy = (sections, key) => rowsOf(sections).find((r) => r.key === key);
+
+test('the latest match the night reached is the latest in the evening’s own order', () => {
+  // Drawn counts, and so does announced; Day 2 comes after the whole of Day 1.
+  assert.deepEqual(lastReached(fullBoard({ '1-3': { usa: ['u1', 'u2'] } })), 
+    { day: 1, index: 2, number: 3, match: fullBoard({ '1-3': { usa: ['u1', 'u2'] } }).days[1][2] });
+  assert.equal(lastReached(fullBoard({ '1-3': { usa: ['u1', 'u2'] }, '2-5': { shown: 'first' } })).day, 2);
+  assert.equal(lastReached(fullBoard({ '1-13': { done: true } })).number, 13);
+  // Day 1's International pairings arrive pre-filled from the running order, so
+  // a board where only those are set has not reached anything at all.
+  assert.equal(lastReached(fullBoard()), null);
+  assert.equal(lastReached(null), null);
+  assert.equal(lastReached({ days: { 1: [null, 'x'] } }), null);
+});
+
+test('announced counts both halves of being announced', () => {
+  assert.equal(announcedCount(fullBoard()), 0);
+  assert.equal(announcedCount(fullBoard({ '1-1': { shown: 'first' } })), 1, 'half revealed is announced');
+  assert.equal(announcedCount(fullBoard({ '1-1': { done: true } })), 1, 'tapped past is announced');
+  assert.equal(announcedCount(fullBoard({ '1-1': { done: true }, '2-9': { shown: 'both' } })), 2);
+  assert.equal(announcedCount(null), 0);
+});
+
+test('the dialog offers three groups, and nothing in it is nameless', () => {
+  const sections = fixSections(big, wireOn(1, 1), fullBoard());
+  assert.deepEqual(sections.map((s) => s.key), ['draw', 'announced', 'who']);
+  const keys = rowsOf(sections).map((r) => r.key);
+  assert.equal(new Set(keys).size, keys.length, 'every row needs its own key for the confirm');
+  for (const s of sections) {
+    assert.ok(s.title && s.hint, s.key);
+    for (const r of s.rows) {
+      assert.ok(r.label && r.detail, r.key);
+      assert.ok(r.command || r.edit, `${r.key} must do something`);
+      // A row that asks which match has to have the question written for it.
+      if (r.pick) assert.match(r.pick, /\?$/);
+    }
+  }
+});
+
+test('every row sends exactly the command it says it does', () => {
+  // Pinned hard and deliberately: a wrong scope here throws away the draw, and
+  // these are read in a hurry by somebody who has just made a mistake.
+  const sections = fixSections(big, wireOn(1, 4), fullBoard({ '1-3': { done: true, shown: 'both' } }));
+  const sent = Object.fromEntries(rowsOf(sections).filter((r) => r.command).map((r) => [r.key, r.command]));
+  assert.deepEqual(sent, {
+    'draw-last': { name: 'resetDraw', scope: 'last' },
+    'draw-match': { name: 'resetDraw', scope: 'match' },
+    'draw-from': { name: 'resetDraw', scope: 'from' },
+    'draw-day1': { name: 'resetDraw', scope: 'day', day: 1 },
+    'draw-day2': { name: 'resetDraw', scope: 'day', day: 2 },
+    'draw-all': { name: 'resetDraw', scope: 'all' },
+    'said-here': { name: 'setAnnounced', scope: 'current', announced: false },
+    'said-match': { name: 'setAnnounced', scope: 'match', announced: false },
+    'said-from': { name: 'setAnnounced', scope: 'from', announced: false },
+    'said-day1': { name: 'setAnnounced', scope: 'day', day: 1, announced: false },
+    'said-day2': { name: 'setAnnounced', scope: 'day', day: 2, announced: false },
+    'said-all': { name: 'setAnnounced', scope: 'all', announced: false },
+  });
+  // Every announced row takes names off and never puts them back on: one of
+  // these set to true would announce a match the room has not heard.
+  for (const r of rowsOf(sections)) {
+    if (r.command && r.command.name === 'setAnnounced') assert.equal(r.command.announced, false, r.key);
+  }
+  // Only the rows that name a match are left to have one added.
+  assert.deepEqual(rowsOf(sections).filter((r) => r.pick).map((r) => r.key),
+    ['draw-match', 'draw-from', 'said-match', 'said-from', 'who-pick']);
+});
+
+test('the rows that swallow a stretch of the night ask twice; the small ones do not', () => {
+  const sections = fixSections(big, wireOn(1, 1), fullBoard({ '1-1': { shown: 'both' } }));
+  assert.deepEqual(rowsOf(sections).filter((r) => r.confirm).map((r) => r.key),
+    ['draw-from', 'draw-day1', 'draw-day2', 'draw-all',
+      'said-from', 'said-day1', 'said-day2', 'said-all']);
+  // Putting one match back is the common case on the night and Undo is right
+  // there, so it must not be behind a second tap.
+  for (const key of ['draw-last', 'draw-match', 'said-here', 'said-match', 'who-pick']) {
+    assert.ok(!rowBy(sections, key).confirm, key);
+  }
+});
+
+test('the labels carry the real numbers, because they are read under pressure', () => {
+  const sections = fixSections(big, wireOn(1, 7), fullBoard({
+    '1-6': { usa: ['u1', 'u2'], done: true, shown: 'both' },
+    '1-7': { shown: 'first' },
+  }));
+  assert.equal(rowBy(sections, 'draw-last').detail,
+    'Day 1 match 7 \u00b7 Ashvini Anjutgi + Vijay Davuluri vs \u2014');
+  assert.equal(rowBy(sections, 'draw-day1').detail, '13 matches');
+  assert.equal(rowBy(sections, 'draw-day2').detail, '26 matches');
+  assert.equal(rowBy(sections, 'draw-all').detail, 'All 39 matches of both days, back to Day 1 match 1');
+  assert.equal(rowBy(sections, 'said-here').detail, 'Day 1 match 7');
+  assert.equal(rowBy(sections, 'said-day1').detail, '2 announced now');
+  assert.equal(rowBy(sections, 'said-day2').detail, '0 announced now');
+  assert.equal(rowBy(sections, 'said-all').detail, '2 announced now');
+  // One is one, not "1 matches".
+  assert.equal(rowBy(fixSections(big, wireOn(1, 1), fullBoard({ '1-1': { done: true } })), 'said-all').detail,
+    '1 announced now');
+});
+
+test('the last match drawn is named with who is in it, so it can be recognised', () => {
+  const sections = fixSections(big, wireOn(1, 4), fullBoard({ '1-3': { intl: ['i3', 'i4'], usa: ['u1', 'u2'] } }));
+  assert.equal(rowBy(sections, 'draw-last').detail,
+    'Day 1 match 3 · Jun Bae + Yun Sang Bae vs John Altman + Frank Ambrose');
+});
+
+test('a row with nothing to do is off, and says why instead of failing when tapped', () => {
+  const virgin = fixSections(big, wireOn(1, 1), fullBoard());
+  assert.equal(rowBy(virgin, 'draw-last').disabled, true);
+  assert.equal(rowBy(virgin, 'draw-last').detail, 'Nothing has been drawn or announced yet');
+  assert.equal(rowBy(virgin, 'said-here').disabled, true);
+  assert.equal(rowBy(virgin, 'said-here').detail, 'Day 1 match 1 · not announced yet');
+  assert.equal(rowBy(virgin, 'said-all').disabled, true);
+  assert.equal(rowBy(virgin, 'said-day1').disabled, true);
+  // Starting the night again is never off: that is the one that has to work
+  // when everything else has gone wrong.
+  assert.ok(!rowBy(virgin, 'draw-all').disabled);
+  assert.ok(!rowBy(virgin, 'draw-match').disabled);
+});
+
+test('the match in play is read off the board, which knows about done', () => {
+  // Tapped past but never revealed: `shown` alone would call it unannounced.
+  const sections = fixSections(big, wireOn(1, 5), fullBoard({ '1-5': { done: true, shown: 'none' } }));
+  assert.equal(rowBy(sections, 'said-here').disabled, false);
+  assert.equal(rowBy(sections, 'said-here').detail, 'Day 1 match 5');
+});
+
+test('a board the console cannot make sense of still opens the Fix dialog', () => {
+  for (const b of [null, undefined, {}, { days: {} }, 'x', { days: { 1: null, 2: 'nope' } }]) {
+    const sections = fixSections(big, wireOn(1, 1), b);
+    assert.deepEqual(sections.map((s) => s.key), ['draw', 'announced', 'who'], JSON.stringify(b));
+    // With no board to count, the counts fall back to the size of the real show
+    // rather than reading zero and telling the operator there is nothing there.
+    assert.equal(rowBy(sections, 'draw-day1').detail, '13 matches');
+    assert.equal(rowBy(sections, 'draw-all').detail, 'All 39 matches of both days, back to Day 1 match 1');
+  }
+  // And with no state either, nothing here throws.
+  assert.deepEqual(fixSections(big, null, null).map((s) => s.key), ['draw', 'announced', 'who']);
+  assert.equal(rowBy(fixSections(big, null, null), 'said-here').detail, 'the match in play · not announced yet');
+});
+
+test('matchLabel is how a match is named everywhere in the dialog', () => {
+  assert.equal(matchLabel({ day: 2, number: 17 }), 'Day 2 match 17');
+});
+
+test('the match list tells the Fix dialog which matches have been announced', () => {
+  const rows = jumpSections(big, fullBoard({ '1-2': { shown: 'first' }, '1-4': { done: true } })).find((s) => s.day === 1).rows;
+  assert.deepEqual(rows.filter((r) => r.announced).map((r) => r.label), ['Match 2', 'Match 4']);
+  assert.equal(rows[0].announced, false);
 });

@@ -47,6 +47,7 @@
   <button id="photos" class="btn">Photos</button>
   <button id="refresh" class="btn">Refresh from AWS</button>
   <button id="screens" class="btn">Screens…</button>
+  <button id="fix" class="btn">Fix…</button>
   <button id="undo" class="btn btn-danger">Undo</button>
 </nav>
 
@@ -68,9 +69,27 @@
 </dialog>
 
 <dialog id="jumper">
-  <h3>Jump to match</h3>
+  <h3 id="jumper-title">Jump to match</h3>
   <div id="jumper-list"></div>
   <button id="jumper-cancel" class="btn">Cancel</button>
+</dialog>
+
+<dialog id="fixer">
+  <h3>Fix the draw</h3>
+  <div id="fixer-list"></div>
+  <p class="hint">Undo steps back one tap at a time. These put whole stretches of
+    the night back in one go — and every one of them is itself a single Undo away
+    from being put back.</p>
+  <button id="fixer-cancel" class="btn">Close</button>
+</dialog>
+
+<dialog id="editor">
+  <h3 id="editor-title">Change who is in this match</h3>
+  <div id="editor-sides" class="sides"></div>
+  <button id="editor-first" class="btn btn-quiet" type="button">Swap which side reveals first</button>
+  <p class="hint">Nothing here goes on the screen, and the match in play does not
+    change. Tap Done when the match is right.</p>
+  <button id="editor-cancel" class="btn">Done</button>
 </dialog>
 
 <dialog id="films-dialog">

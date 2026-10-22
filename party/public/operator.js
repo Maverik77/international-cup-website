@@ -4,6 +4,7 @@ import {
   nameOf, syncLabel, describeProblems, slotLabel, createCommandClient, NEXT_LOCK_MS,
   matchCount, NEXT_FLIGHT_CAP_MS, recoveredBanner, loadUntilReady, LOGIN_PATH,
   pickerRows, jumpSections, screenRows, screensInSync, screensLabel, filmSections,
+  fixSections,
 } from '/console.mjs';
 
 const $ = (id) => document.getElementById(id);
@@ -104,20 +105,28 @@ async function loadBoard() {
   }
 }
 
-async function openPicker(side, pos) {
+// `at` names a match other than the one in play - {day, index, number, intl,
+// usa} - and is how the Fix dialog corrects a drawing without the room seeing
+// it. Without it, the match on the screen, exactly as before.
+async function openPicker(side, pos, at = null, after = null) {
   const dialog = $('picker');
   const list = $('picker-list');
   const filter = $('picker-filter');
   const toggle = $('picker-toggle');
-  $('picker-title').textContent = side === 'intl' ? 'International player' : 'USA player';
+  const day = at ? at.day : wire.day;
+  const per = day === 1 ? 2 : 1;
+  const number = at ? at.number : wire.slot.index;
+  const held = at || wire.slot;
+  const who = side === 'intl' ? 'International player' : 'USA player';
+  $('picker-title').textContent = at ? `${who} \u2014 Day ${day} match ${number}` : who;
 
   const board = await loadBoard();
   if (!board) return;                       // the session went: loadBoard sent us to the login
-  const holding = (wire.slot[side] || [])[pos] || '';
+  const holding = (held[side] || [])[pos] || '';
 
   const paint = () => {
     const { rows, hidden } = pickerRows(show, {
-      side, board, day: wire.day, holding, current: wire.slot.index,
+      side, board, day, holding, current: number,
       showPicked, query: filter.value,
     });
     toggle.textContent = showPicked
@@ -136,11 +145,12 @@ async function openPicker(side, pos) {
         b.append(meta);
       }
       b.onclick = async () => {
-        const players = [...(wire.slot[side] || [])];
-        while (players.length < perSide()) players.push('');
+        const players = [...(held[side] || [])];
+        while (players.length < per) players.push('');
         players[pos] = row.id;
         dialog.close();
-        await send({ name: 'assign', side, players });
+        await send(at ? { name: 'assign', side, players, day, index: at.index } : { name: 'assign', side, players });
+        if (after) after();
       };
       li.append(b);
       return li;
@@ -154,9 +164,14 @@ async function openPicker(side, pos) {
   dialog.showModal();
 }
 
-async function openJumper() {
+// The one match list. On its own it is Jump to…, which moves the show to the
+// match tapped. The Fix dialog borrows it to ask WHICH match, passing a `pick`
+// that does something else entirely with the row - and then the suffixes change
+// too, because "done, reopens it" describes jumping and nothing else.
+async function openJumper({ title = 'Jump to match', pick = null, after = null } = {}) {
   const dialog = $('jumper');
   const list = $('jumper-list');
+  $('jumper-title').textContent = title;
   const board = await loadBoard();
   if (!board) return;
 
@@ -175,6 +190,7 @@ async function openJumper() {
       label.className = 'jump-label';
       label.textContent = row.label;
       if (row.current) label.textContent += ' · here now';
+      else if (pick) { if (row.announced) label.textContent += ' · announced'; }
       else if (row.done) label.textContent += ' · done, reopens it';
       b.append(label);
       if (row.names) {
@@ -187,9 +203,11 @@ async function openJumper() {
         dialog.close();
         // reopen carries its own day; goto now takes one too, so jumping across
         // days stays a single command and a single Undo.
-        await send(row.done
+        if (pick) await pick(row);
+        else await send(row.done
           ? { name: 'reopen', day: row.day, index: row.index }
           : { name: 'goto', day: row.day, index: row.index });
+        if (after) after();
       };
       if (row.current) here = b;
       li.append(b);
@@ -315,6 +333,189 @@ function openScreens() {
   dialog.showModal();
 }
 
+// --- Fix… -------------------------------------------------------------------
+//
+// The ways back that Undo cannot reach. What each row says, and which rows ask
+// twice, is decided in console.mjs where the tests can reach it; this draws the
+// rows and runs them.
+
+// Two taps for the rows that swallow a stretch of the night: the first arms the
+// button and tells it what it is about to do, the second does it. Not a browser
+// confirm() - a modal alert blocks every event the page gets, which on the one
+// device running the show is the worst thing that could sit between the operator
+// and the room - and a button that changes under the finger is the same guard
+// without adding anything to dismiss. It disarms itself after a few seconds, so
+// a dialog left open and come back to is never half-way through something.
+const ARMED_MS = 5000;
+let armedKey = null;
+let armedTimer = null;
+
+function disarm() {
+  clearTimeout(armedTimer);
+  armedKey = null;
+}
+
+function fixButton(row, ctx) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = `btn fix-row${row.tone === 'danger' ? ' btn-danger' : ''}`;
+  b.disabled = Boolean(row.disabled);
+  const label = document.createElement('span');
+  label.className = 'fix-label';
+  const detail = document.createElement('span');
+  detail.className = 'meta fix-detail';
+  b.append(label, detail);
+
+  const draw = () => {
+    const armed = armedKey === row.key;
+    b.classList.toggle('is-armed', armed);
+    // The label the operator was reading moves down into the detail line, so
+    // the armed button still says which one it is.
+    label.textContent = armed ? 'Tap again to be sure' : row.label;
+    detail.textContent = armed ? row.label : row.detail;
+  };
+  ctx.draws.push(draw);
+  draw();
+
+  const act = async () => {
+    if (row.edit) {
+      // Three stacked dialogs is enough; this one goes four deep (fix, list,
+      // match, picker), so the fix dialog stands down and comes back after.
+      ctx.dialog.close();
+      await guard(openJumper({
+        title: row.pick,
+        pick: (at) => guard(openEditor(at.day, at.index, () => guard(openFixer()))),
+      }));
+      return;
+    }
+    if (row.pick) {
+      await guard(openJumper({
+        title: row.pick,
+        pick: (at) => send({ ...row.command, day: at.day, index: at.index }),
+        after: ctx.repaint,
+      }));
+      return;
+    }
+    await send(row.command);
+    await ctx.repaint();
+  };
+
+  b.onclick = () => {
+    if (row.confirm && armedKey !== row.key) {
+      disarm();
+      armedKey = row.key;
+      ctx.redraw();
+      armedTimer = setTimeout(() => { disarm(); ctx.redraw(); }, ARMED_MS);
+      return;
+    }
+    disarm();
+    ctx.redraw();
+    act();
+  };
+  return b;
+}
+
+async function openFixer() {
+  const dialog = $('fixer');
+  const list = $('fixer-list');
+  disarm();
+
+  // Repainted after every row that fires, because the labels carry counts -
+  // "14 announced now" - and a count that has stopped being true is worse than
+  // no count at all.
+  const paint = async () => {
+    const board = await loadBoard();
+    if (!board) return false;
+    const draws = [];
+    const ctx = {
+      dialog,
+      draws,
+      redraw: () => { for (const f of draws) f(); },
+      repaint: () => paint(),
+    };
+    list.replaceChildren(...fixSections(show, wire, board).map((section) => {
+      const box = document.createElement('section');
+      box.className = 'fix-group';
+      const h = document.createElement('h4');
+      h.textContent = section.title;
+      const hint = document.createElement('p');
+      hint.className = 'hint fix-hint';
+      hint.textContent = section.hint;
+      box.append(h, hint, ...section.rows.map((row) => fixButton(row, ctx)));
+      return box;
+    }));
+    return true;
+  };
+
+  if (!(await paint())) return;             // loadBoard sent us to the login
+  if (!dialog.open) dialog.showModal();
+}
+
+// One match's own pickers, for a match that is not on the screen. The commands
+// carry the day and the match, so nothing moves to it and the room goes on
+// looking at whatever it was looking at.
+async function openEditor(day, index, after = null) {
+  const dialog = $('editor');
+  const sides = $('editor-sides');
+  let at = null;
+
+  const load = async () => {
+    const board = await loadBoard();
+    if (!board) return false;
+    const rows = board.days && Array.isArray(board.days[String(day)]) ? board.days[String(day)] : [];
+    const m = rows[index] && typeof rows[index] === 'object' ? rows[index] : {};
+    at = {
+      day,
+      index,
+      number: Number.isInteger(m.index) ? m.index : index + 1,
+      intl: Array.isArray(m.intl) ? [...m.intl] : [],
+      usa: Array.isArray(m.usa) ? [...m.usa] : [],
+      firstSide: m.firstSide === 'usa' ? 'usa' : 'intl',
+    };
+    return true;
+  };
+
+  const paint = () => {
+    $('editor-title').textContent = `Change who is in Day ${at.day} match ${at.number}`;
+    const per = at.day === 1 ? 2 : 1;
+    sides.replaceChildren(...['intl', 'usa'].map((side) => {
+      const box = document.createElement('div');
+      box.className = `side${at.firstSide === side ? ' is-first' : ''}`;
+      box.dataset.side = side;
+      const h = document.createElement('h3');
+      h.textContent = side === 'intl' ? 'International ' : 'USA ';
+      const tag = document.createElement('span');
+      tag.className = 'first-tag';
+      tag.textContent = 'reveals first';
+      h.append(tag);
+      const picks = document.createElement('div');
+      picks.className = 'picks';
+      picks.replaceChildren(...Array.from({ length: per }, (_, pos) => {
+        const id = at[side][pos] || '';
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = `pick${id ? '' : ' empty'}`;
+        b.textContent = id ? nameOf(show, id) : 'Tap to pick';
+        b.onclick = () => guard(openPicker(side, pos, at, async () => {
+          if (await load()) paint();
+        }));
+        return b;
+      }));
+      box.append(h, picks);
+      return box;
+    }));
+  };
+
+  if (!(await load())) return;
+  paint();
+  $('editor-first').onclick = async () => {
+    const out = await send({ name: 'setFirstSide', side: at.firstSide === 'intl' ? 'usa' : 'intl', day: at.day, index: at.index });
+    if (out.kind === 'ok' && await load()) paint();
+  };
+  $('editor-cancel').onclick = () => { dialog.close(); if (after) after(); };
+  dialog.showModal();
+}
+
 function renderSide(side) {
   const box = document.querySelector(`.side[data-side="${side}"]`);
   box.classList.toggle('is-first', wire.slot.firstSide === side);
@@ -386,6 +587,8 @@ $('slideshow').onclick = ready(() => send({ name: 'setMode', mode: wire.mode ===
 $('photos').onclick = ready(() => send({ name: 'setMode', mode: wire.mode === 'photos' ? 'live' : 'photos' }));
 $('toggle-first').onclick = ready(() => send({ name: 'setFirstSide', side: wire.slot.firstSide === 'intl' ? 'usa' : 'intl' }));
 $('screens').onclick = ready(() => openScreens());
+$('fix').onclick = ready(() => guard(openFixer()));
+$('fixer-cancel').onclick = () => { disarm(); $('fixer').close(); };
 $('screens-cancel').onclick = () => $('screens-dialog').close();
 $('films-cancel').onclick = () => $('films-dialog').close();
 $('picker-cancel').onclick = () => $('picker').close();

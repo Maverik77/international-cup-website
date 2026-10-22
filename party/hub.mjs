@@ -220,6 +220,11 @@ export async function createHub({
       intl: [...slot.intl],
       usa: [...slot.usa],
       done: slot.done,
+      // The Fix dialog has to be able to say which matches have been announced,
+      // and `done` alone does not: a match can be revealed in the room without
+      // the operator having tapped Next past it yet.
+      shown: slot.shown,
+      firstSide: slot.firstSide,
     }))])),
   });
 

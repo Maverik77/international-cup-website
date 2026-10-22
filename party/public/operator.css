@@ -149,6 +149,30 @@ dialog li button.jump { display: flex; flex-direction: column; justify-content: 
 .jump-label { font-weight: 700; }
 .jump-names { line-height: 1.3; }
 dialog li button.jump.is-here { border-color: var(--gold); }
+/* Fix…: a stack of wide two-line buttons, grouped under what they put back. */
+#fixer-list { max-height: 60vh; overflow: auto; margin-bottom: 4px; }
+.fix-group { margin-bottom: 20px; }
+.fix-group h4 {
+  position: sticky; top: 0; z-index: 1;
+  margin: 0 0 6px; padding: 6px 0;
+  background: var(--panel);
+  color: var(--dim); font-size: .85rem; text-transform: uppercase; letter-spacing: .12em;
+}
+.fix-hint { margin-bottom: 10px; }
+.fix-row {
+  width: 100%; margin-bottom: 8px; min-height: 60px;
+  display: flex; flex-direction: column; justify-content: center; gap: 3px;
+  padding: 10px 14px; text-align: left;
+}
+.fix-label { font-weight: 700; }
+.fix-detail { line-height: 1.35; }
+/* Armed: one more tap and a stretch of the night goes. It has to be unmistakable
+   at a glance in a dark room, so it borrows the warning banner's colours. */
+.fix-row.is-armed { background: #3a2f12; border-color: var(--warn); color: #ffe9a8; }
+.fix-row.is-armed .fix-detail { color: #ffe9a8; }
+#editor-sides .side { min-width: 0; }
+#editor-sides h3 { margin: 0 0 8px; font-size: .95rem; font-weight: 700; }
+
 /* The film this screen was last sent to, marked the way the match you are on is. */
 dialog li button.film.is-cued { border-color: var(--gold); }
 
