@@ -2,7 +2,7 @@
 // tested; this file only does what the plan says.
 import {
   screenPlan, panelsForMatch, preloadSrcs, slideshowEntry, panelsToLoad, srcAfterError, startOffset,
-  screenNameFrom, flagRow, nobodyDrawn, WAITING_LINE, TITLE_LINE, TITLE_YEAR,
+  screenNameFrom, flagRow, awaitingDraw, WAITING_LINE, TITLE_LINE, TITLE_YEAR,
 } from '/panels.mjs';
 
 // Which screen this is: /stage is "main", /stage?screen=bar is "bar". Read once,
@@ -201,10 +201,12 @@ function showLayer(key) {
 }
 
 function renderLive(plan) {
-  // Nobody drawn into this match yet: the room is waiting on the hat, not on a
-  // reveal, so it gets the title card and its line rather than a black screen.
-  // A match that IS drawn but unrevealed stays black - that is the reveal.
-  if (nobodyDrawn(plan)) { renderIdle(); return; }
+  // A seat still empty and nothing revealed: the room is waiting on the hat,
+  // not on a reveal, so it gets the title card rather than a black screen. The
+  // match number stays up - it sits above the card - because between two
+  // reveals "match 4 of 13" is the thing the room most wants to know.
+  // A match that is fully drawn and unrevealed stays black: that is the reveal.
+  if (awaitingDraw(plan)) { renderIdle(); applyTitle(plan.match); return; }
   stopPhotos();
   clearSlideTimer();
   stopFilms();

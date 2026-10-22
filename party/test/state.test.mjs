@@ -893,3 +893,80 @@ test('setFirstSide can name another match too', () => {
   assert.equal(s.slots['2'][3].firstSide, 'usa');
   assert.equal(s.slots['1'][2].firstSide, before.slots['1'][2].firstSide);
 });
+
+// --- putting the running order back ------------------------------------------
+//
+// This exists because a reset empties BOTH sides, and Day 1's International
+// pairings are not the night's to lose: they come from running-order.json and
+// have been settled for days. It happened for real within hours of the reset
+// landing - a test of "start the whole night again" left all 39 matches with no
+// International side, hours before the party.
+
+const orderOf = (s, day) => s.slots[String(day)].map((m) => m.intl.join('|'));
+
+test('the running order comes back after a reset has taken the whole night', () => {
+  const start = initialState(show);
+  const wiped = run(midNight(), { name: 'resetDraw', scope: 'all' });
+  assert.equal(wiped.slots['1'].filter((m) => m.intl.some(Boolean)).length, 0, 'the reset took them');
+
+  const back = run(wiped, { name: 'restoreOrder', scope: 'all' });
+  assert.deepEqual(orderOf(back, 1), orderOf(start, 1));
+  assert.deepEqual(orderOf(back, 2), orderOf(start, 2));
+  // And nothing else came back with them: this is the clean start of a night,
+  // not an undo of the reset.
+  for (const d of ['1', '2']) {
+    for (const slot of back.slots[d]) {
+      assert.deepEqual(slot.usa, slot.usa.map(() => ''), `day ${d} match ${slot.index} usa`);
+      assert.equal(slot.shown, 'none');
+      assert.equal(slot.done, false);
+    }
+  }
+  assert.deepEqual(back.slots, start.slots, 'which is exactly the show as built');
+});
+
+test('it never reverts a pairing the operator changed on purpose', () => {
+  // The whole point of a reset is that the contents of a match were wrong. A
+  // command reached for to undo a reset must not quietly undo the correction
+  // that came after it.
+  const changed = run(initialState(show),
+    { name: 'assign', side: 'intl', players: ['player-intl-9', 'player-intl-10'], day: 1, index: 0 });
+  const after = run(changed, { name: 'restoreOrder', scope: 'all' });
+  assert.deepEqual(after.slots['1'][0].intl, ['player-intl-9', 'player-intl-10']);
+  assert.deepEqual(after.slots['1'][1].intl, initialState(show).slots['1'][1].intl, 'the rest are untouched');
+});
+
+test('it leaves the draw and the announcements exactly where they were', () => {
+  const night = midNight();
+  const wiped = run(night, { name: 'resetDraw', scope: 'match', day: 1, index: 5 });
+  const back = run(wiped, { name: 'restoreOrder', scope: 'all' });
+  // Match 6 has its pairing back and is still undrawn and unannounced.
+  assert.deepEqual(back.slots['1'][5].intl, initialState(show).slots['1'][5].intl);
+  assert.deepEqual(back.slots['1'][5].usa, ['', '']);
+  // Everything the night had actually done is still done.
+  assert.deepEqual(back.slots['1'][0].usa, night.slots['1'][0].usa);
+  assert.equal(back.slots['1'][0].done, true);
+  assert.equal(back.slots['1'][2].shown, 'first');
+  assert.equal(back.day, night.day);
+  assert.equal(back.current['1'], night.current['1']);
+  assert.equal(back.mode, night.mode);
+});
+
+test('it takes the same scopes as the resets, and refuses the same nonsense', () => {
+  const wiped = run(midNight(), { name: 'resetDraw', scope: 'all' });
+  const oneDay = run(wiped, { name: 'restoreOrder', scope: 'day', day: 1 });
+  assert.deepEqual(orderOf(oneDay, 1), orderOf(initialState(show), 1));
+  assert.equal(oneDay.slots['2'].filter((m) => m.intl.some(Boolean)).length, 0, 'Day 2 was not asked for');
+
+  const oneMatch = run(wiped, { name: 'restoreOrder', scope: 'match', day: 2, index: 4 });
+  assert.deepEqual(oneMatch.slots['2'][4].intl, initialState(show).slots['2'][4].intl);
+  assert.deepEqual(oneMatch.slots['2'][5].intl, ['']);
+
+  rejects(wiped, { name: 'restoreOrder', scope: 'everything' }, /stretch of the night/);
+  rejects(wiped, { name: 'restoreOrder', scope: 'day', day: 3 }, /day must be 1 or 2/);
+});
+
+test('putting the running order back is one undo, like everything else', () => {
+  const wiped = run(midNight(), { name: 'resetDraw', scope: 'all' });
+  const back = run(wiped, { name: 'restoreOrder', scope: 'all' });
+  assert.deepEqual(run(back, { name: 'undo' }).slots, wiped.slots);
+});

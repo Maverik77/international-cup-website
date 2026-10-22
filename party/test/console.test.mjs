@@ -557,6 +557,7 @@ test('every row sends exactly the command it says it does', () => {
     'draw-day1': { name: 'resetDraw', scope: 'day', day: 1 },
     'draw-day2': { name: 'resetDraw', scope: 'day', day: 2 },
     'draw-all': { name: 'resetDraw', scope: 'all' },
+    'draw-order': { name: 'restoreOrder', scope: 'all' },
     'said-here': { name: 'setAnnounced', scope: 'current', announced: false },
     'said-match': { name: 'setAnnounced', scope: 'match', announced: false },
     'said-from': { name: 'setAnnounced', scope: 'from', announced: false },
@@ -712,4 +713,27 @@ test('the pace falls back to four seconds rather than to nothing', () => {
   // that nobody reaches for the button, and they only go up.
   assert.deepEqual([...REVEAL_GAPS].sort((a, b) => a - b), REVEAL_GAPS);
   assert.ok(REVEAL_GAPS.every((s) => Number.isInteger(s) && s >= 2 && s <= 10));
+});
+
+test('the dialog offers the running order back, and only when something needs it', () => {
+  // The row that would have saved the night: a reset had taken every
+  // International pairing and nothing in the console offered them back.
+  const wiped = fullBoard();
+  for (const d of ['1', '2']) for (const m of wiped.days[d]) m.intl = m.intl.map(() => '');
+  const row = rowBy(fixSections(big, wireOn(1, 1), wiped), 'draw-order');
+  assert.deepEqual(row.command, { name: 'restoreOrder', scope: 'all' });
+  assert.equal(row.disabled, false);
+  assert.equal(row.detail, '39 matches have no International pairing — fills them from the running order');
+  assert.ok(!row.confirm, 'filling in what is missing is not a destructive act');
+
+  // With the running order in place it is off, and says so rather than looking broken.
+  const fine = rowBy(fixSections(big, wireOn(1, 1), fullBoard()), 'draw-order');
+  assert.equal(fine.disabled, true);
+  assert.equal(fine.detail, 'Every match has its International pairing');
+
+  // One match short reads as one match, not "1 matches".
+  const one = fullBoard();
+  one.days['1'][6].intl = ['', ''];
+  assert.equal(rowBy(fixSections(big, wireOn(1, 1), one), 'draw-order').detail,
+    '1 match has no International pairing — fills it from the running order');
 });

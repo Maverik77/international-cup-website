@@ -194,6 +194,9 @@ export function fixSections(show, wire, board) {
   const hereAnnounced = inPlay ? isAnnounced(inPlay.match) : Boolean(wire && wire.slot && wire.slot.shown !== 'none');
 
   const lastNames = last ? matchNames(show, last.match) : '';
+  // Matches whose International side is empty. These are the ones a reset took,
+  // and the running order can put them straight back.
+  const noOrder = all.filter((m) => !(Array.isArray(m.match.intl) ? m.match.intl : []).some(Boolean)).length;
 
   return [
     {
@@ -241,6 +244,17 @@ export function fixSections(show, wire, board) {
           command: { name: 'resetDraw', scope: 'all' },
           confirm: true,
           tone: 'danger',
+        },
+        {
+          key: 'draw-order',
+          label: 'Put the running order back',
+          detail: noOrder === 0
+            ? 'Every match has its International pairing'
+            : noOrder === 1
+              ? '1 match has no International pairing \u2014 fills it from the running order'
+              : `${noOrder} matches have no International pairing \u2014 fills them from the running order`,
+          command: { name: 'restoreOrder', scope: 'all' },
+          disabled: noOrder === 0,
         },
       ],
     },

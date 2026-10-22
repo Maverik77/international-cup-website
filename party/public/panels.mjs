@@ -196,13 +196,22 @@ export function flagRow(show) {
   return out;
 }
 
-// Nobody has been drawn into this match yet. A match that IS drawn but not yet
-// revealed is a different thing entirely - that one is black on purpose, and the
-// reveal is the whole point - so this asks who is in the match, never who is
-// visible.
-export function nobodyDrawn(plan) {
+// The room is waiting on the hat: this match still has an empty seat and
+// nothing has been revealed yet.
+//
+// NOT "every seat is empty". Day 1's International pairings come from the
+// running order and have been settled for days; what the room actually watches
+// being drawn is the USA side. A match with its Internationals in and its USA
+// names still to come IS a draw that has not happened, and it is the commonest
+// state of the whole evening - once between every pair of reveals.
+//
+// A match that is fully drawn and not yet revealed is a different thing
+// entirely: that one is black on purpose, because the reveal is the point. So
+// is a reveal already under way, which is why anything visible ends the wait.
+export function awaitingDraw(plan) {
   if (!plan || !Array.isArray(plan.panels) || plan.panels.length === 0) return false;
-  return plan.panels.every((p) => !p || !p.playerId);
+  if (plan.panels.some((p) => p && p.visible)) return false;
+  return plan.panels.some((p) => !p || !p.playerId);
 }
 
 // THE STAGE'S GATE, in one place: which of the three screens the TV is showing,

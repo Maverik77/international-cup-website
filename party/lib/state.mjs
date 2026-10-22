@@ -374,6 +374,27 @@ const HANDLERS = {
     return next;
   },
 
+  // The way back from a reset that went too far. The International pairings are
+  // NOT drawn on the night - they come from running-order.json and have been
+  // settled for days - so a reset that takes them is taking something the
+  // evening never had to lose. This puts them back from the show as built,
+  // leaving who has been drawn and what has been announced exactly as they are.
+  restoreOrder(state, cmd, show) {
+    const targets = matchesIn(state, cmd, show);
+    const fresh = initialState(show);
+    const next = clone(state);
+    for (const m of targets) {
+      const slot = next.slots[String(m.day)][m.at];
+      // ONLY where the side is empty. An operator who deliberately overrode a
+      // pairing must not have it reverted under them by a command they reached
+      // for to undo a reset - that would be this command making the same
+      // mistake it exists to repair.
+      if (slot.intl.some(Boolean)) continue;
+      slot.intl = [...fresh.slots[String(m.day)][m.at].intl];
+    }
+    return next;
+  },
+
   // Who is drawn is untouched; only whether it has been said out loud.
   setAnnounced(state, cmd, show) {
     if (typeof cmd.announced !== 'boolean') {

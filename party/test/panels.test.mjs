@@ -5,7 +5,7 @@ import {
   formatFor, perSide, panelPlan, panelsForMatch, preloadSrcs, slideshowEntry,
   panelsToLoad, srcAfterError, screenPlan, matchTitle, joinsFor, DAY_MATCHES,
   screenNameFrom, roleOf, drawList, filmList, photoList, filmCueOf, SCREEN_ROLES, DEFAULT_SCREEN, MAX_SCREENS,
-  screenKind, startOffset, flagRow, nobodyDrawn, WAITING_LINE, TITLE_LINE, TITLE_YEAR,
+  screenKind, startOffset, flagRow, awaitingDraw, WAITING_LINE, TITLE_LINE, TITLE_YEAR,
 } from '../public/panels.mjs';
 import { indexShow, DAY1_MATCHES, DAY2_MATCHES } from '../build/build-show.mjs';
 import { initialState, reduce, project } from '../lib/state.mjs';
@@ -839,33 +839,46 @@ test('a flags list the stage cannot draw costs the flags, never the title', () =
     [{ src: 'flags/in.png', country: '' }]);
 });
 
-test('a match nobody has been drawn into is told apart from one not yet revealed', () => {
-  const empty = panelPlan(wire({ slot: { index: 4, firstSide: 'intl', intl: ['', ''], usa: ['', ''], shown: 'none', problems: [] } }), show);
-  assert.equal(nobodyDrawn(empty), true);
+const slotWire = (over) => wire({ slot: { index: 4, firstSide: 'intl', shown: 'none', problems: [], ...over } });
 
-  // Drawn and hidden is NOT waiting: that screen is black on purpose and the
-  // reveal is the whole point of the evening.
+test('a match still waiting on the hat is told apart from one waiting on its reveal', () => {
+  // THE CASE THAT MATTERS, and the commonest state of the whole evening: Day 1's
+  // International pairings come from the running order, so between every two
+  // reveals the match on screen has its Internationals in and its USA names
+  // still to be drawn. If this read "false" the waiting screen would show once,
+  // before the night began, and never again.
+  const awaitingUsa = panelPlan(slotWire({ intl: ['player-intl-1', 'player-intl-2'], usa: ['', ''] }), show);
+  assert.equal(awaitingDraw(awaitingUsa), true);
+
+  // Nothing in it at all - after a reset - is the same answer.
+  assert.equal(awaitingDraw(panelPlan(slotWire({ intl: ['', ''], usa: ['', ''] }), show)), true);
+  // Half a side still out of the hat counts too.
+  assert.equal(awaitingDraw(panelPlan(slotWire({ intl: ['player-intl-1', 'player-intl-2'], usa: ['player-usa-1', ''] }), show)), true);
+
+  // Fully drawn and hidden is NOT waiting: that screen is black on purpose and
+  // the reveal is the whole point of the evening.
   const drawnHidden = panelPlan(wire(), show);
   assert.equal(drawnHidden.panels.every((p) => !p.visible), true, 'nothing is visible yet');
-  assert.equal(nobodyDrawn(drawnHidden), false);
+  assert.equal(awaitingDraw(drawnHidden), false);
 
-  // One side drawn and the other still in the hat is also not waiting.
-  const half = panelPlan(wire({ slot: { index: 4, firstSide: 'intl', intl: ['player-intl-1', 'player-intl-2'], usa: ['', ''], shown: 'none', problems: [] } }), show);
-  assert.equal(nobodyDrawn(half), false);
+  // A reveal already under way ends the wait, even of a half-drawn match: the
+  // title card must never land on top of a name the room is looking at.
+  const revealing = panelPlan(slotWire({ intl: ['player-intl-1', 'player-intl-2'], usa: ['', ''], shown: 'first' }), show);
+  assert.equal(revealing.panels.some((p) => p.visible), true);
+  assert.equal(awaitingDraw(revealing), false);
+  assert.equal(awaitingDraw(panelPlan(slotWire({ intl: ['player-intl-1', 'player-intl-2'], usa: ['player-usa-1', 'player-usa-2'], shown: 'both' }), show)), false);
 
-  // An id the show does not know leaves no player in the panel, so that match
-  // really has nobody in it as far as the screen is concerned.
-  const ghost = panelPlan(wire({ slot: { index: 4, firstSide: 'intl', intl: ['nobody', ''], usa: ['', ''], shown: 'none', problems: [] } }), show);
-  assert.equal(nobodyDrawn(ghost), true);
+  // An id the show does not know leaves an empty seat, so the room is still waiting.
+  assert.equal(awaitingDraw(panelPlan(slotWire({ intl: ['nobody', 'player-intl-2'], usa: ['player-usa-1', 'player-usa-2'] }), show)), true);
 });
 
 test('nothing to look at at all is not the same as waiting on a draw', () => {
   // No panels means no plan - a slideshow or a film screen - and those have
-  // their own screens to show. Only a live match with empty hands waits.
-  assert.equal(nobodyDrawn(null), false);
-  assert.equal(nobodyDrawn(undefined), false);
-  assert.equal(nobodyDrawn({}), false);
-  assert.equal(nobodyDrawn({ panels: [] }), false);
-  assert.equal(nobodyDrawn({ panels: 'no' }), false);
-  assert.equal(nobodyDrawn({ panels: [null, undefined] }), true);
+  // their own screens to show. Only a live match with an empty seat waits.
+  assert.equal(awaitingDraw(null), false);
+  assert.equal(awaitingDraw(undefined), false);
+  assert.equal(awaitingDraw({}), false);
+  assert.equal(awaitingDraw({ panels: [] }), false);
+  assert.equal(awaitingDraw({ panels: 'no' }), false);
+  assert.equal(awaitingDraw({ panels: [null, undefined] }), true);
 });
