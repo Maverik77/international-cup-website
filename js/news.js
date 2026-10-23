@@ -58,6 +58,14 @@ class NewsManager {
         return date.toLocaleDateString('en-US', options);
     }
 
+    // Optional photograph. An article without an `image` renders exactly as before.
+    imageHtml(article) {
+        if (!article || typeof article.image !== 'string' || article.image.trim() === '') return '';
+        const src = this.escapeHtml(article.image.trim());
+        const alt = this.escapeHtml(article.imageAlt || article.title || '');
+        return `<img class="news-photo" src="${src}" alt="${alt}" loading="lazy">`;
+    }
+
     // Escape HTML to prevent XSS, but allow safe internal links
     escapeHtml(text) {
         const div = document.createElement('div');
@@ -134,6 +142,7 @@ async function updateHomepageNews() {
                 <article class="news-card">
                     <div class="news-date">${window.newsManager.formatDate(article.date)}</div>
                     <h3>${window.newsManager.escapeHtml(article.title)}</h3>
+                    ${window.newsManager.imageHtml(article)}
                     <p>${window.newsManager.processContent(article.content)}</p>
                 </article>
             `).join('');
@@ -161,6 +170,7 @@ async function loadAllNewsInModal() {
             <article class="modal-news-card">
                 <div class="news-date">${window.newsManager.formatDate(article.date)}</div>
                 <h3>${window.newsManager.escapeHtml(article.title)}</h3>
+                ${window.newsManager.imageHtml(article)}
                 <p>${window.newsManager.processContent(article.content)}</p>
             </article>
         `).join('');

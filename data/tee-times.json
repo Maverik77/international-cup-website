@@ -1,0 +1,950 @@
+{
+  "updated": "2026-10-23",
+  "source": "2026 IC Line-Ups - FINAL.xlsx",
+  "note": "Official tee sheet. Handicaps and tee colours as issued by the committee.",
+  "days": [
+    {
+      "day": 1,
+      "label": "Day 1: Team Matches",
+      "date": "2026-10-23",
+      "course": "Norman Course",
+      "playersPerSide": 2,
+      "formatNote": "Three team formats: Best Ball, Alt-Shot, Best Ball",
+      "groups": [
+        {
+          "time": "11:00 AM",
+          "matches": [
+            {
+              "match": 1,
+              "usa": [
+                {
+                  "name": "Keith Barnes",
+                  "handicap": 12.5,
+                  "tee": "White"
+                },
+                {
+                  "name": "Dave Kohlasch",
+                  "handicap": 11.2,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Daren Wickham",
+                  "handicap": 19.6,
+                  "tee": "White"
+                },
+                {
+                  "name": "Ben Hedges",
+                  "handicap": 18.5,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:10 AM",
+          "matches": [
+            {
+              "match": 2,
+              "usa": [
+                {
+                  "name": "Mike Ziegler",
+                  "handicap": 6.1,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Jeff Galkin",
+                  "handicap": 8.1,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Philip Woodisse",
+                  "handicap": 7.8,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Michael Kim",
+                  "handicap": 13.1,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:20 AM",
+          "matches": [
+            {
+              "match": 3,
+              "usa": [
+                {
+                  "name": "Jay Collins",
+                  "handicap": 7.3,
+                  "tee": "White"
+                },
+                {
+                  "name": "Frank Ambrose",
+                  "handicap": 15.8,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Anil Katarki",
+                  "handicap": 9.0,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Vijay Davuluri",
+                  "handicap": 17.2,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:30 AM",
+          "matches": [
+            {
+              "match": 4,
+              "usa": [
+                {
+                  "name": "Jeff Kritsberg",
+                  "handicap": 3.8,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Anthony Rizzo",
+                  "handicap": 7.8,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Chakshush Kumar",
+                  "handicap": 14.0,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Ashvini Anjutgi",
+                  "handicap": 15.7,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:40 AM",
+          "matches": [
+            {
+              "match": 5,
+              "usa": [
+                {
+                  "name": "Scott Covino",
+                  "handicap": 4.2,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "John Altman",
+                  "handicap": 10.5,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Tim Pearce",
+                  "handicap": 7.2,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Robbie Neilson",
+                  "handicap": 8.1,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:50 AM",
+          "matches": [
+            {
+              "match": 6,
+              "usa": [
+                {
+                  "name": "Tom Walsh",
+                  "handicap": 6.2,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Jeff Barnette",
+                  "handicap": 8.8,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Jun Bae",
+                  "handicap": 6.0,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Yun Sang Bae",
+                  "handicap": 14.1,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:00 PM",
+          "matches": [
+            {
+              "match": 7,
+              "usa": [
+                {
+                  "name": "Jim Gillie",
+                  "handicap": 5.5,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Kevin Kozlowski",
+                  "handicap": 21.3,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Rhys Gully",
+                  "handicap": 13.0,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Erik Wagner",
+                  "handicap": 8.5,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:10 PM",
+          "matches": [
+            {
+              "match": 8,
+              "usa": [
+                {
+                  "name": "Kyle Lenihan",
+                  "handicap": 10.0,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Mitch Freedman",
+                  "handicap": 7.0,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Jonathan Doan",
+                  "handicap": 10.8,
+                  "tee": "White"
+                },
+                {
+                  "name": "Raj Malik",
+                  "handicap": 5.9,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:20 PM",
+          "matches": [
+            {
+              "match": 9,
+              "usa": [
+                {
+                  "name": "Jay Vosburgh",
+                  "handicap": 5.9,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Seth Holladay",
+                  "handicap": 10.9,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Phillip Jewell",
+                  "handicap": 5.8,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Mohammed Ashraf",
+                  "handicap": 18.0,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:30 PM",
+          "matches": [
+            {
+              "match": 10,
+              "usa": [
+                {
+                  "name": "Tom Murphy",
+                  "handicap": 6.1,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Dominic Michael",
+                  "handicap": 5.6,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Uttam Bharwani",
+                  "handicap": 9.8,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Sridhar Muthusamy",
+                  "handicap": 11.7,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:40 PM",
+          "matches": [
+            {
+              "match": 11,
+              "usa": [
+                {
+                  "name": "Maggie Vosburgh",
+                  "handicap": 13.3,
+                  "tee": "Green"
+                },
+                {
+                  "name": "Chrissy Crouse",
+                  "handicap": 18.4,
+                  "tee": "Green"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Alba Phillips",
+                  "handicap": 13.9,
+                  "tee": "Green"
+                },
+                {
+                  "name": "Joung Barnes",
+                  "handicap": 15.9,
+                  "tee": "Green"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:50 PM",
+          "matches": [
+            {
+              "match": 12,
+              "usa": [
+                {
+                  "name": "John Daley",
+                  "handicap": 10.8,
+                  "tee": "White"
+                },
+                {
+                  "name": "Jeff Miller",
+                  "handicap": 14.1,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Suresh Saribala",
+                  "handicap": 9.3,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Stefan Lambert",
+                  "handicap": 14.3,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "1:00 PM",
+          "matches": [
+            {
+              "match": 13,
+              "usa": [
+                {
+                  "name": "Victor Esposito",
+                  "handicap": 8.2,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Greg Parda",
+                  "handicap": 9.9,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Soban Ansari",
+                  "handicap": 10.1,
+                  "tee": "Blue"
+                },
+                {
+                  "name": "Jim Lee",
+                  "handicap": 16.1,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "label": "Day 2: Singles Matches",
+      "date": "2026-10-24",
+      "course": "Robert Trent Jones 2 Course",
+      "playersPerSide": 1,
+      "formatNote": "Twenty-six individual matchplay battles",
+      "groups": [
+        {
+          "time": "11:00 AM",
+          "matches": [
+            {
+              "match": 1,
+              "usa": [
+                {
+                  "name": "Jeff Miller",
+                  "handicap": 14.1,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Soban Ansari",
+                  "handicap": 10.1,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 2,
+              "usa": [
+                {
+                  "name": "Kevin Kozlowski",
+                  "handicap": 21.3,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Robbie Neilson",
+                  "handicap": 8.1,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:10 AM",
+          "matches": [
+            {
+              "match": 3,
+              "usa": [
+                {
+                  "name": "Victor Esposito",
+                  "handicap": 8.2,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Suresh Saribala",
+                  "handicap": 9.3,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 4,
+              "usa": [
+                {
+                  "name": "Jeff Kritsberg",
+                  "handicap": 3.8,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Ben Hedges",
+                  "handicap": 18.5,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:20 AM",
+          "matches": [
+            {
+              "match": 5,
+              "usa": [
+                {
+                  "name": "Frank Ambrose",
+                  "handicap": 15.8,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Jun Bae",
+                  "handicap": 6.0,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 6,
+              "usa": [
+                {
+                  "name": "Anthony Rizzo",
+                  "handicap": 7.8,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Jim Lee",
+                  "handicap": 16.1,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:30 AM",
+          "matches": [
+            {
+              "match": 7,
+              "usa": [
+                {
+                  "name": "Kyle Lenihan",
+                  "handicap": 10.0,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Yun Sang Bae",
+                  "handicap": 14.1,
+                  "tee": "White"
+                }
+              ]
+            },
+            {
+              "match": 8,
+              "usa": [
+                {
+                  "name": "Jim Gillie",
+                  "handicap": 5.5,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Anil Katarki",
+                  "handicap": 9.0,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:40 AM",
+          "matches": [
+            {
+              "match": 9,
+              "usa": [
+                {
+                  "name": "Scott Covino",
+                  "handicap": 4.2,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Tim Pearce",
+                  "handicap": 7.2,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 10,
+              "usa": [
+                {
+                  "name": "Chrissy Crouse",
+                  "handicap": 18.4,
+                  "tee": "Green"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Joung Barnes",
+                  "handicap": 15.9,
+                  "tee": "Green"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "11:50 AM",
+          "matches": [
+            {
+              "match": 11,
+              "usa": [
+                {
+                  "name": "Keith Barnes",
+                  "handicap": 12.5,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Vijay Davuluri",
+                  "handicap": 17.2,
+                  "tee": "White"
+                }
+              ]
+            },
+            {
+              "match": 12,
+              "usa": [
+                {
+                  "name": "Jay Vosburgh",
+                  "handicap": 5.9,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Phillip Jewell",
+                  "handicap": 5.8,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:00 PM",
+          "matches": [
+            {
+              "match": 13,
+              "usa": [
+                {
+                  "name": "Mitch Freedman",
+                  "handicap": 7.0,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Rhys Gully",
+                  "handicap": 13.0,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 14,
+              "usa": [
+                {
+                  "name": "Seth Holladay",
+                  "handicap": 10.9,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Philip Woodisse",
+                  "handicap": 7.8,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:10 PM",
+          "matches": [
+            {
+              "match": 15,
+              "usa": [
+                {
+                  "name": "John Altman",
+                  "handicap": 10.5,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Mohammed Ashraf",
+                  "handicap": 18.0,
+                  "tee": "White"
+                }
+              ]
+            },
+            {
+              "match": 16,
+              "usa": [
+                {
+                  "name": "Jeff Galkin",
+                  "handicap": 8.1,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Stefan Lambert",
+                  "handicap": 14.3,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:20 PM",
+          "matches": [
+            {
+              "match": 17,
+              "usa": [
+                {
+                  "name": "Greg Parda",
+                  "handicap": 9.9,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Raj Malik",
+                  "handicap": 5.9,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 18,
+              "usa": [
+                {
+                  "name": "Jay Collins",
+                  "handicap": 7.3,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Daren Wickham",
+                  "handicap": 19.6,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:30 PM",
+          "matches": [
+            {
+              "match": 19,
+              "usa": [
+                {
+                  "name": "Jeff Barnette",
+                  "handicap": 8.8,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Sridhar Muthusamy",
+                  "handicap": 11.7,
+                  "tee": "White"
+                }
+              ]
+            },
+            {
+              "match": 20,
+              "usa": [
+                {
+                  "name": "Dominic Michael",
+                  "handicap": 5.6,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Michael Kim",
+                  "handicap": 13.1,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:40 PM",
+          "matches": [
+            {
+              "match": 21,
+              "usa": [
+                {
+                  "name": "Maggie Vosburgh",
+                  "handicap": 13.3,
+                  "tee": "Green"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Alba Phillips",
+                  "handicap": 13.9,
+                  "tee": "Green"
+                }
+              ]
+            },
+            {
+              "match": 22,
+              "usa": [
+                {
+                  "name": "Mike Ziegler",
+                  "handicap": 6.1,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Erik Wagner",
+                  "handicap": 8.5,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "12:50 PM",
+          "matches": [
+            {
+              "match": 23,
+              "usa": [
+                {
+                  "name": "Dave Kohlasch",
+                  "handicap": 11.2,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Jonathan Doan",
+                  "handicap": 10.8,
+                  "tee": "White"
+                }
+              ]
+            },
+            {
+              "match": 24,
+              "usa": [
+                {
+                  "name": "John Daley",
+                  "handicap": 10.8,
+                  "tee": "White"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Chakshush Kumar",
+                  "handicap": 14.0,
+                  "tee": "Blue"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time": "1:00 PM",
+          "matches": [
+            {
+              "match": 25,
+              "usa": [
+                {
+                  "name": "Tom Walsh",
+                  "handicap": 6.2,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Uttam Bharwani",
+                  "handicap": 9.8,
+                  "tee": "Blue"
+                }
+              ]
+            },
+            {
+              "match": 26,
+              "usa": [
+                {
+                  "name": "Tom Murphy",
+                  "handicap": 6.2,
+                  "tee": "Blue"
+                }
+              ],
+              "intl": [
+                {
+                  "name": "Ashvini Anjutgi",
+                  "handicap": 15.7,
+                  "tee": "White"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

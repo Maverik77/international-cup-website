@@ -275,6 +275,20 @@
                         <p>Three team matches featuring Best Ball, Alternate Shot, and Shamble formats, followed by the Day 1 After Party</p>
                         <span class="schedule-time schedule-time--course">Norman Course</span>
                         <span class="schedule-time">Tee times between 11:00 AM and 1:00 PM</span>
+                        <button class="btn btn-secondary" onclick="toggleTeeTimes(1)" style="margin-top: 1rem;">View Tee Times</button>
+
+                        <!-- Day 1 Tee Times Section -->
+                        <div id="day1-tee-times-section" class="tee-times-container" style="display: none;">
+                            <div class="tee-times-header">
+                                <h4>&#127948;&#65039; Day 1 Tee Sheet - Team Matches</h4>
+                                <p style="color: #666; font-size: 0.95rem; margin-top: 0.5rem;">Norman Course &bull; 13 Team Matches &bull; 11:00 AM - 1:00 PM</p>
+                            </div>
+                            <div class="tee-times-grid" id="day1-tee-times-grid">
+                                <div style="text-align: center; padding: 2rem; color: #999;">
+                                    <p>Loading tee times&hellip;</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="schedule-item">
@@ -287,7 +301,7 @@
                         <p>Twenty-six individual matchplay battles to determine the International Cup champion, capped off with the championship celebration</p>
                         <span class="schedule-time schedule-time--course">Robert Trent Jones 2 Course</span>
                         <span class="schedule-time">Tee times between 11:00 AM and 1:00 PM</span>
-                        <button class="btn btn-secondary" onclick="toggleDay2TeeTimes()" style="margin-top: 1rem;">View Tee Times</button>
+                        <button class="btn btn-secondary" onclick="toggleTeeTimes(2)" style="margin-top: 1rem;">View Tee Times</button>
                         
                         <!-- Day 2 Tee Times Section -->
                         <div id="day2-tee-times-section" class="tee-times-container" style="display: none;">
@@ -297,7 +311,7 @@
                             </div>
                             <div class="tee-times-grid" id="day2-tee-times-grid">
                                 <div style="text-align: center; padding: 2rem; color: #999;">
-                                    <p>Loading tee times from pairings database...</p>
+                                    <p>Loading tee times&hellip;</p>
                                 </div>
                             </div>
                         </div>
@@ -848,25 +862,85 @@
             margin-bottom: 0.5rem;
         }
         
-        .tee-players {
+        .tee-matches {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
-        
+
+        .tee-match {
+            display: grid;
+            grid-template-columns: 1fr 1.1rem 1fr;
+            align-items: center;
+            gap: 0.4rem 0.4rem;
+        }
+
+        .tee-time-matches {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #666;
+            margin-left: 0.4rem;
+        }
+
+        .tee-side {
+            display: grid;
+            gap: 0.3rem;
+        }
+
+        .tee-vs {
+            text-align: center;
+            font-size: 0.8rem;
+            font-style: italic;
+            color: #9a9a9a;
+        }
+
         .tee-player {
-            padding: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 0.6rem;
+            padding: 0.4rem 0.6rem;
             background: white;
             border-radius: 4px;
             font-size: 0.9rem;
             color: #333;
         }
-        
+
+        .tee-side--usa .tee-player { border-left: 3px solid #c8102e; }
+        .tee-side--intl .tee-player { border-left: 3px solid #007bff; }
+
+        .tee-player-name { font-weight: 600; }
+
+        .tee-meta {
+            font-size: 0.78rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .tee-dot {
+            display: inline-block;
+            width: 0.62rem;
+            height: 0.62rem;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.35);
+            margin: 0 0.28rem 0 0.4rem;
+            vertical-align: middle;
+        }
+
+        .tee-dot--blue  { background: #1f6fd0; }
+        .tee-dot--white { background: #ffffff; }
+        .tee-dot--green { background: #2e9b57; }
+
         @media (max-width: 768px) {
-            .tee-players {
+            .tee-match {
                 grid-template-columns: 1fr;
+                gap: 0.3rem;
             }
-            
+
+            .tee-vs {
+                text-align: left;
+                padding-left: 0.6rem;
+            }
+
             .tee-times-container {
                 padding: 1rem;
             }
@@ -896,152 +970,100 @@
             }
         }
         
-        // Day 2 Tee Times Toggle Function
-        function toggleDay2TeeTimes() {
-            const teeTimesSection = document.getElementById('day2-tee-times-section');
-            
-            if (teeTimesSection.style.display === 'none' || teeTimesSection.style.display === '') {
-                // Load tee times if not already loaded
-                if (!teeTimesSection.dataset.loaded) {
-                    loadDay2TeeTimes();
-                    teeTimesSection.dataset.loaded = 'true';
+        // Tee Times - rendered from data/tee-times.json, the committee's own
+        // sheet. It carries the handicap and tee colour for every player, which
+        // the pairings API does not, so the sheet is the source here.
+        let teeTimesDoc = null;
+
+        function toggleTeeTimes(day) {
+            const section = document.getElementById(`day${day}-tee-times-section`);
+            if (!section) return;
+
+            if (section.style.display === 'none' || section.style.display === '') {
+                if (!section.dataset.loaded) {
+                    section.dataset.loaded = 'true';
+                    loadTeeTimes(day);
                 }
-                
-                // Show tee times
-                teeTimesSection.style.display = 'block';
-                
-                // Smooth scroll to tee times
+                section.style.display = 'block';
                 setTimeout(() => {
-                    teeTimesSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 100);
             } else {
-                // Hide tee times
-                teeTimesSection.style.display = 'none';
+                section.style.display = 'none';
             }
         }
-        
-        // Load Day 2 Tee Times from Pairings API
-        async function loadDay2TeeTimes() {
-            try {
-                // Determine API endpoint based on environment
-                const isStaging = window.location.hostname.includes('staging');
-                const baseUrl = isStaging 
-                    ? 'https://9iz68mvngi.execute-api.us-east-1.amazonaws.com/prod'
-                    : 'https://qzq9gvuk9f.execute-api.us-east-1.amazonaws.com/prod';
-                
-                // Fetch both pairings and players
-                const [pairingsResponse, playersResponse] = await Promise.all([
-                    fetch(`${baseUrl}/pairings`),
-                    fetch(`${baseUrl}/players`)
-                ]);
-                
-                const pairingsData = await pairingsResponse.json();
-                const playersData = await playersResponse.json();
-                
-                // Create player lookup map
-                const playerMap = {};
-                (playersData.players || []).forEach(player => {
-                    // Construct full name from firstName and lastName
-                    const fullName = `${player.lastName}, ${player.firstName}`;
-                    playerMap[player.id] = fullName;
-                });
-                
-                // Filter Day 2 singles matches and sort by match number
-                const day2Matches = pairingsData.pairings
-                    .filter(p => p.day === 2 && p.type === 'singles')
-                    .sort((a, b) => a.match_number - b.match_number);
 
-                // If no Day 2 singles matches exist yet (e.g., pre-tournament, or right after a rollover wipe),
-                // render the same "not available yet" message the catch block uses.
-                if (day2Matches.length === 0) {
-                    document.getElementById('day2-tee-times-grid').innerHTML = `
-                        <div style="text-align: center; padding: 2rem; color: #999;">
-                            <p>Pairings not yet posted for Day 2.</p>
-                            <p style="font-size: 0.9rem;">Tee times will appear here once the draw is done on Thursday night. Every group goes out between 11:00 AM and 1:00 PM.</p>
+        async function fetchTeeTimes() {
+            if (!teeTimesDoc) {
+                const response = await fetch('./data/tee-times.json?t=' + Date.now(), { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                teeTimesDoc = await response.json();
+            }
+            return teeTimesDoc;
+        }
+
+        function teeSideHtml(players, team) {
+            const flag = team === 'usa' ? '\u{1F1FA}\u{1F1F8}' : '\u{1F30D}';
+            return `
+                <div class="tee-side tee-side--${team}">
+                    ${players.map(p => `
+                        <div class="tee-player">
+                            <span class="tee-player-name">${flag} ${escapeTee(p.name)}</span>
+                            <span class="tee-meta">${Number(p.handicap).toFixed(1)}
+                                <span class="tee-dot tee-dot--${String(p.tee).toLowerCase()}"
+                                      title="${escapeTee(p.tee)} tees"></span>${escapeTee(p.tee)}</span>
                         </div>
-                    `;
-                    return;
-                }
+                    `).join('')}
+                </div>
+            `;
+        }
 
-                // Group matches into tee times (2 matches = 4 players per group)
-                const teeTimeGroups = [];
-                // Every group goes out between 11:00 AM and 1:00 PM: thirteen
-                // groups at ten-minute intervals from 11:00 end exactly on 1:00.
-                const startHour = 11;
-                const startMinute = 0;
-                const intervalMinutes = 10;
-                
-                for (let i = 0; i < day2Matches.length; i += 2) {
-                    const match1 = day2Matches[i];
-                    const match2 = day2Matches[i + 1];
-                    
-                    // Calculate tee time
-                    const groupIndex = Math.floor(i / 2);
-                    const totalMinutes = startMinute + (groupIndex * intervalMinutes);
-                    const hour = startHour + Math.floor(totalMinutes / 60);
-                    const minute = totalMinutes % 60;
-                    const time = `${hour % 12 || 12}:${minute.toString().padStart(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}`;
-                    
-                    // Get player names from IDs
-                    const players = [];
-                    if (match1) {
-                        players.push({
-                            name: playerMap[match1.usa_player_id] || 'TBD',
-                            match: match1.match_number,
-                            team: 'USA'
-                        });
-                        players.push({
-                            name: playerMap[match1.intl_player_id] || 'TBD',
-                            match: match1.match_number,
-                            team: 'International'
-                        });
-                    }
-                    if (match2) {
-                        players.push({
-                            name: playerMap[match2.usa_player_id] || 'TBD',
-                            match: match2.match_number,
-                            team: 'USA'
-                        });
-                        players.push({
-                            name: playerMap[match2.intl_player_id] || 'TBD',
-                            match: match2.match_number,
-                            team: 'International'
-                        });
-                    }
-                    
-                    teeTimeGroups.push({
-                        time,
-                        matches: [match1?.match_number, match2?.match_number].filter(Boolean),
-                        players
-                    });
-                }
-                
-                // Render tee times
-                const teeTimesGrid = document.getElementById('day2-tee-times-grid');
-                teeTimesGrid.innerHTML = teeTimeGroups.map(group => `
+        function matchLabel(matches) {
+            const nums = matches.map(m => Number(m.match));
+            return nums.length === 1 ? `Match ${nums[0]}` : `Matches ${nums.join(' & ')}`;
+        }
+
+        function escapeTee(text) {
+            const div = document.createElement('div');
+            div.textContent = text == null ? '' : String(text);
+            return div.innerHTML;
+        }
+
+        async function loadTeeTimes(day) {
+            const grid = document.getElementById(`day${day}-tee-times-grid`);
+            if (!grid) return;
+            try {
+                const doc = await fetchTeeTimes();
+                const dayDoc = (doc.days || []).find(d => d.day === day);
+                if (!dayDoc || !(dayDoc.groups || []).length) throw new Error('no groups');
+
+                grid.innerHTML = dayDoc.groups.map(group => `
                     <div class="tee-time-group">
-                        <div class="tee-time">⏰ ${group.time} <span style="font-size: 0.85rem; color: #666; font-weight: 400;">• Matches ${group.matches.join(' & ')}</span></div>
-                        <div class="tee-players">
-                            ${group.players.map(player => `
-                                <div class="tee-player" style="border-left: 3px solid ${player.team === 'USA' ? '#c8102e' : '#007bff'};">
-                                    <span style="font-weight: 600;">${player.team === 'USA' ? '🇺🇸' : '🌍'} ${player.name}</span>
-                                    <span style="font-size: 0.8rem; color: #666;"> (Match ${player.match})</span>
+                        <div class="tee-time">&#9200; ${escapeTee(group.time)}
+                            <span class="tee-time-matches">${matchLabel(group.matches)}</span>
+                        </div>
+                        <div class="tee-matches">
+                            ${group.matches.map(m => `
+                                <div class="tee-match">
+                                    ${teeSideHtml(m.usa, 'usa')}
+                                    <span class="tee-vs">v</span>
+                                    ${teeSideHtml(m.intl, 'intl')}
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 `).join('');
             } catch (error) {
-                console.error('Error loading Day 2 tee times:', error);
-                document.getElementById('day2-tee-times-grid').innerHTML = `
+                console.error(`Error loading Day ${day} tee times:`, error);
+                grid.innerHTML = `
                     <div style="text-align: center; padding: 2rem; color: #999;">
-                        <p>Unable to load tee times. Pairings may not be set yet.</p>
-                        <p style="font-size: 0.9rem;">Check the pairings admin page to set Day 2 matches.</p>
+                        <p>Tee times are not posted yet.</p>
+                        <p style="font-size: 0.9rem;">Every group goes out between 11:00 AM and 1:00 PM.</p>
                     </div>
                 `;
             }
         }
-        
+
         // News Modal Functions
         function openNewsModal() {
             document.getElementById('news-modal').style.display = 'block';

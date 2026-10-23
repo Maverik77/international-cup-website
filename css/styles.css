@@ -2137,6 +2137,15 @@ textarea:focus {
     margin-bottom: 1.5rem;
 }
 
+.news-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    background: #f0f0f0;
+}
+
 .news-card .news-link,
 .modal-news-card .news-link {
     color: var(--primary-color);
