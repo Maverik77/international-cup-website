@@ -93,8 +93,13 @@
                         <p>Select your bets below. Click $10 or $20 to add a bet to your bet slip.</p>
                         <div id="pairings-stats" style="background:#f7fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;margin-bottom:12px;color:#4a5568;font-size:0.9rem;display:none;"></div>
                         
-                        <!-- Day 1 Matches -->
-                        <div class="day-section">
+                        <!-- Day 1 Matches. Hidden once Day 1 has been played:
+                             the results are known, so there is nothing left to
+                             bet on. Delete the hidden attribute to bring the
+                             block back. Betting on Day 1 is also closed at the
+                             data layer (day1Closed in icup-betting-config-prod),
+                             which is what stops a stale page submitting. -->
+                        <div class="day-section" id="day1-section" hidden>
                             <h3>Day 1 - Team Matches</h3>
                             <div id="day1-matches" class="matches-grid">
                                 <!-- Day 1 matches will be loaded here -->
@@ -273,6 +278,6 @@
     </div>
 
     <script src="js/main.js?v=811cd19b"></script>
-    <script src="js/betting.js?v=82dd55d0"></script>
+    <script src="js/betting.js?v=5d3619e5"></script>
 </body>
 </html>

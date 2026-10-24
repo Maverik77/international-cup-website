@@ -101,8 +101,15 @@ class BettingSystem {
         const day1 = this.getMatchesByDay(1);
         const day2 = this.getMatchesByDay(2);
         this.updateStatsBanner(day1.length, day2.length, (this.pairings || []).length);
+        // A day whose section carries the hidden attribute is not rendered at
+        // all, so no bet button for it ever reaches the page.
         this.renderDayMatches(1, 'Day 1');
         this.renderDayMatches(2, 'Day 2');
+    }
+
+    isDayHidden(dayNumber) {
+        const section = document.getElementById(`day${dayNumber}-section`);
+        return Boolean(section && section.hasAttribute('hidden'));
     }
 
     getMatchesByDay(dayNumber) {
@@ -112,6 +119,10 @@ class BettingSystem {
     renderDayMatches(dayNumber, dayLabel) {
         const container = document.getElementById(`${dayNumber === 1 ? 'day1' : 'day2'}-matches`);
         if (!container) return;
+        if (this.isDayHidden(dayNumber)) {
+            container.innerHTML = '';
+            return;
+        }
 
         const dayMatches = this.getMatchesByDay(dayNumber);
         
@@ -482,7 +493,11 @@ class BettingSystem {
         const el = document.getElementById('pairings-stats');
         if (!el) return;
         el.style.display = 'block';
-        el.textContent = `Loaded pairings: Day 1 = ${day1Count}, Day 2 = ${day2Count}, Total = ${total}`;
+        const parts = [];
+        if (!this.isDayHidden(1)) parts.push(`Day 1 = ${day1Count}`);
+        if (!this.isDayHidden(2)) parts.push(`Day 2 = ${day2Count}`);
+        parts.push(`Total = ${total}`);
+        el.textContent = `Loaded pairings: ${parts.join(', ')}`;
     }
 }
 
