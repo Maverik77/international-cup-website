@@ -452,6 +452,19 @@
 
 
     <!-- News Modal -->
+    <!-- Player film modal: the long-form 16x9 reveal, for players who consented -->
+    <div id="film-modal" class="modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="film-modal-name">
+        <div class="modal-content film-modal-content">
+            <div class="modal-header film-modal-header">
+                <h2 id="film-modal-name">Player film</h2>
+                <span class="modal-close film-modal-close" id="film-modal-close" role="button" tabindex="0" aria-label="Close">&times;</span>
+            </div>
+            <div class="modal-body film-modal-body">
+                <video id="film-player" controls playsinline preload="none"></video>
+            </div>
+        </div>
+    </div>
+
     <div id="news-modal" class="modal" style="display: none;">
         <div class="modal-content news-modal-content">
             <div class="modal-header">
@@ -474,7 +487,7 @@
     <script src="js/historic-data-embedded.js?v=11e6d119"></script>
     <script src="js/historic-data.js?v=049d7a91"></script>
     <script src="js/news.js?v=7e66360a"></script>
-    <script src="js/roster.js?v=43f1de2e"></script>
+    <script src="js/roster.js?v=7b25ae87"></script>
     <style>
         /* News Actions Styles */
         .news-actions {
@@ -741,6 +754,83 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* A card that has a film is a button; one without is unchanged. */
+        .pcard--film { cursor: pointer; }
+
+        .pcard--film .pcard-media { position: relative; }
+
+        .pcard-play {
+            position: absolute;
+            right: 0.45rem;
+            bottom: 0.45rem;
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 50%;
+            background: rgba(16, 24, 40, 0.62);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .pcard-play svg { width: 0.72rem; height: 0.72rem; fill: #fff; margin-left: 2px; }
+
+        .pcard--film:hover .pcard-play,
+        .pcard--film:focus-visible .pcard-play {
+            background: var(--primary-color, #c8102e);
+            transform: scale(1.08);
+        }
+
+        .pcard--film:focus-visible {
+            outline: 3px solid var(--primary-color, #c8102e);
+            outline-offset: 2px;
+        }
+
+        /* Film modal */
+        .film-modal-content {
+            max-width: 1120px;
+            width: 94%;
+            margin: 3% auto;
+            background: #0d1117;
+        }
+
+        .film-modal-header {
+            padding: 1rem 1.25rem 0.75rem;
+            align-items: flex-start;
+        }
+
+        .film-modal-header h2 {
+            font-size: 1.15rem;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .film-modal-close {
+            color: #cbd3de;
+            font-size: 1.9rem;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 0.25rem;
+        }
+
+        .film-modal-close:hover { color: #fff; }
+
+        .film-modal-body { padding: 0 1.25rem 1.25rem; }
+
+        #film-player {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: block;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        @media (max-width: 600px) {
+            .film-modal-content { width: 100%; margin: 0 auto; border-radius: 0; min-height: 100%; }
+            .film-modal-body { padding: 0 0.6rem 1rem; }
+            .film-modal-header { padding: 0.8rem 0.9rem 0.6rem; }
         }
 
         .pcard-media img {

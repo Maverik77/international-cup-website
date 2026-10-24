@@ -157,3 +157,6 @@ party/RESUME.md
 !party/build/
 !party/public/
 .superpowers/
+
+# Player films: ~600 MB, hosted in S3 under films/, never committed.
+films/

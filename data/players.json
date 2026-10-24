@@ -8,68 +8,88 @@
         "country": "India",
         "hometown": "Hyderabad, India",
         "school": "Bowie State University",
-        "photo": "pics/players/ashvini-anjutgi.jpg"
+        "photo": "pics/players/ashvini-anjutgi.jpg",
+        "film": "films/ashvini.mp4",
+        "filmPoster": "pics/players/film/ashvini.jpg"
       },
       {
         "name": "Vijay Davuluri",
         "country": "India",
         "hometown": "Hyderabad, India",
         "school": "Andhra University",
-        "photo": "pics/players/vijay-davuluri.jpg"
+        "photo": "pics/players/vijay-davuluri.jpg",
+        "film": "films/vijay.mp4",
+        "filmPoster": "pics/players/film/vijay.jpg"
       },
       {
         "name": "Anil Katarki",
         "country": "India",
         "hometown": "Belagavi",
         "school": "George Washington University",
-        "photo": "pics/players/anil-katarki.jpg"
+        "photo": "pics/players/anil-katarki.jpg",
+        "film": "films/anil.mp4",
+        "filmPoster": "pics/players/film/anil.jpg"
       },
       {
         "name": "Chakshush Kumar",
         "country": "India",
         "hometown": "New Delhi, India",
         "school": "George Mason University",
-        "photo": "pics/players/chakshush-kumar.jpg"
+        "photo": "pics/players/chakshush-kumar.jpg",
+        "film": "films/chakshush.mp4",
+        "filmPoster": "pics/players/film/chakshush.jpg"
       },
       {
         "name": "Raj Malik",
         "country": "India",
         "hometown": "Delhi, India",
         "school": "Kansas State University",
-        "photo": "pics/players/raj-malik.jpg"
+        "photo": "pics/players/raj-malik.jpg",
+        "film": "films/raj.mp4",
+        "filmPoster": "pics/players/film/raj.jpg"
       },
       {
         "name": "Sridhar Muthusamy",
         "country": "India",
         "hometown": "Vellore, Tamil Nadu, India",
-        "photo": "pics/players/sridhar-muthusamy.jpg"
+        "photo": "pics/players/sridhar-muthusamy.jpg",
+        "film": "films/sridhar.mp4",
+        "filmPoster": "pics/players/film/sridhar.jpg"
       },
       {
         "name": "Suresh Saribala",
         "country": "India",
         "photo": "pics/players/suresh-saribala.jpg",
         "hometown": "Hyderabad, India",
-        "school": "Jawaharlal Nehru Technological University"
+        "school": "Jawaharlal Nehru Technological University",
+        "film": "films/saribala.mp4",
+        "filmPoster": "pics/players/film/saribala.jpg"
       },
       {
         "name": "Mohammed Ashraf",
         "country": "England",
         "hometown": "Blackburn, Lancashire, England",
         "school": "University of Greenwich, London",
-        "photo": "pics/players/mohammed-ashraf.jpg"
+        "photo": "pics/players/mohammed-ashraf.jpg",
+        "film": "films/ash.mp4",
+        "filmPoster": "pics/players/film/ash.jpg"
       },
       {
         "name": "Ben Hedges",
         "country": "England",
         "hometown": "Royal Wootton Bassett, England",
-        "photo": "pics/players/ben-hedges.jpg"
+        "photo": "pics/players/ben-hedges.jpg",
+        "film": "films/ben.mp4",
+        "filmPoster": "pics/players/film/ben.jpg"
       },
       {
         "name": "Tim Pearce",
         "country": "England",
         "hometown": "Banbury, Oxfordshire, England",
         "school": "Stowe School",
-        "photo": "pics/players/tim-pearce.jpg"
+        "photo": "pics/players/tim-pearce.jpg",
+        "film": "films/pearce.mp4",
+        "filmPoster": "pics/players/film/pearce.jpg"
       },
       {
         "name": "Daren Wickham",
@@ -79,7 +99,9 @@
         "name": "Philip Woodisse",
         "country": "England",
         "hometown": "Cheltenham, Gloucestershire, England",
-        "photo": "pics/players/philip-woodisse.jpg"
+        "photo": "pics/players/philip-woodisse.jpg",
+        "film": "films/phil.mp4",
+        "filmPoster": "pics/players/film/phil.jpg"
       },
       {
         "name": "Jun Bae",
@@ -90,85 +112,111 @@
         "name": "Yun Sang Bae",
         "country": "Korea",
         "hometown": "Seoul",
-        "photo": "pics/players/yun-sang-bae.jpg"
+        "photo": "pics/players/yun-sang-bae.jpg",
+        "film": "films/yun.mp4",
+        "filmPoster": "pics/players/film/yun.jpg"
       },
       {
         "name": "Joung Barnes",
         "country": "Korea",
         "hometown": "Pohang",
-        "photo": "pics/players/joung-barnes.jpg"
+        "photo": "pics/players/joung-barnes.jpg",
+        "film": "films/joung.mp4",
+        "filmPoster": "pics/players/film/joung.jpg"
       },
       {
         "name": "Michael Kim",
         "country": "Korea",
         "hometown": "Seoul",
         "school": "College of William and Mary",
-        "photo": "pics/players/michael-kim.jpg"
+        "photo": "pics/players/michael-kim.jpg",
+        "film": "films/kim.mp4",
+        "filmPoster": "pics/players/film/kim.jpg"
       },
       {
         "name": "Jim Lee",
         "country": "Korea",
         "hometown": "Seoul, South Korea",
-        "photo": "pics/players/jim-lee.jpg"
+        "photo": "pics/players/jim-lee.jpg",
+        "film": "films/lee.mp4",
+        "filmPoster": "pics/players/film/lee.jpg"
       },
       {
         "name": "Rhys Gully",
         "country": "Australia",
         "photo": "pics/players/rhys-gully.jpg",
-        "hometown": "Alice Springs, Northern Territory, Australia"
+        "hometown": "Alice Springs, Northern Territory, Australia",
+        "film": "films/rhys.mp4",
+        "filmPoster": "pics/players/film/rhys.jpg"
       },
       {
         "name": "Phillip Jewell",
         "country": "Australia",
         "hometown": "Canberra, Australia",
-        "photo": "pics/players/phillip-jewell.jpg"
+        "photo": "pics/players/phillip-jewell.jpg",
+        "film": "films/phillip.mp4",
+        "filmPoster": "pics/players/film/phillip.jpg"
       },
       {
         "name": "Stefan Lambert",
         "country": "Germany",
         "hometown": "Wiesbaden",
-        "photo": "pics/players/stefan-lambert.jpg"
+        "photo": "pics/players/stefan-lambert.jpg",
+        "film": "films/stefan.mp4",
+        "filmPoster": "pics/players/film/stefan.jpg"
       },
       {
         "name": "Erik Wagner",
         "country": "Germany",
         "photo": "pics/players/erik-wagner.jpg",
         "hometown": "Waldweiler, Germany",
-        "school": "Technical University of Kaiserslautern"
+        "school": "Technical University of Kaiserslautern",
+        "film": "films/erik.mp4",
+        "filmPoster": "pics/players/film/erik.jpg"
       },
       {
         "name": "Jonathan Doan",
         "country": "Canada",
         "hometown": "Toronto, Ontario, Canada",
         "school": "Colorado State University & Oxford Said School of Business",
-        "photo": "pics/players/jonathan-doan.jpg"
+        "photo": "pics/players/jonathan-doan.jpg",
+        "film": "films/doan.mp4",
+        "filmPoster": "pics/players/film/doan.jpg"
       },
       {
         "name": "Soban Ansari",
         "country": "Pakistan",
         "hometown": "Rawalpindi",
         "school": "VCU",
-        "photo": "pics/players/soban-ansari.jpg"
+        "photo": "pics/players/soban-ansari.jpg",
+        "film": "films/soban.mp4",
+        "filmPoster": "pics/players/film/soban.jpg"
       },
       {
         "name": "Robbie Neilson",
         "country": "Scotland",
         "hometown": "Wishaw",
-        "photo": "pics/players/robbie-neilson.jpg"
+        "photo": "pics/players/robbie-neilson.jpg",
+        "film": "films/robbie.mp4",
+        "filmPoster": "pics/players/film/robbie.jpg"
       },
       {
         "name": "Alba Phillips",
         "country": "Spain",
         "hometown": "Barcelona",
         "school": "Indiana University of Pennsylvania",
-        "photo": "pics/players/alba-phillips.jpg"
+        "photo": "pics/players/alba-phillips.jpg",
+        "film": "films/alba.mp4",
+        "filmPoster": "pics/players/film/alba.jpg"
       },
       {
         "name": "Uttam Bharwani",
         "country": "Tanzania",
         "hometown": "Dar-es-Salaam, Tanzania",
         "school": "University of Maryland",
-        "photo": "pics/players/uttam-bharwani.jpg"
+        "photo": "pics/players/uttam-bharwani.jpg",
+        "film": "films/uttam.mp4",
+        "filmPoster": "pics/players/film/uttam.jpg"
       }
     ],
     "usa": [
@@ -176,25 +224,33 @@
         "name": "John Altman",
         "hometown": "Washington, DC",
         "school": "Virginia Tech",
-        "photo": "pics/players/john-altman.jpg"
+        "photo": "pics/players/john-altman.jpg",
+        "film": "films/altman.mp4",
+        "filmPoster": "pics/players/film/altman.jpg"
       },
       {
         "name": "Frank Ambrose",
         "hometown": "Kingston, NY",
         "school": "Siena University",
-        "photo": "pics/players/frank-ambrose.jpg"
+        "photo": "pics/players/frank-ambrose.jpg",
+        "film": "films/frank.mp4",
+        "filmPoster": "pics/players/film/frank.jpg"
       },
       {
         "name": "Keith Barnes",
         "hometown": "Springfield, VA",
         "school": "Ohio State University",
-        "photo": "pics/players/keith-barnes.jpg"
+        "photo": "pics/players/keith-barnes.jpg",
+        "film": "films/keith.mp4",
+        "filmPoster": "pics/players/film/keith.jpg"
       },
       {
         "name": "Jeff Barnette",
         "hometown": "Clifton Forge, VA",
         "school": "Radford University",
-        "photo": "pics/players/jeff-barnette.jpg"
+        "photo": "pics/players/jeff-barnette.jpg",
+        "film": "films/barnette.mp4",
+        "filmPoster": "pics/players/film/barnette.jpg"
       },
       {
         "name": "Jay Collins"
@@ -203,24 +259,32 @@
         "name": "Scott Covino",
         "hometown": "Houston, Texas",
         "school": "American University",
-        "photo": "pics/players/scott-covino.jpg"
+        "photo": "pics/players/scott-covino.jpg",
+        "film": "films/covino.mp4",
+        "filmPoster": "pics/players/film/covino.jpg"
       },
       {
         "name": "Mike Ziegler",
         "hometown": "Cincinnati, OH",
         "school": "University of Cincinnati",
-        "photo": "pics/players/mike-ziegler.jpg"
+        "photo": "pics/players/mike-ziegler.jpg",
+        "film": "films/ziegler.mp4",
+        "filmPoster": "pics/players/film/ziegler.jpg"
       },
       {
         "name": "Chrissy Crouse",
         "hometown": "Reston, VA",
-        "photo": "pics/players/chrissy-crouse.jpg"
+        "photo": "pics/players/chrissy-crouse.jpg",
+        "film": "films/chrissy.mp4",
+        "filmPoster": "pics/players/film/chrissy.jpg"
       },
       {
         "name": "John Daley",
         "hometown": "Chicago, IL",
         "school": "Western Illinois & DePaul University",
-        "photo": "pics/players/john-daley.jpg"
+        "photo": "pics/players/john-daley.jpg",
+        "film": "films/daley.mp4",
+        "filmPoster": "pics/players/film/daley.jpg"
       },
       {
         "name": "Victor Esposito"
@@ -234,36 +298,48 @@
         "name": "Jeff Galkin",
         "hometown": "Ashburn, VA",
         "school": "Radford University",
-        "photo": "pics/players/jeff-galkin.jpg"
+        "photo": "pics/players/jeff-galkin.jpg",
+        "film": "films/jeff.mp4",
+        "filmPoster": "pics/players/film/jeff.jpg"
       },
       {
         "name": "Jim Gillie",
         "hometown": "Vienna, VA",
         "school": "Florida Southern College",
-        "photo": "pics/players/jim-gillie.jpg"
+        "photo": "pics/players/jim-gillie.jpg",
+        "film": "films/gillie.mp4",
+        "filmPoster": "pics/players/film/gillie.jpg"
       },
       {
         "name": "Seth Holladay",
         "hometown": "Unionville, PA",
         "school": "Penn State University",
-        "photo": "pics/players/seth-holladay.jpg"
+        "photo": "pics/players/seth-holladay.jpg",
+        "film": "films/seth.mp4",
+        "filmPoster": "pics/players/film/seth.jpg"
       },
       {
         "name": "Dave Kohlasch",
         "hometown": "Rye, NY",
         "school": "UNLV",
-        "photo": "pics/players/dave-kohlasch.jpg"
+        "photo": "pics/players/dave-kohlasch.jpg",
+        "film": "films/kohlasch.mp4",
+        "filmPoster": "pics/players/film/kohlasch.jpg"
       },
       {
         "name": "Kevin Kozlowski",
         "hometown": "Endicott, NY",
         "school": "James Madison University",
-        "photo": "pics/players/kevin-kozlowski.jpg"
+        "photo": "pics/players/kevin-kozlowski.jpg",
+        "film": "films/kevin.mp4",
+        "filmPoster": "pics/players/film/kevin.jpg"
       },
       {
         "name": "Jeff Kritsberg",
         "hometown": "Syracuse, NY",
-        "photo": "pics/players/jeff-kritsberg.jpg"
+        "photo": "pics/players/jeff-kritsberg.jpg",
+        "film": "films/krits.mp4",
+        "filmPoster": "pics/players/film/krits.jpg"
       },
       {
         "name": "Kyle Lenihan"
@@ -272,40 +348,54 @@
         "name": "Dominic Michael",
         "hometown": "Lansdowne, VA",
         "school": "University of South Carolina",
-        "photo": "pics/players/dominic-michael.jpg"
+        "photo": "pics/players/dominic-michael.jpg",
+        "film": "films/dominic.mp4",
+        "filmPoster": "pics/players/film/dominic.jpg"
       },
       {
         "name": "Jeff Miller",
         "hometown": "Clifton Heights, PA",
         "school": "Penn State",
-        "photo": "pics/players/jeff-miller.jpg"
+        "photo": "pics/players/jeff-miller.jpg",
+        "film": "films/miller.mp4",
+        "filmPoster": "pics/players/film/miller.jpg"
       },
       {
         "name": "Tom Murphy",
         "hometown": "Atlanta, GA",
-        "photo": "pics/players/tom-murphy.jpg"
+        "photo": "pics/players/tom-murphy.jpg",
+        "film": "films/murphy.mp4",
+        "filmPoster": "pics/players/film/murphy.jpg"
       },
       {
         "name": "Greg Parda",
         "hometown": "Boston, MA",
-        "photo": "pics/players/greg-parda.jpg"
+        "photo": "pics/players/greg-parda.jpg",
+        "film": "films/parda.mp4",
+        "filmPoster": "pics/players/film/parda.jpg"
       },
       {
         "name": "Anthony Rizzo",
         "hometown": "St. Petersburg, Florida",
         "school": "Georgia Southern University",
-        "photo": "pics/players/anthony-rizzo.jpg"
+        "photo": "pics/players/anthony-rizzo.jpg",
+        "film": "films/rizzo.mp4",
+        "filmPoster": "pics/players/film/rizzo.jpg"
       },
       {
         "name": "Jay Vosburgh",
         "hometown": "Poughkeepsie, NY",
-        "photo": "pics/players/jay-vosburgh.jpg"
+        "photo": "pics/players/jay-vosburgh.jpg",
+        "film": "films/jay.mp4",
+        "filmPoster": "pics/players/film/jay.jpg"
       },
       {
         "name": "Maggie Vosburgh",
         "hometown": "Hyde Park, NY",
         "school": "Manhattan College",
-        "photo": "pics/players/maggie-vosburgh.jpg"
+        "photo": "pics/players/maggie-vosburgh.jpg",
+        "film": "films/maggie.mp4",
+        "filmPoster": "pics/players/film/maggie.jpg"
       },
       {
         "name": "Tom Walsh"

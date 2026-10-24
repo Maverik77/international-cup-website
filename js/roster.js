@@ -27,7 +27,11 @@
         '<circle cx="22" cy="21" r="8.2"/>' +
         '<path d="M7.5 45.5c0-8 6.5-13 14.5-13s14.5 5 14.5 13v9.5h-29z"/></svg>';
 
+    var PLAY = '<span class="pcard-play" aria-hidden="true">' +
+        '<svg viewBox="0 0 12 14" focusable="false"><path d="M0 0l12 7-12 7z"/></svg></span>';
+
     var viewMode = 'detailed';
+    var filmReturnFocus = null;
     var teams = null;
 
     document.addEventListener('DOMContentLoaded', init);
@@ -36,6 +40,7 @@
         var mounts = document.querySelectorAll('[data-roster]');
         if (!mounts.length) { return; }
         wireToggles();
+        wireFilms();
         fetch(DATA_URL, { cache: 'no-store' })
             .then(function (res) {
                 if (!res.ok) { throw new Error('HTTP ' + res.status); }
@@ -65,6 +70,71 @@
             });
         });
         syncToggles();
+    }
+
+    function wireFilms() {
+        var modal = document.getElementById('film-modal');
+        if (!modal) { return; }
+
+        // Delegated: cards are re-rendered whenever the view toggles.
+        document.addEventListener('click', function (e) {
+            var card = e.target.closest ? e.target.closest('.pcard--film') : null;
+            if (card) { openFilm(card); }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { closeFilm(); return; }
+            if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') { return; }
+            var card = e.target && e.target.classList && e.target.classList.contains('pcard--film')
+                ? e.target : null;
+            if (card) { e.preventDefault(); openFilm(card); }
+        });
+
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) { closeFilm(); }
+        });
+        var close = document.getElementById('film-modal-close');
+        if (close) {
+            close.addEventListener('click', closeFilm);
+            close.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeFilm(); }
+            });
+        }
+    }
+
+    function openFilm(card) {
+        var modal = document.getElementById('film-modal');
+        var video = document.getElementById('film-player');
+        var title = document.getElementById('film-modal-name');
+        if (!modal || !video) { return; }
+
+        if (title) { title.textContent = card.getAttribute('data-name') || 'Player film'; }
+        var poster = card.getAttribute('data-poster');
+        if (poster) { video.setAttribute('poster', poster); } else { video.removeAttribute('poster'); }
+        video.src = card.getAttribute('data-film');
+
+        filmReturnFocus = card;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        var started = video.play();
+        if (started && started.catch) { started.catch(function () { /* autoplay refused; controls are there */ }); }
+    }
+
+    function closeFilm() {
+        var modal = document.getElementById('film-modal');
+        var video = document.getElementById('film-player');
+        if (!modal || modal.style.display === 'none') { return; }
+
+        if (video) {
+            video.pause();
+            // Dropping the source stops a download that may be only half done -
+            // these films are about thirteen megabytes each.
+            video.removeAttribute('src');
+            video.load();
+        }
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        if (filmReturnFocus && filmReturnFocus.focus) { filmReturnFocus.focus(); }
+        filmReturnFocus = null;
     }
 
     function syncToggles() {
@@ -133,8 +203,17 @@
         if (player.school) {
             lines += '<p class="pcard-school">' + esc(player.school) + '</p>';
         }
-        return '<article class="pcard' + (player.photo ? '' : ' pcard--anon') + '">' +
-            '<div class="pcard-media">' + media + '</div>' +
+        // Only a player who consented to appear in detail ever carries a film;
+        // data/players.json is written that way by scripts/build-films.mjs.
+        var film = player.film
+            ? ' pcard--film" role="button" tabindex="0"' +
+              ' data-film="' + esc(player.film) + '"' +
+              ' data-poster="' + esc(player.filmPoster || '') + '"' +
+              ' data-name="' + esc(player.name) + '"' +
+              ' aria-label="Play the film about ' + esc(player.name) + '"'
+            : '"';
+        return '<article class="pcard' + (player.photo ? '' : ' pcard--anon') + film + '>' +
+            '<div class="pcard-media">' + media + (player.film ? PLAY : '') + '</div>' +
             '<div class="pcard-body"><h5 class="pcard-name">' + esc(player.name) + '</h5>' +
             lines + '</div></article>';
     }

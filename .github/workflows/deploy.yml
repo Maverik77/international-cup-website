@@ -162,7 +162,10 @@ jobs:
     - name: Deploy to S3
       run: |
         # Sync files to S3 bucket
-        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete --exact-timestamps
+        # The player films (films/) are ~600 MB and live only in S3, never in
+        # the repository. They are not in build/, so without this exclusion
+        # --delete would wipe them on the very next push.
+        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete --exact-timestamps --exclude "films/*"
         
         # Set proper content types for different file types
         aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME }}/ --recursive \
@@ -337,7 +340,7 @@ jobs:
     - name: Deploy to S3 (Staging)
       run: |
         # Sync files to S3 bucket
-        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }} --delete --exact-timestamps
+        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }} --delete --exact-timestamps --exclude "films/*"
         
         # Set proper content types for different file types
         aws s3 cp build/ s3://${{ secrets.S3_BUCKET_NAME_STAGING }}/ --recursive \
