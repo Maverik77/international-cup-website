@@ -461,6 +461,7 @@
             </div>
             <div class="modal-body film-modal-body">
                 <video id="film-player" controls playsinline preload="none"></video>
+                <p id="film-modal-note" class="film-modal-note" hidden></p>
             </div>
         </div>
     </div>
@@ -487,7 +488,7 @@
     <script src="js/historic-data-embedded.js?v=11e6d119"></script>
     <script src="js/historic-data.js?v=049d7a91"></script>
     <script src="js/news.js?v=7e66360a"></script>
-    <script src="js/roster.js?v=7b25ae87"></script>
+    <script src="js/roster.js?v=98119095"></script>
     <style>
         /* News Actions Styles */
         .news-actions {
@@ -818,6 +819,13 @@
         .film-modal-close:hover { color: #fff; }
 
         .film-modal-body { padding: 0 1.25rem 1.25rem; }
+
+        .film-modal-note {
+            margin: 0.75rem 0 0;
+            color: #f2b8b5;
+            font-size: 0.9rem;
+            text-align: center;
+        }
 
         #film-player {
             width: 100%;

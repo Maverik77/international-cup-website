@@ -92,6 +92,11 @@
         modal.addEventListener('click', function (e) {
             if (e.target === modal) { closeFilm(); }
         });
+        var video = document.getElementById('film-player');
+        if (video) {
+            video.addEventListener('error', showFilmError);
+        }
+
         var close = document.getElementById('film-modal-close');
         if (close) {
             close.addEventListener('click', closeFilm);
@@ -101,12 +106,26 @@
         }
     }
 
+    function showFilmError() {
+        var note = document.getElementById('film-modal-note');
+        if (note) {
+            note.textContent = 'This film could not be played. Please try again later.';
+            note.hidden = false;
+        }
+    }
+
+    function clearFilmError() {
+        var note = document.getElementById('film-modal-note');
+        if (note) { note.hidden = true; note.textContent = ''; }
+    }
+
     function openFilm(card) {
         var modal = document.getElementById('film-modal');
         var video = document.getElementById('film-player');
         var title = document.getElementById('film-modal-name');
         if (!modal || !video) { return; }
 
+        clearFilmError();
         if (title) { title.textContent = card.getAttribute('data-name') || 'Player film'; }
         var poster = card.getAttribute('data-poster');
         if (poster) { video.setAttribute('poster', poster); } else { video.removeAttribute('poster'); }
