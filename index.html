@@ -250,6 +250,19 @@
                 <h2>Tournament Schedule</h2>
                 <p>Three days of golf, competition, and celebration at Lansdowne</p>
             </div>
+
+            <!-- Final score. Hidden until data/results.json reports a finished
+                 tournament, so this markup is inert during the week of play. -->
+            <div id="final-score" class="final-score" hidden>
+                <div class="final-score-label">Final</div>
+                <div class="final-score-line">
+                    <span class="final-team final-team--usa"><span class="final-flag">&#127482;&#127480;</span> USA</span>
+                    <span class="final-numbers"><span id="final-usa">0</span> &ndash; <span id="final-intl">0</span></span>
+                    <span class="final-team final-team--intl"><span class="final-flag">&#127757;</span> International</span>
+                </div>
+                <div class="final-score-winner" id="final-winner"></div>
+            </div>
+
             <div class="schedule-timeline">
                 <div class="schedule-item">
                     <div class="schedule-date">
@@ -276,6 +289,16 @@
                         <span class="schedule-time schedule-time--course">Norman Course</span>
                         <span class="schedule-time">Tee times between 11:00 AM and 1:00 PM</span>
                         <button class="btn btn-secondary" onclick="toggleTeeTimes(1)" style="margin-top: 1rem;">View Tee Times</button>
+                        <button class="btn btn-secondary" onclick="toggleResults(1)" style="margin-top: 1rem;">View Results</button>
+
+                        <!-- Day 1 Results -->
+                        <div id="day1-results-section" class="tee-times-container" style="display: none;">
+                            <div class="tee-times-grid" id="day1-results-grid">
+                                <div style="text-align: center; padding: 2rem; color: #999;">
+                                    <p>Loading results&hellip;</p>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Day 1 Tee Times Section -->
                         <div id="day1-tee-times-section" class="tee-times-container" style="display: none;">
@@ -302,6 +325,16 @@
                         <span class="schedule-time schedule-time--course">Robert Trent Jones 2 Course</span>
                         <span class="schedule-time">Tee times between 11:00 AM and 1:00 PM</span>
                         <button class="btn btn-secondary" onclick="toggleTeeTimes(2)" style="margin-top: 1rem;">View Tee Times</button>
+                        <button class="btn btn-secondary" onclick="toggleResults(2)" style="margin-top: 1rem;">View Results</button>
+
+                        <!-- Day 2 Results -->
+                        <div id="day2-results-section" class="tee-times-container" style="display: none;">
+                            <div class="tee-times-grid" id="day2-results-grid">
+                                <div style="text-align: center; padding: 2rem; color: #999;">
+                                    <p>Loading results&hellip;</p>
+                                </div>
+                            </div>
+                        </div>
                         
                         <!-- Day 2 Tee Times Section -->
                         <div id="day2-tee-times-section" class="tee-times-container" style="display: none;">
@@ -1042,6 +1075,160 @@
             .tee-times-container {
                 padding: 1rem;
             }
+
+            .res-match {
+                grid-template-columns: 1.6rem 1fr;
+            }
+
+            .res-match .res-side:nth-of-type(2) {
+                grid-column: 2;
+            }
+
+            .res-segments {
+                grid-column: 1 / -1;
+            }
+
+            .final-score-line {
+                flex-direction: column;
+                gap: 0.35rem;
+            }
+        }
+
+        /* Results */
+        .final-score {
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #999;
+            border-radius: 10px;
+            background: #fff;
+            padding: 1.1rem 1.3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .final-score--usa  { border-left-color: #c8102e; }
+        .final-score--intl { border-left-color: #007bff; }
+
+        .final-score-label {
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 0.78rem;
+            color: #718096;
+            margin-bottom: 0.35rem;
+        }
+
+        .final-score-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .final-team {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .final-flag { margin-right: 0.25rem; }
+
+        .final-numbers {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #1a202c;
+            letter-spacing: 0.02em;
+        }
+
+        .final-score-winner {
+            margin-top: 0.45rem;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .res-header { text-align: center; margin-bottom: 1.1rem; }
+        .res-header h4 { margin: 0 0 0.35rem; }
+
+        .res-dayscore { font-size: 1.15rem; font-weight: 700; color: #1a202c; }
+        .res-dayscore-sep { margin: 0 0.4rem; color: #a0aec0; }
+        .res-course { color: #666; font-size: 0.9rem; margin-top: 0.3rem; }
+
+        .res-sessions { display: grid; gap: 0.5rem; }
+
+        .res-session {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0.85rem;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .res-session-name { font-weight: 600; color: #2d3748; }
+        .res-session-score { color: #4a5568; }
+        .res-win { color: #1a202c; }
+
+        .res-matches { display: grid; gap: 0.45rem; }
+
+        .res-match {
+            display: grid;
+            grid-template-columns: 1.9rem 1fr 1fr;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.7rem;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .res-num {
+            color: #a0aec0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .res-side {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 0;
+        }
+
+        .res-match .res-side:nth-of-type(2) { justify-content: flex-end; }
+
+        .res-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .res-pts {
+            font-weight: 700;
+            min-width: 1.6rem;
+            text-align: center;
+            border-radius: 5px;
+            padding: 0.05rem 0.3rem;
+        }
+
+        .res-side--won .res-pts    { background: #e6f4ea; color: #1b5e34; }
+        .res-side--lost .res-pts   { background: #f7fafc; color: #a0aec0; }
+        .res-side--halved .res-pts { background: #fff6e0; color: #8a6d1f; }
+
+        .res-side--won .res-name { font-weight: 600; color: #1a202c; }
+        .res-side--lost .res-name { color: #718096; }
+
+        .res-segments {
+            grid-column: 2 / -1;
+            font-size: 0.78rem;
+            color: #a0aec0;
+            text-align: center;
+        }
+
+        .res-note {
+            margin-top: 0.9rem;
+            font-size: 0.82rem;
+            color: #718096;
+            text-align: center;
         }
     </style>
     <script>
@@ -1068,6 +1255,144 @@
             }
         }
         
+        // Results - rendered from data/results.json, transcribed from the
+        // club's Golf Genius sheet. Every singles match is worth three points:
+        // front nine, back nine and the full eighteen, so a match reads 3-0,
+        // 2.5-0.5, 1.5-1.5 and so on rather than simply won or lost.
+        let resultsDoc = null;
+
+        async function fetchResults() {
+            if (!resultsDoc) {
+                const response = await fetch('./data/results.json?t=' + Date.now(), { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                resultsDoc = await response.json();
+            }
+            return resultsDoc;
+        }
+
+        function toggleResults(day) {
+            const section = document.getElementById(`day${day}-results-section`);
+            if (!section) return;
+
+            if (section.style.display === 'none' || section.style.display === '') {
+                if (!section.dataset.loaded) {
+                    section.dataset.loaded = 'true';
+                    loadResults(day);
+                }
+                section.style.display = 'block';
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        // 1 and 0 are whole points, a halved segment is 0.5. Trailing zeros
+        // just add noise to a scoreline, so 2.5 stays 2.5 and 3.0 becomes 3.
+        function pts(n) {
+            const v = Number(n);
+            return Number.isInteger(v) ? String(v) : v.toFixed(1);
+        }
+
+        function resultSideClass(winner) {
+            if (winner === 'USA') return 'res-side--won';
+            if (winner === 'International') return 'res-side--lost';
+            return 'res-side--halved';
+        }
+
+        async function loadResults(day) {
+            const grid = document.getElementById(`day${day}-results-grid`);
+            if (!grid) return;
+
+            try {
+                const doc = await fetchResults();
+                const dayDoc = (doc.days || []).find(d => Number(d.day) === day);
+                if (!dayDoc) throw new Error(`no results for day ${day}`);
+
+                const head = `
+                    <div class="res-header">
+                        <h4>${escapeTee(dayDoc.label)}</h4>
+                        <div class="res-dayscore">
+                            <span class="res-dayscore-usa">USA ${pts(dayDoc.usa)}</span>
+                            <span class="res-dayscore-sep">&ndash;</span>
+                            <span class="res-dayscore-intl">${pts(dayDoc.intl)} International</span>
+                        </div>
+                        <p class="res-course">${escapeTee(dayDoc.course)}</p>
+                    </div>
+                `;
+
+                let body;
+                if (dayDoc.sessions) {
+                    body = `
+                        <div class="res-sessions">
+                            ${dayDoc.sessions.map(se => `
+                                <div class="res-session">
+                                    <span class="res-session-name">${escapeTee(se.name)}</span>
+                                    <span class="res-session-score">
+                                        <strong class="${se.usa > se.intl ? 'res-win' : ''}">${pts(se.usa)}</strong>
+                                        &ndash;
+                                        <strong class="${se.intl > se.usa ? 'res-win' : ''}">${pts(se.intl)}</strong>
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    body = `
+                        <div class="res-matches">
+                            ${(dayDoc.matches || []).map(m => `
+                                <div class="res-match">
+                                    <div class="res-num">${Number(m.match)}</div>
+                                    <div class="res-side ${resultSideClass(m.winner)}">
+                                        <span class="res-name">${escapeTee(m.usa)}</span>
+                                        <span class="res-pts">${pts(m.usaPoints)}</span>
+                                    </div>
+                                    <div class="res-side ${resultSideClass(
+                                        m.winner === 'USA' ? 'International'
+                                        : m.winner === 'International' ? 'USA' : 'tie')}">
+                                        <span class="res-pts">${pts(m.intlPoints)}</span>
+                                        <span class="res-name">${escapeTee(m.intl)}</span>
+                                    </div>
+                                    <div class="res-segments">${m.segments.map(escapeTee).join(' &middot; ')}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <p class="res-note">${escapeTee(doc.note || '')}</p>
+                    `;
+                }
+
+                grid.innerHTML = head + body;
+            } catch (err) {
+                console.error('Error loading results:', err);
+                grid.innerHTML = '<div style="text-align: center; padding: 2rem; color: #999;">' +
+                    '<p>Results are not available right now.</p></div>';
+            }
+        }
+
+        // The final score banner only appears once the file says the tournament
+        // is decided, so nothing has to be edited by hand to reveal it.
+        async function showFinalScore() {
+            try {
+                const doc = await fetchResults();
+                if (!doc.final) return;
+                const banner = document.getElementById('final-score');
+                if (!banner) return;
+                document.getElementById('final-usa').textContent = pts(doc.final.usa);
+                document.getElementById('final-intl').textContent = pts(doc.final.intl);
+                document.getElementById('final-winner').textContent =
+                    doc.final.winner === 'tie'
+                        ? 'The 2026 International Cup is drawn'
+                        : `Team ${doc.final.winner} wins the 2026 International Cup`;
+                banner.classList.add(doc.final.winner === 'USA' ? 'final-score--usa' : 'final-score--intl');
+                banner.hidden = false;
+            } catch (err) {
+                console.error('Error loading final score:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', showFinalScore);
+
         // Tee Times - rendered from data/tee-times.json, the committee's own
         // sheet. It carries the handicap and tee colour for every player, which
         // the pairings API does not, so the sheet is the source here.

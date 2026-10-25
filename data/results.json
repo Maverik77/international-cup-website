@@ -1,0 +1,385 @@
+{
+  "updated": "2026-10-25",
+  "source": "2026 International Cup Event - Tournament Results (Golf Genius), Round 2",
+  "note": "Each singles match is three points: front nine, back nine and the full eighteen. A halved segment splits its point.",
+  "final": {
+    "usa": 75,
+    "intl": 81,
+    "winner": "International"
+  },
+  "days": [
+    {
+      "day": 1,
+      "label": "Day 1: Team Matches",
+      "date": "2026-10-23",
+      "course": "Norman Course",
+      "usa": 42,
+      "intl": 36,
+      "sessions": [
+        {
+          "name": "Best Ball",
+          "usa": 8,
+          "intl": 18
+        },
+        {
+          "name": "Alternate Shot",
+          "usa": 15,
+          "intl": 11
+        },
+        {
+          "name": "Shamble",
+          "usa": 19,
+          "intl": 7
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "label": "Day 2: Singles Matches",
+      "date": "2026-10-24",
+      "course": "Robert Trent Jones 2 Course",
+      "usa": 33,
+      "intl": 45,
+      "matches": [
+        {
+          "match": 1,
+          "usa": "Jeff Miller",
+          "intl": "Soban Ansari",
+          "segments": [
+            "tied",
+            "tied",
+            "tied"
+          ],
+          "usaPoints": 1.5,
+          "intlPoints": 1.5,
+          "winner": "tie"
+        },
+        {
+          "match": 2,
+          "usa": "Kevin Kozlowski",
+          "intl": "Robbie Neilson",
+          "segments": [
+            "5 & 4",
+            "tied",
+            "5 & 3"
+          ],
+          "usaPoints": 0.5,
+          "intlPoints": 2.5,
+          "winner": "International"
+        },
+        {
+          "match": 3,
+          "usa": "Victor Esposito",
+          "intl": "Suresh Saribala",
+          "segments": [
+            "3 & 1",
+            "1 up",
+            "4 & 3"
+          ],
+          "usaPoints": 3,
+          "intlPoints": 0,
+          "winner": "USA"
+        },
+        {
+          "match": 4,
+          "usa": "Jeff Kritsberg",
+          "intl": "Ben Hedges",
+          "segments": [
+            "3 & 1",
+            "3 & 2",
+            "6 & 5"
+          ],
+          "usaPoints": 3,
+          "intlPoints": 0,
+          "winner": "USA"
+        },
+        {
+          "match": 5,
+          "usa": "Scott Covino",
+          "intl": "Tim Pearce",
+          "segments": [
+            "1 up",
+            "3 & 2",
+            "4 & 2"
+          ],
+          "usaPoints": 3,
+          "intlPoints": 0,
+          "winner": "USA"
+        },
+        {
+          "match": 6,
+          "usa": "Frank Ambrose",
+          "intl": "Jun Bae",
+          "segments": [
+            "tied",
+            "tied",
+            "tied"
+          ],
+          "usaPoints": 1.5,
+          "intlPoints": 1.5,
+          "winner": "tie"
+        },
+        {
+          "match": 7,
+          "usa": "Anthony Rizzo",
+          "intl": "Jim Lee",
+          "segments": [
+            "1 down",
+            "3 & 2",
+            "2 & 1"
+          ],
+          "usaPoints": 1,
+          "intlPoints": 2,
+          "winner": "International"
+        },
+        {
+          "match": 8,
+          "usa": "Kyle Lenihan",
+          "intl": "Yun Sang Bae",
+          "segments": [
+            "3 & 1",
+            "2 up",
+            "4 & 3"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 9,
+          "usa": "Chrissy Crouse",
+          "intl": "Joung Barnes",
+          "segments": [
+            "3 & 2",
+            "1 up",
+            "2 up"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 10,
+          "usa": "Keith Barnes",
+          "intl": "Vijay Davuluri",
+          "segments": [
+            "1 up",
+            "tied",
+            "3 & 2"
+          ],
+          "usaPoints": 0.5,
+          "intlPoints": 2.5,
+          "winner": "International"
+        },
+        {
+          "match": 11,
+          "usa": "Jay Vosburgh",
+          "intl": "Phillip Jewell",
+          "segments": [
+            "2 up",
+            "3 & 2",
+            "4 & 3"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 12,
+          "usa": "Mitch Freedman",
+          "intl": "Rhys Gully",
+          "segments": [
+            "L 2 & 1",
+            "3 & 1",
+            "tied"
+          ],
+          "usaPoints": 1.5,
+          "intlPoints": 1.5,
+          "winner": "tie"
+        },
+        {
+          "match": 13,
+          "usa": "Seth Holladay",
+          "intl": "Philip Woodisse",
+          "segments": [
+            "3 & 2",
+            "1 up",
+            "3 & 2"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 14,
+          "usa": "John Altman",
+          "intl": "Mohammed Ashraf",
+          "segments": [
+            "tied",
+            "2 up",
+            "2 up"
+          ],
+          "usaPoints": 2.5,
+          "intlPoints": 0.5,
+          "winner": "USA"
+        },
+        {
+          "match": 15,
+          "usa": "Jeff Galkin",
+          "intl": "Stefan Lambert",
+          "segments": [
+            "4 & 3",
+            "1 up",
+            "3 & 2"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 16,
+          "usa": "Greg Parda",
+          "intl": "Raj Malik",
+          "segments": [
+            "3 & 2",
+            "2 & 1",
+            "7 & 5"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 17,
+          "usa": "Jay Collins",
+          "intl": "Daren Wickham",
+          "segments": [
+            "3 & 2",
+            "1 up",
+            "4 & 3"
+          ],
+          "usaPoints": 3,
+          "intlPoints": 0,
+          "winner": "USA"
+        },
+        {
+          "match": 18,
+          "usa": "Jeff Barnette",
+          "intl": "Sridhar Muthusamy",
+          "segments": [
+            "3 & 2",
+            "2 down",
+            "5 & 4"
+          ],
+          "usaPoints": 1,
+          "intlPoints": 2,
+          "winner": "International"
+        },
+        {
+          "match": 19,
+          "usa": "Dominic Michael",
+          "intl": "Michael Kim",
+          "segments": [
+            "tied",
+            "2 up",
+            "2 up"
+          ],
+          "usaPoints": 0.5,
+          "intlPoints": 2.5,
+          "winner": "International"
+        },
+        {
+          "match": 20,
+          "usa": "Maggie Vosburgh",
+          "intl": "Alba Phillips",
+          "segments": [
+            "4 & 2",
+            "tied",
+            "3 & 2"
+          ],
+          "usaPoints": 2.5,
+          "intlPoints": 0.5,
+          "winner": "USA"
+        },
+        {
+          "match": 21,
+          "usa": "Mike Ziegler",
+          "intl": "Erik Wagner",
+          "segments": [
+            "tied",
+            "tied",
+            "tied"
+          ],
+          "usaPoints": 1.5,
+          "intlPoints": 1.5,
+          "winner": "tie"
+        },
+        {
+          "match": 22,
+          "usa": "Dave Kohlasch",
+          "intl": "Jonathan Doan",
+          "segments": [
+            "2 & 1",
+            "1 down",
+            "tied"
+          ],
+          "usaPoints": 1.5,
+          "intlPoints": 1.5,
+          "winner": "tie"
+        },
+        {
+          "match": 23,
+          "usa": "John Daley",
+          "intl": "Chakshush Kumar",
+          "segments": [
+            "2 & 1",
+            "4 & 2",
+            "6 & 4"
+          ],
+          "usaPoints": 3,
+          "intlPoints": 0,
+          "winner": "USA"
+        },
+        {
+          "match": 24,
+          "usa": "Tom Walsh",
+          "intl": "Uttam Bharwani",
+          "segments": [
+            "3 & 2",
+            "1 up",
+            "4 & 3"
+          ],
+          "usaPoints": 0,
+          "intlPoints": 3,
+          "winner": "International"
+        },
+        {
+          "match": 25,
+          "usa": "Tom Murphy",
+          "intl": "Ashvini Anjutgi",
+          "segments": [
+            "2 & 1",
+            "L 3 & 1",
+            "tied"
+          ],
+          "usaPoints": 1.5,
+          "intlPoints": 1.5,
+          "winner": "tie"
+        },
+        {
+          "match": 26,
+          "usa": "Jim Gillie",
+          "intl": "Anil Katarki",
+          "segments": [
+            "tied",
+            "2 up",
+            "2 up"
+          ],
+          "usaPoints": 0.5,
+          "intlPoints": 2.5,
+          "winner": "International"
+        }
+      ]
+    }
+  ]
+}
