@@ -79,9 +79,11 @@ class NewsManager {
         let processed = this.escapeHtml(content);
         
         // Then allow specific safe internal links
-        // Pattern: [Link Text](#section) or [Link Text](/page)
+        // Pattern: [Link Text](#section), [Link Text](/page) or [Link Text](/page.html)
+        // The optional .html matters because the site serves real files: a link
+        // to /results would 404 where /results.html resolves.
         processed = processed.replace(
-            /\[([^\]]+)\]\((#[a-zA-Z0-9-]+|\/[a-zA-Z0-9-\/]*)\)/g,
+            /\[([^\]]+)\]\((#[a-zA-Z0-9-]+|\/[a-zA-Z0-9-\/]*(?:\.html)?)\)/g,
             '<a href="$2" class="news-link">$1</a>'
         );
         

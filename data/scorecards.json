@@ -1,0 +1,8840 @@
+{
+ "updated": "2026-10-25",
+ "source": "Golf Genius scorecards: Round 1 landscape export, Round 2 tournament results export.",
+ "note": "Scores are gross. A dot marks a hole where that side received a handicap stroke, and the hole is won on the net score.",
+ "day1": {
+  "sessions": [
+   {
+    "name": "Best Ball",
+    "holes": "1-6",
+    "usa": 8,
+    "intl": 18,
+    "cards": [
+     {
+      "match": 1,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Keith Barnes",
+        "Dave Kohlasch"
+       ],
+       "players": [
+        {
+         "name": "Keith Barnes",
+         "handicap": 1,
+         "scores": [
+          4,
+          6,
+          6,
+          8,
+          5,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 33
+        },
+        {
+         "name": "Dave Kohlasch",
+         "handicap": 0,
+         "scores": [
+          5,
+          4,
+          4,
+          7,
+          5,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        7,
+        5,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Daren Wickham",
+        "Ben Hedges"
+       ],
+       "players": [
+        {
+         "name": "Daren Wickham",
+         "handicap": 8,
+         "scores": [
+          4,
+          6,
+          6,
+          8,
+          5,
+          6
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 35
+        },
+        {
+         "name": "Ben Hedges",
+         "handicap": 7,
+         "scores": [
+          6,
+          6,
+          6,
+          8,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 34
+        }
+       ],
+       "net": [
+        4,
+        5,
+        6,
+        7,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "USA",
+       "USA",
+       "tie",
+       "International",
+       "USA"
+      ],
+      "status": [
+       "AS",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 2 up",
+       "USA 1 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2 up"
+     },
+     {
+      "match": 2,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Mike Ziegler",
+        "Jeff Galkin"
+       ],
+       "players": [
+        {
+         "name": "Mike Ziegler",
+         "handicap": 0,
+         "scores": [
+          4,
+          5,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "Jeff Galkin",
+         "handicap": 2,
+         "scores": [
+          5,
+          6,
+          4,
+          6,
+          3,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        4,
+        5,
+        4,
+        5,
+        3,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Philip Woodisse",
+        "Michael Kim"
+       ],
+       "players": [
+        {
+         "name": "Philip Woodisse",
+         "handicap": 2,
+         "scores": [
+          4,
+          5,
+          4,
+          5,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 28
+        },
+        {
+         "name": "Michael Kim",
+         "handicap": 5,
+         "scores": [
+          5,
+          6,
+          3,
+          7,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 30
+        }
+       ],
+       "net": [
+        4,
+        5,
+        3,
+        4,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "tie",
+       "International",
+       "International",
+       "tie",
+       "USA"
+      ],
+      "status": [
+       "AS",
+       "AS",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 1 up"
+      ],
+      "winner": "International",
+      "result": "1 up"
+     },
+     {
+      "match": 3,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Jay Collins",
+        "Frank Ambrose"
+       ],
+       "players": [
+        {
+         "name": "Jay Collins",
+         "handicap": 0,
+         "scores": [
+          5,
+          5,
+          4,
+          5,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Frank Ambrose",
+         "handicap": 9,
+         "scores": [
+          5,
+          6,
+          6,
+          7,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+         ],
+         "total": 33
+        }
+       ],
+       "net": [
+        5,
+        5,
+        4,
+        5,
+        4,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Anil Katarki",
+        "Vijay Davuluri"
+       ],
+       "players": [
+        {
+         "name": "Anil Katarki",
+         "handicap": 4,
+         "scores": [
+          4,
+          5,
+          5,
+          7,
+          4,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Vijay Davuluri",
+         "handicap": 10,
+         "scores": [
+          5,
+          6,
+          4,
+          7,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+         ],
+         "total": 32
+        }
+       ],
+       "net": [
+        4,
+        5,
+        4,
+        6,
+        4,
+        4
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "tie",
+       "USA",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 1 up",
+       "AS",
+       "AS",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 4,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Jeff Kritsberg",
+        "Anthony Rizzo"
+       ],
+       "players": [
+        {
+         "name": "Jeff Kritsberg",
+         "handicap": 0,
+         "scores": [
+          4,
+          5,
+          4,
+          6,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        },
+        {
+         "name": "Anthony Rizzo",
+         "handicap": 4,
+         "scores": [
+          5,
+          6,
+          5,
+          7,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 33
+        }
+       ],
+       "net": [
+        4,
+        5,
+        4,
+        6,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Chakshush Kumar",
+        "Ashvini Anjutgi"
+       ],
+       "players": [
+        {
+         "name": "Chakshush Kumar",
+         "handicap": 10,
+         "scores": [
+          7,
+          7,
+          6,
+          7,
+          5,
+          7
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+         ],
+         "total": 39
+        },
+        {
+         "name": "Ashvini Anjutgi",
+         "handicap": 10,
+         "scores": [
+          4,
+          4,
+          5,
+          6,
+          5,
+          4
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        4,
+        3,
+        5,
+        5,
+        5,
+        3
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "International",
+       "USA",
+       "International",
+       "USA",
+       "International"
+      ],
+      "status": [
+       "AS",
+       "Intl 1 up",
+       "AS",
+       "Intl 1 up",
+       "AS",
+       "Intl 1 up"
+      ],
+      "winner": "International",
+      "result": "1 up"
+     },
+     {
+      "match": 5,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Scott Covino",
+        "John Altman"
+       ],
+       "players": [
+        {
+         "name": "Scott Covino",
+         "handicap": 0,
+         "scores": [
+          3,
+          5,
+          4,
+          6,
+          5,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "John Altman",
+         "handicap": 6,
+         "scores": [
+          6,
+          4,
+          4,
+          7,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        3,
+        4,
+        4,
+        6,
+        4,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Tim Pearce",
+        "Robbie Neilson"
+       ],
+       "players": [
+        {
+         "name": "Tim Pearce",
+         "handicap": 3,
+         "scores": [
+          4,
+          5,
+          3,
+          7,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Robbie Neilson",
+         "handicap": 4,
+         "scores": [
+          5,
+          6,
+          4,
+          6,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        4,
+        5,
+        3,
+        5,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "International",
+       "International",
+       "International",
+       "USA"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 1 up",
+       "AS",
+       "Intl 1 up",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 6,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Tom Walsh",
+        "Jeff Barnette"
+       ],
+       "players": [
+        {
+         "name": "Tom Walsh",
+         "handicap": 0,
+         "scores": [
+          4,
+          6,
+          4,
+          5,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Jeff Barnette",
+         "handicap": 3,
+         "scores": [
+          4,
+          6,
+          4,
+          6,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        4,
+        6,
+        4,
+        5,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Jun Bae",
+        "Yun Sang Bae"
+       ],
+       "players": [
+        {
+         "name": "Jun Bae",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          4,
+          6,
+          2,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 23
+        },
+        {
+         "name": "Jun Bae",
+         "handicap": 6,
+         "scores": [
+          3,
+          5,
+          5,
+          6,
+          2,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 27
+        }
+       ],
+       "net": [
+        3,
+        4,
+        4,
+        5,
+        2,
+        4
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "International",
+       "tie",
+       "tie",
+       "International",
+       "International"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 4 up"
+      ],
+      "winner": "International",
+      "result": "4 up"
+     },
+     {
+      "match": 7,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Jim Gillie",
+        "Kevin Kozlowski"
+       ],
+       "players": [
+        {
+         "name": "Jim Gillie",
+         "handicap": 0,
+         "scores": [
+          5,
+          5,
+          4,
+          6,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Kevin Kozlowski",
+         "handicap": 14,
+         "scores": [
+          4,
+          4,
+          6,
+          7,
+          5,
+          6
+         ],
+         "strokes": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+         ],
+         "total": 32
+        }
+       ],
+       "net": [
+        3,
+        3,
+        4,
+        6,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Rhys Gully",
+        "Erik Wagner"
+       ],
+       "players": [
+        {
+         "name": "Rhys Gully",
+         "handicap": 8,
+         "scores": [
+          6,
+          7,
+          6,
+          7,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 35
+        },
+        {
+         "name": "Erik Wagner",
+         "handicap": 3,
+         "scores": [
+          4,
+          6,
+          5,
+          5,
+          4,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        4,
+        6,
+        5,
+        4,
+        4,
+        4
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "USA",
+       "International",
+       "tie",
+       "International"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 3 up",
+       "USA 2 up",
+       "USA 2 up",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     },
+     {
+      "match": 8,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Kyle Lenihan",
+        "Mitch Freedman"
+       ],
+       "players": [
+        {
+         "name": "Kyle Lenihan",
+         "handicap": 4,
+         "scores": [
+          4,
+          5,
+          5,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 28
+        },
+        {
+         "name": "Mitch Freedman",
+         "handicap": 1,
+         "scores": [
+          6,
+          5,
+          4,
+          6,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        4,
+        5,
+        4,
+        4,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Jonathan Doan",
+        "Raj Malik"
+       ],
+       "players": [
+        {
+         "name": "Jonathan Doan",
+         "handicap": 3,
+         "scores": [
+          4,
+          4,
+          4,
+          5,
+          5,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 26
+        },
+        {
+         "name": "Raj Malik",
+         "handicap": 0,
+         "scores": [
+          6,
+          5,
+          4,
+          6,
+          5,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 30
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        4,
+        5,
+        4
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "International",
+       "tie",
+       "tie",
+       "USA",
+       "International"
+      ],
+      "status": [
+       "AS",
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 1 up",
+       "AS",
+       "Intl 1 up"
+      ],
+      "winner": "International",
+      "result": "1 up"
+     },
+     {
+      "match": 9,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Jay Vosburgh",
+        "Seth Holladay"
+       ],
+       "players": [
+        {
+         "name": "Jay Vosburgh",
+         "handicap": 0,
+         "scores": [
+          4,
+          4,
+          4,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        },
+        {
+         "name": "Seth Holladay",
+         "handicap": 5,
+         "scores": [
+          5,
+          5,
+          4,
+          7,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 30
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        5,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Phillip Jewell",
+        "Mohammed Ashraf"
+       ],
+       "players": [
+        {
+         "name": "Phillip Jewell",
+         "handicap": 0,
+         "scores": [
+          4,
+          4,
+          4,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        },
+        {
+         "name": "Mohammed Ashraf",
+         "handicap": 10,
+         "scores": [
+          5,
+          6,
+          5,
+          5,
+          4,
+          4
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        3
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "tie",
+       "tie",
+       "International",
+       "tie",
+       "International"
+      ],
+      "status": [
+       "AS",
+       "AS",
+       "AS",
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 10,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Tom Murphy",
+        "Dominic Michael"
+       ],
+       "players": [
+        {
+         "name": "Tom Murphy",
+         "handicap": 1,
+         "scores": [
+          4,
+          5,
+          5,
+          8,
+          3,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Dominic Michael",
+         "handicap": 0,
+         "scores": [
+          4,
+          5,
+          4,
+          6,
+          5,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        4,
+        5,
+        4,
+        6,
+        3,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Uttam Bharwani",
+        "Sridhar Muthusamy"
+       ],
+       "players": [
+        {
+         "name": "Uttam Bharwani",
+         "handicap": 4,
+         "scores": [
+          4,
+          5,
+          4,
+          7,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Sridhar Muthusamy",
+         "handicap": 6,
+         "scores": [
+          3,
+          6,
+          3,
+          6,
+          3,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 25
+        }
+       ],
+       "net": [
+        3,
+        5,
+        3,
+        5,
+        3,
+        4
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "International",
+       "International",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 3 up",
+       "Intl 3 up"
+      ],
+      "winner": "International",
+      "result": "3 up"
+     },
+     {
+      "match": 11,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Maggie Vosburgh",
+        "Chrissy Crouse"
+       ],
+       "players": [
+        {
+         "name": "Maggie Vosburgh",
+         "handicap": 0,
+         "scores": [
+          5,
+          6,
+          5,
+          7,
+          3,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 30
+        },
+        {
+         "name": "Chrissy Crouse",
+         "handicap": 5,
+         "scores": [
+          5,
+          7,
+          5,
+          8,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          false,
+          false,
+          true
+         ],
+         "total": 34
+        }
+       ],
+       "net": [
+        5,
+        6,
+        5,
+        7,
+        3,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Alba Phillips",
+        "Joung Barnes"
+       ],
+       "players": [
+        {
+         "name": "Alba Phillips",
+         "handicap": 1,
+         "scores": [
+          4,
+          6,
+          6,
+          6,
+          4,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 30
+        },
+        {
+         "name": "Joung Barnes",
+         "handicap": 3,
+         "scores": [
+          4,
+          7,
+          4,
+          7,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        4,
+        6,
+        4,
+        6,
+        4,
+        4
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "International",
+       "International",
+       "USA",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 2 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 12,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "John Daley",
+        "Jeff Miller"
+       ],
+       "players": [
+        {
+         "name": "John Daley",
+         "handicap": 0,
+         "scores": [
+          6,
+          5,
+          5,
+          7,
+          3,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 30
+        },
+        {
+         "name": "Jeff Miller",
+         "handicap": 3,
+         "scores": [
+          6,
+          5,
+          5,
+          7,
+          2,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        6,
+        5,
+        5,
+        6,
+        2,
+        4
+       ]
+      },
+      "intl": {
+       "team": [
+        "Suresh Saribala",
+        "Stefan Lambert"
+       ],
+       "players": [
+        {
+         "name": "Suresh Saribala",
+         "handicap": 1,
+         "scores": [
+          5,
+          6,
+          5,
+          6,
+          4,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 30
+        },
+        {
+         "name": "Stefan Lambert",
+         "handicap": 4,
+         "scores": [
+          5,
+          4,
+          5,
+          6,
+          3,
+          4
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 27
+        }
+       ],
+       "net": [
+        5,
+        4,
+        5,
+        5,
+        3,
+        4
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "International",
+       "tie",
+       "International",
+       "USA",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 2 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 13,
+      "holes": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      "usa": {
+       "team": [
+        "Victor Esposito",
+        "Greg Parda"
+       ],
+       "players": [
+        {
+         "name": "Victor Esposito",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          4,
+          7,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        },
+        {
+         "name": "Greg Parda",
+         "handicap": 2,
+         "scores": [
+          3,
+          5,
+          4,
+          8,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        3,
+        4,
+        4,
+        7,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Soban Ansari",
+        "Jim Lee"
+       ],
+       "players": [
+        {
+         "name": "Soban Ansari",
+         "handicap": 2,
+         "scores": [
+          4,
+          6,
+          6,
+          7,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 33
+        },
+        {
+         "name": "Jim Lee",
+         "handicap": 6,
+         "scores": [
+          4,
+          4,
+          4,
+          7,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        6,
+        5,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "tie",
+       "tie",
+       "International",
+       "USA",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 1 up",
+       "USA 1 up",
+       "AS",
+       "USA 1 up",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     }
+    ]
+   },
+   {
+    "name": "Alternate Shot",
+    "holes": "7-12",
+    "usa": 15,
+    "intl": 11,
+    "cards": [
+     {
+      "match": 1,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Keith Barnes",
+        "Dave Kohlasch"
+       ],
+       "players": [
+        {
+         "name": "Keith Barnes & Dave Kohlasch",
+         "handicap": 0,
+         "scores": [
+          5,
+          8,
+          4,
+          6,
+          4,
+          7
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 34
+        }
+       ],
+       "net": [
+        5,
+        8,
+        4,
+        6,
+        4,
+        7
+       ]
+      },
+      "intl": {
+       "team": [
+        "Daren Wickham",
+        "Ben Hedges"
+       ],
+       "players": [
+        {
+         "name": "Daren Wickham & Ben Hedges",
+         "handicap": null,
+         "scores": [
+          6,
+          8,
+          5,
+          8,
+          4,
+          7
+         ],
+         "strokes": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false
+         ],
+         "total": 38
+        }
+       ],
+       "net": [
+        5,
+        7,
+        5,
+        7,
+        3,
+        7
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "International",
+       "USA",
+       "USA",
+       "International",
+       "tie"
+      ],
+      "status": [
+       "AS",
+       "Intl 1 up",
+       "AS",
+       "USA 1 up",
+       "AS",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 2,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Mike Ziegler",
+        "Jeff Galkin"
+       ],
+       "players": [
+        {
+         "name": "Mike Ziegler & Jeff Galkin",
+         "handicap": 0,
+         "scores": [
+          4,
+          6,
+          3,
+          4,
+          4,
+          "X"
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": null
+        }
+       ],
+       "net": [
+        4,
+        6,
+        3,
+        4,
+        4,
+        null
+       ]
+      },
+      "intl": {
+       "team": [
+        "Philip Woodisse",
+        "Michael Kim"
+       ],
+       "players": [
+        {
+         "name": "Philip Woodisse & Michael Kim",
+         "handicap": 3,
+         "scores": [
+          6,
+          6,
+          5,
+          4,
+          6,
+          "X"
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": null
+        }
+       ],
+       "net": [
+        6,
+        5,
+        5,
+        4,
+        5,
+        null
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "International",
+       "USA",
+       "tie",
+       "USA",
+       null
+      ],
+      "status": [
+       "USA 1 up",
+       "AS",
+       "USA 1 up",
+       "USA 1 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2&1"
+     },
+     {
+      "match": 3,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Jay Collins",
+        "Frank Ambrose"
+       ],
+       "players": [
+        {
+         "name": "Jay Collins & Frank Ambrose",
+         "handicap": 0,
+         "scores": [
+          4,
+          6,
+          3,
+          4,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        4,
+        6,
+        3,
+        4,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Anil Katarki",
+        "Vijay Davuluri"
+       ],
+       "players": [
+        {
+         "name": "Anil Katarki & Vijay Davuluri",
+         "handicap": 3,
+         "scores": [
+          5,
+          8,
+          4,
+          4,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        5,
+        7,
+        4,
+        4,
+        4,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "USA",
+       "tie",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 3 up",
+       "USA 3 up",
+       "USA 3 up",
+       "USA 3 up"
+      ],
+      "winner": "USA",
+      "result": "3 up"
+     },
+     {
+      "match": 4,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Jeff Kritsberg",
+        "Anthony Rizzo"
+       ],
+       "players": [
+        {
+         "name": "Jeff Kritsberg & Anthony Rizzo",
+         "handicap": 0,
+         "scores": [
+          3,
+          7,
+          3,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        3,
+        7,
+        3,
+        5,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Chakshush Kumar",
+        "Ashvini Anjutgi"
+       ],
+       "players": [
+        {
+         "name": "Chakshush Kumar & Ashvini Anjutgi",
+         "handicap": 9,
+         "scores": [
+          4,
+          8,
+          5,
+          6,
+          5,
+          5
+         ],
+         "strokes": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false
+         ],
+         "total": 33
+        }
+       ],
+       "net": [
+        3,
+        7,
+        5,
+        5,
+        4,
+        5
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "tie",
+       "USA",
+       "tie",
+       "USA",
+       "tie"
+      ],
+      "status": [
+       "AS",
+       "AS",
+       "USA 1 up",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2 up"
+     },
+     {
+      "match": 5,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Scott Covino",
+        "John Altman"
+       ],
+       "players": [
+        {
+         "name": "Scott Covino & John Altman",
+         "handicap": 0,
+         "scores": [
+          6,
+          7,
+          5,
+          4,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        6,
+        7,
+        5,
+        4,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Tim Pearce",
+        "Robbie Neilson"
+       ],
+       "players": [
+        {
+         "name": "Tim Pearce & Robbie Neilson",
+         "handicap": 0,
+         "scores": [
+          5,
+          6,
+          4,
+          5,
+          6,
+          7
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 33
+        }
+       ],
+       "net": [
+        5,
+        6,
+        4,
+        5,
+        6,
+        7
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "International",
+       "International",
+       "USA",
+       "USA",
+       "USA"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 2 up",
+       "Intl 1 up",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 6,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Tom Walsh",
+        "Jeff Barnette"
+       ],
+       "players": [
+        {
+         "name": "Tom Walsh & Jeff Barnette",
+         "handicap": 0,
+         "scores": [
+          5,
+          6,
+          2,
+          7,
+          7,
+          7
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 34
+        }
+       ],
+       "net": [
+        5,
+        6,
+        2,
+        7,
+        7,
+        7
+       ]
+      },
+      "intl": {
+       "team": [
+        "Jun Bae",
+        "Yun Sang Bae"
+       ],
+       "players": [
+        {
+         "name": "Jun Bae & Yun Sang Bae",
+         "handicap": 2,
+         "scores": [
+          5,
+          6,
+          3,
+          6,
+          6,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": 32
+        }
+       ],
+       "net": [
+        5,
+        6,
+        3,
+        6,
+        5,
+        6
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "tie",
+       "USA",
+       "International",
+       "International",
+       "International"
+      ],
+      "status": [
+       "AS",
+       "AS",
+       "USA 1 up",
+       "AS",
+       "Intl 1 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 7,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Jim Gillie",
+        "Kevin Kozlowski"
+       ],
+       "players": [
+        {
+         "name": "Jim Gillie & Kevin Kozlowski",
+         "handicap": 2,
+         "scores": [
+          5,
+          7,
+          5,
+          6,
+          6,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": 35
+        }
+       ],
+       "net": [
+        5,
+        7,
+        5,
+        6,
+        5,
+        6
+       ]
+      },
+      "intl": {
+       "team": [
+        "Rhys Gully",
+        "Erik Wagner"
+       ],
+       "players": [
+        {
+         "name": "Rhys Gully & Erik Wagner",
+         "handicap": 0,
+         "scores": [
+          4,
+          7,
+          6,
+          6,
+          5,
+          7
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 35
+        }
+       ],
+       "net": [
+        4,
+        7,
+        6,
+        6,
+        5,
+        7
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "USA",
+       "tie",
+       "tie",
+       "USA"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "AS",
+       "AS",
+       "AS",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     },
+     {
+      "match": 8,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Kyle Lenihan",
+        "Mitch Freedman"
+       ],
+       "players": [
+        {
+         "name": "Kyle Lenihan & Mitch Freedman",
+         "handicap": 1,
+         "scores": [
+          5,
+          7,
+          3,
+          6,
+          "X",
+          "X"
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": null
+        }
+       ],
+       "net": [
+        5,
+        7,
+        3,
+        6,
+        null,
+        null
+       ]
+      },
+      "intl": {
+       "team": [
+        "Jonathan Doan",
+        "Raj Malik"
+       ],
+       "players": [
+        {
+         "name": "Jonathan Doan & Raj Malik",
+         "handicap": 0,
+         "scores": [
+          4,
+          6,
+          3,
+          4,
+          "X",
+          "X"
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": null
+        }
+       ],
+       "net": [
+        4,
+        6,
+        3,
+        4,
+        null,
+        null
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "International",
+       "tie",
+       "International",
+       null,
+       null
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 3 up"
+      ],
+      "winner": "International",
+      "result": "3&2"
+     },
+     {
+      "match": 9,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Jay Vosburgh",
+        "Seth Holladay"
+       ],
+       "players": [
+        {
+         "name": "Jay Vosburgh & Seth Holladay",
+         "handicap": 0,
+         "scores": [
+          5,
+          5,
+          4,
+          5,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        5,
+        5,
+        4,
+        5,
+        5,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Phillip Jewell",
+        "Mohammed Ashraf"
+       ],
+       "players": [
+        {
+         "name": "Phillip Jewell & Mohammed Ashraf",
+         "handicap": null,
+         "scores": [
+          6,
+          5,
+          3,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        6,
+        4,
+        3,
+        5,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "International",
+       "International",
+       "tie",
+       "International",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "AS",
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 10,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Tom Murphy",
+        "Dominic Michael"
+       ],
+       "players": [
+        {
+         "name": "Tom Murphy & Dominic Michael",
+         "handicap": 0,
+         "scores": [
+          4,
+          6,
+          4,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        4,
+        6,
+        4,
+        5,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Uttam Bharwani",
+        "Sridhar Muthusamy"
+       ],
+       "players": [
+        {
+         "name": "Uttam Bharwani & Sridhar Muthusamy",
+         "handicap": null,
+         "scores": [
+          6,
+          8,
+          5,
+          5,
+          5,
+          5
+         ],
+         "strokes": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": 34
+        }
+       ],
+       "net": [
+        5,
+        7,
+        5,
+        5,
+        4,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "USA",
+       "tie",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 3 up",
+       "USA 3 up",
+       "USA 3 up",
+       "USA 3 up"
+      ],
+      "winner": "USA",
+      "result": "3 up"
+     },
+     {
+      "match": 11,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Maggie Vosburgh",
+        "Chrissy Crouse"
+       ],
+       "players": [
+        {
+         "name": "Maggie Vosburgh & Chrissy Crouse",
+         "handicap": 1,
+         "scores": [
+          4,
+          6,
+          5,
+          6,
+          6,
+          6
+         ],
+         "strokes": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 33
+        }
+       ],
+       "net": [
+        3,
+        6,
+        5,
+        6,
+        6,
+        6
+       ]
+      },
+      "intl": {
+       "team": [
+        "Alba Phillips",
+        "Joung Barnes"
+       ],
+       "players": [
+        {
+         "name": "Alba Phillips & Joung Barnes",
+         "handicap": 0,
+         "scores": [
+          6,
+          7,
+          4,
+          6,
+          5,
+          8
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 36
+        }
+       ],
+       "net": [
+        6,
+        7,
+        4,
+        6,
+        5,
+        8
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "International",
+       "tie",
+       "International",
+       "USA"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 1 up",
+       "USA 1 up",
+       "AS",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     },
+     {
+      "match": 12,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "John Daley",
+        "Jeff Miller"
+       ],
+       "players": [
+        {
+         "name": "John Daley & Jeff Miller",
+         "handicap": 0,
+         "scores": [
+          5,
+          7,
+          4,
+          6,
+          5,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 32
+        }
+       ],
+       "net": [
+        5,
+        7,
+        4,
+        6,
+        5,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Suresh Saribala",
+        "Stefan Lambert"
+       ],
+       "players": [
+        {
+         "name": "Suresh Saribala & Stefan Lambert",
+         "handicap": 0,
+         "scores": [
+          5,
+          7,
+          3,
+          5,
+          7,
+          7
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 34
+        }
+       ],
+       "net": [
+        5,
+        7,
+        3,
+        5,
+        7,
+        7
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "tie",
+       "International",
+       "International",
+       "USA",
+       "USA"
+      ],
+      "status": [
+       "AS",
+       "AS",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 1 up",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 13,
+      "holes": [
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "usa": {
+       "team": [
+        "Victor Esposito",
+        "Greg Parda"
+       ],
+       "players": [
+        {
+         "name": "Victor Esposito & Greg Parda",
+         "handicap": 0,
+         "scores": [
+          7,
+          8,
+          4,
+          6,
+          5,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 36
+        }
+       ],
+       "net": [
+        7,
+        8,
+        4,
+        6,
+        5,
+        6
+       ]
+      },
+      "intl": {
+       "team": [
+        "Soban Ansari",
+        "Jim Lee"
+       ],
+       "players": [
+        {
+         "name": "Soban Ansari & Jim Lee",
+         "handicap": 3,
+         "scores": [
+          6,
+          6,
+          4,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          false
+         ],
+         "total": 30
+        }
+       ],
+       "net": [
+        6,
+        5,
+        4,
+        5,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "International",
+       "tie",
+       "International",
+       "International",
+       "International"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 4 up",
+       "Intl 5 up"
+      ],
+      "winner": "International",
+      "result": "5 up"
+     }
+    ]
+   },
+   {
+    "name": "Shamble",
+    "holes": "13-18",
+    "usa": 19,
+    "intl": 7,
+    "cards": [
+     {
+      "match": 1,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Keith Barnes",
+        "Dave Kohlasch"
+       ],
+       "players": [
+        {
+         "name": "Keith Barnes",
+         "handicap": 1,
+         "scores": [
+          3,
+          4,
+          5,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        },
+        {
+         "name": "Dave Kohlasch",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        }
+       ],
+       "net": [
+        3,
+        4,
+        5,
+        4,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Daren Wickham",
+        "Ben Hedges"
+       ],
+       "players": [
+        {
+         "name": "Daren Wickham",
+         "handicap": 7,
+         "scores": [
+          3,
+          5,
+          7,
+          6,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        },
+        {
+         "name": "Ben Hedges",
+         "handicap": 6,
+         "scores": [
+          3,
+          5,
+          7,
+          6,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        3,
+        5,
+        6,
+        5,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "USA",
+       "USA",
+       "USA",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "AS",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 3 up",
+       "USA 3 up",
+       "USA 3 up"
+      ],
+      "winner": "USA",
+      "result": "3 up"
+     },
+     {
+      "match": 2,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Mike Ziegler",
+        "Jeff Galkin"
+       ],
+       "players": [
+        {
+         "name": "Mike Ziegler",
+         "handicap": 0,
+         "scores": [
+          3,
+          5,
+          5,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "Jeff Galkin",
+         "handicap": 2,
+         "scores": [
+          4,
+          6,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        }
+       ],
+       "net": [
+        3,
+        5,
+        5,
+        4,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Philip Woodisse",
+        "Michael Kim"
+       ],
+       "players": [
+        {
+         "name": "Philip Woodisse",
+         "handicap": 1,
+         "scores": [
+          2,
+          5,
+          4,
+          5,
+          4,
+          7
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "Michael Kim",
+         "handicap": 4,
+         "scores": [
+          3,
+          5,
+          5,
+          6,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        2,
+        5,
+        4,
+        5,
+        4,
+        6
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "International",
+       "USA",
+       "USA",
+       "USA"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 1 up",
+       "AS",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     },
+     {
+      "match": 3,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Jay Collins",
+        "Frank Ambrose"
+       ],
+       "players": [
+        {
+         "name": "Jay Collins",
+         "handicap": 0,
+         "scores": [
+          2,
+          3,
+          3,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 21
+        },
+        {
+         "name": "Frank Ambrose",
+         "handicap": 7,
+         "scores": [
+          2,
+          4,
+          4,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 23
+        }
+       ],
+       "net": [
+        2,
+        3,
+        3,
+        4,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Anil Katarki",
+        "Vijay Davuluri"
+       ],
+       "players": [
+        {
+         "name": "Anil Katarki",
+         "handicap": 3,
+         "scores": [
+          2,
+          4,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        },
+        {
+         "name": "Vijay Davuluri",
+         "handicap": 8,
+         "scores": [
+          2,
+          4,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 24
+        }
+       ],
+       "net": [
+        2,
+        4,
+        4,
+        4,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "USA",
+       "USA",
+       "tie",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "AS",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 2 up",
+       "USA 2 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2 up"
+     },
+     {
+      "match": 4,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Jeff Kritsberg",
+        "Anthony Rizzo"
+       ],
+       "players": [
+        {
+         "name": "Jeff Kritsberg",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          4,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 23
+        },
+        {
+         "name": "Anthony Rizzo",
+         "handicap": 3,
+         "scores": [
+          3,
+          4,
+          6,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        3,
+        4,
+        4,
+        4,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Chakshush Kumar",
+        "Ashvini Anjutgi"
+       ],
+       "players": [
+        {
+         "name": "Chakshush Kumar",
+         "handicap": 9,
+         "scores": [
+          4,
+          5,
+          7,
+          6,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 30
+        },
+        {
+         "name": "Ashvini Anjutgi",
+         "handicap": 8,
+         "scores": [
+          4,
+          4,
+          5,
+          6,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 27
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        5,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "tie",
+       "tie",
+       "USA",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 1 up",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 2 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2 up"
+     },
+     {
+      "match": 5,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Scott Covino",
+        "John Altman"
+       ],
+       "players": [
+        {
+         "name": "Scott Covino",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "John Altman",
+         "handicap": 5,
+         "scores": [
+          3,
+          4,
+          6,
+          5,
+          2,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        }
+       ],
+       "net": [
+        3,
+        4,
+        5,
+        5,
+        2,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Tim Pearce",
+        "Robbie Neilson"
+       ],
+       "players": [
+        {
+         "name": "Tim Pearce",
+         "handicap": 3,
+         "scores": [
+          3,
+          5,
+          6,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        },
+        {
+         "name": "Robbie Neilson",
+         "handicap": 3,
+         "scores": [
+          3,
+          5,
+          6,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        3,
+        5,
+        6,
+        4,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "tie",
+       "USA",
+       "USA",
+       "International",
+       "USA",
+       "tie"
+      ],
+      "status": [
+       "AS",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2 up"
+     },
+     {
+      "match": 6,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Tom Walsh",
+        "Jeff Barnette"
+       ],
+       "players": [
+        {
+         "name": "Tom Walsh",
+         "handicap": 0,
+         "scores": [
+          2,
+          5,
+          4,
+          4,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        },
+        {
+         "name": "Jeff Barnette",
+         "handicap": 2,
+         "scores": [
+          2,
+          5,
+          4,
+          4,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        }
+       ],
+       "net": [
+        2,
+        5,
+        4,
+        4,
+        3,
+        6
+       ]
+      },
+      "intl": {
+       "team": [
+        "Jun Bae",
+        "Yun Sang Bae"
+       ],
+       "players": [
+        {
+         "name": "Jun Bae",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          4,
+          6,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "Jun Bae",
+         "handicap": 5,
+         "scores": [
+          3,
+          3,
+          5,
+          6,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        3,
+        3,
+        4,
+        6,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "International",
+       "tie",
+       "USA",
+       "tie",
+       "International"
+      ],
+      "status": [
+       "USA 1 up",
+       "AS",
+       "AS",
+       "USA 1 up",
+       "USA 1 up",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 7,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Jim Gillie",
+        "Kevin Kozlowski"
+       ],
+       "players": [
+        {
+         "name": "Jim Gillie",
+         "handicap": 0,
+         "scores": [
+          3,
+          4,
+          6,
+          4,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        },
+        {
+         "name": "Kevin Kozlowski",
+         "handicap": 11,
+         "scores": [
+          3,
+          4,
+          7,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        3,
+        4,
+        6,
+        3,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Rhys Gully",
+        "Erik Wagner"
+       ],
+       "players": [
+        {
+         "name": "Rhys Gully",
+         "handicap": 6,
+         "scores": [
+          3,
+          4,
+          4,
+          5,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "Erik Wagner",
+         "handicap": 3,
+         "scores": [
+          2,
+          4,
+          4,
+          5,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        }
+       ],
+       "net": [
+        2,
+        4,
+        3,
+        4,
+        3,
+        6
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "International",
+       "USA",
+       "tie",
+       "USA"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 1 up",
+       "Intl 1 up",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 8,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Kyle Lenihan",
+        "Mitch Freedman"
+       ],
+       "players": [
+        {
+         "name": "Kyle Lenihan",
+         "handicap": 4,
+         "scores": [
+          4,
+          5,
+          7,
+          4,
+          4,
+          null
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        },
+        {
+         "name": "Mitch Freedman",
+         "handicap": 1,
+         "scores": [
+          4,
+          4,
+          4,
+          6,
+          3,
+          null
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 21
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        4,
+        3,
+        0
+       ]
+      },
+      "intl": {
+       "team": [
+        "Jonathan Doan",
+        "Raj Malik"
+       ],
+       "players": [
+        {
+         "name": "Jonathan Doan",
+         "handicap": 2,
+         "scores": [
+          4,
+          5,
+          5,
+          5,
+          4,
+          null
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 23
+        },
+        {
+         "name": "Raj Malik",
+         "handicap": 0,
+         "scores": [
+          3,
+          5,
+          4,
+          5,
+          4,
+          null
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 21
+        }
+       ],
+       "net": [
+        3,
+        5,
+        4,
+        5,
+        4,
+        0
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "USA",
+       "tie",
+       "USA",
+       "USA",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "AS",
+       "AS",
+       "USA 1 up",
+       "USA 2 up",
+       "USA 2 up"
+      ],
+      "winner": "USA",
+      "result": "2&1"
+     },
+     {
+      "match": 9,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Jay Vosburgh",
+        "Seth Holladay"
+       ],
+       "players": [
+        {
+         "name": "Jay Vosburgh",
+         "handicap": 0,
+         "scores": [
+          5,
+          4,
+          4,
+          4,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        },
+        {
+         "name": "Seth Holladay",
+         "handicap": 4,
+         "scores": [
+          5,
+          5,
+          6,
+          6,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 31
+        }
+       ],
+       "net": [
+        5,
+        4,
+        4,
+        4,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Phillip Jewell",
+        "Mohammed Ashraf"
+       ],
+       "players": [
+        {
+         "name": "Phillip Jewell",
+         "handicap": 0,
+         "scores": [
+          4,
+          4,
+          5,
+          5,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "Mohammed Ashraf",
+         "handicap": 8,
+         "scores": [
+          4,
+          5,
+          6,
+          6,
+          4,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+         ],
+         "total": 30
+        }
+       ],
+       "net": [
+        4,
+        4,
+        5,
+        5,
+        4,
+        5
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "USA",
+       "USA",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "AS",
+       "USA 1 up",
+       "USA 1 up",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     },
+     {
+      "match": 10,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Tom Murphy",
+        "Dominic Michael"
+       ],
+       "players": [
+        {
+         "name": "Tom Murphy",
+         "handicap": 1,
+         "scores": [
+          4,
+          4,
+          4,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "Dominic Michael",
+         "handicap": 0,
+         "scores": [
+          4,
+          5,
+          5,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        4,
+        4,
+        4,
+        4,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Uttam Bharwani",
+        "Sridhar Muthusamy"
+       ],
+       "players": [
+        {
+         "name": "Uttam Bharwani",
+         "handicap": 4,
+         "scores": [
+          3,
+          4,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "Sridhar Muthusamy",
+         "handicap": 5,
+         "scores": [
+          3,
+          5,
+          4,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        }
+       ],
+       "net": [
+        3,
+        4,
+        3,
+        4,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "tie",
+       "International",
+       "tie",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 2 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 11,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Maggie Vosburgh",
+        "Chrissy Crouse"
+       ],
+       "players": [
+        {
+         "name": "Maggie Vosburgh",
+         "handicap": 0,
+         "scores": [
+          4,
+          5,
+          6,
+          5,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 30
+        },
+        {
+         "name": "Chrissy Crouse",
+         "handicap": 4,
+         "scores": [
+          4,
+          5,
+          5,
+          5,
+          4,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          true
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        4,
+        5,
+        4,
+        5,
+        4,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Alba Phillips",
+        "Joung Barnes"
+       ],
+       "players": [
+        {
+         "name": "Alba Phillips",
+         "handicap": 1,
+         "scores": [
+          3,
+          4,
+          6,
+          6,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 28
+        },
+        {
+         "name": "Joung Barnes",
+         "handicap": 2,
+         "scores": [
+          3,
+          4,
+          4,
+          7,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        }
+       ],
+       "net": [
+        3,
+        4,
+        3,
+        6,
+        3,
+        6
+       ]
+      },
+      "holeWinners": [
+       "International",
+       "International",
+       "International",
+       "USA",
+       "International",
+       "USA"
+      ],
+      "status": [
+       "Intl 1 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 2 up",
+       "Intl 3 up",
+       "Intl 2 up"
+      ],
+      "winner": "International",
+      "result": "2 up"
+     },
+     {
+      "match": 12,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "John Daley",
+        "Jeff Miller"
+       ],
+       "players": [
+        {
+         "name": "John Daley",
+         "handicap": 0,
+         "scores": [
+          3,
+          3,
+          6,
+          6,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "Jeff Miller",
+         "handicap": 3,
+         "scores": [
+          2,
+          5,
+          5,
+          5,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        }
+       ],
+       "net": [
+        2,
+        3,
+        5,
+        5,
+        3,
+        5
+       ]
+      },
+      "intl": {
+       "team": [
+        "Suresh Saribala",
+        "Stefan Lambert"
+       ],
+       "players": [
+        {
+         "name": "Suresh Saribala",
+         "handicap": 1,
+         "scores": [
+          3,
+          5,
+          5,
+          5,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "Stefan Lambert",
+         "handicap": 3,
+         "scores": [
+          3,
+          5,
+          4,
+          4,
+          3,
+          5
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 24
+        }
+       ],
+       "net": [
+        3,
+        5,
+        4,
+        4,
+        3,
+        5
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "International",
+       "International",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 1 up",
+       "AS",
+       "AS",
+       "AS"
+      ],
+      "winner": "tie",
+      "result": "halved"
+     },
+     {
+      "match": 13,
+      "holes": [
+       13,
+       14,
+       15,
+       16,
+       17,
+       18
+      ],
+      "usa": {
+       "team": [
+        "Victor Esposito",
+        "Greg Parda"
+       ],
+       "players": [
+        {
+         "name": "Victor Esposito",
+         "handicap": 0,
+         "scores": [
+          3,
+          3,
+          6,
+          4,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 25
+        },
+        {
+         "name": "Greg Parda",
+         "handicap": 1,
+         "scores": [
+          3,
+          3,
+          6,
+          5,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 26
+        }
+       ],
+       "net": [
+        3,
+        3,
+        6,
+        4,
+        3,
+        6
+       ]
+      },
+      "intl": {
+       "team": [
+        "Soban Ansari",
+        "Jim Lee"
+       ],
+       "players": [
+        {
+         "name": "Soban Ansari",
+         "handicap": 2,
+         "scores": [
+          4,
+          4,
+          6,
+          4,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+         ],
+         "total": 27
+        },
+        {
+         "name": "Jim Lee",
+         "handicap": 5,
+         "scores": [
+          4,
+          4,
+          6,
+          6,
+          3,
+          6
+         ],
+         "strokes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+         ],
+         "total": 29
+        }
+       ],
+       "net": [
+        4,
+        4,
+        5,
+        4,
+        3,
+        6
+       ]
+      },
+      "holeWinners": [
+       "USA",
+       "USA",
+       "International",
+       "tie",
+       "tie",
+       "tie"
+      ],
+      "status": [
+       "USA 1 up",
+       "USA 2 up",
+       "USA 1 up",
+       "USA 1 up",
+       "USA 1 up",
+       "USA 1 up"
+      ],
+      "winner": "USA",
+      "result": "1 up"
+     }
+    ]
+   }
+  ]
+ },
+ "day2": {
+  "matches": [
+   {
+    "match": 1,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jeff Miller",
+     "handicap": 0,
+     "scores": [
+      4,
+      5,
+      4,
+      3,
+      6,
+      5,
+      3,
+      5,
+      5,
+      5,
+      6,
+      4,
+      4,
+      4,
+      4,
+      6,
+      4,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 40,
+     "in": 42,
+     "total": 82,
+     "net": 82
+    },
+    "intl": {
+     "name": "Soban Ansari",
+     "handicap": 0,
+     "scores": [
+      5,
+      5,
+      4,
+      3,
+      6,
+      4,
+      5,
+      4,
+      5,
+      4,
+      6,
+      5,
+      3,
+      6,
+      6,
+      6,
+      4,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 41,
+     "in": 44,
+     "total": 85,
+     "net": 85
+    },
+    "holeWinners": [
+     "USA",
+     "tie",
+     "tie",
+     "tie",
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "tie",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "tie",
+     "International"
+    ],
+    "status": [
+     "USA 1 up",
+     "USA 1 up",
+     "USA 1 up",
+     "USA 1 up",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "USA 1 up",
+     "USA 1 up",
+     "AS"
+    ],
+    "segments": [
+     "tied",
+     "tied",
+     "tied"
+    ],
+    "usaPoints": 1.5,
+    "intlPoints": 1.5,
+    "winner": "tie"
+   },
+   {
+    "match": 2,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Kevin Kozlowski",
+     "handicap": null,
+     "scores": [
+      6,
+      6,
+      5,
+      6,
+      8,
+      5,
+      4,
+      8,
+      4,
+      6,
+      6,
+      7,
+      3,
+      5,
+      6,
+      5,
+      4,
+      7
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+     ],
+     "out": 52,
+     "in": 49,
+     "total": null,
+     "net": 90
+    },
+    "intl": {
+     "name": "Robbie Neilson",
+     "handicap": 0,
+     "scores": [
+      4,
+      4,
+      4,
+      4,
+      5,
+      6,
+      4,
+      5,
+      5,
+      4,
+      6,
+      4,
+      4,
+      5,
+      4,
+      6,
+      5,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 41,
+     "in": 43,
+     "total": 84,
+     "net": 84
+    },
+    "holeWinners": [
+     "International",
+     "International",
+     "International",
+     "International",
+     "International",
+     "USA",
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "USA",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "International"
+    ],
+    "status": [
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 6 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 4 up"
+    ],
+    "segments": [
+     "5 & 4",
+     "tied",
+     "5 & 3"
+    ],
+    "usaPoints": 0.5,
+    "intlPoints": 2.5,
+    "winner": "International"
+   },
+   {
+    "match": 3,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Victor Esposito",
+     "handicap": 0,
+     "scores": [
+      4,
+      5,
+      4,
+      4,
+      7,
+      5,
+      5,
+      6,
+      4,
+      5,
+      5,
+      6,
+      3,
+      5,
+      5,
+      7,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 44,
+     "in": 44,
+     "total": 88,
+     "net": 88
+    },
+    "intl": {
+     "name": "Suresh Saribala",
+     "handicap": 1,
+     "scores": [
+      6,
+      7,
+      5,
+      4,
+      6,
+      6,
+      4,
+      7,
+      5,
+      4,
+      7,
+      6,
+      5,
+      5,
+      5,
+      7,
+      3,
+      6
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 50,
+     "in": 48,
+     "total": 98,
+     "net": 97
+    },
+    "holeWinners": [
+     "USA",
+     "USA",
+     "USA",
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "International",
+     "USA",
+     "tie",
+     "USA",
+     "International",
+     "tie",
+     "tie",
+     "tie",
+     "USA"
+    ],
+    "status": [
+     "USA 1 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 4 up",
+     "USA 5 up",
+     "USA 4 up",
+     "USA 4 up",
+     "USA 4 up",
+     "USA 4 up",
+     "USA 5 up"
+    ],
+    "segments": [
+     "3 & 1",
+     "1 up",
+     "4 & 3"
+    ],
+    "usaPoints": 3,
+    "intlPoints": 0,
+    "winner": "USA"
+   },
+   {
+    "match": 4,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jeff Kritsberg",
+     "handicap": 0,
+     "scores": [
+      4,
+      5,
+      6,
+      3,
+      6,
+      5,
+      3,
+      6,
+      5,
+      4,
+      4,
+      4,
+      3,
+      4,
+      7,
+      5,
+      2,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 43,
+     "in": 37,
+     "total": 80,
+     "net": 80
+    },
+    "intl": {
+     "name": "Ben Hedges",
+     "handicap": null,
+     "scores": [
+      5,
+      5,
+      5,
+      5,
+      7,
+      7,
+      4,
+      7,
+      6,
+      5,
+      7,
+      7,
+      4,
+      5,
+      6,
+      7,
+      4,
+      7
+     ],
+     "strokes": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+     ],
+     "out": 51,
+     "in": 52,
+     "total": null,
+     "net": 91
+    },
+    "holeWinners": [
+     "USA",
+     "International",
+     "International",
+     "USA",
+     "tie",
+     "USA",
+     "USA",
+     "USA",
+     "tie",
+     "USA",
+     "USA",
+     "USA",
+     "tie",
+     "tie",
+     "International",
+     "USA",
+     "USA",
+     "USA"
+    ],
+    "status": [
+     "USA 1 up",
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "AS",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 5 up",
+     "USA 6 up",
+     "USA 6 up",
+     "USA 6 up",
+     "USA 5 up",
+     "USA 6 up",
+     "USA 7 up",
+     "USA 8 up"
+    ],
+    "segments": [
+     "3 & 1",
+     "3 & 2",
+     "6 & 5"
+    ],
+    "usaPoints": 3,
+    "intlPoints": 0,
+    "winner": "USA"
+   },
+   {
+    "match": 5,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Scott Covino",
+     "handicap": 0,
+     "scores": [
+      4,
+      5,
+      4,
+      3,
+      5,
+      5,
+      4,
+      6,
+      4,
+      4,
+      5,
+      6,
+      2,
+      6,
+      4,
+      5,
+      3,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 40,
+     "in": 39,
+     "total": 79,
+     "net": 79
+    },
+    "intl": {
+     "name": "Tim Pearce",
+     "handicap": 3,
+     "scores": [
+      4,
+      4,
+      3,
+      5,
+      7,
+      5,
+      4,
+      6,
+      5,
+      6,
+      5,
+      6,
+      5,
+      6,
+      6,
+      7,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 43,
+     "in": 49,
+     "total": 92,
+     "net": 89
+    },
+    "holeWinners": [
+     "tie",
+     "International",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "tie",
+     "tie",
+     "USA",
+     "USA",
+     "tie",
+     "tie",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "tie"
+    ],
+    "status": [
+     "AS",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "AS",
+     "AS",
+     "AS",
+     "AS",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 4 up",
+     "USA 4 up"
+    ],
+    "segments": [
+     "1 up",
+     "3 & 2",
+     "4 & 2"
+    ],
+    "usaPoints": 3,
+    "intlPoints": 0,
+    "winner": "USA"
+   },
+   {
+    "match": 6,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Frank Ambrose",
+     "handicap": null,
+     "scores": [
+      3,
+      6,
+      6,
+      5,
+      7,
+      6,
+      6,
+      5,
+      5,
+      4,
+      7,
+      5,
+      3,
+      9,
+      6,
+      7,
+      3,
+      7
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+     ],
+     "out": 49,
+     "in": 51,
+     "total": null,
+     "net": 93
+    },
+    "intl": {
+     "name": "Jun Bae",
+     "handicap": 0,
+     "scores": [
+      4,
+      6,
+      4,
+      4,
+      5,
+      6,
+      4,
+      5,
+      5,
+      5,
+      5,
+      5,
+      4,
+      8,
+      5,
+      5,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 43,
+     "in": 45,
+     "total": 88,
+     "net": 88
+    },
+    "holeWinners": [
+     "USA",
+     "USA",
+     "International",
+     "International",
+     "International",
+     "USA",
+     "International",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "tie",
+     "International",
+     "tie",
+     "International"
+    ],
+    "status": [
+     "USA 1 up",
+     "USA 2 up",
+     "USA 1 up",
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 1 up",
+     "USA 1 up",
+     "AS"
+    ],
+    "segments": [
+     "tied",
+     "tied",
+     "tied"
+    ],
+    "usaPoints": 1.5,
+    "intlPoints": 1.5,
+    "winner": "tie"
+   },
+   {
+    "match": 7,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Anthony Rizzo",
+     "handicap": 0,
+     "scores": [
+      5,
+      6,
+      5,
+      3,
+      5,
+      5,
+      4,
+      5,
+      5,
+      5,
+      7,
+      5,
+      3,
+      5,
+      5,
+      6,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 43,
+     "in": 44,
+     "total": 87,
+     "net": 87
+    },
+    "intl": {
+     "name": "Jim Lee",
+     "handicap": 5,
+     "scores": [
+      5,
+      4,
+      5,
+      4,
+      8,
+      5,
+      4,
+      5,
+      7,
+      5,
+      6,
+      5,
+      3,
+      5,
+      5,
+      6,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 47,
+     "in": 43,
+     "total": 90,
+     "net": 85
+    },
+    "holeWinners": [
+     "tie",
+     "International",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "tie",
+     "tie",
+     "USA",
+     "tie",
+     "International",
+     "International",
+     "tie",
+     "International",
+     "tie",
+     "tie",
+     "tie",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "AS",
+     "AS",
+     "USA 1 up",
+     "USA 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 3 up"
+    ],
+    "segments": [
+     "1 down",
+     "3 & 2",
+     "2 & 1"
+    ],
+    "usaPoints": 1,
+    "intlPoints": 2,
+    "winner": "International"
+   },
+   {
+    "match": 8,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Kyle Lenihan",
+     "handicap": 0,
+     "scores": [
+      5,
+      5,
+      4,
+      4,
+      6,
+      5,
+      4,
+      5,
+      6,
+      6,
+      6,
+      6,
+      4,
+      3,
+      4,
+      7,
+      4,
+      6
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 44,
+     "in": 46,
+     "total": 90,
+     "net": 90
+    },
+    "intl": {
+     "name": "Yun Sang Bae",
+     "handicap": 1,
+     "scores": [
+      5,
+      4,
+      4,
+      5,
+      5,
+      5,
+      3,
+      4,
+      5,
+      4,
+      6,
+      6,
+      4,
+      5,
+      4,
+      5,
+      4,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 40,
+     "in": 43,
+     "total": 83,
+     "net": 82
+    },
+    "holeWinners": [
+     "tie",
+     "International",
+     "tie",
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "International",
+     "International",
+     "International",
+     "tie",
+     "tie",
+     "tie",
+     "USA",
+     "tie",
+     "International",
+     "tie",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 6 up"
+    ],
+    "segments": [
+     "3 & 1",
+     "2 up",
+     "4 & 3"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 9,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Chrissy Crouse",
+     "handicap": 2,
+     "scores": [
+      4,
+      4,
+      7,
+      4,
+      8,
+      7,
+      5,
+      5,
+      5,
+      5,
+      6,
+      6,
+      4,
+      6,
+      4,
+      7,
+      4,
+      7
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 49,
+     "in": 49,
+     "total": 98,
+     "net": 96
+    },
+    "intl": {
+     "name": "Joung Barnes",
+     "handicap": 0,
+     "scores": [
+      4,
+      6,
+      5,
+      3,
+      7,
+      4,
+      4,
+      7,
+      6,
+      5,
+      6,
+      6,
+      5,
+      5,
+      7,
+      5,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 46,
+     "in": 47,
+     "total": 93,
+     "net": 93
+    },
+    "holeWinners": [
+     "tie",
+     "USA",
+     "International",
+     "International",
+     "tie",
+     "International",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "tie",
+     "tie",
+     "USA",
+     "tie",
+     "USA",
+     "International",
+     "International",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "USA 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 2 up"
+    ],
+    "segments": [
+     "3 & 2",
+     "1 up",
+     "2 up"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 10,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Keith Barnes",
+     "handicap": 0,
+     "scores": [
+      5,
+      4,
+      5,
+      4,
+      6,
+      4,
+      4,
+      5,
+      6,
+      4,
+      7,
+      6,
+      3,
+      5,
+      7,
+      7,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 43,
+     "in": 47,
+     "total": 90,
+     "net": 90
+    },
+    "intl": {
+     "name": "Vijay Davuluri",
+     "handicap": 4,
+     "scores": [
+      4,
+      5,
+      6,
+      5,
+      5,
+      6,
+      2,
+      5,
+      5,
+      6,
+      8,
+      4,
+      3,
+      3,
+      4,
+      6,
+      5,
+      7
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 43,
+     "in": 46,
+     "total": 89,
+     "net": 85
+    },
+    "holeWinners": [
+     "International",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "USA",
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "International",
+     "International",
+     "USA",
+     "USA"
+    ],
+    "status": [
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 1 up"
+    ],
+    "segments": [
+     "1 up",
+     "tied",
+     "3 & 2"
+    ],
+    "usaPoints": 0.5,
+    "intlPoints": 2.5,
+    "winner": "International"
+   },
+   {
+    "match": 11,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jay Vosburgh",
+     "handicap": 0,
+     "scores": [
+      4,
+      5,
+      4,
+      4,
+      6,
+      4,
+      4,
+      5,
+      6,
+      5,
+      6,
+      5,
+      2,
+      6,
+      6,
+      6,
+      4,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 42,
+     "in": 44,
+     "total": 86,
+     "net": 86
+    },
+    "intl": {
+     "name": "Phillip Jewell",
+     "handicap": 0,
+     "scores": [
+      4,
+      4,
+      5,
+      3,
+      6,
+      4,
+      3,
+      6,
+      5,
+      4,
+      6,
+      4,
+      3,
+      6,
+      5,
+      5,
+      4,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 40,
+     "in": 41,
+     "total": 81,
+     "net": 81
+    },
+    "holeWinners": [
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "tie",
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "International",
+     "tie",
+     "International",
+     "USA",
+     "tie",
+     "International",
+     "International",
+     "tie",
+     "tie"
+    ],
+    "status": [
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 5 up"
+    ],
+    "segments": [
+     "2 up",
+     "3 & 2",
+     "4 & 3"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 12,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Mitch Freedman",
+     "handicap": 0,
+     "scores": [
+      4,
+      4,
+      5,
+      5,
+      5,
+      5,
+      3,
+      5,
+      4,
+      6,
+      4,
+      5,
+      4,
+      5,
+      5,
+      5,
+      5,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 40,
+     "in": 44,
+     "total": 84,
+     "net": 84
+    },
+    "intl": {
+     "name": "Rhys Gully",
+     "handicap": 7,
+     "scores": [
+      5,
+      5,
+      5,
+      5,
+      6,
+      5,
+      5,
+      5,
+      6,
+      3,
+      6,
+      4,
+      3,
+      4,
+      6,
+      6,
+      3,
+      6
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+     ],
+     "out": 47,
+     "in": 41,
+     "total": 88,
+     "net": 81
+    },
+    "holeWinners": [
+     "USA",
+     "tie",
+     "tie",
+     "tie",
+     "USA",
+     "International",
+     "USA",
+     "tie",
+     "USA",
+     "International",
+     "USA",
+     "International",
+     "International",
+     "International",
+     "tie",
+     "USA",
+     "International",
+     "tie"
+    ],
+    "status": [
+     "USA 1 up",
+     "USA 1 up",
+     "USA 1 up",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 1 up",
+     "AS",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "AS"
+    ],
+    "segments": [
+     "L 2 & 1",
+     "3 & 1",
+     "tied"
+    ],
+    "usaPoints": 1.5,
+    "intlPoints": 1.5,
+    "winner": "tie"
+   },
+   {
+    "match": 13,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Seth Holladay",
+     "handicap": 3,
+     "scores": [
+      3,
+      7,
+      5,
+      5,
+      7,
+      5,
+      4,
+      6,
+      4,
+      3,
+      7,
+      7,
+      3,
+      7,
+      5,
+      7,
+      5,
+      7
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 46,
+     "in": 51,
+     "total": 97,
+     "net": 94
+    },
+    "intl": {
+     "name": "Philip Woodisse",
+     "handicap": 0,
+     "scores": [
+      3,
+      4,
+      7,
+      3,
+      6,
+      5,
+      3,
+      4,
+      4,
+      5,
+      5,
+      5,
+      4,
+      7,
+      6,
+      6,
+      4,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 39,
+     "in": 46,
+     "total": 85,
+     "net": 85
+    },
+    "holeWinners": [
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "International",
+     "tie",
+     "International",
+     "International",
+     "tie",
+     "USA",
+     "International",
+     "International",
+     "USA",
+     "USA",
+     "USA",
+     "International",
+     "International",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up"
+    ],
+    "segments": [
+     "3 & 2",
+     "1 up",
+     "3 & 2"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 14,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "John Altman",
+     "handicap": 0,
+     "scores": [
+      3,
+      5,
+      4,
+      4,
+      6,
+      5,
+      3,
+      5,
+      4,
+      4,
+      6,
+      4,
+      3,
+      5,
+      5,
+      6,
+      4,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 39,
+     "in": 41,
+     "total": 80,
+     "net": 80
+    },
+    "intl": {
+     "name": "Mohammed Ashraf",
+     "handicap": 4,
+     "scores": [
+      4,
+      5,
+      4,
+      3,
+      6,
+      4,
+      4,
+      5,
+      6,
+      5,
+      5,
+      6,
+      4,
+      6,
+      4,
+      4,
+      5,
+      6
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 41,
+     "in": 45,
+     "total": 86,
+     "net": 82
+    },
+    "holeWinners": [
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "tie",
+     "International",
+     "USA",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "International",
+     "International",
+     "USA",
+     "USA"
+    ],
+    "status": [
+     "USA 1 up",
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "USA 2 up"
+    ],
+    "segments": [
+     "tied",
+     "2 up",
+     "2 up"
+    ],
+    "usaPoints": 2.5,
+    "intlPoints": 0.5,
+    "winner": "USA"
+   },
+   {
+    "match": 15,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jeff Galkin",
+     "handicap": 0,
+     "scores": [
+      6,
+      5,
+      6,
+      4,
+      6,
+      4,
+      4,
+      5,
+      4,
+      4,
+      5,
+      4,
+      5,
+      4,
+      5,
+      8,
+      3,
+      6
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 44,
+     "in": 44,
+     "total": 88,
+     "net": 88
+    },
+    "intl": {
+     "name": "Stefan Lambert",
+     "handicap": 4,
+     "scores": [
+      4,
+      5,
+      5,
+      3,
+      6,
+      5,
+      4,
+      7,
+      6,
+      4,
+      7,
+      6,
+      4,
+      4,
+      5,
+      7,
+      4,
+      5
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 45,
+     "in": 46,
+     "total": 91,
+     "net": 87
+    },
+    "holeWinners": [
+     "International",
+     "International",
+     "International",
+     "International",
+     "tie",
+     "tie",
+     "tie",
+     "USA",
+     "USA",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "International",
+     "tie",
+     "International",
+     "USA",
+     "International"
+    ],
+    "status": [
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 4 up",
+     "Intl 4 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "AS",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 3 up"
+    ],
+    "segments": [
+     "4 & 3",
+     "1 up",
+     "3 & 2"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 16,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Greg Parda",
+     "handicap": 4,
+     "scores": [
+      4,
+      7,
+      4,
+      4,
+      6,
+      5,
+      4,
+      8,
+      5,
+      4,
+      6,
+      6,
+      4,
+      4,
+      5,
+      6,
+      4,
+      5
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 47,
+     "in": 44,
+     "total": 91,
+     "net": 87
+    },
+    "intl": {
+     "name": "Raj Malik",
+     "handicap": 0,
+     "scores": [
+      3,
+      5,
+      3,
+      5,
+      5,
+      5,
+      3,
+      6,
+      4,
+      4,
+      6,
+      5,
+      2,
+      6,
+      5,
+      6,
+      2,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 39,
+     "in": 41,
+     "total": 80,
+     "net": 80
+    },
+    "holeWinners": [
+     "International",
+     "International",
+     "International",
+     "USA",
+     "International",
+     "USA",
+     "International",
+     "International",
+     "International",
+     "tie",
+     "tie",
+     "International",
+     "International",
+     "USA",
+     "tie",
+     "tie",
+     "International",
+     "USA"
+    ],
+    "status": [
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 6 up",
+     "Intl 7 up",
+     "Intl 6 up",
+     "Intl 6 up",
+     "Intl 6 up",
+     "Intl 7 up",
+     "Intl 6 up"
+    ],
+    "segments": [
+     "3 & 2",
+     "2 & 1",
+     "7 & 5"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 17,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jay Collins",
+     "handicap": 0,
+     "scores": [
+      5,
+      5,
+      6,
+      4,
+      6,
+      5,
+      2,
+      6,
+      5,
+      7,
+      8,
+      4,
+      2,
+      5,
+      4,
+      6,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 44,
+     "in": 44,
+     "total": 88,
+     "net": 88
+    },
+    "intl": {
+     "name": "Daren Wickham",
+     "handicap": null,
+     "scores": [
+      6,
+      7,
+      7,
+      6,
+      6,
+      6,
+      6,
+      8,
+      3,
+      6,
+      8,
+      6,
+      4,
+      4,
+      6,
+      7,
+      3,
+      6
+     ],
+     "strokes": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+     ],
+     "out": 55,
+     "in": 50,
+     "total": null,
+     "net": 93
+    },
+    "holeWinners": [
+     "USA",
+     "USA",
+     "tie",
+     "USA",
+     "International",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "International",
+     "tie",
+     "USA",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "International",
+     "tie"
+    ],
+    "status": [
+     "USA 1 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 3 up",
+     "USA 2 up",
+     "USA 2 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 3 up",
+     "USA 4 up",
+     "USA 5 up",
+     "USA 4 up",
+     "USA 4 up"
+    ],
+    "segments": [
+     "3 & 2",
+     "1 up",
+     "4 & 3"
+    ],
+    "usaPoints": 3,
+    "intlPoints": 0,
+    "winner": "USA"
+   },
+   {
+    "match": 18,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jeff Barnette",
+     "handicap": 0,
+     "scores": [
+      5,
+      5,
+      4,
+      5,
+      6,
+      5,
+      4,
+      5,
+      4,
+      6,
+      7,
+      5,
+      3,
+      4,
+      3,
+      5,
+      2,
+      4
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 43,
+     "in": 39,
+     "total": 82,
+     "net": 82
+    },
+    "intl": {
+     "name": "Sridhar Muthusamy",
+     "handicap": 3,
+     "scores": [
+      4,
+      6,
+      4,
+      3,
+      5,
+      5,
+      4,
+      5,
+      4,
+      5,
+      6,
+      5,
+      5,
+      4,
+      5,
+      7,
+      3,
+      7
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 40,
+     "in": 47,
+     "total": 87,
+     "net": 84
+    },
+    "holeWinners": [
+     "International",
+     "tie",
+     "tie",
+     "International",
+     "International",
+     "tie",
+     "tie",
+     "tie",
+     "tie",
+     "International",
+     "International",
+     "tie",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "USA",
+     "USA"
+    ],
+    "status": [
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 3 up",
+     "Intl 3 up",
+     "Intl 3 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 5 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 1 up"
+    ],
+    "segments": [
+     "3 & 2",
+     "2 down",
+     "5 & 4"
+    ],
+    "usaPoints": 1,
+    "intlPoints": 2,
+    "winner": "International"
+   },
+   {
+    "match": 19,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Dominic Michael"
+    },
+    "intl": {
+     "name": "Michael Kim"
+    },
+    "card": false,
+    "segments": [
+     "tied",
+     "2 up",
+     "2 up"
+    ],
+    "usaPoints": 0.5,
+    "intlPoints": 2.5,
+    "winner": "International"
+   },
+   {
+    "match": 20,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Maggie Vosburgh"
+    },
+    "intl": {
+     "name": "Alba Phillips"
+    },
+    "card": false,
+    "segments": [
+     "4 & 2",
+     "tied",
+     "3 & 2"
+    ],
+    "usaPoints": 2.5,
+    "intlPoints": 0.5,
+    "winner": "USA"
+   },
+   {
+    "match": 21,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Mike Ziegler"
+    },
+    "intl": {
+     "name": "Erik Wagner"
+    },
+    "card": false,
+    "segments": [
+     "tied",
+     "tied",
+     "tied"
+    ],
+    "usaPoints": 1.5,
+    "intlPoints": 1.5,
+    "winner": "tie"
+   },
+   {
+    "match": 22,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Dave Kohlasch"
+    },
+    "intl": {
+     "name": "Jonathan Doan"
+    },
+    "card": false,
+    "segments": [
+     "2 & 1",
+     "1 down",
+     "tied"
+    ],
+    "usaPoints": 1.5,
+    "intlPoints": 1.5,
+    "winner": "tie"
+   },
+   {
+    "match": 23,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "John Daley"
+    },
+    "intl": {
+     "name": "Chakshush Kumar"
+    },
+    "card": false,
+    "segments": [
+     "2 & 1",
+     "4 & 2",
+     "6 & 4"
+    ],
+    "usaPoints": 3,
+    "intlPoints": 0,
+    "winner": "USA"
+   },
+   {
+    "match": 24,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Tom Walsh",
+     "handicap": 0,
+     "scores": [
+      5,
+      4,
+      6,
+      4,
+      6,
+      5,
+      3,
+      4,
+      5,
+      5,
+      5,
+      4,
+      4,
+      6,
+      6,
+      5,
+      2,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 42,
+     "in": 42,
+     "total": 84,
+     "net": 84
+    },
+    "intl": {
+     "name": "Uttam Bharwani",
+     "handicap": 4,
+     "scores": [
+      5,
+      5,
+      5,
+      3,
+      7,
+      5,
+      2,
+      5,
+      5,
+      4,
+      6,
+      4,
+      4,
+      5,
+      4,
+      6,
+      3,
+      4
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 42,
+     "in": 40,
+     "total": 82,
+     "net": 78
+    },
+    "holeWinners": [
+     "tie",
+     "tie",
+     "International",
+     "International",
+     "USA",
+     "International",
+     "International",
+     "USA",
+     "tie",
+     "International",
+     "USA",
+     "tie",
+     "tie",
+     "International",
+     "International",
+     "USA",
+     "USA",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 4 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 3 up"
+    ],
+    "segments": [
+     "3 & 2",
+     "1 up",
+     "4 & 3"
+    ],
+    "usaPoints": 0,
+    "intlPoints": 3,
+    "winner": "International"
+   },
+   {
+    "match": 25,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Tom Murphy",
+     "handicap": 0,
+     "scores": [
+      4,
+      4,
+      6,
+      4,
+      6,
+      5,
+      3,
+      5,
+      5,
+      5,
+      5,
+      6,
+      3,
+      4,
+      4,
+      5,
+      3,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 42,
+     "in": 40,
+     "total": 82,
+     "net": 82
+    },
+    "intl": {
+     "name": "Ashvini Anjutgi",
+     "handicap": 7,
+     "scores": [
+      4,
+      5,
+      5,
+      4,
+      6,
+      4,
+      3,
+      5,
+      6,
+      4,
+      7,
+      6,
+      4,
+      6,
+      5,
+      6,
+      5,
+      5
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true
+     ],
+     "out": 42,
+     "in": 48,
+     "total": 90,
+     "net": 83
+    },
+    "holeWinners": [
+     "tie",
+     "tie",
+     "International",
+     "tie",
+     "tie",
+     "International",
+     "tie",
+     "tie",
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "USA",
+     "USA",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 3 up",
+     "Intl 2 up",
+     "Intl 1 up",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "AS"
+    ],
+    "segments": [
+     "2 & 1",
+     "L 3 & 1",
+     "tied"
+    ],
+    "usaPoints": 1.5,
+    "intlPoints": 1.5,
+    "winner": "tie"
+   },
+   {
+    "match": 26,
+    "holes": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "usa": {
+     "name": "Jim Gillie",
+     "handicap": 0,
+     "scores": [
+      4,
+      4,
+      5,
+      3,
+      6,
+      4,
+      3,
+      5,
+      6,
+      4,
+      5,
+      4,
+      3,
+      6,
+      5,
+      6,
+      4,
+      5
+     ],
+     "strokes": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "out": 40,
+     "in": 42,
+     "total": 82,
+     "net": 82
+    },
+    "intl": {
+     "name": "Anil Katarki",
+     "handicap": 3,
+     "scores": [
+      4,
+      4,
+      6,
+      4,
+      6,
+      5,
+      2,
+      5,
+      4,
+      5,
+      4,
+      5,
+      3,
+      4,
+      5,
+      5,
+      4,
+      5
+     ],
+     "strokes": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+     ],
+     "out": 40,
+     "in": 40,
+     "total": 80,
+     "net": 77
+    },
+    "holeWinners": [
+     "tie",
+     "International",
+     "USA",
+     "USA",
+     "tie",
+     "USA",
+     "International",
+     "tie",
+     "International",
+     "USA",
+     "International",
+     "USA",
+     "tie",
+     "International",
+     "tie",
+     "International",
+     "tie",
+     "International"
+    ],
+    "status": [
+     "AS",
+     "Intl 1 up",
+     "AS",
+     "USA 1 up",
+     "USA 1 up",
+     "USA 2 up",
+     "USA 1 up",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "AS",
+     "USA 1 up",
+     "USA 1 up",
+     "AS",
+     "AS",
+     "Intl 1 up",
+     "Intl 1 up",
+     "Intl 2 up"
+    ],
+    "segments": [
+     "tied",
+     "2 up",
+     "2 up"
+    ],
+    "usaPoints": 0.5,
+    "intlPoints": 2.5,
+    "winner": "International"
+   }
+  ]
+ }
+}

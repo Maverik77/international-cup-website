@@ -60,6 +60,11 @@ jobs:
         # Copy all necessary files to build directory
         cp index.html build/
         
+        # Copy results page if it exists
+        if [ -f results.html ]; then
+          cp results.html build/
+        fi
+        
         # Copy photos page if it exists
         if [ -f photos.html ]; then
           cp photos.html build/
@@ -237,6 +242,11 @@ jobs:
         
         # Copy all necessary files to build directory
         cp index.html build/
+        
+        # Copy results page if it exists
+        if [ -f results.html ]; then
+          cp results.html build/
+        fi
         
         # Copy photos page if it exists
         if [ -f photos.html ]; then
