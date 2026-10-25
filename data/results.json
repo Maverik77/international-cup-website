@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-25",
-  "source": "2026 International Cup Event - Tournament Results (Golf Genius), Rounds 1 and 2",
+  "source": "2026 International Cup Event - Tournament Results (Golf Genius), Rounds 1 and 2. Day 1 per-match results are read from the landscape export, which prints all eighteen holes.",
   "note": "Day 1 was three six-hole sessions - Best Ball on 1 to 6, Alternate Shot on 7 to 12, Shamble on 13 to 18 - each match worth two points. Day 2 singles are worth three: front nine, back nine and the full eighteen.",
   "final": {
     "usa": 75,
@@ -105,7 +105,7 @@
             {
               "match": 2,
               "winner": "USA",
-              "result": "2 up"
+              "result": "2&1"
             },
             {
               "match": 3,
@@ -135,7 +135,7 @@
             {
               "match": 8,
               "winner": "International",
-              "result": "3 up"
+              "result": "3&2"
             },
             {
               "match": 9,
@@ -169,8 +169,74 @@
           "usa": 19,
           "intl": 7,
           "holes": "13-18",
-          "complete": false,
-          "note": "The club export clips every scorecard after the sixteenth hole, so the individual Shamble matches cannot be given - only the session score."
+          "complete": true,
+          "matches": [
+            {
+              "match": 1,
+              "winner": "USA",
+              "result": "3 up"
+            },
+            {
+              "match": 2,
+              "winner": "USA",
+              "result": "1 up"
+            },
+            {
+              "match": 3,
+              "winner": "USA",
+              "result": "2 up"
+            },
+            {
+              "match": 4,
+              "winner": "USA",
+              "result": "2 up"
+            },
+            {
+              "match": 5,
+              "winner": "USA",
+              "result": "2 up"
+            },
+            {
+              "match": 6,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 7,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 8,
+              "winner": "USA",
+              "result": "2&1"
+            },
+            {
+              "match": 9,
+              "winner": "USA",
+              "result": "1 up"
+            },
+            {
+              "match": 10,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 11,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 12,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 13,
+              "winner": "USA",
+              "result": "1 up"
+            }
+          ]
         }
       ],
       "pairings": [

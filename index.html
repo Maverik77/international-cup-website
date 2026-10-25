@@ -1341,12 +1341,12 @@
 
                 let body;
                 if (dayDoc.sessions) {
-                    // Day 1 is scored by session, not by match: Golf Genius holds
-                    // no per-match points for it. The pairings are listed below
-                    // the sessions because the same thirteen played all three.
                     // Day 1 ran as three six-hole sessions between the same
-                    // thirteen pairings. A session the club's export covers in
-                    // full lists its matches; one it clips shows its score only.
+                    // thirteen pairings, so the pairings are listed once, below
+                    // the sessions, and each session lists its own thirteen
+                    // match results. A session carrying no `matches` falls back
+                    // to its score plus a `note`, which is how a partial export
+                    // renders.
                     const pairs = dayDoc.pairings || [];
                     const byNum = {};
                     pairs.forEach(p => { byNum[p.match] = p; });
