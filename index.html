@@ -1224,6 +1224,16 @@
             text-align: center;
         }
 
+        .res-subhead {
+            margin: 1.4rem 0 0.6rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .res-match--pair .res-name { white-space: normal; }
+        .res-side--right { justify-content: flex-end; text-align: right; }
+
         .res-note {
             margin-top: 0.9rem;
             font-size: 0.82rem;
@@ -1324,6 +1334,10 @@
 
                 let body;
                 if (dayDoc.sessions) {
+                    // Day 1 is scored by session, not by match: Golf Genius holds
+                    // no per-match points for it. The pairings are listed below
+                    // the sessions because the same thirteen played all three.
+                    const pairs = dayDoc.pairings || [];
                     body = `
                         <div class="res-sessions">
                             ${dayDoc.sessions.map(se => `
@@ -1337,6 +1351,23 @@
                                 </div>
                             `).join('')}
                         </div>
+                        ${pairs.length ? `
+                            <h5 class="res-subhead">The Thirteen Pairings</h5>
+                            <div class="res-matches">
+                                ${pairs.map(p => `
+                                    <div class="res-match res-match--pair">
+                                        <div class="res-num">${Number(p.match)}</div>
+                                        <div class="res-side">
+                                            <span class="res-name">${p.usa.map(escapeTee).join(' &amp; ')}</span>
+                                        </div>
+                                        <div class="res-side res-side--right">
+                                            <span class="res-name">${p.intl.map(escapeTee).join(' &amp; ')}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <p class="res-note">${escapeTee(dayDoc.pairingsNote || '')}</p>
+                        ` : ''}
                     `;
                 } else {
                     body = `

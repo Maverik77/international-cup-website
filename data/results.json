@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-25",
-  "source": "2026 International Cup Event - Tournament Results (Golf Genius), Round 2",
+  "source": "2026 International Cup Event - Tournament Results (Golf Genius), Rounds 1 and 2",
   "note": "Each singles match is three points: front nine, back nine and the full eighteen. A halved segment splits its point.",
   "final": {
     "usa": 75,
@@ -31,7 +31,166 @@
           "usa": 19,
           "intl": 7
         }
-      ]
+      ],
+      "pairings": [
+        {
+          "match": 1,
+          "time": "11:00 AM",
+          "usa": [
+            "Keith Barnes",
+            "Dave Kohlasch"
+          ],
+          "intl": [
+            "Daren Wickham",
+            "Ben Hedges"
+          ]
+        },
+        {
+          "match": 2,
+          "time": "11:10 AM",
+          "usa": [
+            "Mike Ziegler",
+            "Jeff Galkin"
+          ],
+          "intl": [
+            "Philip Woodisse",
+            "Michael Kim"
+          ]
+        },
+        {
+          "match": 3,
+          "time": "11:20 AM",
+          "usa": [
+            "Jay Collins",
+            "Frank Ambrose"
+          ],
+          "intl": [
+            "Anil Katarki",
+            "Vijay Davuluri"
+          ]
+        },
+        {
+          "match": 4,
+          "time": "11:30 AM",
+          "usa": [
+            "Jeff Kritsberg",
+            "Anthony Rizzo"
+          ],
+          "intl": [
+            "Chakshush Kumar",
+            "Ashvini Anjutgi"
+          ]
+        },
+        {
+          "match": 5,
+          "time": "11:40 AM",
+          "usa": [
+            "Scott Covino",
+            "John Altman"
+          ],
+          "intl": [
+            "Tim Pearce",
+            "Robbie Neilson"
+          ]
+        },
+        {
+          "match": 6,
+          "time": "11:50 AM",
+          "usa": [
+            "Tom Walsh",
+            "Jeff Barnette"
+          ],
+          "intl": [
+            "Jun Bae",
+            "Yun Sang Bae"
+          ]
+        },
+        {
+          "match": 7,
+          "time": "12:00 PM",
+          "usa": [
+            "Jim Gillie",
+            "Kevin Kozlowski"
+          ],
+          "intl": [
+            "Rhys Gully",
+            "Erik Wagner"
+          ]
+        },
+        {
+          "match": 8,
+          "time": "12:10 PM",
+          "usa": [
+            "Kyle Lenihan",
+            "Mitch Freedman"
+          ],
+          "intl": [
+            "Jonathan Doan",
+            "Raj Malik"
+          ]
+        },
+        {
+          "match": 9,
+          "time": "12:20 PM",
+          "usa": [
+            "Jay Vosburgh",
+            "Seth Holladay"
+          ],
+          "intl": [
+            "Phillip Jewell",
+            "Mohammed Ashraf"
+          ]
+        },
+        {
+          "match": 10,
+          "time": "12:30 PM",
+          "usa": [
+            "Tom Murphy",
+            "Dominic Michael"
+          ],
+          "intl": [
+            "Uttam Bharwani",
+            "Sridhar Muthusamy"
+          ]
+        },
+        {
+          "match": 11,
+          "time": "12:40 PM",
+          "usa": [
+            "Maggie Vosburgh",
+            "Chrissy Crouse"
+          ],
+          "intl": [
+            "Alba Phillips",
+            "Joung Barnes"
+          ]
+        },
+        {
+          "match": 12,
+          "time": "12:50 PM",
+          "usa": [
+            "John Daley",
+            "Jeff Miller"
+          ],
+          "intl": [
+            "Suresh Saribala",
+            "Stefan Lambert"
+          ]
+        },
+        {
+          "match": 13,
+          "time": "1:00 PM",
+          "usa": [
+            "Victor Esposito",
+            "Greg Parda"
+          ],
+          "intl": [
+            "Soban Ansari",
+            "Jim Lee"
+          ]
+        }
+      ],
+      "pairingsNote": "The same thirteen pairings played all three sessions. Golf Genius holds no per-match points for Day 1, so only the session scores are given."
     },
     {
       "day": 2,
