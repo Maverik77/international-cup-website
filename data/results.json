@@ -1,7 +1,7 @@
 {
   "updated": "2026-10-25",
   "source": "2026 International Cup Event - Tournament Results (Golf Genius), Rounds 1 and 2",
-  "note": "Each singles match is three points: front nine, back nine and the full eighteen. A halved segment splits its point.",
+  "note": "Day 1 was three six-hole sessions - Best Ball on 1 to 6, Alternate Shot on 7 to 12, Shamble on 13 to 18 - each match worth two points. Day 2 singles are worth three: front nine, back nine and the full eighteen.",
   "final": {
     "usa": 75,
     "intl": 81,
@@ -19,17 +19,158 @@
         {
           "name": "Best Ball",
           "usa": 8,
-          "intl": 18
+          "intl": 18,
+          "holes": "1-6",
+          "complete": true,
+          "matches": [
+            {
+              "match": 1,
+              "winner": "USA",
+              "result": "2 up"
+            },
+            {
+              "match": 2,
+              "winner": "International",
+              "result": "1 up"
+            },
+            {
+              "match": 3,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 4,
+              "winner": "International",
+              "result": "1 up"
+            },
+            {
+              "match": 5,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 6,
+              "winner": "International",
+              "result": "4 up"
+            },
+            {
+              "match": 7,
+              "winner": "USA",
+              "result": "1 up"
+            },
+            {
+              "match": 8,
+              "winner": "International",
+              "result": "1 up"
+            },
+            {
+              "match": 9,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 10,
+              "winner": "International",
+              "result": "3 up"
+            },
+            {
+              "match": 11,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 12,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 13,
+              "winner": "USA",
+              "result": "1 up"
+            }
+          ]
         },
         {
           "name": "Alternate Shot",
           "usa": 15,
-          "intl": 11
+          "intl": 11,
+          "holes": "7-12",
+          "complete": true,
+          "matches": [
+            {
+              "match": 1,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 2,
+              "winner": "USA",
+              "result": "2 up"
+            },
+            {
+              "match": 3,
+              "winner": "USA",
+              "result": "3 up"
+            },
+            {
+              "match": 4,
+              "winner": "USA",
+              "result": "2 up"
+            },
+            {
+              "match": 5,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 6,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 7,
+              "winner": "USA",
+              "result": "1 up"
+            },
+            {
+              "match": 8,
+              "winner": "International",
+              "result": "3 up"
+            },
+            {
+              "match": 9,
+              "winner": "International",
+              "result": "2 up"
+            },
+            {
+              "match": 10,
+              "winner": "USA",
+              "result": "3 up"
+            },
+            {
+              "match": 11,
+              "winner": "USA",
+              "result": "1 up"
+            },
+            {
+              "match": 12,
+              "winner": "tie",
+              "result": "halved"
+            },
+            {
+              "match": 13,
+              "winner": "International",
+              "result": "5 up"
+            }
+          ]
         },
         {
           "name": "Shamble",
           "usa": 19,
-          "intl": 7
+          "intl": 7,
+          "holes": "13-18",
+          "complete": false,
+          "note": "The club export clips every scorecard after the sixteenth hole, so the individual Shamble matches cannot be given - only the session score."
         }
       ],
       "pairings": [
@@ -190,7 +331,7 @@
           ]
         }
       ],
-      "pairingsNote": "The same thirteen pairings played all three sessions. Golf Genius holds no per-match points for Day 1, so only the session scores are given."
+      "pairingsNote": "The same thirteen pairings played all three sessions. Each match is worth two points: two for a win, one each when halved."
     },
     {
       "day": 2,

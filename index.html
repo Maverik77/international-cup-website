@@ -1232,6 +1232,13 @@
         }
 
         .res-match--pair .res-name { white-space: normal; }
+
+        .res-holes {
+            font-weight: 400;
+            font-size: 0.78rem;
+            color: #a0aec0;
+            margin-left: 0.3rem;
+        }
         .res-side--right { justify-content: flex-end; text-align: right; }
 
         .res-note {
@@ -1337,12 +1344,19 @@
                     // Day 1 is scored by session, not by match: Golf Genius holds
                     // no per-match points for it. The pairings are listed below
                     // the sessions because the same thirteen played all three.
+                    // Day 1 ran as three six-hole sessions between the same
+                    // thirteen pairings. A session the club's export covers in
+                    // full lists its matches; one it clips shows its score only.
                     const pairs = dayDoc.pairings || [];
+                    const byNum = {};
+                    pairs.forEach(p => { byNum[p.match] = p; });
+
                     body = `
                         <div class="res-sessions">
                             ${dayDoc.sessions.map(se => `
                                 <div class="res-session">
-                                    <span class="res-session-name">${escapeTee(se.name)}</span>
+                                    <span class="res-session-name">${escapeTee(se.name)}${
+                                        se.holes ? ` <span class="res-holes">holes ${escapeTee(se.holes)}</span>` : ''}</span>
                                     <span class="res-session-score">
                                         <strong class="${se.usa > se.intl ? 'res-win' : ''}">${pts(se.usa)}</strong>
                                         &ndash;
@@ -1351,23 +1365,39 @@
                                 </div>
                             `).join('')}
                         </div>
-                        ${pairs.length ? `
-                            <h5 class="res-subhead">The Thirteen Pairings</h5>
+
+                        ${dayDoc.sessions.filter(se => se.matches && se.matches.length).map(se => `
+                            <h5 class="res-subhead">${escapeTee(se.name)}
+                                <span class="res-holes">holes ${escapeTee(se.holes || '')}</span></h5>
                             <div class="res-matches">
-                                ${pairs.map(p => `
-                                    <div class="res-match res-match--pair">
-                                        <div class="res-num">${Number(p.match)}</div>
-                                        <div class="res-side">
-                                            <span class="res-name">${p.usa.map(escapeTee).join(' &amp; ')}</span>
+                                ${se.matches.map(m => {
+                                    const p = byNum[m.match] || { usa: [], intl: [] };
+                                    const usaClass = m.winner === 'USA' ? 'res-side--won'
+                                        : m.winner === 'International' ? 'res-side--lost' : 'res-side--halved';
+                                    const intlClass = m.winner === 'International' ? 'res-side--won'
+                                        : m.winner === 'USA' ? 'res-side--lost' : 'res-side--halved';
+                                    return `
+                                        <div class="res-match res-match--pair">
+                                            <div class="res-num">${Number(m.match)}</div>
+                                            <div class="res-side ${usaClass}">
+                                                <span class="res-name">${p.usa.map(escapeTee).join(' &amp; ')}</span>
+                                            </div>
+                                            <div class="res-side res-side--right ${intlClass}">
+                                                <span class="res-name">${p.intl.map(escapeTee).join(' &amp; ')}</span>
+                                            </div>
+                                            <div class="res-segments">${
+                                                m.winner === 'tie' ? 'halved'
+                                                : `${escapeTee(m.winner)} ${escapeTee(m.result)}`}</div>
                                         </div>
-                                        <div class="res-side res-side--right">
-                                            <span class="res-name">${p.intl.map(escapeTee).join(' &amp; ')}</span>
-                                        </div>
-                                    </div>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                             </div>
-                            <p class="res-note">${escapeTee(dayDoc.pairingsNote || '')}</p>
-                        ` : ''}
+                        `).join('')}
+
+                        ${dayDoc.sessions.filter(se => se.note).map(se => `
+                            <p class="res-note"><strong>${escapeTee(se.name)}:</strong> ${escapeTee(se.note)}</p>
+                        `).join('')}
+                        <p class="res-note">${escapeTee(dayDoc.pairingsNote || '')}</p>
                     `;
                 } else {
                     body = `
