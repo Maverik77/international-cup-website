@@ -301,8 +301,9 @@
         /* ---- Day 2: eighteen holes, one player a side ---- */
         function day2Card(m) {
             if (m.card === false) {
-                return '<p class="no-card">No scorecard was entered for this match &mdash; the group reported the result only. ' +
-                    'Front nine, back nine and the full eighteen went ' + esc(m.segments.join(', ')) + '.</p>';
+                return '<p class="no-card">This scorecard is not in the club&rsquo;s export &mdash; the file stops part-way ' +
+                    'through the card list, so the round was never printed. Front nine, back nine and the full eighteen ' +
+                    'went ' + esc(m.segments.join(', ')) + '.</p>';
             }
             var holes = m.holes;
             function headRow() {
@@ -402,8 +403,9 @@
             html += '</section>';
             if (missing) {
                 html += '<p class="session-note">' + missing + ' of the ' + day.matches.length +
-                    ' singles have no scorecard: those groups entered their result without ' +
-                    'filling in the holes, so only the match result is on record.</p>';
+                    ' singles are shown without a scorecard. Those rounds were played and scored like ' +
+                    'every other &mdash; the club&rsquo;s export simply runs out before it reaches them. ' +
+                    'They will appear here once a complete export is in.</p>';
             }
             return html;
         }

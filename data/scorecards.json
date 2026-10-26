@@ -1,7 +1,7 @@
 {
  "updated": "2026-10-25",
  "source": "Golf Genius scorecards: Round 1 landscape export, Round 2 tournament results export.",
- "note": "Scores are gross. A dot marks a hole where that side received a handicap stroke, and the hole is won on the net score.",
+ "note": "Scores are gross. A dot marks a hole where that side received a handicap stroke, and the hole is won on the net score. Four Day 2 singles, plus half of Michael v Kim, are absent because the Round 2 export stops part-way through its card list - not because those rounds went unscored.",
  "day1": {
   "sessions": [
    {
