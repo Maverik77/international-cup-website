@@ -1,0 +1,20 @@
+{
+  "_comment": "The Round 2 PDF export stops part-way through its card list, so these five scorecards were transcribed from the Golf Genius screenshots Erik supplied on 2026-10-26. Each is validated on load: Out/In/Total must agree, Total minus Net must equal the stroke count, and the hole-by-hole net scores must reproduce the front-nine, back-nine and eighteen-hole points already published in data/results.json. Holes listed under `strokes` are hole numbers, not indices.",
+  "day2": [
+    { "match": 19,
+      "usa":  { "scores": [5,4,4,4,6,4,4,6,5,4,6,5,3,4,4,7,4,5], "strokes": [],                   "out": 42, "in": 42, "total": 84, "net": 84 },
+      "intl": { "scores": [4,5,5,5,7,5,3,5,5,4,5,6,3,5,4,5,4,5], "strokes": [2,6,14,18],          "out": 44, "in": 41, "total": 85, "net": 81 } },
+    { "match": 20,
+      "usa":  { "scores": [6,4,4,4,6,4,3,7,5,5,7,6,4,5,6,6,4,7], "strokes": [],                   "out": 43, "in": 50, "total": 93, "net": 93 },
+      "intl": { "scores": [4,5,6,4,7,5,4,5,4,6,7,6,4,5,6,7,4,6], "strokes": [14],                 "out": 44, "in": 51, "total": 95, "net": 94 } },
+    { "match": 21,
+      "usa":  { "scores": [4,4,3,4,5,4,4,3,5,5,5,4,4,5,6,5,4,4], "strokes": [],                   "out": 36, "in": 42, "total": 78, "net": 78 },
+      "intl": { "scores": [3,6,4,3,5,5,3,6,4,5,5,6,5,5,5,5,3,6], "strokes": [2,14,18],            "out": 39, "in": 45, "total": 84, "net": 81 } },
+    { "match": 22,
+      "usa":  { "scores": [4,5,5,3,6,5,4,5,4,4,6,6,3,7,5,7,3,5], "strokes": [],                   "out": 41, "in": 46, "total": 87, "net": 87 },
+      "intl": { "scores": [5,4,4,3,6,4,4,5,5,5,5,4,4,5,5,7,4,6], "strokes": [],                   "out": 40, "in": 45, "total": 85, "net": 85 } },
+    { "match": 23,
+      "usa":  { "scores": [5,6,4,3,5,5,4,5,4,7,5,6,4,5,5,4,3,4], "strokes": [],                   "out": 41, "in": 43, "total": 84, "net": 84 },
+      "intl": { "scores": [5,5,6,4,7,6,3,6,6,6,6,8,5,7,6,7,4,5], "strokes": [2,6,9,12,14,15,18],  "out": 48, "in": 54, "total": 102, "net": 95 } }
+  ]
+}

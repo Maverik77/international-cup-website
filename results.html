@@ -151,6 +151,7 @@
         .st-usa { color: #a4142c; } .st-intl { color: #14468f; } .st-as { color: #a0aec0; }
         .no-card { padding: 0.9rem; color: #718096; font-size: 0.87rem; }
         .card-legend { padding: 0 0.9rem 0.85rem; color: #a0aec0; font-size: 0.74rem; }
+        .card-source { font-style: italic; }
 
         .loading, .load-error { text-align: center; padding: 3rem 1rem; color: #718096; }
 
@@ -346,7 +347,9 @@
                 status +
                 '</tbody></table></div>' +
                 '<p class="card-legend">Gross scores, with a dot where a stroke was given. Holes are won on the net score. ' +
-                'Front nine, back nine and the full eighteen are each worth a point: ' + esc(m.segments.join(', ')) + '.</p>';
+                'Front nine, back nine and the full eighteen are each worth a point: ' + esc(m.segments.join(', ')) + '.' +
+                (m.cardSource ? ' <span class="card-source">Taken from the club scorecard rather than the results export.</span>' : '') +
+                '</p>';
         }
 
         function matchRow(num, usaLabel, intlLabel, winner, resultText, body) {
